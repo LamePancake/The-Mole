@@ -15,6 +15,11 @@
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
+!Lib/**/[Dd]ebug
+!Lib/**/[Dd]ebugPublic
+!Lib/**/[Rr]elease
+!Lib/**/[Rr]elWithDebInfo
+!Lib/**/[Rr]eleases
 x64/
 x86/
 bld/
@@ -67,6 +72,17 @@ artifacts/
 *.pidb
 *.svclog
 *.scc
+
+!Lib/**/[Dd]ebug/*.pdb
+!Lib/**/[Dd]ebug/*.ilk
+!Lib/**/[Dd]ebugPublic/*.pdb
+!Lib/**/[Dd]ebugPublic/*.ilk
+!Lib/**/[Rr]elease/*.pdb
+!Lib/**/[Rr]elease/*.ilk
+!Lib/**/[Rr]elWithDebInfo/*.pdb
+!Lib/**/[Rr]elWithDebInfo/*.ilk
+!Lib/**/[Rr]eleases/*.pdb
+!Lib/**/[Rr]eleases/*.ilk
 
 # Chutzpah Test files
 _Chutzpah*
