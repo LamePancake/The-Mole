@@ -1,6 +1,7 @@
 #include <iostream>
 #include <SDL2pp\SDL2pp.hh>
 #include <SDL2\SDL_main.h>
+#include "Input.h"
 
 int main(int argc, char** argv) {
 	try {
@@ -34,6 +35,11 @@ int main(int argc, char** argv) {
 			SDL_Color{ 255, 255, 255, 255 }));
 
 		unsigned char pixels[16 * 16 * 4];
+
+		//----------------------------------------------------------------
+		Input input_handler;
+
+		input_handler.Poll_Event();
 
 		// Note proper constructor for Rect
 		sprite1.Update(Rect(0, 0, 16, 16), pixels, 16 * 4);
