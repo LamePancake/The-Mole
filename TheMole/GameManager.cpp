@@ -59,6 +59,10 @@ void GameManager::Loop(string& startScreen) {
 	int dt = 0;
 	int updateResult;
 
+	// Loads a test level
+	LevelLoader l;
+	std::vector<std::vector<Tile*>> testLevel = l.LoadLevel("Assets//Levels//test_level.txt");
+
 	while (true) {
 		// Perform the update
 		newTime = SDL_GetTicks();

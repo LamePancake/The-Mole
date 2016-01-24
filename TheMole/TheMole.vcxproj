@@ -133,13 +133,25 @@
   <ItemGroup>
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="LevelLoader.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MenuScreen.cpp" />
+    <ClCompile Include="Tiles\Tile.cpp" />
+    <ClCompile Include="Tiles\Tile_Blank.cpp" />
+    <ClCompile Include="Tiles\Tile_Dirt.cpp" />
+    <ClCompile Include="Tiles\Tile_Metal.cpp" />
+    <ClCompile Include="Tiles\Tile_Stone.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="LevelLoader.h" />
     <ClInclude Include="MenuScreen.h" />
     <ClInclude Include="Screen.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="Tiles\Tile.h" />
+    <ClInclude Include="Tiles\Tile_Blank.h" />
+    <ClInclude Include="Tiles\Tile_Dirt.h" />
+    <ClInclude Include="Tiles\Tile_Metal.h" />
+    <ClInclude Include="Tiles\Tile_Stone.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Input.h" />
