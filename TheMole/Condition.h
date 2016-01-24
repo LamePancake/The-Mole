@@ -1,10 +1,12 @@
+#ifndef CONDITION_H
+#define CONDITION_H
 #pragma once
-template <typename Condition>
 class Condition
 {
 public:
 	Condition();
 	~Condition();
-	virtual int Test() = 0;
+	bool Test();
 };
 
+#endif

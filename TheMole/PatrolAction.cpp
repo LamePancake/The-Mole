@@ -11,7 +11,8 @@ PatrolAction::~PatrolAction()
 {
 }
 
-int PatrolAction::Execute()
+bool PatrolAction::Execute()
 {
 	std::cout << "Patrolling";
+	return true;
 }

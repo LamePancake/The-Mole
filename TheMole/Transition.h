@@ -8,20 +8,16 @@
 class Transition
 {
 public:
-	template <typename Action, typename Condition>
-	Transition(State target, std::vector<Action> actList, Condition c);
+	Transition();
 	~Transition();
-	template <typename Condition>
+	Transition(State target, std::vector<Action> actList, Condition c);
 	bool IsTriggered();
 	State GetTargetState();
-	template <typename Action>
 	std::vector<Action> GetAction();
 
 private:
 	State _targetState;
-	template <typename Action>
 	std::vector<Action> _actions;
-	template <typename Condition>
 	Condition _condi;
 	int _minVal;
 	int _maxVal;

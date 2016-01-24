@@ -11,7 +11,13 @@ PrintAction::~PrintAction()
 {
 }
 
-int PrintAction::Execute()
+PrintAction::PrintAction(std::string output)
 {
-	std::cout << "Printing";
+	_output = output;
+}
+
+bool PrintAction::Execute()
+{
+	std::cout << _output;
+	return true;
 }

@@ -1,3 +1,5 @@
+#ifndef PATROLCONDITION_H
+#define PATROLCONDITION_H
 #pragma once
 #include "Condition.h"
 class PatrolCondition : public Condition
@@ -5,6 +7,7 @@ class PatrolCondition : public Condition
 public:
 	PatrolCondition();
 	~PatrolCondition();
-	int Test();
+	bool Test();
 };
 
+#endif

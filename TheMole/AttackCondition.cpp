@@ -11,7 +11,7 @@ AttackCondition::~AttackCondition()
 {
 }
 
-int AttackCondition::Test()
+bool AttackCondition::Test()
 {
-
+	return true;
 }

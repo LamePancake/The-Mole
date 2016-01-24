@@ -10,3 +10,8 @@ Condition::Condition()
 Condition::~Condition()
 {
 }
+
+bool Condition::Test()
+{
+	return true;
+}

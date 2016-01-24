@@ -11,4 +11,8 @@ Action::~Action()
 {
 }
 
+bool Action::Execute()
+{
+	return true;
+}
 

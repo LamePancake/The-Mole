@@ -1,3 +1,5 @@
+#ifndef AGENT_H
+#define AGENT_H
 #pragma once
 #include <stack>
 #include <string>
@@ -10,6 +12,9 @@
 #include "Transition.h"
 #include "AttackCondition.h"
 #include "PatrolCondition.h"
+#include "PrintAction.h"
+#include "AttackAction.h"
+#include "PatrolAction.h"
 #include "Action.h"
 
 class Agent {
@@ -60,17 +65,16 @@ private:
 	SDL2pp::Window& _window;
 	SDL2pp::Renderer& _renderer;
 
-	template <typename Action>
 	std::vector<Action> _actionList;
 	StateMachine _sm_FSM;
 	State _s_Patrol;
 	State _s_Attack;
 	Transition _t_AttackPatrol;
 	Transition _t_PatrolAttack;
-	template <typename Action>
 	std::vector<Action> _attackTransList;
-	template <typename Action>
 	std::vector<Action> _patrolTransList;
 	AttackCondition _c_Attack;
 	PatrolCondition _c_Patrol;
 };
+
+#endif

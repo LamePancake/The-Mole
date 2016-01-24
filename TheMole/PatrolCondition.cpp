@@ -11,7 +11,7 @@ PatrolCondition::~PatrolCondition()
 {
 }
 
-int PatrolCondition::Test()
+bool PatrolCondition::Test()
 {
-
+	return true;
 }

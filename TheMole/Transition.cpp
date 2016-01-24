@@ -1,7 +1,15 @@
 #include "Transition.h"
 
 
-template <typename Action, typename Condition>
+Transition::Transition()
+{
+
+}
+
+Transition::~Transition()
+{
+}
+
 Transition::Transition(State target, std::vector<Action> actList, Condition c)
 {
 	_targetState = target;
@@ -9,12 +17,6 @@ Transition::Transition(State target, std::vector<Action> actList, Condition c)
 	_condi = c;
 }
 
-
-Transition::~Transition()
-{
-}
-
-template <typename Condition>
 bool Transition::IsTriggered()
 {
 	return _condi.Test();
@@ -25,8 +27,7 @@ State Transition::GetTargetState()
 	return _targetState;
 }
 
-template <typename Action>
-std::vector<Action> GetAction()
+std::vector<Action> Transition::GetAction()
 {
 	return _actions;
 }

@@ -11,7 +11,8 @@ AttackAction::~AttackAction()
 {
 }
 
-int AttackAction::Execute()
+bool AttackAction::Execute()
 {
 	std::cout << "Attacking";
+	return true;
 }

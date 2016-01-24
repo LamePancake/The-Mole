@@ -1,3 +1,5 @@
+#ifndef STATEMACHINE_H
+#define STATEMACHINE_H
 #pragma once
 #include "State.h"
 #include <vector>
@@ -8,10 +10,10 @@ class StateMachine
 public:
 	StateMachine();
 	~StateMachine();
+	StateMachine(State init);
 
 	void AddState(State s);
 
-	template <typename Action>
 	std::vector<Action> UpdateStateMachine();
 
 private:
@@ -19,8 +21,7 @@ private:
 	State _initialState;
 	State _currentState;
 	State _targetState;
-	Transition triggeredTransition;
-	template<typename Action>
+	Transition _triggeredTransition;
 	std::vector<Action> _actions;
 };
-
+#endif

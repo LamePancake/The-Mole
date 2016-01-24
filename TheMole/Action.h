@@ -1,10 +1,13 @@
+#ifndef ACTION_H
+#define ACTION_H
+
 #pragma once
-template <typename Action>
 class Action
 {
 public:
 	Action();
 	~Action();
-	virtual int Execute() = 0;
+	bool Execute();
 };
 
+#endif
