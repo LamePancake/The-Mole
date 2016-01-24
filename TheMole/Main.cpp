@@ -6,6 +6,7 @@
 #include <memory>
 #include "GameManager.h"
 #include "MenuScreen.h"
+#include "Input.h"
 
 using std::string;
 using std::unordered_map;
