@@ -60,8 +60,8 @@ void GameManager::Loop(string& startScreen) {
 	int updateResult;
 
 	// Loads a test level
-	LevelLoader l;
-	std::vector<std::vector<Tile*>> testLevel = l.LoadLevel("Assets//Levels//test_level.txt");
+	//LevelLoader l;
+	//std::vector<std::vector<Tile*>> testLevel = l.LoadLevel("Assets//Levels//test_level.txt");
 
 	while (true) {
 		// Perform the update
