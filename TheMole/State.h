@@ -1,7 +1,10 @@
+#ifndef STATE_H
+#define STATE_H
 #pragma once
 #include <vector>
-#include "Action.h"
 #include "Transition.h"
+#include "Action.h"
+
 class State
 {
 public:
@@ -40,3 +43,4 @@ private:
 	std::vector<Transition> _transitions;
 };
 
+#endif

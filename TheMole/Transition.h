@@ -1,3 +1,5 @@
+#ifndef TRANSITION_H
+#define TRANSITION_H
 #pragma once
 #include "Action.h"
 #include "Condition.h"
@@ -28,4 +30,4 @@ private:
 	float _curTime;
 	float _maxTime;
 };
-
+#endif
