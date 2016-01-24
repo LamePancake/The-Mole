@@ -1,68 +1,37 @@
 #include <iostream>
+#include <unordered_map>
+#include <string>
 #include <SDL2pp\SDL2pp.hh>
 #include <SDL2\SDL_main.h>
+#include <memory>
+#include "GameManager.h"
+#include "MenuScreen.h"
+
+using std::string;
+using std::unordered_map;
+using std::shared_ptr;
 
 int main(int argc, char** argv) {
 	try {
 		using namespace SDL2pp;
-
-		// Init SDL; will be automatically deinitialized when the object is destroyed
-		SDL sdl(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
-
-		// Likewise, init SDL_ttf library
+		uint32_t subsystems = SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER;
+		SDL sdl(subsystems);
 		SDLTTF sdl_ttf;
-
+		SDLImage image;
+		SDLMixer mixer;
+		
 		// Straightforward wrappers around corresponding SDL2 objects
 		// These take full care of proper object destruction and error checking
-		Window window("libSDL2pp demo",
-			SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-			640, 480, SDL_WINDOW_RESIZABLE);
+		Window window("libSDL2pp demo",	SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_RESIZABLE);
 		Renderer renderer(window, -1, SDL_RENDERER_ACCELERATED);
-		Texture sprite1(renderer, SDL_PIXELFORMAT_ARGB8888,
-			SDL_TEXTUREACCESS_STATIC, 16, 16);
-		Texture sprite2(renderer, ".\\Assets\\Textures\\mole.png"); // SDL_image support
 
-		Font font(".\\Assets\\GUI\\BEBAS.ttf", 60); // SDL_ttf font
+		unordered_map<string, shared_ptr<Screen>> map;
+		shared_ptr<Screen> menu(new MenuScreen);
+		map.insert({ "menu", menu });
 
-								   // Initialize audio mixer
-		Mixer mixer(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 4096);
-
-		Chunk sound(".\\Assets\\Audio\\digging.ogg"); // OGG sound file
-
-								   // Create texture from surface containing text rendered by SDL_ttf
-		Texture text(renderer, font.RenderText_Solid("Hello, world!",
-			SDL_Color{ 255, 255, 255, 255 }));
-
-		unsigned char pixels[16 * 16 * 4];
-
-		// Note proper constructor for Rect
-		sprite1.Update(Rect(0, 0, 16, 16), pixels, 16 * 4);
-
-		// Most setter methods are chainable
-		renderer.SetLogicalSize(640, 480).SetDrawColor(0, 16, 32).Clear();
-
-		// Also note a safe way to specify null rects and points
-		renderer.Copy(sprite1, NullOpt, NullOpt);
-
-		// There are multiple convenient ways to construct e.g. a Rect;
-		// Objects provide extensive set of getters
-		renderer.Copy(text, NullOpt, Rect(Point(0, 0), text.GetSize()));
-
-		// Copy() is overloaded, providing access to both SDL_RenderCopy and SDL_RenderCopyEx
-		renderer.Copy(sprite2, NullOpt, NullOpt, 45.0);
-
-		renderer.Present();
-
-		// Play our sound one time on a first available mixer channel
-		mixer.PlayChannel(-1, sound);
-
-		// You can still access wrapped C SDL types
-		SDL_Renderer* sdl_renderer = renderer.Get();
-
-		// Of course, C SDL2 API is still perfectly valid
-		SDL_Delay(5000);
-
-		// All SDL objects are released at this point or if an error occurs
+		GameManager mgr(sdl, image, mixer, sdl_ttf, window, renderer, map);
+		std::string startScreen("menu");
+		mgr.Loop(startScreen);
 	}
 	catch (SDL2pp::Exception& e) {
 		// Exception stores SDL_GetError() result and name of function which failed
@@ -73,5 +42,6 @@ int main(int argc, char** argv) {
 		// This also works (e.g. "SDL_Init failed: No available video device")
 		std::cerr << e.what() << std::endl;
 	}
+	std::cin.get();
 	return 0;
 }
