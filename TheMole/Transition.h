@@ -1,24 +1,27 @@
 #ifndef TRANSITION_H
 #define TRANSITION_H
 #pragma once
-#include "Action.h"
-#include "Condition.h"
-#include "State.h"
 #include <vector>
+
+class Action;
+class Condition;
+class State;
 class Transition
 {
 public:
 	Transition();
 	~Transition();
-	Transition(State target, std::vector<Action> actList, Condition c);
+	Transition(State &target, std::vector<Action> actList, Condition &c);
 	bool IsTriggered();
-	State GetTargetState();
+	State* GetTargetState();
 	std::vector<Action> GetAction();
 
+
+
 private:
-	State _targetState;
+	State* _target;
 	std::vector<Action> _actions;
-	Condition _condi;
+	Condition* _condi;
 	int _minVal;
 	int _maxVal;
 	int _curVal;

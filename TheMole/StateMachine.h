@@ -10,7 +10,7 @@ class StateMachine
 public:
 	StateMachine();
 	~StateMachine();
-	StateMachine(State init);
+	StateMachine(State &init);
 
 	void AddState(State s);
 
@@ -18,9 +18,9 @@ public:
 
 private:
 	std::vector<State> _statesList;
-	State _initialState;
-	State _currentState;
-	State _targetState;
+	State* _initialState;
+	State* _currentState;
+	State* _targetState;
 	Transition _triggeredTransition;
 	std::vector<Action> _actions;
 };

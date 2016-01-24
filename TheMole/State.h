@@ -4,7 +4,7 @@
 #include <vector>
 #include "Transition.h"
 #include "Action.h"
-
+class Transition;
 class State
 {
 public:
