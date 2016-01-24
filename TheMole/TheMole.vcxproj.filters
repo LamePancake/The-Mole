@@ -13,12 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\AI">
-      <UniqueIdentifier>{b2f8ce52-1459-429a-b6e4-37e9b20eff03}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\AI">
-      <UniqueIdentifier>{6adbf52f-bb0b-4f00-9a53-23aeba8211a2}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -33,38 +27,23 @@
     <ClCompile Include="Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Action.cpp">
-      <Filter>Source Files\AI</Filter>
+    <ClCompile Include="LevelLoader.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Agent.cpp">
-      <Filter>Source Files\AI</Filter>
+    <ClCompile Include="Tiles\Tile.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AttackAction.cpp">
-      <Filter>Source Files\AI</Filter>
+    <ClCompile Include="Tiles\Tile_Blank.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AttackCondition.cpp">
-      <Filter>Source Files\AI</Filter>
+    <ClCompile Include="Tiles\Tile_Dirt.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Condition.cpp">
-      <Filter>Source Files\AI</Filter>
+    <ClCompile Include="Tiles\Tile_Metal.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PatrolAction.cpp">
-      <Filter>Source Files\AI</Filter>
-    </ClCompile>
-    <ClCompile Include="PrintAction.cpp">
-      <Filter>Source Files\AI</Filter>
-    </ClCompile>
-    <ClCompile Include="State.cpp">
-      <Filter>Source Files\AI</Filter>
-    </ClCompile>
-    <ClCompile Include="StateMachine.cpp">
-      <Filter>Source Files\AI</Filter>
-    </ClCompile>
-    <ClCompile Include="Transition.cpp">
-      <Filter>Source Files\AI</Filter>
-    </ClCompile>
-    <ClCompile Include="PatrolCondition.cpp">
-      <Filter>Source Files\AI</Filter>
+    <ClCompile Include="Tiles\Tile_Stone.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -80,38 +59,23 @@
     <ClInclude Include="Input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Action.h">
-      <Filter>Header Files\AI</Filter>
+    <ClInclude Include="LevelLoader.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Agent.h">
-      <Filter>Header Files\AI</Filter>
+    <ClInclude Include="Tiles\Tile.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AttackAction.h">
-      <Filter>Header Files\AI</Filter>
+    <ClInclude Include="Tiles\Tile_Blank.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AttackCondition.h">
-      <Filter>Header Files\AI</Filter>
+    <ClInclude Include="Tiles\Tile_Dirt.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Condition.h">
-      <Filter>Header Files\AI</Filter>
+    <ClInclude Include="Tiles\Tile_Metal.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PatrolAction.h">
-      <Filter>Header Files\AI</Filter>
-    </ClInclude>
-    <ClInclude Include="PrintAction.h">
-      <Filter>Header Files\AI</Filter>
-    </ClInclude>
-    <ClInclude Include="State.h">
-      <Filter>Header Files\AI</Filter>
-    </ClInclude>
-    <ClInclude Include="StateMachine.h">
-      <Filter>Header Files\AI</Filter>
-    </ClInclude>
-    <ClInclude Include="Transition.h">
-      <Filter>Header Files\AI</Filter>
-    </ClInclude>
-    <ClInclude Include="PatrolCondition.h">
-      <Filter>Header Files\AI</Filter>
+    <ClInclude Include="Tiles\Tile_Stone.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
