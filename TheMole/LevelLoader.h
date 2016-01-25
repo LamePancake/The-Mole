@@ -9,6 +9,7 @@
 #include "Tiles/Tile_Metal.h"
 #include "Tiles/Tile_Stone.h"
 #include "Tiles/Tile_Blank.h"
+#include "Tiles/Tile_Spike.h"
 
 /**
 * LevelLoader.h

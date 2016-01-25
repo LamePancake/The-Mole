@@ -140,6 +140,7 @@
     <ClCompile Include="Tiles\Tile_Blank.cpp" />
     <ClCompile Include="Tiles\Tile_Dirt.cpp" />
     <ClCompile Include="Tiles\Tile_Metal.cpp" />
+    <ClCompile Include="Tiles\Tile_Spike.cpp" />
     <ClCompile Include="Tiles\Tile_Stone.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -151,6 +152,7 @@
     <ClInclude Include="Tiles\Tile_Blank.h" />
     <ClInclude Include="Tiles\Tile_Dirt.h" />
     <ClInclude Include="Tiles\Tile_Metal.h" />
+    <ClInclude Include="Tiles\Tile_Spike.h" />
     <ClInclude Include="Tiles\Tile_Stone.h" />
   </ItemGroup>
   <ItemGroup>

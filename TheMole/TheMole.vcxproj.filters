@@ -19,6 +19,12 @@
     <Filter Include="Source Files\AI">
       <UniqueIdentifier>{1c72ef21-ad4c-472e-bd35-b9a0043f1ea1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Tiles">
+      <UniqueIdentifier>{f3cf1bf5-0c8c-4519-9b6d-e5d4e65d98e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Tiles">
+      <UniqueIdentifier>{48c467c1-dba9-493c-87fd-dd6c5b5cb24e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -37,19 +43,22 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Tiles\Tile.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Tiles</Filter>
     </ClCompile>
     <ClCompile Include="Tiles\Tile_Blank.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Tiles</Filter>
     </ClCompile>
     <ClCompile Include="Tiles\Tile_Dirt.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Tiles</Filter>
     </ClCompile>
     <ClCompile Include="Tiles\Tile_Metal.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Tiles</Filter>
     </ClCompile>
     <ClCompile Include="Tiles\Tile_Stone.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Tiles\Tile_Spike.cpp">
+      <Filter>Source Files\Tiles</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -69,19 +78,22 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Tiles\Tile.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Tiles</Filter>
     </ClInclude>
     <ClInclude Include="Tiles\Tile_Blank.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Tiles</Filter>
     </ClInclude>
     <ClInclude Include="Tiles\Tile_Dirt.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Tiles</Filter>
     </ClInclude>
     <ClInclude Include="Tiles\Tile_Metal.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Tiles</Filter>
     </ClInclude>
     <ClInclude Include="Tiles\Tile_Stone.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="Tiles\Tile_Spike.h">
+      <Filter>Header Files\Tiles</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

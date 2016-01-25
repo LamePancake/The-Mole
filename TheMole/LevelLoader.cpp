@@ -50,6 +50,10 @@ Tile* LevelLoader::CreateTile(char tile, int x, int y)
 		{
 			return  new Tile_Stone(x, y);
 		}
+		case 'P':
+		{
+			return  new Tile_Spike(x, y);
+		}
 		case ' ':
 		{
 			return new Tile_Blank(x, y);
