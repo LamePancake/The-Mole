@@ -1,6 +1,7 @@
 #include <cstring>
 #include "GameManager.h"
 #include "MenuScreen.h"
+#include "Agent.h"
 
 using namespace SDL2pp;
 
@@ -34,6 +35,9 @@ int MenuScreen::Update(double elapsedSecs) {
 		_curMenuItem--;
 		if (_curMenuItem < 0) _curMenuItem = NUM_MENU_ITEMS - 1;
 	}
+
+	Agent testAI;
+	testAI.Update();
 
 	// We selected a menu item; do the appropriate thing
 	if (keys[SDL_SCANCODE_RETURN]) {

@@ -3,6 +3,11 @@
 using std::string;
 using std::shared_ptr;
 
+Agent::Agent()
+{
+	InitializeAllStates();
+}
+
 /**
 * Initialize state machine, all states, transitions, and conditions
 *
