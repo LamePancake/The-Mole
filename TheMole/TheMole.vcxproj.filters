@@ -93,6 +93,9 @@
     <ClCompile Include="Transition.cpp">
       <Filter>Source Files\AI</Filter>
     </ClCompile>
+    <ClCompile Include="SimpleAgent.cpp">
+      <Filter>Source Files\AI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -159,6 +162,9 @@
       <Filter>Header Files\AI</Filter>
     </ClInclude>
     <ClInclude Include="Transition.h">
+      <Filter>Header Files\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleAgent.h">
       <Filter>Header Files\AI</Filter>
     </ClInclude>
   </ItemGroup>

@@ -144,6 +144,7 @@
     <ClCompile Include="PatrolAction.cpp" />
     <ClCompile Include="PatrolCondition.cpp" />
     <ClCompile Include="PrintAction.cpp" />
+    <ClCompile Include="SimpleAgent.cpp" />
     <ClCompile Include="State.cpp" />
     <ClCompile Include="StateMachine.cpp" />
     <ClCompile Include="Tiles\Tile.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="PrintAction.h" />
     <ClInclude Include="Screen.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="SimpleAgent.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="StateMachine.h" />
     <ClInclude Include="Tiles\Tile.h" />
