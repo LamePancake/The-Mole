@@ -11,6 +11,11 @@ PatrolCondition::~PatrolCondition()
 {
 }
 
+/*
+* Test contains the condition test that each condition will check for. Currently this is only a key check, checking for P
+* 
+* returns true if fulfilled and false if not.
+*/
 bool PatrolCondition::Test()
 {
 	//return Poll_Event();

@@ -45,10 +45,14 @@ void Agent::InitializeAllStates()
 */
 void Agent::Update()
 {
+	/*
+	* Update the actions to the current state's actions as returned from the state machine.
+	*/
 	_actionList = _sm_FSM.UpdateStateMachine();
 
 	for (size_t i = 0; i < _actionList.size(); i++)
 	{
+		// Execute the next action in the queue.
 		_actionList[i].Execute();
 	}
 }

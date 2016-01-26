@@ -17,10 +17,14 @@
 #include "PatrolAction.h"
 #include "Action.h"
 
+/*
+* This is the class that is the AI object. 
+*/
 class Agent {
 public:
 
 	Agent();
+	// THE FOLLOWING IS COMMENTED OUT BECAUSE I'M NOT SURE IF THE AI WILL NEED THOSE THINGS LATER
 	/**
 	* Creates a new Agent object with references to the SDL libraries, a window, and the map of screens to be used in the game.
 	*
@@ -67,15 +71,54 @@ private:
 	SDL2pp::Window& _window;
 	SDL2pp::Renderer& _renderer;*/
 
+	/*
+	* This is the collection of actions to be executed by the AI
+	*/
 	std::vector<Action> _actionList;
+
+	/*
+	* This is the Finite State Machine that will execute all the necessary calls
+	*/
 	StateMachine _sm_FSM;
+
+	/*
+	* The patrol state.
+	*/
 	State _s_Patrol;
+
+	/*
+	* The attack state.
+	*/
 	State _s_Attack;
+
+	/*
+	* The transition from attack to patrol. Naming convention is [current][target]
+	*/
 	Transition _t_AttackPatrol;
+
+	/*
+	* The transition from patrol to attack. Naming convention is [current][target]
+	*/
 	Transition _t_PatrolAttack;
+
+	/*
+	* The collection of attack state's transitions.
+	*/ 
 	std::vector<Action> _attackTransList;
+
+	/*
+	* The collection of patrol state's transitions.
+	*/
 	std::vector<Action> _patrolTransList;
+
+	/*
+	* Attack state's trigger condition.
+	*/
 	AttackCondition _c_Attack;
+
+	/*
+	* Patrol state's trigger condition.
+	*/
 	PatrolCondition _c_Patrol;
 };
 

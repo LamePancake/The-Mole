@@ -11,6 +11,11 @@ AttackCondition::~AttackCondition()
 {
 }
 
+/*
+* Test contains the condition test that each condition will check for. Currently this is only a key check, checking for O
+*
+* returns true if fulfilled and false if not.
+*/
 bool AttackCondition::Test()
 {
 	//return Poll_Event();

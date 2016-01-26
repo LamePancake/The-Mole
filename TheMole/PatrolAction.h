@@ -8,6 +8,9 @@ class PatrolAction : public Action
 public:
 	PatrolAction();
 	~PatrolAction();
+	/*
+	* Contains the commands to be executed in this action.
+	*/
 	bool Execute();
 };
 

@@ -10,6 +10,9 @@ public:
 	PrintAction();
 	~PrintAction();
 	PrintAction(std::string output);
+	/*
+	* Contains the commands to be executed in this action.
+	*/
 	bool Execute();
 private:
 	std::string _output;
