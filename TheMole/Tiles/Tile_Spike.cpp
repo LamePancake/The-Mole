@@ -1,12 +1,12 @@
-#include "Tile_Spike.h"
+#include "TileSpike.h"
 
-void Tile_Spike::Draw()
+void TileSpike::Draw()
 {
 	Tile::Draw();
 	//Drawing code goes here
 }
 
-void Tile_Spike::Update(float deltaTime)
+void TileSpike::Update(float deltaTime)
 {
 	Tile::Update(deltaTime);
 	//Update code goes here.

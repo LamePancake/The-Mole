@@ -40,27 +40,27 @@ Tile* LevelLoader::CreateTile(char tile, int x, int y)
 	{
 		case 'D':
 		{
-			return new Tile_Dirt(x, y);
+			return new TileDirt(x, y);
 		}
 		case 'M':
 		{
-			return new Tile_Metal(x, y);
+			return new TileMetal(x, y);
 		}
 		case 'S':
 		{
-			return  new Tile_Stone(x, y);
+			return  new TileStone(x, y);
 		}
 		case 'P':
 		{
-			return  new Tile_Spike(x, y);
+			return  new TileSpike(x, y);
 		}
 		case ' ':
 		{
-			return new Tile_Blank(x, y);
+			return new TileBlank(x, y);
 		}
 		default:
 		{
-			return new Tile_Blank(x, y);
+			return new TileBlank(x, y);
 		}
 	}
 }

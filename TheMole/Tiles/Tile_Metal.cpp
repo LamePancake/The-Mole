@@ -1,12 +1,12 @@
-#include "Tile_Metal.h"
+#include "TileMetal.h"
 
-void Tile_Metal::Draw()
+void TileMetal::Draw()
 {
 	Tile::Draw();
 	//Drawing code goes here
 }
 
-void Tile_Metal::Update(float deltaTime)
+void TileMetal::Update(float deltaTime)
 {
 	Tile::Update(deltaTime);
 	//Update code goes here.

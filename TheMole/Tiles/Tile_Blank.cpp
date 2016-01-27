@@ -1,12 +1,12 @@
-#include "Tile_Blank.h"
+#include "TileBlank.h"
 
-void Tile_Blank::Draw()
+void TileBlank::Draw()
 {
 	Tile::Draw();
 	//Drawing code goes here
 }
 
-void Tile_Blank::Update(float deltaTime)
+void TileBlank::Update(float deltaTime)
 {
 	Tile::Update(deltaTime);
 	//Update code goes here.

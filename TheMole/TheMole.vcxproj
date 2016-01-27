@@ -138,6 +138,7 @@
     <ClCompile Include="Condition.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="Level.cpp" />
     <ClCompile Include="LevelLoader.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MenuScreen.cpp" />
@@ -161,6 +162,7 @@
     <ClInclude Include="AttackAction.h" />
     <ClInclude Include="AttackCondition.h" />
     <ClInclude Include="Condition.h" />
+    <ClInclude Include="Level.h" />
     <ClInclude Include="LevelLoader.h" />
     <ClInclude Include="MenuScreen.h" />
     <ClInclude Include="PatrolAction.h" />
@@ -172,11 +174,11 @@
     <ClInclude Include="State.h" />
     <ClInclude Include="StateMachine.h" />
     <ClInclude Include="Tiles\Tile.h" />
-    <ClInclude Include="Tiles\Tile_Blank.h" />
-    <ClInclude Include="Tiles\Tile_Dirt.h" />
-    <ClInclude Include="Tiles\Tile_Metal.h" />
-    <ClInclude Include="Tiles\Tile_Spike.h" />
-    <ClInclude Include="Tiles\Tile_Stone.h" />
+    <ClInclude Include="Tiles\TileBlank.h" />
+    <ClInclude Include="Tiles\TileDirt.h" />
+    <ClInclude Include="Tiles\TileMetal.h" />
+    <ClInclude Include="Tiles\TileSpike.h" />
+    <ClInclude Include="Tiles\TileStone.h" />
     <ClInclude Include="Transition.h" />
   </ItemGroup>
   <ItemGroup>

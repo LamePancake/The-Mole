@@ -2,10 +2,10 @@
 #include "Tile.h"
 
 /**
-* Tile_Spike.h
-* Represents an spike tile in in the level.
+* Tile_Dirt.h
+* Represents an dirt tile in in the level.
 */
-class Tile_Spike : public Tile
+class TileDirt : public Tile
 {
 public:
 
@@ -13,14 +13,14 @@ public:
 	* Default constuctor.
 	* Initilizes everying to default values.
 	*/
-	Tile_Spike() :Tile() {}
+	TileDirt() : Tile() {}
 
 	/**
 	* Constructor.
 	* int x - a cached value of the x index in the array of tiles in a level.
 	* int y - a cached value of the y index in the array of tiles in a level.
 	*/
-	Tile_Spike(int x, int y) : Tile(x, y) {}
+	TileDirt(int x, int y) : Tile(x, y) {}
 
 	/**
 	* Constructor.
@@ -29,7 +29,7 @@ public:
 	* int width - the width of the tile.
 	* int height - the height of the tile.
 	*/
-	Tile_Spike(int x, int y, int width, int height) : Tile(x, y, width, height) {}
+	TileDirt(int x, int y, int width, int height) : Tile(x, y, width, height) {}
 
 	/**
 	* OVERRIDE.

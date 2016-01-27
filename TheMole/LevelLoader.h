@@ -5,11 +5,11 @@
 #include <vector>
 
 #include "Tiles/Tile.h"
-#include "Tiles/Tile_Dirt.h"
-#include "Tiles/Tile_Metal.h"
-#include "Tiles/Tile_Stone.h"
-#include "Tiles/Tile_Blank.h"
-#include "Tiles/Tile_Spike.h"
+#include "Tiles/TileDirt.h"
+#include "Tiles/TileMetal.h"
+#include "Tiles/TileStone.h"
+#include "Tiles/TileBlank.h"
+#include "Tiles/TileSpike.h"
 
 /**
 * LevelLoader.h

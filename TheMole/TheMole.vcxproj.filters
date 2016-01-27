@@ -96,6 +96,9 @@
     <ClCompile Include="SimpleAgent.cpp">
       <Filter>Source Files\AI</Filter>
     </ClCompile>
+    <ClCompile Include="Level.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -114,21 +117,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Tiles\Tile.h">
-      <Filter>Header Files\Tiles</Filter>
-    </ClInclude>
-    <ClInclude Include="Tiles\Tile_Blank.h">
-      <Filter>Header Files\Tiles</Filter>
-    </ClInclude>
-    <ClInclude Include="Tiles\Tile_Dirt.h">
-      <Filter>Header Files\Tiles</Filter>
-    </ClInclude>
-    <ClInclude Include="Tiles\Tile_Metal.h">
-      <Filter>Header Files\Tiles</Filter>
-    </ClInclude>
-    <ClInclude Include="Tiles\Tile_Stone.h">
-      <Filter>Header Files\Tiles</Filter>
-    </ClInclude>
-    <ClInclude Include="Tiles\Tile_Spike.h">
       <Filter>Header Files\Tiles</Filter>
     </ClInclude>
     <ClInclude Include="Action.h">
@@ -166,6 +154,24 @@
     </ClInclude>
     <ClInclude Include="SimpleAgent.h">
       <Filter>Header Files\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Level.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Tiles\TileBlank.h">
+      <Filter>Header Files\Tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="Tiles\TileDirt.h">
+      <Filter>Header Files\Tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="Tiles\TileMetal.h">
+      <Filter>Header Files\Tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="Tiles\TileSpike.h">
+      <Filter>Header Files\Tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="Tiles\TileStone.h">
+      <Filter>Header Files\Tiles</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

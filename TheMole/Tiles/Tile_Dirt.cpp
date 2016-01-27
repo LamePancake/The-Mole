@@ -1,12 +1,12 @@
-#include "Tile_Dirt.h"
+#include "TileDirt.h"
 
-void Tile_Dirt::Draw()
+void TileDirt::Draw()
 {
 	Tile::Draw();
 	//Drawing code goes here
 }
 
-void Tile_Dirt::Update(float deltaTime)
+void TileDirt::Update(float deltaTime)
 {
 	Tile::Update(deltaTime);
 	//Update code goes here.

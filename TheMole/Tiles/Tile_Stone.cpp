@@ -1,12 +1,12 @@
-#include "Tile_Stone.h"
+#include "TileStone.h"
 
-void Tile_Stone::Draw()
+void TileStone::Draw()
 {
 	Tile::Draw();
 	//Drawing code goes here
 }
 
-void Tile_Stone::Update(float deltaTime)
+void TileStone::Update(float deltaTime)
 {
 	Tile::Update(deltaTime);
 	//Update code goes here.
