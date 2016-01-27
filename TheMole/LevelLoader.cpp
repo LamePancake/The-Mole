@@ -1,66 +1,79 @@
 #include "LevelLoader.h"
 
 // Loads the level
-std::vector<std::vector<Tile*>> LevelLoader::LoadLevel(std::string level_path)
+ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath)
 {
-	int level_width  = 0; // Keeps track of the width of the level
-	int level_height = 0; // Keeps track of the height of the level
+	int levelWidth  = 0; // Keeps track of the width of the level
+	int levelHeight = 0; // Keeps track of the height of the level
 
-	std::vector<std::vector<Tile*>> level; // Stores the level
+	std::shared_ptr<Level> level = std::make_shared<Level>(); // Stores the level
 	std::string line; // Stores a line to be read
 
-	std::ifstream inFile(level_path.c_str());
+	std::ifstream inFile(levelPath.c_str());
 
 	if (!inFile.is_open())
 	{
-		std::cerr << "Unable to load level: " << level_path << std::endl;
-		return std::vector<std::vector<Tile*>>();
+		std::cerr << "Unable to load level: " << levelPath << std::endl;
+		return nullptr;
 	}
 
 	while (std::getline(inFile, line))
 	{
-		level.push_back(std::vector<Tile*>());
 		for (auto it = line.begin(); it != line.end(); ++it)
 		{
-			level[level_height].push_back(CreateTile((*it), level_width, level_height));
-			level_width++;
+			std::shared_ptr<Tile> tile = nullptr;
+
+			// Creates the new tile and addes it to the type list in level, for rendering
+			switch (toupper((*it)))
+			{
+				case 'D':
+				{
+					tile = std::make_shared<TileDirt>(levelWidth, levelHeight);
+					level->AddDirt(tile);
+					break;
+				}
+				case 'M':
+				{
+					tile = std::make_shared<TileMetal>(levelWidth, levelHeight);
+					level->AddMetal(tile);
+					break;
+				}
+				case 'S':
+				{
+					tile = std::make_shared<TileStone>(levelWidth, levelHeight);
+					level->AddStone(tile);
+					break;
+				}
+				case 'P':
+				{
+					tile = std::make_shared<TileSpike>(levelWidth, levelHeight);
+					level->AddSpike(tile);
+					break;
+				}
+				case ' ':
+				{
+					tile = std::make_shared<TileBlank>(levelWidth, levelHeight);
+					level->AddBlank(tile);
+					break;
+				}
+				default:
+				{
+					tile = std::make_shared<TileBlank>(levelWidth, levelHeight);
+					level->AddBlank(tile);
+					break;
+				}
+			}
+
+			// Stores the tile in the level as well
+			level->AddTileToLevel(tile, levelHeight); 
+			levelWidth++;
 		}
 
-		level_width = 0;
-		level_height++;
+		levelWidth = 0;
+		levelHeight++;
 	}
 	
-	return level;
-}
+	inFile.close();
 
-// Creates a tile based on the character passed into to it
-Tile* LevelLoader::CreateTile(char tile, int x, int y)
-{
-	switch (toupper(tile))
-	{
-		case 'D':
-		{
-			return new TileDirt(x, y);
-		}
-		case 'M':
-		{
-			return new TileMetal(x, y);
-		}
-		case 'S':
-		{
-			return  new TileStone(x, y);
-		}
-		case 'P':
-		{
-			return  new TileSpike(x, y);
-		}
-		case ' ':
-		{
-			return new TileBlank(x, y);
-		}
-		default:
-		{
-			return new TileBlank(x, y);
-		}
-	}
+	return level;
 }

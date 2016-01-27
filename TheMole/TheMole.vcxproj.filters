@@ -45,21 +45,6 @@
     <ClCompile Include="Tiles\Tile.cpp">
       <Filter>Source Files\Tiles</Filter>
     </ClCompile>
-    <ClCompile Include="Tiles\Tile_Blank.cpp">
-      <Filter>Source Files\Tiles</Filter>
-    </ClCompile>
-    <ClCompile Include="Tiles\Tile_Dirt.cpp">
-      <Filter>Source Files\Tiles</Filter>
-    </ClCompile>
-    <ClCompile Include="Tiles\Tile_Metal.cpp">
-      <Filter>Source Files\Tiles</Filter>
-    </ClCompile>
-    <ClCompile Include="Tiles\Tile_Stone.cpp">
-      <Filter>Source Files\Tiles</Filter>
-    </ClCompile>
-    <ClCompile Include="Tiles\Tile_Spike.cpp">
-      <Filter>Source Files\Tiles</Filter>
-    </ClCompile>
     <ClCompile Include="Action.cpp">
       <Filter>Source Files\AI</Filter>
     </ClCompile>
@@ -98,6 +83,24 @@
     </ClCompile>
     <ClCompile Include="Level.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LevelRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Tiles\TileBlank.cpp">
+      <Filter>Source Files\Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Tiles\TileDirt.cpp">
+      <Filter>Source Files\Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Tiles\TileMetal.cpp">
+      <Filter>Source Files\Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Tiles\TileSpike.cpp">
+      <Filter>Source Files\Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Tiles\TileStone.cpp">
+      <Filter>Source Files\Tiles</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -172,6 +175,9 @@
     </ClInclude>
     <ClInclude Include="Tiles\TileStone.h">
       <Filter>Header Files\Tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="LevelRenderer.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
