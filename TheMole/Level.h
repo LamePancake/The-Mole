@@ -13,4 +13,6 @@ private:
 	std::vector<Tile*> _metalTiles;
 	std::vector<Tile*> _spikeTiles;
 	std::vector<Tile*> _stoneTiles;
+
+	std::vector<std::vector<Tile*>> _level;
 };

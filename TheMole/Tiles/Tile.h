@@ -1,117 +1,108 @@
 #pragma once
 #include <tuple>
 
-/**
-* Tile.h
-* Represents an abstract tile in in the level.
-*/
+/** Represents an abstract tile in in the level. */
 class Tile
 {
 public:
 
-	/**
-	* Default constuctor. 
-	* Initilizes everying to default values.
-	*/
+	/** Default constuctor. Initilizes everying to default values. */
 	Tile(): _width(DEFAULT_TILE_WIDTH), 
 		    _height(DEFAULT_TILE_HEIGHT),
 			_xIndex(0),
 			_yIndex(0) {}
 
 	/**
-	* Constructor.
-	* int x - a cached value of the x index in the array of tiles in a level.
-	* int y - a cached value of the y index in the array of tiles in a level.
-	* int width - the width of the tile.
-	* int height - the height of the tile.
-	*/
+	 * Constructor.
+	 *
+	 * @param	x	  	The x index. Cached x index into the level array.
+	 * @param	y	  	The y index. Cached y index into level array
+	 * @param	width 	The width of the tile.
+	 * @param	height	The height of the tile.
+	 */
 	Tile(int x, int y, int width = DEFAULT_TILE_WIDTH, int height = DEFAULT_TILE_HEIGHT ) : 
 		_width(width),
 		_height(height),
 		_xIndex(x),
 	    _yIndex(y) {}
 
-	/**
-	* OVERRIDE.
-	* Handles drawing the tile.
-	*/
+	/** OVERRIDE. Handles drawing the tile. */
 	virtual void Draw();
-	
+
 	/**
-	* OVERRIDE.
-	* Handles updating the tile every frame.
-	* float deltaTime - the time since last update.
-	*/
+	 * OVERRIDE. Handles updating the tile every frame.
+	 *
+	 * @param	deltaTime	The delta time since the last update.
+	 */
 	virtual void Update(float deltaTime);
 
 	/**
-	* Returns the width in pixels of the tile.
-	*/
+	 * Returns the width in pixels of the tile.
+	 *
+	 * @return	The width of the tile.
+	 */
 	int const GetWidth();
-	
+
 	/**
-	* Returns the height in pixels of the tile.
-	*/
+	 * Returns the height in pixels of the tile.
+	 *
+	 * @return	The height of the tile.
+	 */
 	int const GetHeight();
 
 	/**
-	* Sets the width in pixels of the tile.
-	* int width - the width of the tiles in pixels.
-	*/
+	 * Sets the width in pixels of the tile.
+	 *
+	 * @param	width	The new width of the tile in pixels.
+	 */
 	void SetWidth(int width);
 
 	/**
-	* Sets the height of the tile in pixels.
-	* int height - the height of the tile in pixels.
-	*/
+	 * Sets the height of the tile in pixels.
+	 *
+	 * @param	height	The height of the tile in pixels.
+	 */
 	void SetHeight(int height);
 
 	/**
-	* Returns the x, y pair of cached indices of the tile in an array of tiles.
-	*/
+	 * Returns the x, y pair of cached indices of the tile in an array of tiles.
+	 *
+	 * @return	The x y indicies.
+	 */
 	std::pair<int, int> GetIndices();
 
 	/**
-	* Sets the indices of the tile.
-	* int x - the x index.
-	* int y - the y index.
-	*/
+	 * Sets the indices of the tile of where it is placed in the level.
+	 *
+	 * @param	x	The x index.
+	 * @param	y	The y index.
+	 */
 	void SetIndices(int x, int y);
 
 	/**
-	* Returns the world position (x, y) of the top left corner of the tile.
-	* Calculated using x * width, y * height.
-	*/
+	 * Returns the world position (x, y) of the top left corner of the tile. Calculated using x *
+	 * width, y * height.
+	 *
+	 * @return	The world position of the tile.
+	 */
 	std::pair<int, int> GetWorldPosition();
 
 private:
-	/**
-	* The width of the tile in pixels.
-	*/
+	/** The width of the tile in pixels. */
 	int _width;
 
-	/**
-	* The height of the tile in pixels.
-	*/
+	/** The height of the tile in pixels. */
 	int _height;
 
-	/**
-	* The x index of the tile in an array of tiles (cached).
-	*/
+	/** The x index of the tile in an array of tiles (cached). */
 	int _xIndex;
 
-	/**
-	* The y index of the tile in an array of tiles (cached).
-	*/
+	/** The y index of the tile in an array of tiles (cached). */
 	int _yIndex;
 
-	/**
-	* The default width in pixels of the tile.
-	*/
+	/** The default width in pixels of the tile. */
 	const static int DEFAULT_TILE_WIDTH = 64;
 
-	/**
-	* The default height in pixels of the tile.
-	*/
+	/** The default height in pixels of the tile. */
 	const static int DEFAULT_TILE_HEIGHT = 64;
 };

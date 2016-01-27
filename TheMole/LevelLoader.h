@@ -11,32 +11,33 @@
 #include "Tiles/TileBlank.h"
 #include "Tiles/TileSpike.h"
 
-/**
-* LevelLoader.h
-* Loads a level from a text file and returns a vector of tiles that represent the level.
-*/
+/** Loads a level from a text file and returns a vector of tiles that represent the level. */
 class LevelLoader
 {
 public:
 
-	/**
-	*Default Constructor.
-	*/
+	/** Default Constructor. */
 	LevelLoader() {}
 
 	/**
-	* Loads in the level and returns an array of tiles.
-	* string level_path - the path to the file that contains the level.
-	*/
+	 * Loads in the level and returns an array of tiles. 
+	 *
+	 * @param	level_path	Full pathname of the level file.
+	 *
+	 * @return	null if it fails, else the level.
+	 */
 	std::vector<std::vector<Tile*>> LoadLevel(std::string level_path);
 
 private:
 
 	/**
-	* Returns a new tile based on the character passed to it.
-	* char tile - the type of tile to be created.
-	* int x - the x index of the tile.
-	* int y - the y index of the tile.
-	*/
+	 * Returns a new tile based on the character passed to it.
+	 *
+	 * @param	tile	The type of tile to be created.
+	 * @param	x   	The x index into the level.
+	 * @param	y   	The y index into the level.
+	 *
+	 * @return	null if it fails, else the new tile.
+	 */
 	Tile* CreateTile(char tile, int x, int y);
 };
