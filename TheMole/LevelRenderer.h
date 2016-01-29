@@ -30,7 +30,7 @@ public:
 	 *
 	 * @param [in,out]	level	The level to be rendered.
 	 */
-	void RenderLevel(Level & level);
+	void RenderLevel(std::shared_ptr<Level> level);
 
 private:
 

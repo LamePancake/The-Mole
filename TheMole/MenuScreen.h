@@ -1,5 +1,8 @@
 #pragma once
 #include "Screen.h"
+#include "LevelLoader.h"
+#include "Level.h"
+#include "LevelRenderer.h"
 
 #define NUM_MENU_ITEMS 3
 
@@ -19,4 +22,7 @@ private:
 	SDL2pp::Texture* _settings;
 	SDL2pp::Texture* _quit;
 	Uint8* _prevKeyState;
+	LevelLoader _levelLoader;
+	LevelRenderer _levelRenderer;
+	std::shared_ptr<Level> _levelOne;
 };

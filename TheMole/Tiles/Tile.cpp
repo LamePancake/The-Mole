@@ -30,9 +30,9 @@ void Tile::SetHeight(int height)
 	_height = height;
 }
 
-std::pair<int, int> Tile::GetIndices()
+SDL2pp::Point& Tile::GetIndices()
 {
-	return std::pair<int, int>(_xIndex, _yIndex);
+	return SDL2pp::Point(_xIndex, _yIndex);
 }
 
 void Tile::SetIndices(int x, int y)
@@ -41,8 +41,8 @@ void Tile::SetIndices(int x, int y)
 	_yIndex = y;
 }
 
-std::pair<int, int> Tile::GetWorldPosition()
+SDL2pp::Point& Tile::GetWorldPosition()
 {
-	return std::pair<int, int>(_xIndex * _width, _yIndex * _height);
+	return SDL2pp::Point(_xIndex * _width, _yIndex * _height);
 }
 

@@ -19,6 +19,10 @@ int MenuScreen::Load(GameManager& manager) {
 	_prevKeyState = (Uint8*)std::malloc(sizeof(Uint8) * SDL_NUM_SCANCODES);
 	std::memcpy(_prevKeyState, SDL_GetKeyboardState, sizeof(Uint8) * SDL_NUM_SCANCODES);
 
+	// Load level one in order to render
+	_levelOne = _levelLoader.LoadLevel(".\\Assets\\Levels\\den_level.txt");
+	_levelRenderer.Load(manager);
+
 	return SCREEN_LOAD_SUCCESS;
 }
 
@@ -65,6 +69,9 @@ void MenuScreen::Draw() {
 	rend.SetDrawColor(100, 100, 100, 255);
 	rend.Clear();
 	rend.Copy(*_menuItems[_curMenuItem], NullOpt, NullOpt);
+	
+	_levelRenderer.RenderLevel(_levelOne);
+
 	rend.Present();
 }
 

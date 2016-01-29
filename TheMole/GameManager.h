@@ -5,9 +5,6 @@
 #include <memory>
 #include <SDL2pp\SDL2pp.hh>
 #include "Screen.h"
-#include "LevelLoader.h"
-#include "Level.h"
-#include "LevelRenderer.h"
 #include <vector>
 
 class GameManager {

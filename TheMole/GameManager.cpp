@@ -59,13 +59,6 @@ void GameManager::Loop(string& startScreen) {
 	int dt = 0;
 	int updateResult;
 
-	// Loads a test level
-	//LevelLoader l;
-	//std::shared_ptr<Level> testLevel = l.LoadLevel("Assets//Levels//den_level.txt");
-
-	//LevelRenderer l2;
-	//l2.Load(*this);
-
 	while (true) {
 		// Perform the update
 		newTime = SDL_GetTicks();

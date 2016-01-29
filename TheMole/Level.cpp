@@ -61,9 +61,9 @@ int Level::GetStoneSize() const
 	return _stoneTiles.size();
 }
 
-std::pair<int, int>& Level::GetLevelSize() const
+SDL2pp::Point& Level::GetLevelSize() const
 {
-	return std::pair<int, int>(_level.size(), _level[0].size());
+	return SDL2pp::Point(_level[0].size(), _level.size());
 }
 
 std::shared_ptr<Tile> Level::GetBlankTile(int & idx)

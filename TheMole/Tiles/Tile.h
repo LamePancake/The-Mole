@@ -1,5 +1,5 @@
 #pragma once
-#include <tuple>
+#include <SDL2pp\SDL2pp.hh>
 
 /** Represents an abstract tile in in the level. */
 class Tile
@@ -69,7 +69,7 @@ public:
 	 *
 	 * @return	The x y indicies.
 	 */
-	std::pair<int, int> GetIndices();
+	SDL2pp::Point& GetIndices();
 
 	/**
 	 * Sets the indices of the tile of where it is placed in the level.
@@ -85,7 +85,7 @@ public:
 	 *
 	 * @return	The world position of the tile.
 	 */
-	std::pair<int, int> GetWorldPosition();
+	SDL2pp::Point& GetWorldPosition();
 
 private:
 	/** The width of the tile in pixels. */

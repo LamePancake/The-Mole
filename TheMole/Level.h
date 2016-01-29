@@ -100,7 +100,7 @@ public:
 	*
 	* @return	The level array size.
 	*/
-	std::pair<int, int> & GetLevelSize() const;
+	SDL2pp::Point & GetLevelSize() const;
 
 	/**
 	 * Gets a particular blank tile.
