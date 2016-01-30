@@ -5,12 +5,20 @@
 SimpleAgent::SimpleAgent()
 {
 	_health = 100;
+	_position = Vector2(0.0f, 0.0f);
 }
 
 
 SimpleAgent::~SimpleAgent()
 {
 }
+
+SimpleAgent::SimpleAgent(Vector2 position)
+{
+	_health = 100;
+	_position = position;
+}
+
 
 void SimpleAgent::Update()
 {
@@ -41,4 +49,14 @@ void SimpleAgent::Update()
 		// So for now we're going to do it the dirty way
 		exit(0);
 	}*/
+}
+
+void SimpleAgent::SetPosition(Vector2 &newPos)
+{
+	_position = newPos;
+}
+
+Vector2 SimpleAgent::GetPosition()
+{
+	return _position;
 }

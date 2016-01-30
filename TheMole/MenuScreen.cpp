@@ -1,7 +1,7 @@
 #include <cstring>
 #include "GameManager.h"
 #include "MenuScreen.h"
-#include "SimpleAgent.h"
+#include "Vector2.h"
 
 using namespace SDL2pp;
 
@@ -40,8 +40,10 @@ int MenuScreen::Update(double elapsedSecs) {
 		if (_curMenuItem < 0) _curMenuItem = NUM_MENU_ITEMS - 1;
 	}
 
-	SimpleAgent testAI;
+
 	testAI.Update();
+	testAI.SetPosition(Vector2((testAI.GetPosition().GetX() + 0.1f), testAI.GetPosition().GetY()));
+	std::cout << testAI.GetPosition().GetX() << ", " << testAI.GetPosition().GetY() << "\n";
 
 	// We selected a menu item; do the appropriate thing
 	if (keys[SDL_SCANCODE_RETURN]) {

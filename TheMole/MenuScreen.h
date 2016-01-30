@@ -3,6 +3,7 @@
 #include "LevelLoader.h"
 #include "Level.h"
 #include "LevelRenderer.h"
+#include "SimpleAgent.h"
 
 #define NUM_MENU_ITEMS 3
 
@@ -25,4 +26,5 @@ private:
 	LevelLoader _levelLoader;
 	LevelRenderer _levelRenderer;
 	std::shared_ptr<Level> _levelOne;
+	SimpleAgent testAI;
 };
