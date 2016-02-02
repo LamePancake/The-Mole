@@ -1,9 +1,12 @@
 #ifndef SIMPLEAGENT_H
 #define SIMPLEAGENT_H
+class AABB;
 #include <SDL2pp\SDL2pp.hh>
 #include <iostream>
 #include "Vector2.h"
 #include "GameManager.h"
+#include "AABB.h"
+
 #pragma once
 
 /**
@@ -14,8 +17,16 @@ class SimpleAgent
 public:
 	SimpleAgent();
 	~SimpleAgent();
-	SimpleAgent(Vector2 position);
-	void Load(GameManager & _mgr);
+	/**
+	* Constructor that initializes _position to the input parameter
+	*
+	* @param the starting position of the agent
+	*/
+	SimpleAgent(Vector2 position, GameManager & manager);
+
+	/**
+	* Clear up memory used for loading the texture
+	**/
 	void Unload();
 
 	/**
@@ -31,11 +42,26 @@ public:
 
 	// Returns position of the agent.
 	Vector2 GetPosition();
+
+	/**
+	* Check collision against another SimpleAgent
+	*
+	* @return true if collided, false if not
+	**/
+	bool CollisionCheck(SimpleAgent & otherAI);
+
+	/**
+	* Return AABB of the agent
+	*
+	* @retun _aabb
+	**/
+	AABB GetAABB();
 private:
 	size_t _health;
 	float _speed;
 	Vector2 _position;
-	SDL2pp::Texture* _spriteAI;
+	AABB _aabb;
+	SDL2pp::Texture* _sprite;
 	GameManager* _mgr;
 };
 #endif

@@ -19,10 +19,8 @@ int MenuScreen::Load(GameManager& manager) {
 	_prevKeyState = (Uint8*)std::malloc(sizeof(Uint8) * SDL_NUM_SCANCODES);
 	std::memcpy(_prevKeyState, SDL_GetKeyboardState, sizeof(Uint8) * SDL_NUM_SCANCODES);
 
-	_testAI1 = SimpleAgent(Vector2(10.0f, 0.0f));
-	_testAI1.Load(manager);
-	_testAI2 = SimpleAgent(Vector2(-10.0f, 0.0f));
-	_testAI2.Load(manager);
+	_testAI1 = SimpleAgent(Vector2(100.0f, 0.0f), manager);
+	_testAI2 = SimpleAgent(Vector2(-100.0f, 0.0f), manager);
 
 	// Load level one in order to render
 	_levelOne = _levelLoader.LoadLevel(".\\Assets\\Levels\\den_level.txt");
@@ -53,6 +51,11 @@ int MenuScreen::Update(double elapsedSecs) {
 	_testAI2.Update();
 	_testAI2.SetPosition(Vector2((_testAI2.GetPosition().GetX() + 0.1f), _testAI2.GetPosition().GetY()));
 	std::cout << _testAI2.GetPosition().GetX() << ", " << _testAI2.GetPosition().GetY() << "AI2\n";
+
+	if (_testAI1.CollisionCheck(_testAI2))
+	{
+		std::cout << "TITANIC HIT THE ICEBERG\n";
+	}
 
 	// We selected a menu item; do the appropriate thing
 	if (keys[SDL_SCANCODE_RETURN]) {

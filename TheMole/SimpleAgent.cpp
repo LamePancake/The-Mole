@@ -13,27 +13,24 @@ SimpleAgent::~SimpleAgent()
 {
 }
 
-SimpleAgent::SimpleAgent(Vector2 position)
+SimpleAgent::SimpleAgent(Vector2 position, GameManager & manager)
 {
 	_health = 100;
 	_position = position;
-}
-
-void SimpleAgent::Load(GameManager & manager)
-{
 	_mgr = &manager;
 	// This is temporary so we can test whether AABB can be created from texture dimensions
-	_spriteAI = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\block_dirt.png");
+	_sprite = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\block_dirt.png");
+	_aabb = AABB(*_sprite, *this);
 }
 
 void SimpleAgent::Unload()
 {
-	delete _spriteAI;
+	delete _sprite;
 }
 
 SDL2pp::Texture* SimpleAgent::GetTexture()
 {
-	return _spriteAI;
+	return _sprite;
 }
 
 void SimpleAgent::Update()
@@ -52,6 +49,8 @@ void SimpleAgent::Update()
 			std::cout << "Patrolling";
 		}
 	}
+
+	_aabb.UpdatePosition(*this);
 	/*
 	switch (keys) {
 	case 0:
@@ -75,4 +74,14 @@ void SimpleAgent::SetPosition(Vector2 &newPos)
 Vector2 SimpleAgent::GetPosition()
 {
 	return _position;
+}
+
+bool SimpleAgent::CollisionCheck(SimpleAgent &otherAI)
+{
+	return _aabb.CheckCollision(otherAI.GetAABB());
+}
+
+AABB SimpleAgent::GetAABB()
+{
+	return _aabb;
 }

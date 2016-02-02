@@ -1,5 +1,5 @@
 #include "AABB.h"
-
+#include "SimpleAgent.h"
 
 
 AABB::AABB()
@@ -11,7 +11,7 @@ AABB::~AABB()
 {
 }
 
-AABB::AABB(SDL2pp::Texture srcImg, SimpleAgent ai)
+AABB::AABB(SDL2pp::Texture & srcImg, SimpleAgent & ai)
 {
 	// This sets _x and _y as the top left corner of the box
 	_x = ai.GetPosition().GetX() - (srcImg.GetWidth() / 2);
@@ -38,7 +38,7 @@ bool AABB::CheckCollision(AABB otherBox)
 	}
 }
 
-void AABB::UpdatePosition(SimpleAgent ai)
+void AABB::UpdatePosition(SimpleAgent & ai)
 {
 	_x = ai.GetPosition().GetX() - (_width / 2);
 	_y = ai.GetPosition().GetY() - (_height / 2);
