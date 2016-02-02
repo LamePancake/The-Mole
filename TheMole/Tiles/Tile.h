@@ -69,7 +69,7 @@ public:
 	 *
 	 * @return	The x y indicies.
 	 */
-	SDL2pp::Point& GetIndices();
+	SDL2pp::Point GetIndices();
 
 	/**
 	 * Sets the indices of the tile of where it is placed in the level.
@@ -85,7 +85,7 @@ public:
 	 *
 	 * @return	The world position of the tile.
 	 */
-	SDL2pp::Point& GetWorldPosition();
+	SDL2pp::Point GetWorldPosition();
 
 private:
 	/** The width of the tile in pixels. */

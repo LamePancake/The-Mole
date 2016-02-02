@@ -100,7 +100,7 @@ public:
 	*
 	* @return	The level array size.
 	*/
-	SDL2pp::Point & GetLevelSize() const;
+	SDL2pp::Point GetLevelSize() const;
 
 	/**
 	 * Gets a particular blank tile.
@@ -109,7 +109,7 @@ public:
 	 *
 	 * @return	The blank tile at that index.
 	 */
-	std::shared_ptr<Tile> GetBlankTile(int & idx);
+	std::shared_ptr<Tile> GetBlankTile(size_t idx);
 	
 	/**
 	* Gets a particular dirt tile.
@@ -118,7 +118,7 @@ public:
 	*
 	* @return	The dirt tile at that index.
 	*/
-	std::shared_ptr<Tile> GetDirtTile(int & idx);
+	std::shared_ptr<Tile> GetDirtTile(size_t idx);
 	
 	/**
 	* Gets a particular metal tile.
@@ -127,7 +127,7 @@ public:
 	*
 	* @return	The metal tile at that index.
 	*/
-	std::shared_ptr<Tile> GetMetalTile(int & idx);
+	std::shared_ptr<Tile> GetMetalTile(size_t idx);
 	
 	/**
 	* Gets a particular spike tile.
@@ -136,7 +136,7 @@ public:
 	*
 	* @return	The spike tile at that index.
 	*/
-	std::shared_ptr<Tile> GetSpikeTile(int & idx);
+	std::shared_ptr<Tile> GetSpikeTile(size_t idx);
 	
 	/**
 	* Gets a particular stone tile.
@@ -145,7 +145,7 @@ public:
 	*
 	* @return	The stone tile at that index.
 	*/
-	std::shared_ptr<Tile> GetStoneTile(int & idx);
+	std::shared_ptr<Tile> GetStoneTile(size_t idx);
 
 	/**
 	* Gets a particular tile from the level.
@@ -154,7 +154,7 @@ public:
 	*
 	* @return	The level tile at that index.
 	*/
-	std::shared_ptr<Tile> GetTileFromLevel(int & x, int & y);
+	std::shared_ptr<Tile> GetTileFromLevel(size_t x, size_t y);
 
 private:
 

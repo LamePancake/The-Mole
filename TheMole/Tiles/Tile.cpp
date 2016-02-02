@@ -30,7 +30,7 @@ void Tile::SetHeight(int height)
 	_height = height;
 }
 
-SDL2pp::Point& Tile::GetIndices()
+SDL2pp::Point Tile::GetIndices()
 {
 	return SDL2pp::Point(_xIndex, _yIndex);
 }
@@ -41,7 +41,7 @@ void Tile::SetIndices(int x, int y)
 	_yIndex = y;
 }
 
-SDL2pp::Point& Tile::GetWorldPosition()
+SDL2pp::Point Tile::GetWorldPosition()
 {
 	return SDL2pp::Point(_xIndex * _width, _yIndex * _height);
 }

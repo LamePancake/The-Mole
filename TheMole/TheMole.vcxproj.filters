@@ -191,5 +191,14 @@
     <ClInclude Include="AABB.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TileGoal.h">
+      <Filter>Header Files\Tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="TileCollectible.h">
+      <Filter>Header Files\Tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="TileEnemy.h">
+      <Filter>Header Files\Tiles</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -56,6 +56,18 @@
 					level->AddBlank(tile);
 					break;
 				}
+				case 'E':
+				{
+					break;
+				}
+				case 'G':
+				{
+					break;
+				}
+				case 'C':
+				{
+					break;
+				}
 				default:
 				{
 					tile = std::make_shared<TileBlank>(levelWidth, levelHeight);

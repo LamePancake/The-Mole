@@ -61,38 +61,38 @@ int Level::GetStoneSize() const
 	return _stoneTiles.size();
 }
 
-SDL2pp::Point& Level::GetLevelSize() const
+SDL2pp::Point Level::GetLevelSize() const
 {
 	return SDL2pp::Point(_level[0].size(), _level.size());
 }
 
-std::shared_ptr<Tile> Level::GetBlankTile(int & idx)
+std::shared_ptr<Tile> Level::GetBlankTile(size_t idx)
 {
 
 	return idx >= _blankTiles.size() ? nullptr : _blankTiles[idx];
 }
 
-std::shared_ptr<Tile> Level::GetDirtTile(int & idx)
+std::shared_ptr<Tile> Level::GetDirtTile(size_t idx)
 {
 	return idx >= _dirtTiles.size() ? nullptr : _dirtTiles[idx];
 }
 
-std::shared_ptr<Tile> Level::GetMetalTile(int & idx)
+std::shared_ptr<Tile> Level::GetMetalTile(size_t idx)
 {
 	return idx >= _metalTiles.size() ? nullptr : _metalTiles[idx];
 }
 
-std::shared_ptr<Tile> Level::GetSpikeTile(int & idx)
+std::shared_ptr<Tile> Level::GetSpikeTile(size_t idx)
 {
 	return idx >= _spikeTiles.size() ? nullptr : _spikeTiles[idx];
 }
 
-std::shared_ptr<Tile> Level::GetStoneTile(int & idx)
+std::shared_ptr<Tile> Level::GetStoneTile(size_t idx)
 {
 	return idx >= _stoneTiles.size() ? nullptr : _stoneTiles[idx];
 }
 
-std::shared_ptr<Tile> Level::GetTileFromLevel(int & x, int & y)
+std::shared_ptr<Tile> Level::GetTileFromLevel(size_t x, size_t y)
 {
 	if (y >= _level.size() || x > _level[y].size())
 		return nullptr;
