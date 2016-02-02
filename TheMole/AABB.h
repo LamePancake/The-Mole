@@ -7,6 +7,7 @@ class SimpleAgent;
 class AABB
 {
 public:
+	
 	AABB();
 	~AABB();
 	/**
