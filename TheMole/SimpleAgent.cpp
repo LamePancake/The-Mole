@@ -13,8 +13,9 @@ SimpleAgent::~SimpleAgent()
 {
 }
 
-SimpleAgent::SimpleAgent(Vector2 position, GameManager & manager)
+SimpleAgent::SimpleAgent(Vector2 position, GameManager & manager, Vector2 spd)
 {
+	_speed = spd;
 	_health = 100;
 	_position = position;
 	_mgr = &manager;
@@ -51,6 +52,7 @@ void SimpleAgent::Update()
 	}
 
 	_aabb.UpdatePosition(*this);
+	UpdatePosition();
 	/*
 	switch (keys) {
 	case 0:
@@ -66,14 +68,20 @@ void SimpleAgent::Update()
 	}*/
 }
 
-void SimpleAgent::SetPosition(Vector2 &newPos)
+void SimpleAgent::UpdatePosition()
 {
-	_position = newPos;
+	_position.SetX(_position.GetX() + _speed.GetX());
+	_position.SetY(_position.GetY() + _speed.GetY());
 }
 
 Vector2 SimpleAgent::GetPosition()
 {
 	return _position;
+}
+
+void SimpleAgent::SetSpeed(Vector2 spd)
+{
+	_speed = spd;
 }
 
 bool SimpleAgent::CollisionCheck(SimpleAgent &otherAI)
