@@ -3,6 +3,7 @@
 #include <SDL2pp\SDL2pp.hh>
 #include <iostream>
 #include "Vector2.h"
+#include "GameManager.h"
 #pragma once
 
 /**
@@ -14,6 +15,14 @@ public:
 	SimpleAgent();
 	~SimpleAgent();
 	SimpleAgent(Vector2 position);
+	void Load(GameManager & _mgr);
+	void Unload();
+
+	/**
+	* Returns in the textures needed to render the AI.
+	*/
+	SDL2pp::Texture* GetTexture();
+
 	// All the state changing stuff happens in here.
 	void Update();
 
@@ -26,5 +35,7 @@ private:
 	size_t _health;
 	float _speed;
 	Vector2 _position;
+	SDL2pp::Texture* _spriteAI;
+	GameManager* _mgr;
 };
 #endif

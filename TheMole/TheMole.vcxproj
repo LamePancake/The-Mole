@@ -131,6 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AABB.cpp" />
     <ClCompile Include="Action.cpp" />
     <ClCompile Include="Agent.cpp" />
     <ClCompile Include="AttackAction.cpp" />
@@ -159,6 +160,7 @@
     <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AABB.h" />
     <ClInclude Include="Action.h" />
     <ClInclude Include="Agent.h" />
     <ClInclude Include="AttackAction.h" />

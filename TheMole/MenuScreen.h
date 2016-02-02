@@ -26,5 +26,6 @@ private:
 	LevelLoader _levelLoader;
 	LevelRenderer _levelRenderer;
 	std::shared_ptr<Level> _levelOne;
-	SimpleAgent testAI;
+	SimpleAgent _testAI1;
+	SimpleAgent _testAI2;
 };
