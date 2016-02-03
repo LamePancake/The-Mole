@@ -6,25 +6,41 @@ class Tile
 {
 public:
 
+	/** Values that represent tile types. */
+	enum TileType: char
+	{
+		blank       = ' ',
+		stone       = 'S',
+		dirt        = 'D',
+		spike       = 'P',
+		metal       = 'M',
+		enemy       = 'E',
+		goal        = 'G',
+		collectible = 'C',
+	};
+
 	/** Default constuctor. Initilizes everying to default values. */
 	Tile(): _width(DEFAULT_TILE_WIDTH), 
 		    _height(DEFAULT_TILE_HEIGHT),
 			_xIndex(0),
-			_yIndex(0) {}
+			_yIndex(0),
+			_id(blank) {}
 
 	/**
 	 * Constructor.
 	 *
 	 * @param	x	  	The x index. Cached x index into the level array.
-	 * @param	y	  	The y index. Cached y index into level array
+	 * @param	y	  	The y index. Cached y index into level array.
+	 * @param	id	  	The identifier for the type of tile.
 	 * @param	width 	The width of the tile.
 	 * @param	height	The height of the tile.
 	 */
-	Tile(int x, int y, int width = DEFAULT_TILE_WIDTH, int height = DEFAULT_TILE_HEIGHT ) : 
+	Tile(int x, int y, char id, int width = DEFAULT_TILE_WIDTH, int height = DEFAULT_TILE_HEIGHT ) : 
 		_width(width),
 		_height(height),
 		_xIndex(x),
-	    _yIndex(y) {}
+	    _yIndex(y),
+		_id(id) {}
 
 	/** OVERRIDE. Handles drawing the tile. */
 	virtual void Draw();
@@ -41,14 +57,14 @@ public:
 	 *
 	 * @return	The width of the tile.
 	 */
-	int const GetWidth();
+	int const GetWidth() const;
 
 	/**
 	 * Returns the height in pixels of the tile.
 	 *
 	 * @return	The height of the tile.
 	 */
-	int const GetHeight();
+	int const GetHeight() const;
 
 	/**
 	 * Sets the width in pixels of the tile.
@@ -69,7 +85,7 @@ public:
 	 *
 	 * @return	The x y indicies.
 	 */
-	SDL2pp::Point& GetIndices();
+	SDL2pp::Point GetIndices() const;
 
 	/**
 	 * Sets the indices of the tile of where it is placed in the level.
@@ -85,7 +101,21 @@ public:
 	 *
 	 * @return	The world position of the tile.
 	 */
-	SDL2pp::Point& GetWorldPosition();
+	SDL2pp::Point GetWorldPosition();
+
+	/**
+	 * Gets the identifier for the type of tile this is.
+	 *
+	 * @return	The identifier.
+	 */
+	char GetID() const;
+
+	/**
+	 * Sets an identifier for the type of tile this is.
+	 *
+	 * @param	id	The identifier.
+	 */
+	void SetID(char id);
 
 private:
 	/** The width of the tile in pixels. */
@@ -99,6 +129,9 @@ private:
 
 	/** The y index of the tile in an array of tiles (cached). */
 	int _yIndex;
+
+	/** The identifier fo the type of tile. */
+	char _id;
 
 	/** The default width in pixels of the tile. */
 	const static int DEFAULT_TILE_WIDTH = 64;

@@ -132,11 +132,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AABB.cpp" />
-    <ClCompile Include="Action.cpp" />
-    <ClCompile Include="Agent.cpp" />
-    <ClCompile Include="AttackAction.cpp" />
-    <ClCompile Include="AttackCondition.cpp" />
-    <ClCompile Include="Condition.cpp" />
     <ClCompile Include="DenLevelScreen.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Input.cpp" />
@@ -145,49 +140,22 @@
     <ClCompile Include="LevelRenderer.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MenuScreen.cpp" />
-    <ClCompile Include="PatrolAction.cpp" />
-    <ClCompile Include="PatrolCondition.cpp" />
-    <ClCompile Include="PrintAction.cpp" />
     <ClCompile Include="SimpleAgent.cpp" />
-    <ClCompile Include="State.cpp" />
-    <ClCompile Include="StateMachine.cpp" />
-    <ClCompile Include="Tiles\Tile.cpp" />
-    <ClCompile Include="Tiles\TileBlank.cpp" />
-    <ClCompile Include="Tiles\TileDirt.cpp" />
-    <ClCompile Include="Tiles\TileMetal.cpp" />
-    <ClCompile Include="Tiles\TileSpike.cpp" />
-    <ClCompile Include="Tiles\TileStone.cpp" />
-    <ClCompile Include="Transition.cpp" />
+    <ClCompile Include="Tile.cpp" />
     <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AABB.h" />
-    <ClInclude Include="Action.h" />
-    <ClInclude Include="Agent.h" />
-    <ClInclude Include="AttackAction.h" />
-    <ClInclude Include="AttackCondition.h" />
-    <ClInclude Include="Condition.h" />
     <ClInclude Include="DenLevelScreen.h" />
+    <ClInclude Include="Tile.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelLoader.h" />
     <ClInclude Include="LevelRenderer.h" />
     <ClInclude Include="MenuScreen.h" />
-    <ClInclude Include="PatrolAction.h" />
-    <ClInclude Include="PatrolCondition.h" />
-    <ClInclude Include="PrintAction.h" />
     <ClInclude Include="Screen.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="SimpleAgent.h" />
-    <ClInclude Include="State.h" />
-    <ClInclude Include="StateMachine.h" />
-    <ClInclude Include="Tiles\Tile.h" />
-    <ClInclude Include="Tiles\TileBlank.h" />
-    <ClInclude Include="Tiles\TileDirt.h" />
-    <ClInclude Include="Tiles\TileMetal.h" />
-    <ClInclude Include="Tiles\TileSpike.h" />
-    <ClInclude Include="Tiles\TileStone.h" />
-    <ClInclude Include="Transition.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Input.h" />

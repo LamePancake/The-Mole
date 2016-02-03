@@ -18,7 +18,6 @@ int MenuScreen::Load() {
 
 	_prevKeyState = (Uint8*)std::malloc(sizeof(Uint8) * SDL_NUM_SCANCODES);
 	std::memcpy(_prevKeyState, SDL_GetKeyboardState(nullptr), sizeof(Uint8) * SDL_NUM_SCANCODES);
-
 	return SCREEN_LOAD_SUCCESS;
 }
 

@@ -1,11 +1,8 @@
 #include "SimpleAgent.h"
-
-
+#include "Tile.h"
 
 SimpleAgent::SimpleAgent()
 {
-	_health = 100;
-	_position = Vector2(0.0f, 0.0f);
 }
 
 
@@ -13,8 +10,9 @@ SimpleAgent::~SimpleAgent()
 {
 }
 
-SimpleAgent::SimpleAgent(Vector2 position, GameManager & manager)
+SimpleAgent::SimpleAgent(Vector2 position, GameManager & manager, Vector2 spd)
 {
+	_speed = spd;
 	_health = 100;
 	_position = position;
 	_mgr = &manager;
@@ -33,24 +31,24 @@ SDL2pp::Texture* SimpleAgent::GetTexture()
 	return _sprite;
 }
 
-void SimpleAgent::Update()
+void SimpleAgent::Update(std::shared_ptr<Level> & level)
 {
 	// While the AI is alive, do stuff.
+
+	const Uint8* keys = SDL_GetKeyboardState(nullptr);
+
+	if (_health <= 0)
+	{
+		//std::cout << "Dead\n";
+	}
 	if (_health > 0)
 	{
-		const Uint8* keys = SDL_GetKeyboardState(nullptr);
-
-		if (keys[SDL_SCANCODE_O])
-		{
-			std::cout << "Attacking";
-		}
-		if (keys[SDL_SCANCODE_P])
-		{
-			std::cout << "Patrolling";
-		}
+		//std::cout << "Patrolling\n";
 	}
 
-	_aabb.UpdatePosition(*this);
+	//_aabb.UpdatePosition(*this);
+	UpdatePosition();
+	ScanNeighbouringTiles(level);
 	/*
 	switch (keys) {
 	case 0:
@@ -66,14 +64,21 @@ void SimpleAgent::Update()
 	}*/
 }
 
-void SimpleAgent::SetPosition(Vector2 &newPos)
+void SimpleAgent::UpdatePosition()
 {
-	_position = newPos;
+	_position.SetX(_position.GetX() + _speed.GetX());
+	_position.SetY(_position.GetY() + _speed.GetY());
+	std::cout << GetPosition().GetX() << ", " << GetPosition().GetY() << "AI1\n";
 }
 
 Vector2 SimpleAgent::GetPosition()
 {
 	return _position;
+}
+
+void SimpleAgent::SetSpeed(Vector2 spd)
+{
+	_speed = spd;
 }
 
 bool SimpleAgent::CollisionCheck(SimpleAgent &otherAI)
@@ -84,4 +89,28 @@ bool SimpleAgent::CollisionCheck(SimpleAgent &otherAI)
 AABB SimpleAgent::GetAABB()
 {
 	return _aabb;
+}
+
+void SimpleAgent::ScanNeighbouringTiles(std::shared_ptr<Level> & level)
+{
+	if ((int)_position.GetX() % 64 == 0)
+	{
+		int xInd = _position.GetX() / 64;
+		int yInd = _position.GetY() / 64;
+		
+		if (xInd + 1 < level->GetLevelSize().GetX() && _speed.GetX() > 0.0f)
+		{
+			if (level->GetTileFromLevel(xInd + 1, yInd)->GetID() != Tile::blank)
+			{
+				_speed.SetX(_speed.GetX() * -1.0f);
+			}
+		}
+		if (xInd - 1 > 0 && _speed.GetX() < 0.0f)
+		{
+			if (level->GetTileFromLevel(xInd - 1, yInd)->GetID() != Tile::blank)
+			{
+				_speed.SetX(_speed.GetX() * -1.0f);
+			}
+		}
+	}
 }
