@@ -41,13 +41,6 @@ public:
 	std::shared_ptr<Tile> GetTileFromLevel(size_t x, size_t y);
 
 	/**
-	 * Gets level  array size.
-	 *
-	 * @return	The level array size.
-	 */
-	SDL2pp::Point GetLevelSize() const;
-
-	/**
 	 * Stores the positions of a particular type of tile
 	 *
 	 * @param	key			The key.
