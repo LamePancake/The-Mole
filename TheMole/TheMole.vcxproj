@@ -140,16 +140,12 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MenuScreen.cpp" />
     <ClCompile Include="SimpleAgent.cpp" />
-    <ClCompile Include="Tiles\Tile.cpp" />
-    <ClCompile Include="Tiles\TileBlank.cpp" />
-    <ClCompile Include="Tiles\TileDirt.cpp" />
-    <ClCompile Include="Tiles\TileMetal.cpp" />
-    <ClCompile Include="Tiles\TileSpike.cpp" />
-    <ClCompile Include="Tiles\TileStone.cpp" />
+    <ClCompile Include="Tile.cpp" />
     <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AABB.h" />
+    <ClInclude Include="Tile.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelLoader.h" />
@@ -158,12 +154,6 @@
     <ClInclude Include="Screen.h" />
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="SimpleAgent.h" />
-    <ClInclude Include="Tiles\Tile.h" />
-    <ClInclude Include="Tiles\TileBlank.h" />
-    <ClInclude Include="Tiles\TileDirt.h" />
-    <ClInclude Include="Tiles\TileMetal.h" />
-    <ClInclude Include="Tiles\TileSpike.h" />
-    <ClInclude Include="Tiles\TileStone.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Input.h" />

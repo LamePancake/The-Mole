@@ -2,7 +2,7 @@
 #include "Level.h"
 #include "GameManager.h"
 #include <SDL2pp\SDL2pp.hh>
-#include <vector>
+#include <map>
 #include <memory>
 
 
@@ -34,20 +34,7 @@ public:
 
 private:
 
-	/** The blank tile texture. */
-	SDL2pp::Texture* _blank;
-
-	/** The dirt tile texture. */
-	SDL2pp::Texture* _dirt;
-
-	/** The metal tile texture. */
-	SDL2pp::Texture* _metal;
-
-	/** The spike tile texture. */
-	SDL2pp::Texture* _spike;
-
-	/** The stone tile texture. */
-	SDL2pp::Texture* _stone;
+	std::map<char, SDL2pp::Texture*> _tileTextures;
 
 	/** Reference to the game manager. */
 	GameManager* _mgr;

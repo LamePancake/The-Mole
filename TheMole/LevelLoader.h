@@ -5,12 +5,7 @@
 #include <vector>
 #include <memory>
 
-#include "Tiles/Tile.h"
-#include "Tiles/TileDirt.h"
-#include "Tiles/TileMetal.h"
-#include "Tiles/TileStone.h"
-#include "Tiles/TileBlank.h"
-#include "Tiles/TileSpike.h"
+#include "Tile.h"
 #include "Level.h"
 
 /** Loads a level from a text file and returns a vector of tiles that represent the level. */
