@@ -23,6 +23,7 @@
 		{
 			std::shared_ptr<Tile> tile = std::make_shared<Tile>(levelWidth, levelHeight, toupper((*it)));
 			level->AddTileToLevel(tile, levelHeight); 
+			level->AddPosiition(toupper((*it)), SDL2pp::Point(levelWidth, levelHeight));
 			levelWidth++;
 		}
 

@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <memory>
-#include <tuple>
+#include <map>
 
 #include "Tile.h"
 
@@ -40,7 +40,36 @@ public:
 	*/
 	std::shared_ptr<Tile> GetTileFromLevel(size_t x, size_t y);
 
+	/**
+	 * Stores the positions of a particular type of tile
+	 *
+	 * @param	key			The key.
+	 * @param	position	The position.
+	 */
+	void AddPosiition(char key, SDL2pp::Point position);
+
+	/**
+	 * Gets number positions stored for a particular type of tile.
+	 *
+	 * @param	key	The key.
+	 *
+	 * @return	The number positions.
+	 */
+	int GetNumPositions(char key);
+
+	/**
+	 * Gets a position for a particular type of tile.
+	 *
+	 * @param	key	The key.
+	 * @param	idx	The index.
+	 *
+	 * @return	The position.
+	 */
+	SDL2pp::Point GetPosition(char key, size_t idx);
+
 private:
+
+	std::map<char, std::vector<SDL2pp::Point>> _tilePositions;
 
 	/** The level. */
 	std::vector<std::vector<std::shared_ptr<Tile>>> _level;

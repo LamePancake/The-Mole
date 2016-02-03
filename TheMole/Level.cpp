@@ -22,3 +22,18 @@ std::shared_ptr<Tile> Level::GetTileFromLevel(size_t x, size_t y)
 		return nullptr;
 	return _level[y][x];
 }
+
+void Level::AddPosiition(char key, SDL2pp::Point position)
+{
+	_tilePositions[key].push_back(position);
+}
+
+int Level::GetNumPositions(char key)
+{
+	return _tilePositions.size();
+}
+
+SDL2pp::Point Level::GetPosition(char key, size_t idx)
+{
+	return _tilePositions[key][idx];
+}
