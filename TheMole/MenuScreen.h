@@ -1,15 +1,13 @@
 #pragma once
 #include "Screen.h"
-#include "LevelLoader.h"
-#include "Level.h"
-#include "LevelRenderer.h"
-#include "SimpleAgent.h"
 
 #define NUM_MENU_ITEMS 3
 
+class GameManager;
+
 class MenuScreen : public Screen {
 public:
-	virtual int Load(GameManager& manager) override;
+	virtual int Load() override;
 	virtual int Update(double elasepdSecs) override;
 	virtual void Draw() override;
 	virtual void Unload() override;
@@ -23,9 +21,4 @@ private:
 	SDL2pp::Texture* _settings;
 	SDL2pp::Texture* _quit;
 	Uint8* _prevKeyState;
-	LevelLoader _levelLoader;
-	LevelRenderer _levelRenderer;
-	std::shared_ptr<Level> _levelOne;
-	SimpleAgent _testAI1;
-	SimpleAgent _testAI2;
 };

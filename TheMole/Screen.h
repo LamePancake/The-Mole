@@ -14,10 +14,9 @@ public:
 	 * Load any time-consuming stuff (e.g. textures, audio clips, etc.) here.
 	 * Note that the game manager isn't a singleton (it might become one later), so for now, be sure to save a (const) reference to it somewhere.
 	 *
-	 * @param manager A reference to the game manager controlling the game loop and screen transitions.
 	 * @return SCREEN_LOAD_SUCCESS or SCREEN_LOAD_FAILURE to indicate whether loading was successful. Not really used right now.
 	 */
-	virtual int Load(GameManager& manager) = 0;
+	virtual int Load() = 0;
 
 	/**
 	 * Updates the current screen.

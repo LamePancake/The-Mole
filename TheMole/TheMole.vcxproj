@@ -137,6 +137,7 @@
     <ClCompile Include="AttackAction.cpp" />
     <ClCompile Include="AttackCondition.cpp" />
     <ClCompile Include="Condition.cpp" />
+    <ClCompile Include="DenLevelScreen.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Level.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="AttackAction.h" />
     <ClInclude Include="AttackCondition.h" />
     <ClInclude Include="Condition.h" />
+    <ClInclude Include="DenLevelScreen.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelLoader.h" />

@@ -61,7 +61,7 @@ int Level::GetStoneSize() const
 	return _stoneTiles.size();
 }
 
-SDL2pp::Point& Level::GetLevelSize() const
+SDL2pp::Point Level::GetLevelSize() const
 {
 	return SDL2pp::Point(_level[0].size(), _level.size());
 }

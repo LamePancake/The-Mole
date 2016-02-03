@@ -5,8 +5,8 @@
 
 using namespace SDL2pp;
 
-int MenuScreen::Load(GameManager& manager) {
-	_mgr = &manager;	
+int MenuScreen::Load() {
+	_mgr = GameManager::GetInstance();	
 	_play = new Texture(_mgr->GetRenderer(), ".\\Assets\\GUI\\Main_Menu\\main_menu_play.png");
 	_quit = new Texture(_mgr->GetRenderer(), ".\\Assets\\GUI\\Main_Menu\\main_menu_quit.png");
 	_settings = new Texture(_mgr->GetRenderer(), ".\\Assets\\GUI\\Main_Menu\\main_menu_settings.png");
@@ -17,14 +17,7 @@ int MenuScreen::Load(GameManager& manager) {
 	_menuItems[2] = _quit;
 
 	_prevKeyState = (Uint8*)std::malloc(sizeof(Uint8) * SDL_NUM_SCANCODES);
-	std::memcpy(_prevKeyState, SDL_GetKeyboardState, sizeof(Uint8) * SDL_NUM_SCANCODES);
-
-	_testAI1 = SimpleAgent(Vector2(100.0f, 0.0f), manager);
-	_testAI2 = SimpleAgent(Vector2(-100.0f, 0.0f), manager);
-
-	// Load level one in order to render
-	_levelOne = _levelLoader.LoadLevel(".\\Assets\\Levels\\den_level.txt");
-	_levelRenderer.Load(manager);
+	std::memcpy(_prevKeyState, SDL_GetKeyboardState(nullptr), sizeof(Uint8) * SDL_NUM_SCANCODES);
 
 	return SCREEN_LOAD_SUCCESS;
 }
@@ -43,25 +36,11 @@ int MenuScreen::Update(double elapsedSecs) {
 		if (_curMenuItem < 0) _curMenuItem = NUM_MENU_ITEMS - 1;
 	}
 
-
-	_testAI1.Update();
-	_testAI1.SetPosition(Vector2((_testAI1.GetPosition().GetX() - 0.1f), _testAI1.GetPosition().GetY()));
-	std::cout << _testAI1.GetPosition().GetX() << ", " << _testAI1.GetPosition().GetY() << "AI1\n";
-
-	_testAI2.Update();
-	_testAI2.SetPosition(Vector2((_testAI2.GetPosition().GetX() + 0.1f), _testAI2.GetPosition().GetY()));
-	std::cout << _testAI2.GetPosition().GetX() << ", " << _testAI2.GetPosition().GetY() << "AI2\n";
-
-	if (_testAI1.CollisionCheck(_testAI2))
-	{
-		std::cout << "TITANIC HIT THE ICEBERG\n";
-	}
-
 	// We selected a menu item; do the appropriate thing
 	if (keys[SDL_SCANCODE_RETURN]) {
 		switch (_curMenuItem) {
 		case 0:
-			_mgr->SetNextScreen("level1");
+			_mgr->SetNextScreen("denlevel");
 			return SCREEN_FINISH;
 		case 1:
 			_mgr->SetNextScreen("settings");
@@ -74,6 +53,7 @@ int MenuScreen::Update(double elapsedSecs) {
 		
 	}
 
+	// Save the previous key state (temporary until InputManager actions are implemented)
 	std::memcpy(_prevKeyState, keys, sizeof(Uint8) * SDL_NUM_SCANCODES);
 	return SCREEN_CONTINUE;
 }
@@ -84,8 +64,6 @@ void MenuScreen::Draw() {
 	rend.Clear();
 	rend.Copy(*_menuItems[_curMenuItem], NullOpt, NullOpt);
 	
-	_levelRenderer.RenderLevel(_levelOne);
-
 	rend.Present();
 }
 

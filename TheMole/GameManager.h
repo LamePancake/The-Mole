@@ -3,21 +3,12 @@
 #include <string>
 #include <unordered_map>
 #include <memory>
+#include <vector>
 #include <SDL2pp\SDL2pp.hh>
 #include "Screen.h"
-#include <vector>
 
 class GameManager {
 public:
-	/**
-	 * Creates a new GameManager object with references to the SDL libraries, a window, and the map of screens to be used in the game.
-	 *
-	 */
-	GameManager(SDL2pp::SDL& sdl, SDL2pp::SDLImage& sdlImage, SDL2pp::SDLMixer& sdlMixer, SDL2pp::SDLTTF& sdlTtf,
-		SDL2pp::Window& window, SDL2pp::Renderer& renderer, std::unordered_map<std::string, std::shared_ptr<Screen>>& screens) 
-	:_sdl(sdl), _sdlImage(sdlImage), _sdlMixer(sdlMixer), _sdlTtf(sdlTtf),
-		_window(window), _renderer(renderer), _screens(screens) {
-	}
 
 	// Don't want the GameManager object to be copied or moved
 	GameManager operator=(GameManager&) = delete;
@@ -48,7 +39,21 @@ public:
 	SDL2pp::Window& GetWindow() const { return _window; }
 	SDL2pp::Renderer& GetRenderer() const { return _renderer; }
 
+	static GameManager* GetInstance();
 private:
+
+	// FML I hate this
+	friend int main(int argc, char** argv);
+
+	/**
+	 * Creates a new GameManager object with references to the SDL libraries, a window, and the map of screens to be used in the game.
+	 */
+	GameManager(SDL2pp::SDL& sdl, SDL2pp::SDLImage& sdlImage, SDL2pp::SDLMixer& sdlMixer, SDL2pp::SDLTTF& sdlTtf,
+		SDL2pp::Window& window, SDL2pp::Renderer& renderer, std::unordered_map<std::string, std::shared_ptr<Screen>>& screens)
+		:_sdl(sdl), _sdlImage(sdlImage), _sdlMixer(sdlMixer), _sdlTtf(sdlTtf),
+		_window(window), _renderer(renderer), _screens(screens) {
+	}
+
 	/**
 	 * Overlays the given screen on top of the current one.
 	 * The new screen will have had its Load() method called on return from this method.
@@ -63,7 +68,7 @@ private:
 	void FinishScreen();
 
 	// The screens in the game
-	std::unordered_map<std::string, std::shared_ptr<Screen>>& _screens;
+	std::unordered_map<std::string, std::shared_ptr<Screen>> _screens;
 	std::stack<std::shared_ptr<Screen>> _backStack;
 	std::shared_ptr<Screen> _nextScreen;
 	std::shared_ptr<Screen> _curScreen;
@@ -74,4 +79,6 @@ private:
 	SDL2pp::SDLTTF& _sdlTtf;
 	SDL2pp::Window& _window;
 	SDL2pp::Renderer& _renderer;
+
+	static GameManager* _instance;
 };
