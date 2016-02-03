@@ -1,7 +1,16 @@
 #include "GameManager.h"
+#include "MenuScreen.h"
+#include "DenLevelScreen.h"
 
 using std::string;
 using std::shared_ptr;
+using std::unordered_map;
+
+GameManager* GameManager::_instance = nullptr;
+
+GameManager* GameManager::GetInstance() {
+	return _instance;
+}
 
 void GameManager::SetNextScreen(const char* nextScreenName) {
 	if (nextScreenName == nullptr) {
@@ -22,7 +31,7 @@ void GameManager::ClearBackStack() {
 void GameManager::OverlayScreen(shared_ptr<Screen> screen) {
 	_backStack.push(screen);
 	_curScreen = screen;
-	_curScreen->Load(*this);
+	_curScreen->Load();
 }
 
 void GameManager::FinishScreen() {
@@ -36,7 +45,7 @@ void GameManager::FinishScreen() {
 	if (_nextScreen) {
 		_curScreen = _nextScreen;
 		_nextScreen = nullptr;
-		_curScreen->Load(*this);
+		_curScreen->Load();
 	}
 	else {
 		if (_backStack.empty()) {
@@ -51,7 +60,7 @@ void GameManager::FinishScreen() {
 
 void GameManager::Loop(string& startScreen) {
 	_curScreen = _screens[startScreen];
-	_curScreen->Load(*this);
+	_curScreen->Load();
 	_backStack.push(_curScreen);
 	
 	int currentTime = SDL_GetTicks();

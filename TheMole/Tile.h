@@ -1,10 +1,17 @@
 #pragma once
 #include <SDL2pp\SDL2pp.hh>
+#include "Vector2.h"
 
 /** Represents an abstract tile in in the level. */
 class Tile
 {
 public:
+
+	/** The default width in pixels of the tile. */
+	const static int DEFAULT_TILE_WIDTH = 64;
+
+	/** The default height in pixels of the tile. */
+	const static int DEFAULT_TILE_HEIGHT = 64;
 
 	/** Values that represent tile types. */
 	enum TileType: char
@@ -101,7 +108,7 @@ public:
 	 *
 	 * @return	The world position of the tile.
 	 */
-	SDL2pp::Point GetWorldPosition();
+	Vector2 GetWorldPosition();
 
 	/**
 	 * Gets the identifier for the type of tile this is.
@@ -132,10 +139,4 @@ private:
 
 	/** The identifier fo the type of tile. */
 	char _id;
-
-	/** The default width in pixels of the tile. */
-	const static int DEFAULT_TILE_WIDTH = 64;
-
-	/** The default height in pixels of the tile. */
-	const static int DEFAULT_TILE_HEIGHT = 64;
 };

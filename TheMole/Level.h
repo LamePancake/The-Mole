@@ -3,8 +3,9 @@
 #include <memory>
 #include <map>
 
-#include "Tile.h"
+class SimpleAgent;
 
+#include "Tile.h"
 
 /** Stores data for a level. It may be overkill, so chief refactorer may refactor if he wants to. */
 class Level
@@ -46,7 +47,7 @@ public:
 	 * @param	key			The key.
 	 * @param	position	The position.
 	 */
-	void AddPosiition(char key, SDL2pp::Point position);
+	void AddPositions(char key, SDL2pp::Point position);
 
 	/**
 	 * Gets number positions stored for a particular type of tile.
@@ -67,10 +68,70 @@ public:
 	 */
 	SDL2pp::Point GetPosition(char key, size_t idx);
 
+	/**
+	 * Adds an enemy to the enemy array.
+	 *
+	 * @param	e	The std::shared_ptr&lt;SimpleAgent&gt; to process.
+	 */
+	void AddEnemy(std::shared_ptr<SimpleAgent> e);
+
+	/**
+	 * Gets an enemy.
+	 *
+	 * @param	idx	The index into the enemy array.
+	 *
+	 * @return	The enemy.
+	 */
+	std::shared_ptr<SimpleAgent> GetEnemy(size_t idx);
+
+	/**
+	 * Gets enemy array size.
+	 *
+	 * @return	The enemy size.
+	 */
+	size_t GetEnemySize() const;
+
+	/**
+	 * Gets tile width.
+	 *
+	 * @return	The tile width.
+	 */
+	size_t GetTileWidth() const;
+
+	/**
+	 * Sets tile width.
+	 *
+	 * @param	width	The width.
+	 */
+	void SetTileWidth(size_t width);
+
+	/**
+	* Gets tile height.
+	*
+	* @return	The tile height.
+	*/
+	size_t GetTileHeight() const;
+
+	/**
+	* Sets tile Height.
+	*
+	* @param	height	The height.
+	*/
+	void SetTileHeight(size_t height);
+
 private:
+	
+	/** The enemies in the level. */
+	std::vector<std::shared_ptr<SimpleAgent>> _enemies;
 
 	std::map<char, std::vector<SDL2pp::Point>> _tilePositions;
 
 	/** The level. */
 	std::vector<std::vector<std::shared_ptr<Tile>>> _level;
+
+	/** Width of the tile. */
+	size_t _tileWidth;
+
+	/** height of the tile. */
+	size_t _tileHeight;
 };
