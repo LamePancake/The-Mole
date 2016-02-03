@@ -43,12 +43,12 @@ void SimpleAgent::Update(std::shared_ptr<Level> & level)
 	}
 	if (_health > 0)
 	{
-		//std::cout << "Patrolling\n";
+		//_aabb.UpdatePosition(*this);
+		UpdatePosition();
+		ScanNeighbouringTiles(level);
 	}
 
-	//_aabb.UpdatePosition(*this);
-	UpdatePosition();
-	ScanNeighbouringTiles(level);
+
 	/*
 	switch (keys) {
 	case 0:
@@ -113,6 +113,21 @@ void SimpleAgent::ScanNeighbouringTiles(std::shared_ptr<Level> & level)
 			if (level->GetTileFromLevel(xInd - 1, yInd)->GetID() != Tile::blank)
 			{
 				_speed.SetX(_speed.GetX() * -1.0f);
+			}
+		}
+		if (yInd + 1 < level->GetLevelSize().GetY())
+		{
+			if (level->GetTileFromLevel(xInd, yInd + 1)->GetID() == Tile::blank)
+			{
+				_speed.SetY(1.0f);
+			}
+			else if(level->GetTileFromLevel(xInd, yInd + 1)->GetID() == Tile::spike)
+			{
+				_health = 0;
+			}
+			else
+			{
+				_speed.SetY(0.0f);
 			}
 		}
 	}
