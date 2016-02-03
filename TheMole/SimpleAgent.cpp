@@ -1,6 +1,5 @@
 #include "SimpleAgent.h"
-
-
+#include "Tile.h"
 
 SimpleAgent::SimpleAgent()
 {
@@ -32,7 +31,7 @@ SDL2pp::Texture* SimpleAgent::GetTexture()
 	return _sprite;
 }
 
-void SimpleAgent::Update()
+void SimpleAgent::Update(std::shared_ptr<Level> & level)
 {
 	// While the AI is alive, do stuff.
 
@@ -40,15 +39,16 @@ void SimpleAgent::Update()
 
 	if (_health <= 0)
 	{
-		std::cout << "Dead\n";
+		//std::cout << "Dead\n";
 	}
 	if (_health > 0)
 	{
-		std::cout << "Patrolling\n";
+		//std::cout << "Patrolling\n";
 	}
 
-	_aabb.UpdatePosition(*this);
+	//_aabb.UpdatePosition(*this);
 	UpdatePosition();
+	ScanNeighbouringTiles(level);
 	/*
 	switch (keys) {
 	case 0:
@@ -68,6 +68,7 @@ void SimpleAgent::UpdatePosition()
 {
 	_position.SetX(_position.GetX() + _speed.GetX());
 	_position.SetY(_position.GetY() + _speed.GetY());
+	std::cout << GetPosition().GetX() << ", " << GetPosition().GetY() << "AI1\n";
 }
 
 Vector2 SimpleAgent::GetPosition()
@@ -88,4 +89,28 @@ bool SimpleAgent::CollisionCheck(SimpleAgent &otherAI)
 AABB SimpleAgent::GetAABB()
 {
 	return _aabb;
+}
+
+void SimpleAgent::ScanNeighbouringTiles(std::shared_ptr<Level> & level)
+{
+	if ((int)_position.GetX() % 64 == 0)
+	{
+		int xInd = _position.GetX() / 64;
+		int yInd = _position.GetY() / 64;
+		
+		if (xInd + 1 < level->GetLevelSize().GetX() && _speed.GetX() > 0.0f)
+		{
+			if (level->GetTileFromLevel(xInd + 1, yInd)->GetID() != Tile::blank)
+			{
+				_speed.SetX(_speed.GetX() * -1.0f);
+			}
+		}
+		if (xInd - 1 > 0 && _speed.GetX() < 0.0f)
+		{
+			if (level->GetTileFromLevel(xInd - 1, yInd)->GetID() != Tile::blank)
+			{
+				_speed.SetX(_speed.GetX() * -1.0f);
+			}
+		}
+	}
 }

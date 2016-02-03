@@ -6,6 +6,7 @@ class AABB;
 #include "Vector2.h"
 #include "GameManager.h"
 #include "AABB.h"
+#include "Level.h"
 
 #pragma once
 
@@ -37,7 +38,7 @@ public:
 	SDL2pp::Texture* GetTexture();
 
 	// All the state changing stuff happens in here.
-	void Update();
+	void Update(std::shared_ptr<Level> & level);
 
 	// Updates position of the agent by adding _speed to it.
 	void UpdatePosition();
@@ -63,6 +64,11 @@ public:
 	* @return _aabb
 	**/
 	AABB GetAABB();
+
+	/**
+	* Scans tiles left and right of the agent and negate _speed if left or right neighbour is not blank tile
+	*/
+	void ScanNeighbouringTiles(std::shared_ptr<Level> & level);
 private:
 	size_t _health;
 	Vector2 _speed;

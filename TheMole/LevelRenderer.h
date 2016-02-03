@@ -1,6 +1,7 @@
 #pragma once
 #include "Level.h"
 #include "GameManager.h"
+#include "SimpleAgent.h"
 #include <SDL2pp\SDL2pp.hh>
 #include <map>
 #include <memory>
@@ -38,4 +39,6 @@ private:
 
 	/** Reference to the game manager. */
 	GameManager* _mgr;
+
+	SimpleAgent testAI;
 };
