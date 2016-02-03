@@ -108,9 +108,9 @@ void SimpleAgent::ScanNeighbouringTiles(std::shared_ptr<Level> & level)
 				_speed.SetX(_speed.GetX() * -1.0f);
 			}
 		}
-		else if (xInd - 1 >= 0 && _speed.GetX() < 0.0f)
+		else if (xInd >= 0 && _speed.GetX() < 0.0f)
 		{
-			if (level->GetTileFromLevel(xInd - 1, yInd)->GetID() != Tile::blank)
+			if (level->GetTileFromLevel(xInd, yInd)->GetID() != Tile::blank)
 			{
 				_speed.SetX(_speed.GetX() * -1.0f);
 			}
