@@ -17,7 +17,7 @@ SimpleAgent::SimpleAgent(Vector2 position, GameManager & manager, Vector2 spd)
 	_position = position;
 	_mgr = &manager;
 	// This is temporary so we can test whether AABB can be created from texture dimensions
-	_sprite = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\mole.png");
+	_sprite = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\Baddie.png");
 	_aabb = AABB(*_sprite, *this);
 }
 
