@@ -21,6 +21,8 @@ public:
 	* Constructor that initializes _position to the input parameter
 	*
 	* @param the starting position of the agent
+	* @param the game manager
+	* @param starting speed
 	*/
 	SimpleAgent(Vector2 position, GameManager & manager, Vector2 spd);
 

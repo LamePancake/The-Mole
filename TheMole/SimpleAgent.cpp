@@ -4,8 +4,6 @@
 
 SimpleAgent::SimpleAgent()
 {
-	_health = 100;
-	_position = Vector2(0.0f, 0.0f);
 }
 
 
@@ -37,18 +35,16 @@ SDL2pp::Texture* SimpleAgent::GetTexture()
 void SimpleAgent::Update()
 {
 	// While the AI is alive, do stuff.
+
+	const Uint8* keys = SDL_GetKeyboardState(nullptr);
+
+	if (_health <= 0)
+	{
+		std::cout << "Dead\n";
+	}
 	if (_health > 0)
 	{
-		const Uint8* keys = SDL_GetKeyboardState(nullptr);
-
-		if (keys[SDL_SCANCODE_O])
-		{
-			std::cout << "Attacking";
-		}
-		if (keys[SDL_SCANCODE_P])
-		{
-			std::cout << "Patrolling";
-		}
+		std::cout << "Patrolling\n";
 	}
 
 	_aabb.UpdatePosition(*this);
