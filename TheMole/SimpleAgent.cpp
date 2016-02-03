@@ -17,7 +17,7 @@ SimpleAgent::SimpleAgent(Vector2 position, GameManager & manager, Vector2 spd)
 	_position = position;
 	_mgr = &manager;
 	// This is temporary so we can test whether AABB can be created from texture dimensions
-	_sprite = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\block_dirt.png");
+	_sprite = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\mole.png");
 	_aabb = AABB(*_sprite, *this);
 }
 
@@ -93,10 +93,13 @@ AABB SimpleAgent::GetAABB()
 
 void SimpleAgent::ScanNeighbouringTiles(std::shared_ptr<Level> & level)
 {
-	if ((int)_position.GetX() % 64 == 0)
+	int tileWidth  = level->GetTileWidth();
+	int tileHeight = level->GetTileHeight();
+
+	if ((int)_position.GetX() % tileWidth == 0)
 	{
-		int xInd = _position.GetX() / 64;
-		int yInd = _position.GetY() / 64;
+		int xInd = _position.GetX() / tileWidth;
+		int yInd = _position.GetY() / tileHeight;
 		
 		if (xInd + 1 < level->GetLevelSize().GetX() && _speed.GetX() > 0.0f)
 		{
@@ -105,7 +108,7 @@ void SimpleAgent::ScanNeighbouringTiles(std::shared_ptr<Level> & level)
 				_speed.SetX(_speed.GetX() * -1.0f);
 			}
 		}
-		if (xInd - 1 > 0 && _speed.GetX() < 0.0f)
+		else if (xInd - 1 >= 0 && _speed.GetX() < 0.0f)
 		{
 			if (level->GetTileFromLevel(xInd - 1, yInd)->GetID() != Tile::blank)
 			{
@@ -113,4 +116,21 @@ void SimpleAgent::ScanNeighbouringTiles(std::shared_ptr<Level> & level)
 			}
 		}
 	}
+}
+
+void SimpleAgent::Draw(std::shared_ptr<Level> & level)
+{
+	SDL2pp::Renderer& rend = _mgr->GetRenderer();
+	SDL2pp::Window& window = _mgr->GetWindow();
+	SDL2pp::Point levelSize = level->GetLevelSize();
+
+	float xScale = window.GetWidth() / levelSize.x;
+	float yScale = window.GetHeight() / levelSize.y;
+
+	SDL2pp::Rect tempRect;
+
+	//tempPoint = tempTile->GetWorldPosition();
+	tempRect = SDL2pp::Rect(_position.GetX() / (float)level->GetTileWidth() * xScale, _position.GetY() / (float)level->GetTileHeight() * yScale, xScale, yScale);
+	rend.Copy(*_sprite, SDL2pp::NullOpt, tempRect);
+
 }

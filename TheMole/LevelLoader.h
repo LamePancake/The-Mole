@@ -7,6 +7,8 @@
 
 #include "Tile.h"
 #include "Level.h"
+#include "SimpleAgent.h"
+#include "Vector2.h"
 
 /** Loads a level from a text file and returns a vector of tiles that represent the level. */
 class LevelLoader

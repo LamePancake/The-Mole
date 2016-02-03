@@ -9,7 +9,7 @@ int DenLevelScreen::Load() {
 	//_testAI2 = SimpleAgent(Vector2(-100.0f, 0.0f), *_mgr);
 
 	// Load level one in order to render
-	_levelOne = _levelLoader.LoadLevel(".\\Assets\\Levels\\den_level.txt");
+	_level = _levelLoader.LoadLevel(".\\Assets\\Levels\\den_level.txt");
 	_levelRenderer.Load(*_mgr);
 
 	_prevKeyState = (Uint8*)std::malloc(sizeof(Uint8) * SDL_NUM_SCANCODES);
@@ -25,6 +25,11 @@ int DenLevelScreen::Update(double elasepdSecs) {
 	const Uint8* keys = SDL_GetKeyboardState(nullptr);
 	if (keys[SDL_SCANCODE_ESCAPE]) {
 		exit(0);
+	}
+
+	for (int i = 0; i < _level->GetEnemySize(); ++i)
+	{
+		_level->GetEnemy(i)->Update(_level);
 	}
 
 	//_testAI1.Update(_levelOne);
@@ -50,7 +55,12 @@ void DenLevelScreen::Draw() {
 	rend.SetDrawColor(100, 100, 100, 255);
 	rend.Clear();
 
-	_levelRenderer.RenderLevel(_levelOne);
+	_levelRenderer.RenderLevel(_level);
+	for (int i = 0; i < _level->GetEnemySize(); ++i)
+	{
+		_level->GetEnemy(i)->Draw(_level);
+	}
+
 	rend.Present();
 }
 

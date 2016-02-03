@@ -27,7 +27,7 @@ private:
 	Uint8* _prevKeyState;
 	LevelLoader _levelLoader;
 	LevelRenderer _levelRenderer;
-	std::shared_ptr<Level> _levelOne;
+	std::shared_ptr<Level> _level;
 	SimpleAgent _testAI1;
 	SimpleAgent _testAI2;
 };
