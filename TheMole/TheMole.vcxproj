@@ -140,6 +140,7 @@
     <ClCompile Include="LevelRenderer.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MenuScreen.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="SimpleAgent.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="Vector2.cpp" />
@@ -147,6 +148,7 @@
   <ItemGroup>
     <ClInclude Include="AABB.h" />
     <ClInclude Include="DenLevelScreen.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Level.h" />
