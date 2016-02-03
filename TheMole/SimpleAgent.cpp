@@ -96,7 +96,7 @@ void SimpleAgent::ScanNeighbouringTiles(std::shared_ptr<Level> & level)
 	int tileWidth  = level->GetTileWidth();
 	int tileHeight = level->GetTileHeight();
 
-	if ((int)_position.GetX() % tileWidth == 0)
+	if ((int)_position.GetX() % tileWidth == 0 || (int)_position.GetY() % tileWidth == 0)
 	{
 		int xInd = _position.GetX() / tileWidth;
 		int yInd = _position.GetY() / tileHeight;
