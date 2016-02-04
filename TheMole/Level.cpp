@@ -1,5 +1,5 @@
 #include "Level.h"
-#include "SimpleAgent.h"
+#include "Actor.h"
 
 int Level::AddTileToLevel(std::shared_ptr<Tile> tile, int row)
 {
@@ -40,12 +40,12 @@ SDL2pp::Point Level::GetPosition(char key, size_t idx)
 	return _tilePositions[key][idx];
 }
 
-void Level::AddEnemy(std::shared_ptr<SimpleAgent> e)
+void Level::AddEnemy(std::shared_ptr<Actor> e)
 {
 	_enemies.push_back(e);
 }
 
-std::shared_ptr<SimpleAgent> Level::GetEnemy(size_t idx)
+std::shared_ptr<Actor> Level::GetEnemy(size_t idx)
 {
 	if (idx > _enemies.size())
 		return nullptr;

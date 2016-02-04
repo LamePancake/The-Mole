@@ -1,8 +1,9 @@
 #ifndef AABB_H
 #define AABB_H
-class SimpleAgent;
+
 #pragma once
 #include <SDL2pp\SDL2pp.hh>
+class Actor;
 
 class AABB
 {
@@ -15,7 +16,7 @@ public:
 	*
 	* @param source image to create AABB from, SimpleAgent object to which we base our x, y position on
 	**/
-	AABB(SDL2pp::Texture & srcImg, SimpleAgent & ai);
+	AABB(SDL2pp::Texture & srcImg, Actor & actor);
 
 	/**
 	* Checks collision against another AABB
@@ -31,7 +32,7 @@ public:
 	*
 	* @param the SimpleAgent object we update our position to
 	**/
-	void UpdatePosition(SimpleAgent & ai);
+	void UpdatePosition(Actor & actor);
 
 	/**
 	* Getter for _x of this AABB
@@ -60,6 +61,9 @@ public:
 	* @return _height, which is a float
 	*/
 	float AABB::GetHeight();
+
+
+
 private:
 	float _x;
 	float _y;

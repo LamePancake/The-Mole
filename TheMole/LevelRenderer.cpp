@@ -25,8 +25,8 @@ void LevelRenderer::Unload()
 
 void LevelRenderer::RenderLevel(std::shared_ptr<Level> level)
 {
-	SDL2pp::Renderer& rend = _mgr->GetRenderer();
-	SDL2pp::Window& window = _mgr->GetWindow();
+	SDL2pp::Renderer& rend  = _mgr->GetRenderer();
+	SDL2pp::Window& window  = _mgr->GetWindow();
 	SDL2pp::Point levelSize = level->GetLevelSize();
 
 	SDL2pp::Point tempPoint;

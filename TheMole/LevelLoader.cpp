@@ -30,7 +30,7 @@
 
 			if (toupper((*it)) == Tile::enemy)
 			{
-				std::shared_ptr<SimpleAgent> e = std::make_shared<SimpleAgent>(tile->GetWorldPosition(), *GameManager::GetInstance(), Vector2(0.9f, 0.0f));
+				std::shared_ptr<SimpleAgent> e = std::make_shared<SimpleAgent>(tile->GetWorldPosition(), *GameManager::GetInstance(), Vector2(0.9f, 0.0f), ".\\Assets\\Textures\\baddie.png");
 				level->AddEnemy(e);
 				tile->SetID(Tile::blank);
 			}
