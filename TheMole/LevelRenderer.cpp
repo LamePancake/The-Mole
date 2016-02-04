@@ -19,6 +19,12 @@ void LevelRenderer::Load(GameManager & manager)
 	_shadowTileTextures[Tile::collectible] = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\Pancake.png");
 	_shadowTileTextures[Tile::goal]        = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\Toad.png");
 	_shadowTileTextures[Tile::tunnel]      = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\mineShaft.png");
+
+	for (auto it : _shadowTileTextures)
+	{
+		SDL_SetTextureColorMod(it.second->Get(), 120, 120, 120);
+		SDL_SetTextureAlphaMod(it.second->Get(), 127);
+	}
 }
 
 void LevelRenderer::Unload()
@@ -36,8 +42,8 @@ void LevelRenderer::Unload()
 
 void LevelRenderer::RenderLevel(std::shared_ptr<Level> level)
 {
-	float offsetX = 30.0f;
-	float offsetY = 30.0f;
+	float offsetX = 50.0f;
+	float offsetY = 50.0f;
 
 	SDL2pp::Renderer& rend  = _mgr->GetRenderer();
 	SDL2pp::Window& window  = _mgr->GetWindow();

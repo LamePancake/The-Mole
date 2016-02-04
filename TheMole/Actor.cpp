@@ -8,6 +8,9 @@ Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::string t
 	_sprite = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), texturePath);
 	_spriteShadow = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), shadowTexturePath);
 	_aabb = AABB(*_sprite, *this);
+
+	SDL_SetTextureColorMod(_spriteShadow->Get(), 127, 127, 127);
+	SDL_SetTextureAlphaMod(_spriteShadow->Get(), 127);
 }
 
 Actor::~Actor()
@@ -69,8 +72,8 @@ void Actor::UpdatePosition()
 
 void Actor::Draw(std::shared_ptr<Level>& level)
 {
-	float offsetX = 15.0f;
-	float offsetY = 15.0f;
+	float offsetX = 30.0f;
+	float offsetY = 30.0f;
 			
 	SDL2pp::Renderer& rend = _mgr->GetRenderer();
 	SDL2pp::Window& window = _mgr->GetWindow();
