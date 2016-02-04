@@ -95,5 +95,5 @@ void Input::On_Key_Up(SDL_Keysym keysym)
 
 void Input::AddKeyToMap(string key, InputAction &inputAct)
 {	
-	_actionMap.insert({ {key, make_shared<InputAction>(&inputAct)} });
+	_actionMap.insert({ {key, std::shared_ptr<InputAction>(new InputAction(inputAct))} });
 }
