@@ -31,7 +31,13 @@ public:
 	// Updates position of the agent by adding _speed to it.
 	virtual void UpdatePosition();
 
-	/** Draws this object. */
+	/**
+	 * Draws.
+	 *
+	 * @param [in,out]	level	The level.
+	 *
+	 * 	Draws this object.
+	 */
 	virtual void Draw(std::shared_ptr<Level> & level);
 
 	/**

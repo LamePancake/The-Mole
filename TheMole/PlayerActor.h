@@ -18,7 +18,13 @@ public:
 	/** Destructor. */
 	~PlayerActor();
 
-	/** Draws this object. */
+	/**
+	 * Draws.
+	 *
+	 * @param [in,out]	level	The level.
+	 *
+	 * 	Draws this object.
+	 */
 	virtual void Draw(std::shared_ptr<Level> & level);
 
 	// All the state changing stuff happens in here.

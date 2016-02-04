@@ -28,7 +28,7 @@ public:
 	/**
 	 * Renders the level described by level.
 	 *
-	 * @param [in,out]	level	The level to be rendered.
+	 * @param	level   	The level to be rendered.
 	 */
 	void RenderLevel(std::shared_ptr<Level> level);
 
