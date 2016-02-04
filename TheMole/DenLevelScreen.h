@@ -6,6 +6,7 @@
 #include "Level.h"
 #include "LevelRenderer.h"
 #include "SpriteSheet.h"
+#include "Actor.h"
 
 class GameManager;
 
@@ -29,6 +30,7 @@ private:
 	LevelRenderer _levelRenderer;
 	std::shared_ptr<Level> _level;
 	SpriteSheet* _testSheet;
+	std::shared_ptr<Actor> _player;
 };
 
 #endif

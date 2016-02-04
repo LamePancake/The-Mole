@@ -9,10 +9,9 @@ void LevelRenderer::Load(GameManager & manager)
 	_tileTextures[Tile::metal]       = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\block_dirt.png");
 	_tileTextures[Tile::spike]       = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\block_spike.png");
 	_tileTextures[Tile::stone]       = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\block_stone.png");
-	//_tileTextures[Tile::collectible] = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\block_spike.png");
-	//_tileTextures[Tile::enemy]       = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\block_spike.png");
-	//_tileTextures[Tile::goal]        = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\block_spike.png");
-	//_tileTextures[Tile::blank]       = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\block_dirt.png");
+	_tileTextures[Tile::collectible] = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\Pancake.png");
+	_tileTextures[Tile::goal]        = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\Toad.png");
+	_tileTextures[Tile::tunnel]      = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\mineShaft.png");
 }
 
 void LevelRenderer::Unload()
@@ -46,7 +45,7 @@ void LevelRenderer::RenderLevel(std::shared_ptr<Level> level)
 			std::shared_ptr<Tile> tempTile = level->GetTileFromLevel(width, height);
 			char id = tempTile->GetID();
 
-			if (id == Tile::blank || id == Tile::enemy || id == Tile::goal || id == Tile::collectible)
+			if (id == Tile::blank || id == Tile::enemy)
 				continue;
 
 			//tempPoint = tempTile->GetWorldPosition();

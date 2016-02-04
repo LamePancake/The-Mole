@@ -8,7 +8,7 @@ int DenLevelScreen::Load() {
 	_mgr = GameManager::GetInstance();
 
 	// Load level one in order to render
-	_level = _levelLoader.LoadLevel(".\\Assets\\Levels\\den_level.txt");
+	_level = _levelLoader.LoadLevel(".\\Assets\\Levels\\den_level.txt", _player);
 	_levelRenderer.Load(*_mgr);
 
 	_prevKeyState = (Uint8*)std::malloc(sizeof(Uint8) * SDL_NUM_SCANCODES);
@@ -19,7 +19,8 @@ int DenLevelScreen::Load() {
 	return SCREEN_LOAD_SUCCESS;
 }
 
-int DenLevelScreen::Update(double elasepdSecs) {
+int DenLevelScreen::Update(double elasepdSecs)
+{
 	SDL_PumpEvents();
 
 	// Change the currently selected menu item
@@ -32,6 +33,7 @@ int DenLevelScreen::Update(double elasepdSecs) {
 	{
 		_level->GetEnemy(i)->Update(_level);
 	}
+	_player->Update(_level);
 
 	// Save the previous key state (temporary until InputManager actions are implemented)
 	std::memcpy(_prevKeyState, keys, sizeof(Uint8) * SDL_NUM_SCANCODES);
@@ -40,7 +42,8 @@ int DenLevelScreen::Update(double elasepdSecs) {
 	return SCREEN_CONTINUE;
 }
 
-void DenLevelScreen::Draw() {
+void DenLevelScreen::Draw() 
+{
 	SDL2pp::Renderer& rend = _mgr->GetRenderer();
 	rend.SetDrawColor(100, 100, 100, 255);
 	rend.Clear();
@@ -50,6 +53,7 @@ void DenLevelScreen::Draw() {
 	{
 		_level->GetEnemy(i)->Draw(_level);
 	}
+	_player->Draw(_level);
 
 	_testSheet->Draw(Point(_mgr->GetWindow().GetWidth() / 2, _mgr->GetWindow().GetHeight() / 2));
 
