@@ -24,7 +24,8 @@ void SpriteSheet::Draw(const SDL2pp::Point&& position) {
 	Renderer& rend = _mgr->GetRenderer();
 	Rect frameRect((int)(_currentFrame * _spriteSize.x), 0, _spriteSize.x, _spriteSize.x);
 	Rect screenRect(position, _spriteSize);
-	rend.Copy(_sheet, frameRect, screenRect);
+	rend.Copy(_sheet, frameRect, screenRect, 0, NullOpt, SDL_FLIP_VERTICAL);
+	
 }
 
 void SpriteSheet::Reset() {

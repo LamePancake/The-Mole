@@ -70,29 +70,21 @@ void Actor::UpdatePosition()
 {
 }
 
-void Actor::Draw(std::shared_ptr<Level>& level)
+void Actor::Draw(Camera& camera)
 {
-	float offsetX = 30.0f;
-	float offsetY = 30.0f;
+	const SDL2pp::Rect& viewport = camera.GetViewport();
+	int offsetX = 3;
+	int offsetY = 3;
 			
 	SDL2pp::Renderer& rend = _mgr->GetRenderer();
-	SDL2pp::Window& window = _mgr->GetWindow();
-	SDL2pp::Point levelSize = level->GetLevelSize();
+	SDL2pp::Point tempPoint;
 
-	float xScale = window.GetWidth() / levelSize.x;
-	float yScale = window.GetHeight() / levelSize.y;
-	offsetX /= xScale;
-	offsetY /= yScale;
+	tempPoint = { (int)_position.GetX(), (int)_position.GetY() };
 
-	SDL2pp::Rect tempRect;
-
-	//tempPoint = tempTile->GetWorldPosition();
 	// Render shadow
-	tempRect = SDL2pp::Rect((_position.GetX() / (float)level->GetTileWidth() * xScale) + offsetX, (_position.GetY() / (float)level->GetTileHeight() * yScale) + offsetY, xScale, yScale);
-	rend.Copy(*_spriteShadow, SDL2pp::NullOpt, tempRect);
+	rend.Copy(*_spriteShadow, SDL2pp::NullOpt, tempPoint + SDL2pp::Point(offsetX - viewport.x, offsetY - viewport.y));
 
 	// Render normal
-	tempRect = SDL2pp::Rect((_position.GetX() / (float)level->GetTileWidth() * xScale), (_position.GetY() / (float)level->GetTileHeight() * yScale), xScale, yScale);
-	rend.Copy(*_sprite, SDL2pp::NullOpt, tempRect);
+	rend.Copy(*_sprite, SDL2pp::NullOpt, tempPoint + SDL2pp::Point(-viewport.x, -viewport.y));
 }
 

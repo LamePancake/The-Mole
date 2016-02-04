@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
 
 		// Straightforward wrappers around corresponding SDL2 objects
 		// These take full care of proper object destruction and error checking
-		Window window("The Mole", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480, SDL_WINDOW_RESIZABLE);
+		Window window("The Mole", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1280, 720, SDL_WINDOW_FULLSCREEN);
 		Renderer renderer(window, -1, SDL_RENDERER_ACCELERATED);
 
 		unordered_map<string, shared_ptr<Screen>> screens;

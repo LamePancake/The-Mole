@@ -8,6 +8,8 @@
 #include "Screen.h"
 #include "Input.h"
 
+#define FRAME_TIME_MS 16
+
 class GameManager {
 public:
 
@@ -57,6 +59,8 @@ private:
 		:_sdl(sdl), _sdlImage(sdlImage), _sdlMixer(sdlMixer), _sdlTtf(sdlTtf),
 		_window(window), _renderer(renderer), _screens(screens){
 		inputManager = new Input();
+		inputManager->AddKeyToMap("Left", Input::InputAction(SDL_SCANCODE_A));
+		inputManager->AddKeyToMap("Right", Input::InputAction(SDL_SCANCODE_D));
 	}
 
 	/**

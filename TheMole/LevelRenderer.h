@@ -4,6 +4,7 @@
 #include <SDL2pp\SDL2pp.hh>
 #include <map>
 #include <memory>
+#include "Camera.h"
 
 
 /** Renders a given level */
@@ -30,7 +31,7 @@ public:
 	 *
 	 * @param	level   	The level to be rendered.
 	 */
-	void RenderLevel(std::shared_ptr<Level> level);
+	void RenderLevel(std::shared_ptr<Level> level, Camera& camera);
 
 private:
 

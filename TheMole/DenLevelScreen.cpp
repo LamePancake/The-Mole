@@ -16,6 +16,14 @@ int DenLevelScreen::Load() {
 
 	std::string spriteFile(".\\Assets\\Textures\\Borin_walk.png");
 	_testSheet = new SpriteSheet(spriteFile, 8, 1.0);
+
+	SDL2pp::Point playerPos(_level->GetEnemy(1)->GetPosition().GetX(), _level->GetEnemy(1)->GetPosition().GetY());
+	SDL2pp::Point viewportSize = _mgr->GetWindow().GetSize();
+	SDL2pp::Point levelSize = _level->GetLevelSize();
+	levelSize.x *= _level->GetTileWidth();
+	levelSize.y *= _level->GetTileHeight();
+	_camera = new Camera(playerPos, viewportSize, levelSize);
+
 	return SCREEN_LOAD_SUCCESS;
 }
 
@@ -57,13 +65,14 @@ void DenLevelScreen::Draw()
 	SDL2pp::Renderer& rend = _mgr->GetRenderer();
 	rend.SetDrawColor(100, 100, 100, 255);
 	rend.Clear();
+	_camera->CentreView(_level->GetEnemy(1)->GetPosition());
 
-	_levelRenderer.RenderLevel(_level);
 	for (size_t i = 0; i < _level->GetEnemySize(); ++i)
 	{
-		_level->GetEnemy(i)->Draw(_level);
+		_level->GetEnemy(i)->Draw(*_camera);
 	}
-	_player->Draw(_level);
+	_player->Draw(*_camera);
+	_levelRenderer.RenderLevel(_level, *_camera);
 
 	_testSheet->Draw(Point(_mgr->GetWindow().GetWidth() / 2, _mgr->GetWindow().GetHeight() / 2));
 
