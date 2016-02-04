@@ -45,7 +45,7 @@ public:
 	static GameManager* GetInstance();
 
 	/// Input *manager*
-	Input inputManager;
+	Input* inputManager;
 private:
 
 	// FML I hate this
@@ -57,7 +57,8 @@ private:
 	GameManager(SDL2pp::SDL& sdl, SDL2pp::SDLImage& sdlImage, SDL2pp::SDLMixer& sdlMixer, SDL2pp::SDLTTF& sdlTtf,
 		SDL2pp::Window& window, SDL2pp::Renderer& renderer, std::unordered_map<std::string, std::shared_ptr<Screen>>& screens)
 		:_sdl(sdl), _sdlImage(sdlImage), _sdlMixer(sdlMixer), _sdlTtf(sdlTtf),
-		_window(window), _renderer(renderer), _screens(screens) {
+		_window(window), _renderer(renderer), _screens(screens){
+		inputManager = new Input();
 	}
 
 	/**
