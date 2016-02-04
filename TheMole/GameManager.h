@@ -53,9 +53,9 @@ private:
 	 * Creates a new GameManager object with references to the SDL libraries, a window, and the map of screens to be used in the game.
 	 */
 	GameManager(SDL2pp::SDL& sdl, SDL2pp::SDLImage& sdlImage, SDL2pp::SDLMixer& sdlMixer, SDL2pp::SDLTTF& sdlTtf,
-		SDL2pp::Window& window, SDL2pp::Renderer& renderer, std::unordered_map<std::string, std::shared_ptr<Screen>>& screens)
+		SDL2pp::Window& window, SDL2pp::Renderer& renderer, std::unordered_map<std::string, std::shared_ptr<Screen>>& screens, Input inputStuff)
 		:_sdl(sdl), _sdlImage(sdlImage), _sdlMixer(sdlMixer), _sdlTtf(sdlTtf),
-		_window(window), _renderer(renderer), _screens(screens) {
+		_window(window), _renderer(renderer), _screens(screens), inputManager(inputStuff) {
 	}
 
 	/**
