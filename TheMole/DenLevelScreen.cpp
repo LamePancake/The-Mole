@@ -30,11 +30,20 @@ int DenLevelScreen::Update(double elasepdSecs)
 		exit(0);
 	}
 
+	if (_mgr->inputManager->ActionOccured("left", Input::Pressed)) {
+		_player->SetSpeed(Vector2(_player->GetSpeed().GetX() - 2, _player->GetSpeed().GetY()));
+	}
+
+	if (_mgr->inputManager->ActionOccured("right", Input::Pressed)) {
+		_player->SetSpeed(Vector2(_player->GetSpeed().GetX() + 2, _player->GetSpeed().GetY()));
+	}
+
 	for (size_t i = 0; i < _level->GetEnemySize(); ++i)
 	{
 		_level->GetEnemy(i)->Update(_level);
 	}
 	_player->Update(_level);
+	_player->UpdatePosition();
 
 	// Save the previous key state (temporary until InputManager actions are implemented)
 	std::memcpy(_prevKeyState, keys, sizeof(Uint8) * SDL_NUM_SCANCODES);
