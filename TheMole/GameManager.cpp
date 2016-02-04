@@ -73,7 +73,7 @@ void GameManager::Loop(string& startScreen) {
 		newTime = SDL_GetTicks();
 		dt = newTime - currentTime;
 		currentTime = newTime;
-
+		
 		updateResult = _curScreen->Update((dt) / 1000.0);
 
 		switch (updateResult) {

@@ -29,7 +29,6 @@ void AIActor::UpdatePosition()
 
 	_position.SetX(_position.GetX() + _speed.GetX());
 	_position.SetY(_position.GetY() + _speed.GetY());
-	std::cout << GetPosition().GetX() << ", " << GetPosition().GetY() << "AI1\n";
 }
 
 bool AIActor::CollisionCheck(Actor &otherAI)

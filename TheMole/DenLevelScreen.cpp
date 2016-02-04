@@ -65,7 +65,7 @@ void DenLevelScreen::Draw()
 	}
 	_player->Draw(_level, *_camera);
 
-	//_testSheet->Draw(Point(_mgr->GetWindow().GetWidth() / 2, _mgr->GetWindow().GetHeight() / 2));
+	_testSheet->Draw(Point(_mgr->GetWindow().GetWidth() / 2, _mgr->GetWindow().GetHeight() / 2));
 
 	rend.Present();
 }
