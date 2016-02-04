@@ -1,7 +1,7 @@
 #include "LevelLoader.h"
 
 // Loads the level
- std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath)
+ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared_ptr<Actor> & player)
 {
 	int    levelWidth   = 0; // Keeps track of the width of the level
 	int    levelHeight  = 0; // Keeps track of the height of the level
@@ -36,6 +36,7 @@
 			}
 			else if (toupper((*it)) == Tile::origin)
 			{
+				player = std::make_shared<PlayerActor>(tile->GetWorldPosition(), *GameManager::GetInstance(), Vector2(0.9f, 0.0f), ".\\Assets\\Textures\\borin.png");
 				tile->SetID(Tile::blank);
 			}
 

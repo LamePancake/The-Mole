@@ -5,6 +5,7 @@
 #include "LevelLoader.h"
 #include "Level.h"
 #include "LevelRenderer.h"
+#include "Actor.h"
 
 class GameManager;
 
@@ -27,6 +28,7 @@ private:
 	LevelLoader _levelLoader;
 	LevelRenderer _levelRenderer;
 	std::shared_ptr<Level> _level;
+	std::shared_ptr<Actor> _player;
 };
 
 #endif
