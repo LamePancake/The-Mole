@@ -36,6 +36,8 @@ private:
 
 	std::map<char, SDL2pp::Texture*> _tileTextures;
 
+	std::map<char, SDL2pp::Texture*> _shadowTileTextures;
+
 	/** Reference to the game manager. */
 	GameManager* _mgr;
 };
