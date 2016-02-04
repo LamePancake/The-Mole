@@ -1,10 +1,10 @@
-#include "SimpleAgent.h"
+#include "AIActor.h"
 
-SimpleAgent::~SimpleAgent()
+AIActor::~AIActor()
 {
 }
 
-void SimpleAgent::Update(std::shared_ptr<Level> & level)
+void AIActor::Update(std::shared_ptr<Level> & level)
 {
 	Actor::Update(level);
 
@@ -23,7 +23,7 @@ void SimpleAgent::Update(std::shared_ptr<Level> & level)
 	}
 }
 
-void SimpleAgent::UpdatePosition()
+void AIActor::UpdatePosition()
 {
 	Actor::UpdatePosition();
 
@@ -32,12 +32,12 @@ void SimpleAgent::UpdatePosition()
 	std::cout << GetPosition().GetX() << ", " << GetPosition().GetY() << "AI1\n";
 }
 
-bool SimpleAgent::CollisionCheck(SimpleAgent &otherAI)
+bool AIActor::CollisionCheck(Actor &otherAI)
 {
 	return _aabb.CheckCollision(otherAI.GetAABB());
 }
 
-void SimpleAgent::ScanNeighbouringTiles(std::shared_ptr<Level> & level)
+void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level> & level)
 {
 	int tileWidth  = level->GetTileWidth();
 	int tileHeight = level->GetTileHeight();
@@ -79,7 +79,7 @@ void SimpleAgent::ScanNeighbouringTiles(std::shared_ptr<Level> & level)
 	}
 }
 
-void SimpleAgent::Draw(std::shared_ptr<Level> & level)
+void AIActor::Draw(std::shared_ptr<Level> & level)
 {
 	Actor::Draw(level);
 }

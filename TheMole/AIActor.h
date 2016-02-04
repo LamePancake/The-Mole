@@ -1,5 +1,5 @@
-#ifndef SIMPLEAGENT_H
-#define SIMPLEAGENT_H
+#ifndef AIACTOR_H
+#define AIACTOR_H
 #include "Actor.h"
 #include "Tile.h"
 
@@ -8,7 +8,7 @@
 /**
 * This is the simple version of the state machine. It uses a switch instead of states, transitions, conditions, actions.
 **/
-class SimpleAgent : public Actor
+class AIActor : public Actor
 {
 public:
 
@@ -20,10 +20,10 @@ public:
 	 * @param	spd			   	speed.
 	 * @param	texturePath	   	Full pathname of the texture file.
 	 */
-	SimpleAgent(Vector2 position, GameManager & manager, Vector2 spd, std::string texturePath) : Actor(position, manager, spd, texturePath) {}
+	AIActor(Vector2 position, GameManager & manager, Vector2 spd, std::string texturePath) : Actor(position, manager, spd, texturePath) {}
 
 	/** Destructor. */
-	~SimpleAgent();
+	~AIActor();
 
 	// All the state changing stuff happens in here.
 	virtual void Update(std::shared_ptr<Level> & level);
@@ -45,7 +45,7 @@ public:
 	*
 	* @return true if collided, false if not
 	**/
-	bool CollisionCheck(SimpleAgent & otherAI);
+	bool CollisionCheck(Actor & otherAI);
 
 	/**
 	* Scans tiles left and right of the agent and negate _speed if left or right neighbour is not blank tile

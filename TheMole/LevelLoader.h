@@ -7,7 +7,7 @@
 
 #include "Tile.h"
 #include "Level.h"
-#include "SimpleAgent.h"
+#include "AIActor.h"
 #include "Vector2.h"
 #include "Actor.h"
 #include "PlayerActor.h"

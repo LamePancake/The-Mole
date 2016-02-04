@@ -142,7 +142,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MenuScreen.cpp" />
     <ClCompile Include="PlayerActor.cpp" />
-    <ClCompile Include="SimpleAgent.cpp" />
+    <ClCompile Include="AIActor.cpp" />
     <ClCompile Include="SpriteSheet.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="Vector2.cpp" />
@@ -161,7 +161,7 @@
     <ClInclude Include="MenuScreen.h" />
     <ClInclude Include="Screen.h" />
     <ClInclude Include="GameManager.h" />
-    <ClInclude Include="SimpleAgent.h" />
+    <ClInclude Include="AIActor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Input.h" />
