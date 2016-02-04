@@ -38,7 +38,7 @@ public:
 	 *
 	 * 	Draws this object.
 	 */
-	virtual void Draw(std::shared_ptr<Level> & level);
+	virtual void Draw(std::shared_ptr<Level> & level, Camera& camera) override;
 
 	/**
 	* Check collision against another SimpleAgent

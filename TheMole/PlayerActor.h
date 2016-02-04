@@ -25,7 +25,7 @@ public:
 	 *
 	 * 	Draws this object.
 	 */
-	virtual void Draw(std::shared_ptr<Level> & level);
+	virtual void Draw(std::shared_ptr<Level> & level, Camera& camera) override;
 
 	// All the state changing stuff happens in here.
 	virtual void Update(std::shared_ptr<Level> & level);

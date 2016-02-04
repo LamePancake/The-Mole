@@ -8,6 +8,8 @@
 #include "Screen.h"
 #include "Input.h"
 
+#define FRAME_TIME_MS 16
+
 class GameManager {
 public:
 

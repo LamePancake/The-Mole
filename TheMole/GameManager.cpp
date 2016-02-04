@@ -90,5 +90,6 @@ void GameManager::Loop(string& startScreen) {
 			currentTime = SDL_GetTicks();
 			break;
 		}
+		SDL_Delay(1);
 	}
 }

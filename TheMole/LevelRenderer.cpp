@@ -22,8 +22,9 @@ void LevelRenderer::Unload()
 	}
 }
 
-void LevelRenderer::RenderLevel(std::shared_ptr<Level> level)
+void LevelRenderer::RenderLevel(std::shared_ptr<Level> level, Camera& camera)
 {
+	const SDL2pp::Rect& viewport = camera.GetViewport();
 	float offsetX = 25.0f;
 	float offsetY = 25.0f;
 
@@ -33,12 +34,6 @@ void LevelRenderer::RenderLevel(std::shared_ptr<Level> level)
 
 	SDL2pp::Point tempPoint;
 	SDL2pp::Rect tempRect;
-
-	//HARDCODED, SHOULD BE CHANGED AND NOT NECESSARY IN FINAL GAME, USED FOR TESTING ONLY IN ORDER TO VISUALIZE THE WHOLE MAP
-	float xScale = window.GetWidth() / levelSize.x;
-	float yScale = window.GetHeight() / levelSize.y;
-	offsetX /= xScale;
-	offsetY /= yScale;
 
 	if (levelSize.x == 0 || levelSize.y == 0)
 		return;
@@ -53,15 +48,15 @@ void LevelRenderer::RenderLevel(std::shared_ptr<Level> level)
 			if (id == Tile::blank || id == Tile::enemy)
 				continue;
 
-			//tempPoint = tempTile->GetWorldPosition();
-			tempPoint = tempTile->GetIndices();
+			tempPoint = { (int)tempTile->GetWorldPosition().GetX(), (int)tempTile->GetWorldPosition().GetY() };
+			//tempPoint = tempTile->GetIndices();
 
 			//Render shadow
-			tempRect = SDL2pp::Rect((tempPoint.x * xScale) + offsetX, (tempPoint.y * yScale) + offsetY, xScale, yScale);
+			tempRect = SDL2pp::Rect(tempPoint.x + offsetX - viewport.x, tempPoint.y + offsetY - viewport.y, _tileTextures[tempTile->GetID()]->GetWidth(), _tileTextures[tempTile->GetID()]->GetHeight());
 			rend.Copy(*_tileTextures[tempTile->GetID()], SDL2pp::NullOpt, tempRect);
 			
 			//Render normal
-			tempRect = SDL2pp::Rect((tempPoint.x * xScale), (tempPoint.y * yScale), xScale, yScale);
+			tempRect = SDL2pp::Rect(tempPoint.x - viewport.x, tempPoint.y - viewport.y, _tileTextures[tempTile->GetID()]->GetWidth(), _tileTextures[tempTile->GetID()]->GetHeight());
 			rend.Copy(*_tileTextures[tempTile->GetID()], SDL2pp::NullOpt, tempRect);
 		}
 	}

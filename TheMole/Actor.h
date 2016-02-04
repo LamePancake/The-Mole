@@ -6,6 +6,7 @@
 #include "AABB.h"
 #include "GameManager.h"
 #include "Level.h"
+#include "Camera.h"
 
 class Actor
 {
@@ -87,7 +88,7 @@ public:
 	 *
 	 * 	Draws this object.
 	 */
-	virtual void Draw(std::shared_ptr<Level> & level);
+	virtual void Draw(std::shared_ptr<Level> & level, Camera& camera);
 
 protected:
 

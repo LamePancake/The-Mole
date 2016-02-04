@@ -79,7 +79,7 @@ void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level> & level)
 	}
 }
 
-void AIActor::Draw(std::shared_ptr<Level> & level)
+void AIActor::Draw(std::shared_ptr<Level> & level, Camera& camera)
 {
-	Actor::Draw(level);
+	Actor::Draw(level, camera);
 }

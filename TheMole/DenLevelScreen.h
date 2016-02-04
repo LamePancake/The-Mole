@@ -24,6 +24,7 @@ public:
 	virtual void Unload() override;
 
 private:
+	Camera* _camera;
 	GameManager* _mgr;
 	Uint8* _prevKeyState;
 	LevelLoader _levelLoader;
