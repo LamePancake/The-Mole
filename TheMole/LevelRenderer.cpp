@@ -1,5 +1,4 @@
 #include "LevelRenderer.h"
-#include <iostream>
 
 void LevelRenderer::Load(GameManager & manager)
 {
@@ -12,6 +11,20 @@ void LevelRenderer::Load(GameManager & manager)
 	_tileTextures[Tile::collectible] = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\Pancake.png");
 	_tileTextures[Tile::goal]        = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\Toad.png");
 	_tileTextures[Tile::tunnel]      = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\mineShaft.png");
+
+	_shadowTileTextures[Tile::dirt]        = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\block_dirt.png");
+	_shadowTileTextures[Tile::metal]       = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\block_dirt.png");
+	_shadowTileTextures[Tile::spike]       = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\block_spike.png");
+	_shadowTileTextures[Tile::stone]       = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\block_stone.png");
+	_shadowTileTextures[Tile::collectible] = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\Pancake.png");
+	_shadowTileTextures[Tile::goal]        = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\Toad.png");
+	_shadowTileTextures[Tile::tunnel]      = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\mineShaft.png");
+
+	for (auto it : _shadowTileTextures)
+	{
+		SDL_SetTextureColorMod(it.second->Get(), 120, 120, 120);
+		SDL_SetTextureAlphaMod(it.second->Get(), 127);
+	}
 }
 
 void LevelRenderer::Unload()
@@ -20,13 +33,18 @@ void LevelRenderer::Unload()
 	{
 		delete text.second;
 	}
+
+	for (auto text : _shadowTileTextures)
+	{
+		delete text.second;
+	}
 }
 
 void LevelRenderer::RenderLevel(std::shared_ptr<Level> level, Camera& camera)
 {
 	const SDL2pp::Rect& viewport = camera.GetViewport();
-	float offsetX = 25.0f;
-	float offsetY = 25.0f;
+	float offsetX = 50.0f;
+	float offsetY = 50.0f;
 
 	SDL2pp::Renderer& rend  = _mgr->GetRenderer();
 	SDL2pp::Window& window  = _mgr->GetWindow();
@@ -53,8 +71,8 @@ void LevelRenderer::RenderLevel(std::shared_ptr<Level> level, Camera& camera)
 
 			//Render shadow
 			tempRect = SDL2pp::Rect(tempPoint.x + offsetX - viewport.x, tempPoint.y + offsetY - viewport.y, _tileTextures[tempTile->GetID()]->GetWidth(), _tileTextures[tempTile->GetID()]->GetHeight());
-			rend.Copy(*_tileTextures[tempTile->GetID()], SDL2pp::NullOpt, tempRect);
-			
+			rend.Copy(*_shadowTileTextures[tempTile->GetID()], SDL2pp::NullOpt, tempRect);
+		
 			//Render normal
 			tempRect = SDL2pp::Rect(tempPoint.x - viewport.x, tempPoint.y - viewport.y, _tileTextures[tempTile->GetID()]->GetWidth(), _tileTextures[tempTile->GetID()]->GetHeight());
 			rend.Copy(*_tileTextures[tempTile->GetID()], SDL2pp::NullOpt, tempRect);

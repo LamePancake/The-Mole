@@ -38,7 +38,7 @@ int DenLevelScreen::Update(double elasepdSecs)
 		exit(0);
 	}
 
-	for (int i = 0; i < _level->GetEnemySize(); ++i)
+	for (size_t i = 0; i < _level->GetEnemySize(); ++i)
 	{
 		_level->GetEnemy(i)->Update(_level);
 	}
@@ -59,7 +59,7 @@ void DenLevelScreen::Draw()
 	_camera->CentreView(_level->GetEnemy(1)->GetPosition());
 
 	_levelRenderer.RenderLevel(_level, *_camera);
-	for (int i = 0; i < _level->GetEnemySize(); ++i)
+	for (size_t i = 0; i < _level->GetEnemySize(); ++i)
 	{
 		_level->GetEnemy(i)->Draw(_level, *_camera);
 	}

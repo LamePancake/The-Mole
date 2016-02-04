@@ -11,14 +11,17 @@
 class Actor
 {
 public:
+
 	/**
-	* Constructor that initializes _position to the input parameter
-	*
-	* @param the starting position of the agent
-	* @param the game manager
-	* @param starting speed
-	*/
-	Actor(Vector2 position, GameManager & manager, Vector2 spd, std::string texturePath);
+	 * Constructor that initializes _position to the input parameter.
+	 *
+	 * @param	position		 	starting position of the agent.
+	 * @param [in,out]	manager  	game manager.
+	 * @param	spd				 	speed.
+	 * @param	texturePath		 	Full pathname of the texture file.
+	 * @param	shadowTexturePath	Full pathname of the shadow texture file.
+	 */
+	Actor(Vector2 position, GameManager & manager, Vector2 spd, std::string texturePath, std::string shadowTexturePath);
 
 	/** Destructor. */
 	~Actor();
@@ -36,6 +39,13 @@ public:
 	 * @return	null if it fails, else the texture.
 	 */
 	std::shared_ptr<SDL2pp::Texture> GetTexture();
+
+	/**
+	* Returns in the textures needed to render the AI shadow.
+	*
+	* @return	null if it fails, else the texture.
+	*/
+	std::shared_ptr<SDL2pp::Texture> GetTextureShadow();
 
 	// Returns position of the agent.
 	Vector2 GetPosition();
@@ -106,6 +116,9 @@ protected:
 
 	/** The sprite. */
 	std::shared_ptr<SDL2pp::Texture> _sprite;
+
+	/** The sprite shadow. */
+	std::shared_ptr<SDL2pp::Texture> _spriteShadow;
 
 	/** The manager. */
 	GameManager* _mgr;
