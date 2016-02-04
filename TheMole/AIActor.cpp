@@ -22,7 +22,7 @@ void AIActor::Update(std::shared_ptr<Level> & level)
 		ScanNeighbouringTiles(level);
 	}
 }
-
+;
 void AIActor::UpdatePosition()
 {
 	Actor::UpdatePosition();
