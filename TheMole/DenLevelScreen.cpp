@@ -22,6 +22,7 @@ int DenLevelScreen::Load() {
 int DenLevelScreen::Update(double elasepdSecs)
 {
 	SDL_PumpEvents();
+	_mgr->inputManager.UpdateKeyboardState();
 
 	// Change the currently selected menu item
 	const Uint8* keys = SDL_GetKeyboardState(nullptr);
