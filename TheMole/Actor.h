@@ -94,11 +94,11 @@ public:
 	/**
 	 * Draws.
 	 *
-	 * @param [in,out]	level	The level.
-	 *
-	 * 	Draws this object.
+	 * @param [in,out]	camera	ref to the camera.
+	 * 
+	 * Draws this object.
 	 */
-	virtual void Draw(std::shared_ptr<Level> & level, Camera& camera);
+	virtual void Draw(Camera& camera);
 
 protected:
 

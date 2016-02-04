@@ -43,15 +43,13 @@ void LevelRenderer::Unload()
 void LevelRenderer::RenderLevel(std::shared_ptr<Level> level, Camera& camera)
 {
 	const SDL2pp::Rect& viewport = camera.GetViewport();
-	float offsetX = 50.0f;
-	float offsetY = 50.0f;
+	int offsetX = 5;
+	int offsetY = 5;
 
 	SDL2pp::Renderer& rend  = _mgr->GetRenderer();
-	SDL2pp::Window& window  = _mgr->GetWindow();
 	SDL2pp::Point levelSize = level->GetLevelSize();
 
 	SDL2pp::Point tempPoint;
-	SDL2pp::Rect tempRect;
 
 	if (levelSize.x == 0 || levelSize.y == 0)
 		return;
@@ -67,15 +65,12 @@ void LevelRenderer::RenderLevel(std::shared_ptr<Level> level, Camera& camera)
 				continue;
 
 			tempPoint = { (int)tempTile->GetWorldPosition().GetX(), (int)tempTile->GetWorldPosition().GetY() };
-			//tempPoint = tempTile->GetIndices();
 
 			//Render shadow
-			tempRect = SDL2pp::Rect(tempPoint.x + offsetX - viewport.x, tempPoint.y + offsetY - viewport.y, _tileTextures[tempTile->GetID()]->GetWidth(), _tileTextures[tempTile->GetID()]->GetHeight());
-			rend.Copy(*_shadowTileTextures[tempTile->GetID()], SDL2pp::NullOpt, tempRect);
+			rend.Copy(*_shadowTileTextures[id], SDL2pp::NullOpt, tempPoint + SDL2pp::Point(offsetX - viewport.x, offsetY - viewport.y));
 		
 			//Render normal
-			tempRect = SDL2pp::Rect(tempPoint.x - viewport.x, tempPoint.y - viewport.y, _tileTextures[tempTile->GetID()]->GetWidth(), _tileTextures[tempTile->GetID()]->GetHeight());
-			rend.Copy(*_tileTextures[tempTile->GetID()], SDL2pp::NullOpt, tempRect);
+			rend.Copy(*_tileTextures[id], SDL2pp::NullOpt, tempPoint + SDL2pp::Point(-viewport.x, -viewport.y));
 		}
 	}
 }

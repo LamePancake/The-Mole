@@ -58,12 +58,12 @@ void DenLevelScreen::Draw()
 	rend.Clear();
 	_camera->CentreView(_level->GetEnemy(1)->GetPosition());
 
-	_levelRenderer.RenderLevel(_level, *_camera);
 	for (size_t i = 0; i < _level->GetEnemySize(); ++i)
 	{
-		_level->GetEnemy(i)->Draw(_level, *_camera);
+		_level->GetEnemy(i)->Draw(*_camera);
 	}
-	_player->Draw(_level, *_camera);
+	_player->Draw(*_camera);
+	_levelRenderer.RenderLevel(_level, *_camera);
 
 	_testSheet->Draw(Point(_mgr->GetWindow().GetWidth() / 2, _mgr->GetWindow().GetHeight() / 2));
 

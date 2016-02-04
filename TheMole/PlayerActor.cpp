@@ -4,9 +4,9 @@ PlayerActor::~PlayerActor()
 {
 }
 
-void PlayerActor::Draw(std::shared_ptr<Level>& level, Camera& camera)
+void PlayerActor::Draw(Camera& camera)
 {
-	Actor::Draw(level, camera);
+	Actor::Draw(camera);
 }
 
 void PlayerActor::Update(std::shared_ptr<Level>& level)
