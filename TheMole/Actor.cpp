@@ -1,11 +1,12 @@
 #include "Actor.h"
 
-Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::string texturePath)
+Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::string texturePath, std::string shadowTexturePath)
 	:_position(position), _mgr(&manager), _speed(spd)
 {
 	_health = 100;
 	// This is temporary so we can test whether AABB can be created from texture dimensions
 	_sprite = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), texturePath);
+	_spriteShadow = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), shadowTexturePath);
 	_aabb = AABB(*_sprite, *this);
 }
 
@@ -21,6 +22,11 @@ AABB Actor::GetAABB()
 std::shared_ptr<SDL2pp::Texture> Actor::GetTexture()
 {
 	return _sprite;
+}
+
+std::shared_ptr<SDL2pp::Texture> Actor::GetTextureShadow()
+{
+	return _spriteShadow;
 }
 
 Vector2 Actor::GetPosition()
@@ -63,8 +69,8 @@ void Actor::UpdatePosition()
 
 void Actor::Draw(std::shared_ptr<Level>& level)
 {
-	float offsetX = 25.0f;
-	float offsetY = 25.0f;
+	float offsetX = 15.0f;
+	float offsetY = 15.0f;
 			
 	SDL2pp::Renderer& rend = _mgr->GetRenderer();
 	SDL2pp::Window& window = _mgr->GetWindow();
@@ -80,7 +86,7 @@ void Actor::Draw(std::shared_ptr<Level>& level)
 	//tempPoint = tempTile->GetWorldPosition();
 	// Render shadow
 	tempRect = SDL2pp::Rect((_position.GetX() / (float)level->GetTileWidth() * xScale) + offsetX, (_position.GetY() / (float)level->GetTileHeight() * yScale) + offsetY, xScale, yScale);
-	rend.Copy(*_sprite, SDL2pp::NullOpt, tempRect);
+	rend.Copy(*_spriteShadow, SDL2pp::NullOpt, tempRect);
 
 	// Render normal
 	tempRect = SDL2pp::Rect((_position.GetX() / (float)level->GetTileWidth() * xScale), (_position.GetY() / (float)level->GetTileHeight() * yScale), xScale, yScale);
