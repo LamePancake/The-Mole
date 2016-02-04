@@ -132,6 +132,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AABB.cpp" />
+    <ClCompile Include="Actor.cpp" />
     <ClCompile Include="DenLevelScreen.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Input.cpp" />
@@ -140,13 +141,18 @@
     <ClCompile Include="LevelRenderer.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MenuScreen.cpp" />
-    <ClCompile Include="SimpleAgent.cpp" />
+    <ClCompile Include="PlayerActor.cpp" />
+    <ClCompile Include="AIActor.cpp" />
+    <ClCompile Include="SpriteSheet.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AABB.h" />
+    <ClInclude Include="Actor.h" />
     <ClInclude Include="DenLevelScreen.h" />
+    <ClInclude Include="PlayerActor.h" />
+    <ClInclude Include="SpriteSheet.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Level.h" />
@@ -155,7 +161,7 @@
     <ClInclude Include="MenuScreen.h" />
     <ClInclude Include="Screen.h" />
     <ClInclude Include="GameManager.h" />
-    <ClInclude Include="SimpleAgent.h" />
+    <ClInclude Include="AIActor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Input.h" />

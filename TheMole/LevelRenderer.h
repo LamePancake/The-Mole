@@ -1,7 +1,6 @@
 #pragma once
 #include "Level.h"
 #include "GameManager.h"
-#include "SimpleAgent.h"
 #include <SDL2pp\SDL2pp.hh>
 #include <map>
 #include <memory>
@@ -29,7 +28,7 @@ public:
 	/**
 	 * Renders the level described by level.
 	 *
-	 * @param [in,out]	level	The level to be rendered.
+	 * @param	level   	The level to be rendered.
 	 */
 	void RenderLevel(std::shared_ptr<Level> level);
 
@@ -39,6 +38,4 @@ private:
 
 	/** Reference to the game manager. */
 	GameManager* _mgr;
-
-	SimpleAgent testAI;
 };

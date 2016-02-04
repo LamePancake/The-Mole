@@ -3,7 +3,7 @@
 #include <memory>
 #include <map>
 
-class SimpleAgent;
+class Actor;
 
 #include "Tile.h"
 
@@ -73,7 +73,7 @@ public:
 	 *
 	 * @param	e	The std::shared_ptr&lt;SimpleAgent&gt; to process.
 	 */
-	void AddEnemy(std::shared_ptr<SimpleAgent> e);
+	void AddEnemy(std::shared_ptr<Actor> e);
 
 	/**
 	 * Gets an enemy.
@@ -82,7 +82,7 @@ public:
 	 *
 	 * @return	The enemy.
 	 */
-	std::shared_ptr<SimpleAgent> GetEnemy(size_t idx);
+	std::shared_ptr<Actor> GetEnemy(size_t idx);
 
 	/**
 	 * Gets enemy array size.
@@ -122,7 +122,7 @@ public:
 private:
 	
 	/** The enemies in the level. */
-	std::vector<std::shared_ptr<SimpleAgent>> _enemies;
+	std::vector<std::shared_ptr<Actor>> _enemies;
 
 	std::map<char, std::vector<SDL2pp::Point>> _tilePositions;
 

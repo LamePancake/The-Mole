@@ -1,6 +1,5 @@
 #include "AABB.h"
-#include "SimpleAgent.h"
-
+#include "Actor.h"
 
 AABB::AABB()
 {
@@ -11,11 +10,11 @@ AABB::~AABB()
 {
 }
 
-AABB::AABB(SDL2pp::Texture & srcImg, SimpleAgent & ai)
+AABB::AABB(SDL2pp::Texture & srcImg, Actor & actor)
 {
 	// This sets _x and _y as the top left corner of the box
-	_x = ai.GetPosition().GetX() - (srcImg.GetWidth() / 2);
-	_y = ai.GetPosition().GetY() - (srcImg.GetHeight() / 2);
+	_x = actor.GetPosition().GetX() - (srcImg.GetWidth() / 2);
+	_y = actor.GetPosition().GetY() - (srcImg.GetHeight() / 2);
 
 	_width = srcImg.GetWidth();
 	_height = srcImg.GetHeight();
@@ -38,10 +37,10 @@ bool AABB::CheckCollision(AABB otherBox)
 	}
 }
 
-void AABB::UpdatePosition(SimpleAgent & ai)
+void AABB::UpdatePosition(Actor & actor)
 {
-	_x = ai.GetPosition().GetX() - (_width / 2);
-	_y = ai.GetPosition().GetY() - (_height / 2);
+	_x = actor.GetPosition().GetX() - (_width / 2);
+	_y = actor.GetPosition().GetY() - (_height / 2);
 }
 
 float AABB::GetX()
