@@ -34,6 +34,10 @@
 				level->AddEnemy(e);
 				tile->SetID(Tile::blank);
 			}
+			else if (toupper((*it)) == Tile::origin)
+			{
+				tile->SetID(Tile::blank);
+			}
 
 			level->AddTileToLevel(tile, levelHeight);
 			level->AddPositions(toupper((*it)), SDL2pp::Point(levelWidth, levelHeight));
