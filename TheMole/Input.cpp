@@ -1,10 +1,10 @@
 #include "Input.h"
 #include <stdio.h>
 
+using namespace std;
+
 Input::Input()
 {
-	curKeyboardState = SDL_GetKeyboardState(NULL);
-	prevKeyboardState = curKeyboardState;
 }
 
 
@@ -13,8 +13,21 @@ Input::~Input()
 }
 
 void Input::UpdateKeyboardState() {
-	prevKeyboardState = curKeyboardState;
+	prevKeyboardState = (Uint8*)malloc(sizeof(Uint8) * SDL_NUM_SCANCODES);
+	memcpy((Uint8*)prevKeyboardState, (Uint8*)curKeyboardState, sizeof(Uint8) * SDL_NUM_SCANCODES);
 	curKeyboardState = SDL_GetKeyboardState(NULL);
+}
+
+bool Input::ActionOccured(string actionName, ActionType actionType) {
+	switch (actionType) {
+	case Pressed:
+		return KeyPressed(actionMap[actionName]->actionKey);
+		break;
+	case Held:
+		return KeyHeld(actionMap[actionName]->actionKey);
+		break;
+	}
+	return false;
 }
 
 void Input::PollEvent()

@@ -1,17 +1,13 @@
 #pragma once
 #include <SDL2/SDL.h>
+#include <string>
+#include <unordered_map>
+#include <memory>
+
 class Input
 {
 public:
-	//------------------Constructors-------------
-	Input();
-	~Input();
-	//-------------------Functions---------------
-	/// Checks the SDL event structs for stuff
-	void PollEvent();
-	/// This should be called every frame
-	void UpdateKeyboardState();
-	//-------------------Variables---------------
+	//------------------Enumerated----------------
 	/// A type of input action.
 	enum ActionType {
 		/// The button/key was down and is now up.
@@ -23,56 +19,35 @@ public:
 		/// The button/key was down in this update (previous state is not considered).
 		Down,
 		/// The button/key was up in this update (previous state is not considered).
-		Up
+		Up,
+		Held
 	};
 
-	/// Represents a signifcant key/button combination.
-	struct InputAction{
-		/// Denotes that an input action has no corresponding button.
-		//public const Buttons NO_ACTION_BUTTON = (Buttons)(-1);
+	//-----------------Struct--------------------
+	/// Represents a key action.
+	struct InputAction
+	{
+		SDL_Scancode actionKey;
 
-		/// Denotes that an input action has no corresponding key.
-		//public const Keys NO_ACTION_KEY = (Keys)(-1);
+		SDL_JoyButtonEvent gamepadButton;
 
-		/// The shift key must be pressed for this event to register.
-		//const int SHIFT = 1;
+		InputAction(SDL_Scancode actionKey)
+		{
+			this->actionKey = actionKey;
+		}
+	};
+	//------------------Constructors-------------
+	Input();
+	~Input();
+	//-------------------Functions---------------
+	/// Checks the SDL event structs for stuff
+	void PollEvent();
+	/// This should be called every frame
+	void UpdateKeyboardState();
+	/// 
+	bool ActionOccured(std::string actionName, ActionType actionType);
+	//-------------------Variables---------------
 
-		/// The alt key must be pressed for this event to register.
-		//const int ALT = 2;
-
-		/// The ctrl key must be pressed for this event to register.
-		//const int CTRL = 4;
-
-		/// The key corresponding to the action.
-		//public Keys[] ActionKeys;
-
-		/// A mask of ????
-		//int AcceleratorMask[];
-
-		/// The button corresponding to the action.
-		//public Buttons[] ActionButtons;
-
-		/// Constructs a new InputAction with the specified values.
-		/// @param AcceleratorMask A bitwise-OR'd mask of accelerators (SHIFT, ALT, and CTRL) that must be pressed for this action to occur. 0 means that none of them must happen.
-		/// @param ActionKeys The set of keys associated with this action. Use null if there are no associated keys.
-		/// @param ActionButtons The set of buttons associated with this action. Use null if there are no associated buttons.
-		//public InputAction(int[] AcceleratorMask, Keys[] ActionKeys, Buttons[] ActionButtons)
-		//{
-		//	this.ActionKeys = ActionKeys;
-		//	this.ActionButtons = ActionButtons;
-		//	this.AcceleratorMask = AcceleratorMask;
-		//}
-
-		/// Constructs a new InputAction with the specified key and button.
-		/// @param AcceleratorMask A bitwise-OR'd mask of accelerators (SHIFT, ALT, and CTRL) that must be pressed for this action to occur. 0 means that none of them must happen.
-		/// @param ActionKey The key associated with this action or InputAction.NO_ACTION_KEY if there isn't one.
-		/// @param ActionButton The button associated with this action or InputAction.NO_ACTION_BUTTON if there isn't one.
-		//public InputAction(int AcceleratorMask, Keys ActionKey, Buttons ActionButton)
-		//	: this(new int[] {AcceleratorMask},
-		//		ActionKey == NO_ACTION_KEY ? null : new Keys[]{ ActionKey },
-		//		ActionButton == NO_ACTION_BUTTON ? null : new Buttons[]{ ActionButton })
-		//{}
-	} actionState;
 private:
 	//-------------------Functions---------------
 	//Probably won't be using this one anymore
@@ -80,13 +55,12 @@ private:
 	/// Checks keyboard states to determine if a key was pressed
 	/// @param key keyboard key id
 	/// @return bool True if pressed, False if not
-	bool KeyPressed(SDL_Scancode key); //Placeholder
+	bool KeyPressed(SDL_Scancode key);
 	/// Checks keyboard states to determine if a key is being held
 	/// @param key keyboard key id
 	/// @return bool True if held, False if not
 	bool KeyHeld(SDL_Scancode key);
 	//-------------------Variables---------------
-	int buttonsPressed;
 	//state of keyboard == relevant key presses and actions
 	/// State of the keyboard in the previous frame
 	const Uint8 *prevKeyboardState;
@@ -102,4 +76,6 @@ private:
 	SDL_KeyboardEvent keyEvent;
 	/// State of some gamepad button press
 	SDL_JoyButtonEvent gamepadButtonEvent;
+	/// This names and stores relevant keystrokes
+	std::unordered_map<std::string, std::shared_ptr<InputAction>> actionMap;
 };

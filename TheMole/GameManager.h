@@ -6,6 +6,7 @@
 #include <vector>
 #include <SDL2pp\SDL2pp.hh>
 #include "Screen.h"
+#include "Input.h"
 
 class GameManager {
 public:
@@ -40,6 +41,9 @@ public:
 	SDL2pp::Renderer& GetRenderer() const { return _renderer; }
 
 	static GameManager* GetInstance();
+
+	/// Input *manager*
+	Input inputManager;
 private:
 
 	// FML I hate this
