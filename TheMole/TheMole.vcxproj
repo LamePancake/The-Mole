@@ -143,6 +143,7 @@
     <ClCompile Include="MenuScreen.cpp" />
     <ClCompile Include="PlayerActor.cpp" />
     <ClCompile Include="SimpleAgent.cpp" />
+    <ClCompile Include="SpriteSheet.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
@@ -151,6 +152,7 @@
     <ClInclude Include="Actor.h" />
     <ClInclude Include="DenLevelScreen.h" />
     <ClInclude Include="PlayerActor.h" />
+    <ClInclude Include="SpriteSheet.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Level.h" />
