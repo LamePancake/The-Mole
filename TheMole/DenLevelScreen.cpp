@@ -2,6 +2,8 @@
 #include "GameManager.h"
 #include "Vector2.h"
 
+using namespace SDL2pp;
+
 int DenLevelScreen::Load() {
 	_mgr = GameManager::GetInstance();
 
@@ -12,6 +14,8 @@ int DenLevelScreen::Load() {
 	_prevKeyState = (Uint8*)std::malloc(sizeof(Uint8) * SDL_NUM_SCANCODES);
 	std::memcpy(_prevKeyState, SDL_GetKeyboardState(nullptr), sizeof(Uint8) * SDL_NUM_SCANCODES);
 
+	std::string spriteFile(".\\Assets\\Textures\\Borin_walk.png");
+	_testSheet = new SpriteSheet(spriteFile, 8, 1.0);
 	return SCREEN_LOAD_SUCCESS;
 }
 
@@ -31,6 +35,8 @@ int DenLevelScreen::Update(double elasepdSecs) {
 
 	// Save the previous key state (temporary until InputManager actions are implemented)
 	std::memcpy(_prevKeyState, keys, sizeof(Uint8) * SDL_NUM_SCANCODES);
+
+	_testSheet->Update(elasepdSecs);
 	return SCREEN_CONTINUE;
 }
 
@@ -44,6 +50,8 @@ void DenLevelScreen::Draw() {
 	{
 		_level->GetEnemy(i)->Draw(_level);
 	}
+
+	_testSheet->Draw(Point(_mgr->GetWindow().GetWidth() / 2, _mgr->GetWindow().GetHeight() / 2));
 
 	rend.Present();
 }
