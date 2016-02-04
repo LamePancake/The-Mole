@@ -48,6 +48,11 @@ public:
 	void UpdateKeyboardState();
 	/// 
 	bool ActionOccured(std::string actionName, ActionType actionType);
+
+	/**
+	* Adds key and input action pair into map.
+	*/
+	void AddKeyToMap(std::string key, InputAction &inputAct);
 	//-------------------Variables---------------
 
 private:

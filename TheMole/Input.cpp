@@ -1,5 +1,6 @@
 #include "Input.h"
 #include <stdio.h>
+#include <memory>
 
 using namespace std;
 
@@ -90,4 +91,9 @@ void Input::On_Key_Up(SDL_Keysym keysym)
 	default:
 		break;
 	}
+}
+
+void Input::AddKeyToMap(string key, InputAction &inputAct)
+{	
+	_actionMap.insert({ {key, make_shared<InputAction>(&inputAct)} });
 }
