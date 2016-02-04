@@ -14,7 +14,7 @@ public:
 	const static int DEFAULT_TILE_HEIGHT = 64;
 
 	/** Values that represent tile types. */
-	enum TileType: char
+	enum TileType : char
 	{
 		blank       = ' ',
 		stone       = 'S',
@@ -24,6 +24,8 @@ public:
 		enemy       = 'E',
 		goal        = 'G',
 		collectible = 'C',
+		tunnel      = 'T',
+		origin      = 'O'
 	};
 
 	/** Default constuctor. Initilizes everying to default values. */
