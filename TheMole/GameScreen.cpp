@@ -92,6 +92,12 @@ int GameScreen::Update(double elapsedSecs)
 	}
 	_player->Update(elapsedSecs, _level);
 
+	if (_player->IsDead())
+	{
+		GameManager::GetInstance()->SetNextScreen("menu");
+		return SCREEN_FINISH;
+	}
+
 	return SCREEN_CONTINUE;
 }
 

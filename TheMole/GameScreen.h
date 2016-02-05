@@ -20,8 +20,7 @@ public:
 	virtual void Draw() override;
 	virtual void Unload() override;
 
-	void SetPlayer(std::shared_ptr<Actor> &playa);
-private:
+protected:
 	Camera* _camera;
 	GameManager* _mgr;
 	Uint8* _prevKeyState;

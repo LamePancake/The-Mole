@@ -17,7 +17,7 @@ void AIActor::Update(double elapsedSecs, std::shared_ptr<Level> & level)
 	}
 	if (_health > 0)
 	{
-		//_aabb.UpdatePosition(*this);
+		_aabb.UpdatePosition(*this);
 		UpdatePosition(elapsedSecs);
 		ScanNeighbouringTiles(level);
 	}

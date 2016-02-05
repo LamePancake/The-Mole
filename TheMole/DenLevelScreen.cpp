@@ -29,9 +29,7 @@ int DenLevelScreen::Load() {
 
 int DenLevelScreen::Update(double elapsedSecs)
 {
-	//SDL_PumpEvents();
-	//_mgr->inputManager->UpdateKeyboardState();
-	GameScreen::Update(elapsedSecs);
+	if (GameScreen::Update(elapsedSecs) == SCREEN_FINISH) return SCREEN_FINISH;
 
 	return SCREEN_CONTINUE;
 }

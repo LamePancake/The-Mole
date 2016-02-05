@@ -54,6 +54,13 @@ public:
 	 */
 	bool CollisionCheck(Actor &otherAI);
 
+	/**
+	 * Query if this object is dead.
+	 *
+	 * @return	true if dead, false if not.
+	 */
+	bool IsDead();
+
 private:
 
 };

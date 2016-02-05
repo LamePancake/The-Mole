@@ -12,7 +12,16 @@ void PlayerActor::Draw(Camera& camera)
 void PlayerActor::Update(double elapsedSecs, std::shared_ptr<Level>& level)
 {
 	Actor::Update(elapsedSecs, level);
+	_aabb.UpdatePosition(*this);
 	UpdatePosition(elapsedSecs);
+	
+	for (int i = 0; i < level->GetEnemySize(); ++i)
+	{
+		if (CollisionCheck(*level->GetEnemy(i)))
+		{
+			_health = 0;
+		}
+	}
 }
 
 void PlayerActor::UpdatePosition(double elapsedSecs)
@@ -77,4 +86,14 @@ bool PlayerActor::Dig(char dir, std::shared_ptr<Level>& level)
 			return false;
 		}
 	}
+}
+
+bool PlayerActor::CollisionCheck(Actor & otherAI)
+{
+	return _aabb.CheckCollision(otherAI.GetAABB());
+}
+
+bool PlayerActor::IsDead()
+{
+	return _health == 0 ? true : false;
 }
