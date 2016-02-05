@@ -21,7 +21,9 @@ public:
 	 */
 	Camera(const SDL2pp::Point& pos, const SDL2pp::Point& viewportSize, const SDL2pp::Point& mapSize)
 		: _viewport(pos.x, pos.y, viewportSize.x, viewportSize.y), _mapSize(mapSize.x, mapSize.y)
-	{}
+	{
+		CentreView(pos);
+	}
 
 	void Update(double elapsedSecs);
 	

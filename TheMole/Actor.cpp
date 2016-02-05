@@ -73,8 +73,8 @@ void Actor::UpdatePosition()
 void Actor::Draw(Camera& camera)
 {
 	const SDL2pp::Rect& viewport = camera.GetViewport();
-	int offsetX = 3;
-	int offsetY = 2;
+	int offsetX = 4;
+	int offsetY = 0;
 			
 	SDL2pp::Renderer& rend = _mgr->GetRenderer();
 	SDL2pp::Point tempPoint;
