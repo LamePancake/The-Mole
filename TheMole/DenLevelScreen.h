@@ -30,7 +30,6 @@ private:
 	LevelLoader _levelLoader;
 	LevelRenderer _levelRenderer;
 	std::shared_ptr<Level> _level;
-	SpriteSheet* _testSheet;
 	std::shared_ptr<Actor> _player;
 };
 
