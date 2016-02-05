@@ -45,6 +45,15 @@ public:
 	 */
 	bool Dig(char dir, std::shared_ptr<Level> & level);
 
+	/**
+	 * Collision check.
+	 *
+	 * @param [in,out]	otherAI	The other an i.
+	 *
+	 * @return	true if it succeeds, false if it fails.
+	 */
+	bool CollisionCheck(Actor &otherAI);
+
 private:
 
 };
