@@ -66,7 +66,7 @@ void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level> & level)
 		{
 			if (level->GetTileFromLevel(xInd, yInd + 1)->GetID() == Tile::blank)
 			{
-				_speed.SetY(1.0f);
+				_speed.SetY(120.0f);
 			}
 			else if(level->GetTileFromLevel(xInd, yInd + 1)->GetID() == Tile::spike)
 			{

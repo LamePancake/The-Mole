@@ -1,6 +1,7 @@
 #include "DenLevelScreen.h"
 #include "GameManager.h"
 #include "Vector2.h"
+#include "Math.h"
 
 using namespace SDL2pp;
 
