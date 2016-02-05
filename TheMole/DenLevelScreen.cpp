@@ -24,6 +24,8 @@ int DenLevelScreen::Load() {
 	levelSize.y *= _level->GetTileHeight();
 	_camera = new Camera(playerPos, viewportSize, levelSize);
 
+	_background = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), ".\\Assets\\Textures\\den_bg.png");
+
 	return SCREEN_LOAD_SUCCESS;
 }
 
@@ -57,6 +59,8 @@ void DenLevelScreen::Draw()
 	rend.SetDrawColor(100, 100, 100, 255);
 	rend.Clear();
 	_camera->CentreView(_level->GetEnemy(1)->GetPosition());
+
+	rend.Copy(*_background, SDL2pp::NullOpt, SDL2pp::NullOpt);
 
 	for (size_t i = 0; i < _level->GetEnemySize(); ++i)
 	{

@@ -74,7 +74,7 @@ void Actor::Draw(Camera& camera)
 {
 	const SDL2pp::Rect& viewport = camera.GetViewport();
 	int offsetX = 3;
-	int offsetY = 3;
+	int offsetY = 2;
 			
 	SDL2pp::Renderer& rend = _mgr->GetRenderer();
 	SDL2pp::Point tempPoint;

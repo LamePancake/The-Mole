@@ -43,8 +43,8 @@ void LevelRenderer::Unload()
 void LevelRenderer::RenderLevel(std::shared_ptr<Level> level, Camera& camera)
 {
 	const SDL2pp::Rect& viewport = camera.GetViewport();
-	int offsetX = 5;
-	int offsetY = 5;
+	int offsetX = 6;
+	int offsetY = 2;
 
 	SDL2pp::Renderer& rend  = _mgr->GetRenderer();
 	SDL2pp::Point levelSize = level->GetLevelSize();

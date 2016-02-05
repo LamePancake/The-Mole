@@ -32,6 +32,7 @@ private:
 	std::shared_ptr<Level> _level;
 	SpriteSheet* _testSheet;
 	std::shared_ptr<Actor> _player;
+	std::shared_ptr<SDL2pp::Texture> _background;
 };
 
 #endif
