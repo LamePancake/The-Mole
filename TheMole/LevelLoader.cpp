@@ -1,7 +1,7 @@
 #include "LevelLoader.h"
 
 // Loads the level
- std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared_ptr<Actor> & player)
+ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared_ptr<PlayerActor> & player)
 {
 	int    levelWidth   = 0; // Keeps track of the width of the level
 	int    levelHeight  = 0; // Keeps track of the height of the level

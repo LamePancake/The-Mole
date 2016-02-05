@@ -30,7 +30,7 @@ private:
 	LevelLoader _levelLoader;
 	LevelRenderer _levelRenderer;
 	std::shared_ptr<Level> _level;
-	std::shared_ptr<Actor> _player;
+	std::shared_ptr<PlayerActor> _player;
 	std::shared_ptr<SDL2pp::Texture> _background;
 };
 
