@@ -153,6 +153,7 @@
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DenLevelScreen.h" />
+    <ClInclude Include="Math.h" />
     <ClInclude Include="PlayerActor.h" />
     <ClInclude Include="SpriteSheet.h" />
     <ClInclude Include="Tile.h" />

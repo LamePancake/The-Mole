@@ -63,6 +63,9 @@ private:
 		inputManager = new Input();
 		inputManager->AddKeyToMap("LEFT", Input::InputAction(SDL_SCANCODE_A));
 		inputManager->AddKeyToMap("RIGHT", Input::InputAction(SDL_SCANCODE_D));
+		inputManager->AddKeyToMap("UP", Input::InputAction(SDL_SCANCODE_W));
+		inputManager->AddKeyToMap("DOWN", Input::InputAction(SDL_SCANCODE_S));
+		inputManager->AddKeyToMap("JUMP", Input::InputAction(SDL_SCANCODE_SPACE));
 		inputManager->AddKeyToMap("QUIT", Input::InputAction(SDL_SCANCODE_ESCAPE));
 	}
 
