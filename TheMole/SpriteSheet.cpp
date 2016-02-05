@@ -32,3 +32,8 @@ void SpriteSheet::Reset() {
 	_currentFrame = 0;
 	_currentFrameElapsed = 0;
 }
+
+SDL2pp::Texture & SpriteSheet::GetTexture()
+{
+	return _sheet;
+}

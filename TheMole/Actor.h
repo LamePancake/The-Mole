@@ -7,6 +7,7 @@
 #include "GameManager.h"
 #include "Level.h"
 #include "Camera.h"
+#include "SpriteSheet.h"
 
 class Actor
 {
@@ -38,14 +39,14 @@ public:
 	 *
 	 * @return	null if it fails, else the texture.
 	 */
-	std::shared_ptr<SDL2pp::Texture> GetTexture();
+	std::shared_ptr<SpriteSheet> GetTexture();
 
 	/**
 	* Returns in the textures needed to render the AI shadow.
 	*
 	* @return	null if it fails, else the texture.
 	*/
-	std::shared_ptr<SDL2pp::Texture> GetTextureShadow();
+	std::shared_ptr<SpriteSheet> GetTextureShadow();
 
 	// Returns position of the agent.
 	Vector2 GetPosition();
@@ -86,7 +87,7 @@ public:
 	void SetPosition(Vector2 pos);
 
 	// All the state changing stuff happens in here. 
-	virtual void Update(std::shared_ptr<Level> & level);
+	virtual void Update(double elapsedSecs, std::shared_ptr<Level> & level);
 
 	// Updates position of the agent by adding _speed to it.
 	virtual void UpdatePosition();
@@ -114,11 +115,11 @@ protected:
 	/** The aabb. */
 	AABB _aabb;
 
-	/** The sprite. */
-	std::shared_ptr<SDL2pp::Texture> _sprite;
-
 	/** The sprite shadow. */
-	std::shared_ptr<SDL2pp::Texture> _spriteShadow;
+	std::shared_ptr<SpriteSheet> _spriteShadow;
+	
+	/** The sprite. */
+	std::shared_ptr<SpriteSheet> _sprite;
 
 	/** The manager. */
 	GameManager* _mgr;

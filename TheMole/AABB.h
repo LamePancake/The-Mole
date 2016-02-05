@@ -16,7 +16,7 @@ public:
 	*
 	* @param source image to create AABB from, SimpleAgent object to which we base our x, y position on
 	**/
-	AABB(SDL2pp::Texture & srcImg, Actor & actor);
+	AABB(double width, double height, Actor & actor);
 
 	/**
 	* Checks collision against another AABB

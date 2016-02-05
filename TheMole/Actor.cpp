@@ -4,13 +4,14 @@ Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::string t
 	:_position(position), _mgr(&manager), _speed(spd)
 {
 	_health = 100;
-	// This is temporary so we can test whether AABB can be created from texture dimensions
-	_sprite = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), texturePath);
-	_spriteShadow = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), shadowTexturePath);
-	_aabb = AABB(*_sprite, *this);
+	
+	_sprite = std::make_shared<SpriteSheet>(texturePath, 8, 1.0, SpriteSheet::XAxisDirection::RIGHT);
+	_spriteShadow = std::make_shared<SpriteSheet>(shadowTexturePath, 8, 1.0, SpriteSheet::XAxisDirection::RIGHT);
 
-	SDL_SetTextureColorMod(_spriteShadow->Get(), 127, 127, 127);
-	SDL_SetTextureAlphaMod(_spriteShadow->Get(), 127);
+	_aabb = AABB(64, 64, *this);
+
+	SDL_SetTextureColorMod(_spriteShadow->GetTexture().Get(), 127, 127, 127);
+	SDL_SetTextureAlphaMod(_spriteShadow->GetTexture().Get() , 127);
 }
 
 Actor::~Actor()
@@ -22,12 +23,12 @@ AABB Actor::GetAABB()
 	return _aabb;
 }
 
-std::shared_ptr<SDL2pp::Texture> Actor::GetTexture()
+std::shared_ptr<SpriteSheet> Actor::GetTexture()
 {
 	return _sprite;
 }
 
-std::shared_ptr<SDL2pp::Texture> Actor::GetTextureShadow()
+std::shared_ptr<SpriteSheet> Actor::GetTextureShadow()
 {
 	return _spriteShadow;
 }
@@ -62,8 +63,10 @@ void Actor::SetPosition(Vector2 pos)
 	_position = pos;
 }
 
-void Actor::Update(std::shared_ptr<Level>& level)
+void Actor::Update(double elapsedSecs, std::shared_ptr<Level>& level)
 {
+	_sprite->Update(elapsedSecs);
+	_spriteShadow->Update(elapsedSecs);
 }
 
 void Actor::UpdatePosition()
@@ -81,10 +84,7 @@ void Actor::Draw(Camera& camera)
 
 	tempPoint = { (int)_position.GetX(), (int)_position.GetY() };
 
-	// Render shadow
-	rend.Copy(*_spriteShadow, SDL2pp::NullOpt, tempPoint + SDL2pp::Point(offsetX - viewport.x, offsetY - viewport.y));
-
-	// Render normal
-	rend.Copy(*_sprite, SDL2pp::NullOpt, tempPoint + SDL2pp::Point(-viewport.x, -viewport.y));
+	_spriteShadow->Draw(tempPoint + SDL2pp::Point(offsetX - viewport.x, offsetY - viewport.y), SpriteSheet::XAxisDirection::RIGHT);
+	_sprite->Draw(tempPoint + SDL2pp::Point(-viewport.x, -viewport.y), SpriteSheet::XAxisDirection::RIGHT);
 }
 

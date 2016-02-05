@@ -56,6 +56,13 @@ public:
 	 */
 	void Reset();
 
+	/**
+	 * Gets the texture.
+	 *
+	 * @return	The texture.
+	 */
+	SDL2pp::Texture& GetTexture();
+
 private:
 	SDL2pp::Texture _sheet;
 	SDL2pp::Point _spriteSize;

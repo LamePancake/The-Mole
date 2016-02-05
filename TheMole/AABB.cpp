@@ -10,14 +10,14 @@ AABB::~AABB()
 {
 }
 
-AABB::AABB(SDL2pp::Texture & srcImg, Actor & actor)
+AABB::AABB(double width, double height, Actor & actor)
 {
 	// This sets _x and _y as the top left corner of the box
-	_x = actor.GetPosition().GetX() - (srcImg.GetWidth() / 2);
-	_y = actor.GetPosition().GetY() - (srcImg.GetHeight() / 2);
+	_x = actor.GetPosition().GetX() - (width / 2);
+	_y = actor.GetPosition().GetY() - (height / 2);
 
-	_width = srcImg.GetWidth();
-	_height = srcImg.GetHeight();
+	_width = width;
+	_height = height;
 
 }
 

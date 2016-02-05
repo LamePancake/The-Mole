@@ -4,9 +4,9 @@ AIActor::~AIActor()
 {
 }
 
-void AIActor::Update(std::shared_ptr<Level> & level)
+void AIActor::Update(double elapsedSecs, std::shared_ptr<Level> & level)
 {
-	Actor::Update(level);
+	Actor::Update(elapsedSecs, level);
 
 	// While the AI is alive, do stuff.
 	const Uint8* keys = SDL_GetKeyboardState(nullptr);

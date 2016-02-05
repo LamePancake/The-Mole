@@ -9,9 +9,9 @@ void PlayerActor::Draw(Camera& camera)
 	Actor::Draw(camera);
 }
 
-void PlayerActor::Update(std::shared_ptr<Level>& level)
+void PlayerActor::Update(double elapsedSecs, std::shared_ptr<Level>& level)
 {
-	Actor::Update(level);
+	Actor::Update(elapsedSecs, level);
 	UpdatePosition();
 }
 

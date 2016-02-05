@@ -29,7 +29,7 @@ public:
 	virtual void Draw(Camera& camera) override;
 
 	// All the state changing stuff happens in here.
-	virtual void Update(std::shared_ptr<Level> & level);
+	virtual void Update(double elapsedSecs, std::shared_ptr<Level> & level);
 
 	// Updates position of the agent by adding _speed to it.
 	virtual void UpdatePosition();

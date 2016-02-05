@@ -47,9 +47,9 @@ int DenLevelScreen::Update(double elasepdSecs)
 
 	for (size_t i = 0; i < _level->GetEnemySize(); ++i)
 	{
-		_level->GetEnemy(i)->Update(_level);
+		_level->GetEnemy(i)->Update(elasepdSecs, _level);
 	}
-	_player->Update(_level);
+	_player->Update(elasepdSecs, _level);
 	return SCREEN_CONTINUE;
 }
 
