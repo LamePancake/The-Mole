@@ -117,6 +117,14 @@ public:
 
 protected:
 
+	typedef enum {
+		TOP,
+		BOTTOM,
+		RIGHT,
+		LEFT,
+		NONE
+	} Edge;
+
 	/** The health. */
 	size_t _health;
 
@@ -139,4 +147,7 @@ protected:
 	GameManager* _mgr;
 
 	SpriteSheet::XAxisDirection _actorDir;
+
+	void GetTileCollisionInfo(Edge& xEdge, Edge& yEdge, int& xPenetration, int& yPenetration, 
+		std::vector<std::shared_ptr<Tile>>& xIntersect, std::vector<std::shared_ptr<Tile>>& yIntersect, std::shared_ptr<Level>& level);
 };

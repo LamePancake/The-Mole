@@ -57,6 +57,26 @@ public:
 	void Reset();
 
 	/**
+	 * @brief	Gets the width of one animation frame.
+	 *
+	 * @author	Shane
+	 * @date	2/5/2016
+	 *
+	 * @return	The frame width.
+	 */
+	int GetFrameWidth();
+
+	/**
+	 * @brief	Gets the height of one animation frame.
+	 *
+	 * @author	Shane
+	 * @date	2/5/2016
+	 *
+	 * @return	The frame height.
+	 */
+	int GetFrameHeight();
+
+	/**
 	 * Gets the texture.
 	 *
 	 * @return	The texture.

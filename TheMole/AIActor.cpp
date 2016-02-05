@@ -36,46 +36,23 @@ bool AIActor::CollisionCheck(Actor &otherAI)
 	return _aabb.CheckCollision(otherAI.GetAABB());
 }
 
-void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level> & level)
+void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level>& level)
 {
-	int tileWidth  = level->GetTileWidth();
-	int tileHeight = level->GetTileHeight();
+	Edge xEdge, yEdge;
+	int xPenetration, yPenetration;
+	std::vector<std::shared_ptr<Tile>> xIntersection, yIntersection;
 
-	if ((int)_position.GetX() % tileWidth == 0 || (int)_position.GetY() % tileWidth == 0)
+	GetTileCollisionInfo(xEdge, yEdge, xPenetration, yPenetration, xIntersection, yIntersection, level);
+
+	double reverseX = _speed.GetX() * -1;
+	for (auto& tile : xIntersection)
 	{
-		int xInd = _position.GetX() / tileWidth;
-		int yInd = _position.GetY() / tileHeight;
-		
-		if (xInd + 1 < level->GetLevelSize().GetX() && _speed.GetX() > 0.0f)
+		switch (tile->GetID())
 		{
-			if (level->GetTileFromLevel(xInd + 1, yInd)->GetID() != Tile::blank)
-			{
-				_speed.SetX(_speed.GetX() * -1.0f);
-				SetActorDirection(SpriteSheet::XAxisDirection::LEFT);
-			}
-		}
-		else if (xInd >= 0 && _speed.GetX() < 0.0f)
-		{
-			if (level->GetTileFromLevel(xInd, yInd)->GetID() != Tile::blank)
-			{
-				_speed.SetX(_speed.GetX() * -1.0f);
-				SetActorDirection(SpriteSheet::XAxisDirection::RIGHT);
-			}
-		}
-		if (yInd + 1 < level->GetLevelSize().GetY())
-		{
-			if (level->GetTileFromLevel(xInd, yInd + 1)->GetID() == Tile::blank)
-			{
-				_speed.SetY(1.0f);
-			}
-			else if(level->GetTileFromLevel(xInd, yInd + 1)->GetID() == Tile::spike)
-			{
-				_health = 0;
-			}
-			else
-			{
-				_speed.SetY(0.0f);
-			}
+		case Tile::stone:
+			_speed.SetX(reverseX);
+			_actorDir = _actorDir == SpriteSheet::XAxisDirection::RIGHT ? SpriteSheet::XAxisDirection::LEFT : SpriteSheet::XAxisDirection::RIGHT;
+			break;
 		}
 	}
 }

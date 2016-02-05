@@ -25,6 +25,14 @@ std::shared_ptr<Tile> Level::GetTileFromLevel(size_t x, size_t y)
 	return _level[y][x];
 }
 
+void Level::GetTileRange(int startRow, int endRow, int startCol, int endCol, std::vector<std::shared_ptr<Tile>>& out) {
+	for (int row = startRow; row < endRow; ++row) {
+		for (int col = startCol; col < endCol; ++col) {
+			out.push_back(_level[row][col]);
+		}
+	}
+}
+
 void Level::AddPositions(char key, SDL2pp::Point position)
 {
 	_tilePositions[key].push_back(position);

@@ -42,6 +42,21 @@ public:
 	std::shared_ptr<Tile> GetTileFromLevel(size_t x, size_t y);
 
 	/**
+	 * @brief	Gets tiles in the specified range.
+	 * 			The range is exclusive, so (for example) to retrieve one tile, pass startRow = tile's row, endRow = tile's row + 1, startCol = tile's column, endCol = tile's column + 1.
+	 *
+	 * @author	Shane
+	 * @date	2/5/2016
+	 *
+	 * @param	startRow   	The starting row.
+	 * @param	endRow	   	The end row. Must be > startRow.
+	 * @param	startCol   	The start column.
+	 * @param	endCol	   	The end column. Must be > startCol.
+	 * @param [in,out]	out	A vector containing the specified tile range as a flat array.
+	 */
+	void GetTileRange(int startRow, int endRow, int startCol, int endCol, std::vector<std::shared_ptr<Tile>>& out);
+
+	/**
 	 * Stores the positions of a particular type of tile
 	 *
 	 * @param	key			The key.

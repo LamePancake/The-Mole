@@ -33,6 +33,16 @@ void SpriteSheet::Reset() {
 	_currentFrameElapsed = 0;
 }
 
+int SpriteSheet::GetFrameWidth()
+{
+	return _spriteSize.x;
+}
+
+int SpriteSheet::GetFrameHeight()
+{
+	return _spriteSize.y;
+}
+
 SDL2pp::Texture & SpriteSheet::GetTexture()
 {
 	return _sheet;

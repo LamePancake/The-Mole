@@ -52,8 +52,6 @@ public:
 	* Scans tiles left and right of the agent and negate _speed if left or right neighbour is not blank tile
 	*/
 	void ScanNeighbouringTiles(std::shared_ptr<Level> & level);
-
-private:
-
 };
+
 #endif
