@@ -51,7 +51,6 @@ int DenLevelScreen::Update(double elasepdSecs)
 		_level->GetEnemy(i)->Update(_level);
 	}
 	_player->Update(_level);
-	_player->UpdatePosition();
 
 	// Save the previous key state (temporary until InputManager actions are implemented)
 	std::memcpy(_prevKeyState, keys, sizeof(Uint8) * SDL_NUM_SCANCODES);

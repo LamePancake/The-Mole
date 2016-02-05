@@ -12,6 +12,7 @@ void PlayerActor::Draw(Camera& camera)
 void PlayerActor::Update(std::shared_ptr<Level>& level)
 {
 	Actor::Update(level);
+	UpdatePosition();
 }
 
 void PlayerActor::UpdatePosition()

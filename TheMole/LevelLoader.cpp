@@ -30,13 +30,13 @@
 
 			if (toupper((*it)) == Tile::enemy)
 			{
-				std::shared_ptr<AIActor> e = std::make_shared<AIActor>(tile->GetWorldPosition(), *GameManager::GetInstance(), Vector2(0.9f, 0.0f), ".\\Assets\\Textures\\baddie.png", ".\\Assets\\Textures\\baddie.png");
+				std::shared_ptr<AIActor> e = std::make_shared<AIActor>(tile->GetWorldPosition(), *GameManager::GetInstance(), Vector2(0.1f, 0.0f), ".\\Assets\\Textures\\baddie.png", ".\\Assets\\Textures\\baddie.png");
 				level->AddEnemy(e);
 				tile->SetID(Tile::blank);
 			}
 			else if (toupper((*it)) == Tile::origin)
 			{
-				player = std::make_shared<PlayerActor>(tile->GetWorldPosition(), *GameManager::GetInstance(), Vector2(0.9f, 0.0f), ".\\Assets\\Textures\\borin.png", ".\\Assets\\Textures\\borin.png");
+				player = std::make_shared<PlayerActor>(tile->GetWorldPosition(), *GameManager::GetInstance(), Vector2(0.0f, 0.0f), ".\\Assets\\Textures\\borin.png", ".\\Assets\\Textures\\borin.png");
 				tile->SetID(Tile::blank);
 			}
 
