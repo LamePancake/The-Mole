@@ -136,6 +136,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DenLevelScreen.cpp" />
     <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="GameScreen.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="LevelLoader.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DenLevelScreen.h" />
+    <ClInclude Include="GameScreen.h" />
     <ClInclude Include="PlayerActor.h" />
     <ClInclude Include="SpriteSheet.h" />
     <ClInclude Include="Tile.h" />
