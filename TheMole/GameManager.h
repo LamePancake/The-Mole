@@ -58,9 +58,12 @@ private:
 		SDL2pp::Window& window, SDL2pp::Renderer& renderer, std::unordered_map<std::string, std::shared_ptr<Screen>>& screens)
 		:_sdl(sdl), _sdlImage(sdlImage), _sdlMixer(sdlMixer), _sdlTtf(sdlTtf),
 		_window(window), _renderer(renderer), _screens(screens){
+
+		// Initialise the input manager's key maps
 		inputManager = new Input();
 		inputManager->AddKeyToMap("LEFT", Input::InputAction(SDL_SCANCODE_A));
 		inputManager->AddKeyToMap("RIGHT", Input::InputAction(SDL_SCANCODE_D));
+		inputManager->AddKeyToMap("QUIT", Input::InputAction(SDL_SCANCODE_ESCAPE));
 	}
 
 	/**
