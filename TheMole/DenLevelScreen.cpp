@@ -15,7 +15,7 @@ int DenLevelScreen::Load() {
 	std::memcpy(_prevKeyState, SDL_GetKeyboardState(nullptr), sizeof(Uint8) * SDL_NUM_SCANCODES);
 
 	std::string spriteFile(".\\Assets\\Textures\\Borin_walk.png");
-	_testSheet = new SpriteSheet(spriteFile, 8, 1.0);
+	_testSheet = new SpriteSheet(spriteFile, 8, 1.0, SpriteSheet::XAxisDirection::RIGHT);
 
 	SDL2pp::Point playerPos(_level->GetEnemy(1)->GetPosition().GetX(), _level->GetEnemy(1)->GetPosition().GetY());
 	SDL2pp::Point viewportSize = _mgr->GetWindow().GetSize();
@@ -65,7 +65,7 @@ void DenLevelScreen::Draw()
 	_player->Draw(*_camera);
 	_levelRenderer.RenderLevel(_level, *_camera);
 
-	_testSheet->Draw(Point(_mgr->GetWindow().GetWidth() / 2, _mgr->GetWindow().GetHeight() / 2));
+	_testSheet->Draw(Point(_mgr->GetWindow().GetWidth() / 2, _mgr->GetWindow().GetHeight() / 2), SpriteSheet::XAxisDirection::LEFT);
 
 	rend.Present();
 }

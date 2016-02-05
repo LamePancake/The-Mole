@@ -10,17 +10,23 @@ class SpriteSheet {
 
 public:
 
+	typedef enum {
+		RIGHT,
+		LEFT
+	} XAxisDirection;
+
 	/**
 	 * @brief	Constructor.
 	 *
 	 * @author	Shane
 	 * @date	2/3/2016
 	 *
-	 * @param 	filename	Filename of the spritesheet file.
-	 * @param	numFrames	The number of frames in the animation.
-	 * @param	duration	The duration (in seconds) for the animation.
+	 * @param [in,out]	filename	  	Filename of the spritesheet file.
+	 * @param	numFrames			  	The number of frames in the animation.
+	 * @param	duration			  	The duration (in seconds) for the animation.
+	 * @param	defaultFacingDirection	The default direction that the sprite is facing.
 	 */
-	SpriteSheet(std::string& filename, int numFrames, double duration);
+	SpriteSheet(std::string& filename, int numFrames, double duration, XAxisDirection defaultFacingDirection);
 
 	/**
 	 * @brief	Updates the sprite sheet based on the current elapsed time.
@@ -40,7 +46,7 @@ public:
 	 *
 	 * @param [in]	position	The position to draw the sprite.
 	 */
-	void Draw(const SDL2pp::Point&& position);
+	void Draw(const SDL2pp::Point&& position, XAxisDirection facingDir);
 
 	/**
 	 * @brief	Immediately resets the animation to the first frame.
@@ -58,6 +64,7 @@ private:
 	double _frameTime;
 	double _currentFrameElapsed;
 	GameManager* _mgr;
+	XAxisDirection _defaultFacing;
 };
 
 #endif
