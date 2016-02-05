@@ -49,7 +49,9 @@ void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level>& level)
 	{
 		switch (tile->GetID())
 		{
-		case Tile::stone:
+		case Tile::blank:
+			break;
+		default:
 			_speed.SetX(reverseX);
 			_actorDir = _actorDir == SpriteSheet::XAxisDirection::RIGHT ? SpriteSheet::XAxisDirection::LEFT : SpriteSheet::XAxisDirection::RIGHT;
 			break;

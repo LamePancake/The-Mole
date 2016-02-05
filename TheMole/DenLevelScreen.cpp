@@ -1,8 +1,10 @@
 #include "DenLevelScreen.h"
 #include "GameManager.h"
 #include "Vector2.h"
+#include "Math.h"
 
 using namespace SDL2pp;
+using namespace Math;
 
 int DenLevelScreen::Load() {
 	_mgr = GameManager::GetInstance();
@@ -34,17 +36,37 @@ int DenLevelScreen::Update(double elasepdSecs)
 
 	if (_mgr->inputManager->ActionOccured("LEFT", Input::Held)) 
 	{
-		_player->SetSpeed(Vector2(-120.0f, _player->GetSpeed().GetY()));
+		_player->SetSpeed(Vector2(Clamp(_player->GetSpeed().GetX() - 120.0f, -120.0f, 0.0f), _player->GetSpeed().GetY()));
 		_player->SetActorDirection(SpriteSheet::XAxisDirection::LEFT);
 	}
 	else if (_mgr->inputManager->ActionOccured("RIGHT", Input::Held))
 	{
-		_player->SetSpeed(Vector2(120.0f, _player->GetSpeed().GetY()));
+		_player->SetSpeed(Vector2(Clamp(_player->GetSpeed().GetX() + 120.0f, 0.0f, 120.0f), _player->GetSpeed().GetY()));
 		_player->SetActorDirection(SpriteSheet::XAxisDirection::RIGHT);
 	}
-	else
+	else if(!_mgr->inputManager->ActionOccured("RIGHT", Input::Held))
 	{
 		_player->SetSpeed(Vector2(0.0f, _player->GetSpeed().GetY()));
+	}
+
+	if (_mgr->inputManager->ActionOccured("UP", Input::Held))
+	{
+		_player->SetSpeed(Vector2(_player->GetSpeed().GetX(), Clamp(_player->GetSpeed().GetY() - 120.0f, 0.0f, -120.0f)));
+		//_player->SetActorDirection(SpriteSheet::XAxisDirection::UP);
+	}
+	else if (_mgr->inputManager->ActionOccured("DOWN", Input::Held))
+	{
+		_player->SetSpeed(Vector2(_player->GetSpeed().GetX(), Clamp(_player->GetSpeed().GetY() + 120.0f, 0.0f, 120.0f)));
+		//_player->SetActorDirection(SpriteSheet::XAxisDirection::DOWN);
+	}
+	else if (_mgr->inputManager->ActionOccured("JUMP", Input::Held))
+	{
+		_player->SetSpeed(Vector2(_player->GetSpeed().GetX(), Clamp(_player->GetSpeed().GetY() - 120.0f, 0.0f, -120.0f)));
+		//_player->SetActorDirection(SpriteSheet::XAxisDirection::JUMP);
+	}
+	else if (!_mgr->inputManager->ActionOccured("JUMP", Input::Held))
+	{
+		_player->SetSpeed(Vector2(_player->GetSpeed().GetX(), 0.0f));
 	}
 
 	for (size_t i = 0; i < _level->GetEnemySize(); ++i)
