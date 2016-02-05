@@ -38,11 +38,11 @@ int DenLevelScreen::Update(double elasepdSecs)
 		exit(0);
 	}
 
-	if (_mgr->inputManager->ActionOccured("left", Input::Pressed)) {
+	if (_mgr->inputManager->ActionOccured("LEFT", Input::Pressed)) {
 		_player->SetSpeed(Vector2(_player->GetSpeed().GetX() - 2, _player->GetSpeed().GetY()));
 	}
 
-	if (_mgr->inputManager->ActionOccured("right", Input::Pressed)) {
+	if (_mgr->inputManager->ActionOccured("RIGHT", Input::Pressed)) {
 		_player->SetSpeed(Vector2(_player->GetSpeed().GetX() + 2, _player->GetSpeed().GetY()));
 	}
 
@@ -65,7 +65,7 @@ void DenLevelScreen::Draw()
 	SDL2pp::Renderer& rend = _mgr->GetRenderer();
 	rend.SetDrawColor(100, 100, 100, 255);
 	rend.Clear();
-	_camera->CentreView(_level->GetEnemy(1)->GetPosition());
+	_camera->CentreView(_player->GetPosition());
 
 	for (size_t i = 0; i < _level->GetEnemySize(); ++i)
 	{
