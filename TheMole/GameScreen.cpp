@@ -88,7 +88,3 @@ void GameScreen::Unload()
 	delete _camera;
 }
 
-void GameScreen::SetPlayer(std::shared_ptr<Actor> &playa)
-{
-	_player = playa;
-}
