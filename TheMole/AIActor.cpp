@@ -51,6 +51,7 @@ void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level> & level)
 			if (level->GetTileFromLevel(xInd + 1, yInd)->GetID() != Tile::blank)
 			{
 				_speed.SetX(_speed.GetX() * -1.0f);
+				SetActorDirection(SpriteSheet::XAxisDirection::LEFT);
 			}
 		}
 		else if (xInd >= 0 && _speed.GetX() < 0.0f)
@@ -58,6 +59,7 @@ void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level> & level)
 			if (level->GetTileFromLevel(xInd, yInd)->GetID() != Tile::blank)
 			{
 				_speed.SetX(_speed.GetX() * -1.0f);
+				SetActorDirection(SpriteSheet::XAxisDirection::RIGHT);
 			}
 		}
 		if (yInd + 1 < level->GetLevelSize().GetY())

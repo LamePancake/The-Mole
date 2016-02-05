@@ -12,6 +12,8 @@ Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::string t
 
 	SDL_SetTextureColorMod(_spriteShadow->GetTexture().Get(), 127, 127, 127);
 	SDL_SetTextureAlphaMod(_spriteShadow->GetTexture().Get() , 127);
+
+	_actorDir = SpriteSheet::XAxisDirection::RIGHT;
 }
 
 Actor::~Actor()
@@ -63,6 +65,16 @@ void Actor::SetPosition(Vector2 pos)
 	_position = pos;
 }
 
+SpriteSheet::XAxisDirection Actor::GetActorDirection()
+{
+	return _actorDir;
+}
+
+void Actor::SetActorDirection(SpriteSheet::XAxisDirection dir)
+{
+	_actorDir = dir;
+}
+
 void Actor::Update(double elapsedSecs, std::shared_ptr<Level>& level)
 {
 	_sprite->Update(elapsedSecs);
@@ -84,7 +96,7 @@ void Actor::Draw(Camera& camera)
 
 	tempPoint = { (int)_position.GetX(), (int)_position.GetY() };
 
-	_spriteShadow->Draw(tempPoint + SDL2pp::Point(offsetX - viewport.x, offsetY - viewport.y), SpriteSheet::XAxisDirection::RIGHT);
-	_sprite->Draw(tempPoint + SDL2pp::Point(-viewport.x, -viewport.y), SpriteSheet::XAxisDirection::RIGHT);
+	_spriteShadow->Draw(tempPoint + SDL2pp::Point(offsetX - viewport.x, offsetY - viewport.y), _actorDir);
+	_sprite->Draw(tempPoint + SDL2pp::Point(-viewport.x, -viewport.y), _actorDir);
 }
 

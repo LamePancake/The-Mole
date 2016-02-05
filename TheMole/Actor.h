@@ -86,6 +86,20 @@ public:
 	 */
 	void SetPosition(Vector2 pos);
 
+	/**
+	 * Gets actor direction.
+	 *
+	 * @return	The actor direction.
+	 */
+	SpriteSheet::XAxisDirection GetActorDirection();
+
+	/**
+	 * Sets actor direction.
+	 *
+	 * @param	dir	The direction.
+	 */
+	void SetActorDirection(SpriteSheet::XAxisDirection dir);
+
 	// All the state changing stuff happens in here. 
 	virtual void Update(double elapsedSecs, std::shared_ptr<Level> & level);
 
@@ -123,4 +137,6 @@ protected:
 
 	/** The manager. */
 	GameManager* _mgr;
+
+	SpriteSheet::XAxisDirection _actorDir;
 };
