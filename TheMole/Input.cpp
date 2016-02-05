@@ -5,7 +5,7 @@
 using namespace std;
 
 Input::Input()
-	: _prevKeyboardState((Uint8*)std::malloc(sizeof(Uint8) * SDL_NUM_SCANCODES)), _curKeyboardState((Uint8*)std::malloc(sizeof(Uint8) * SDL_NUM_SCANCODES))
+	: _prevKeyboardState((Uint8*)std::calloc(sizeof(Uint8) * SDL_NUM_SCANCODES, 1)), _curKeyboardState((Uint8*)std::calloc(sizeof(Uint8) * SDL_NUM_SCANCODES, 1))
 {}
 
 Input::~Input()
