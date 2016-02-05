@@ -30,7 +30,7 @@ public:
 	virtual void Update(double elapsedSecs, std::shared_ptr<Level> & level);
 
 	// Updates position of the agent by adding _speed to it.
-	virtual void UpdatePosition();
+	virtual void UpdatePosition(double elapsedSecs);
 
 	/**
 	 * Draws.

@@ -18,17 +18,17 @@ void AIActor::Update(double elapsedSecs, std::shared_ptr<Level> & level)
 	if (_health > 0)
 	{
 		//_aabb.UpdatePosition(*this);
-		UpdatePosition();
+		UpdatePosition(elapsedSecs);
 		ScanNeighbouringTiles(level);
 	}
 }
 ;
-void AIActor::UpdatePosition()
+void AIActor::UpdatePosition(double elapsedSecs)
 {
-	Actor::UpdatePosition();
+	Actor::UpdatePosition(elapsedSecs);
 
-	_position.SetX(_position.GetX() + _speed.GetX());
-	_position.SetY(_position.GetY() + _speed.GetY());
+	_position.SetX(_position.GetX() + _speed.GetX() * elapsedSecs);
+	_position.SetY(_position.GetY() + _speed.GetY() * elapsedSecs);
 }
 
 bool AIActor::CollisionCheck(Actor &otherAI)

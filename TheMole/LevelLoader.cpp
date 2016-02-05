@@ -30,7 +30,7 @@
 
 			if (toupper((*it)) == Tile::enemy)
 			{
-				std::shared_ptr<AIActor> e = std::make_shared<AIActor>(tile->GetWorldPosition(), *GameManager::GetInstance(), Vector2(0.1f, 0.0f), ".\\Assets\\Textures\\Baddie_walk.png", ".\\Assets\\Textures\\Baddie_walk.png");
+				std::shared_ptr<AIActor> e = std::make_shared<AIActor>(tile->GetWorldPosition(), *GameManager::GetInstance(), Vector2(100.0f, 0.0f), ".\\Assets\\Textures\\Baddie_walk.png", ".\\Assets\\Textures\\Baddie_walk.png");
 				level->AddEnemy(e);
 				tile->SetID(Tile::blank);
 			}

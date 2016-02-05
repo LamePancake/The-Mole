@@ -34,12 +34,12 @@ int DenLevelScreen::Update(double elasepdSecs)
 
 	if (_mgr->inputManager->ActionOccured("LEFT", Input::Held)) 
 	{
-		_player->SetSpeed(Vector2(-2.0f, _player->GetSpeed().GetY()));
+		_player->SetSpeed(Vector2(-120.0f, _player->GetSpeed().GetY()));
 		_player->SetActorDirection(SpriteSheet::XAxisDirection::LEFT);
 	}
 	else if (_mgr->inputManager->ActionOccured("RIGHT", Input::Held))
 	{
-		_player->SetSpeed(Vector2(2.0f, _player->GetSpeed().GetY()));
+		_player->SetSpeed(Vector2(120.0f, _player->GetSpeed().GetY()));
 		_player->SetActorDirection(SpriteSheet::XAxisDirection::RIGHT);
 	}
 	else

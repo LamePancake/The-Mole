@@ -81,7 +81,7 @@ void Actor::Update(double elapsedSecs, std::shared_ptr<Level>& level)
 	_spriteShadow->Update(elapsedSecs);
 }
 
-void Actor::UpdatePosition()
+void Actor::UpdatePosition(double elapsedSecs)
 {
 }
 

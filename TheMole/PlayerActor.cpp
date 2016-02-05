@@ -12,12 +12,12 @@ void PlayerActor::Draw(Camera& camera)
 void PlayerActor::Update(double elapsedSecs, std::shared_ptr<Level>& level)
 {
 	Actor::Update(elapsedSecs, level);
-	UpdatePosition();
+	UpdatePosition(elapsedSecs);
 }
 
-void PlayerActor::UpdatePosition()
+void PlayerActor::UpdatePosition(double elapsedSecs)
 {
-	Actor::UpdatePosition();
-	_position.SetX(_position.GetX() + _speed.GetX());
-	_position.SetY(_position.GetY() + _speed.GetY());
+	Actor::UpdatePosition(elapsedSecs);
+	_position.SetX(_position.GetX() + _speed.GetX() * elapsedSecs);
+	_position.SetY(_position.GetY() + _speed.GetY() * elapsedSecs);
 }
