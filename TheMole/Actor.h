@@ -148,6 +148,20 @@ protected:
 
 	SpriteSheet::XAxisDirection _actorDir;
 
-	void GetTileCollisionInfo(Edge& xEdge, Edge& yEdge, int& xPenetration, int& yPenetration, 
-		std::vector<std::shared_ptr<Tile>>& xIntersect, std::vector<std::shared_ptr<Tile>>& yIntersect, std::shared_ptr<Level>& level);
+	/**
+	 * @brief	Gets tile collision information.
+	 *
+	 * @author	Shane
+	 * @date	2/5/2016
+	 *
+	 * @param [in,out]	rowEdge		  	The row edge.
+	 * @param [in,out]	colEdge		  	The col edge.
+	 * @param [in,out]	rowPenetration	The row penetration.
+	 * @param [in,out]	colPenetration	The col penetration.
+	 * @param [in,out]	rowIntersect  	The row intersect.
+	 * @param [in,out]	colIntersect  	The col intersect.
+	 * @param [in,out]	level		  	The level.
+	 */
+	void GetTileCollisionInfo(Edge & rowEdge, Edge & colEdge, int & rowPenetration, int & colPenetration,
+		std::vector<std::shared_ptr<Tile>>& rowIntersect, std::vector<std::shared_ptr<Tile>>& colIntersect, std::shared_ptr<Level>& level);
 };

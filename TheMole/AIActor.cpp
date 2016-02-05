@@ -38,25 +38,56 @@ bool AIActor::CollisionCheck(Actor &otherAI)
 
 void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level>& level)
 {
-	Edge xEdge, yEdge;
-	int xPenetration, yPenetration;
-	std::vector<std::shared_ptr<Tile>> xIntersection, yIntersection;
+	Edge colEdge, rowEdge;
+	int colPenetration, rowPenetration;
+	std::vector<std::shared_ptr<Tile>> rowIntersection, colIntersection;
 
-	GetTileCollisionInfo(xEdge, yEdge, xPenetration, yPenetration, xIntersection, yIntersection, level);
+	GetTileCollisionInfo(rowEdge, colEdge, rowPenetration, colPenetration, rowIntersection, colIntersection, level);
 
-	double reverseX = _speed.GetX() * -1;
-	for (auto& tile : xIntersection)
+	int pruneRow = rowIntersection[0]->GetIndices().y;
+	int pruneCol = colIntersection[0]->GetIndices().x;
+
+	const auto pruneColIntersections = [pruneRow](std::shared_ptr<Tile>& tile) {return tile->GetIndices().y == pruneRow; };
+	const auto pruneRowIntersections = [pruneCol](std::shared_ptr<Tile>& tile) {return tile->GetIndices().x == pruneCol; };
+
+	colIntersection.erase(std::remove_if(colIntersection.begin(), colIntersection.end() - 1, pruneColIntersections));
+	rowIntersection.erase(std::remove_if(rowIntersection.begin(), rowIntersection.end() - 1, pruneRowIntersections));
+
+	double correctedYPos = _position.GetY() + (rowEdge == Edge::TOP ? rowPenetration : -rowPenetration);
+	for (auto& tile : rowIntersection)
 	{
 		switch (tile->GetID())
 		{
 		case Tile::blank:
 			break;
 		default:
-			_speed.SetX(reverseX);
-			_actorDir = _actorDir == SpriteSheet::XAxisDirection::RIGHT ? SpriteSheet::XAxisDirection::LEFT : SpriteSheet::XAxisDirection::RIGHT;
+			_position.SetY(correctedYPos);
 			break;
 		}
 	}
+	
+
+	// The new Y position to use in case any of the blocks was solid
+	double correctedXPos = _position.GetX() + (colEdge == Edge::LEFT ? colPenetration : -colPenetration);
+	double reverseX = _speed.GetX() * -1;
+	SpriteSheet::XAxisDirection reverseDir = _actorDir == SpriteSheet::XAxisDirection::LEFT ? SpriteSheet::XAxisDirection::RIGHT : SpriteSheet::XAxisDirection::LEFT;
+	for (auto& tile : colIntersection)
+	{
+		switch (tile->GetID())
+		{
+		case Tile::blank:
+			break;
+		default:
+			_position.SetX(correctedXPos);
+			_speed.SetX(reverseX);
+			_actorDir = reverseDir;
+			break;
+		}
+	}
+
+	// 
+	//_speed.SetX(_speed.GetX() * -1);
+	//_actorDir = _actorDir == SpriteSheet::XAxisDirection::RIGHT ? SpriteSheet::XAxisDirection::LEFT : SpriteSheet::XAxisDirection::RIGHT;
 }
 
 void AIActor::Draw(Camera& camera)

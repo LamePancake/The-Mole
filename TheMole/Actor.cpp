@@ -101,8 +101,8 @@ void Actor::Draw(Camera& camera)
 	_sprite->Draw(tempPoint + SDL2pp::Point(-viewport.x, -viewport.y), _actorDir);
 }
 
-void Actor::GetTileCollisionInfo(Edge & xEdge, Edge & yEdge, int & xPenetration, int & yPenetration, 
-	std::vector<std::shared_ptr<Tile>>& xIntersect, std::vector<std::shared_ptr<Tile>>& yIntersect, std::shared_ptr<Level>& level)
+void Actor::GetTileCollisionInfo(Edge & rowEdge, Edge & colEdge, int & rowPenetration, int & colPenetration, 
+	std::vector<std::shared_ptr<Tile>>& rowIntersect, std::vector<std::shared_ptr<Tile>>& colIntersect, std::shared_ptr<Level>& level)
 {
 	int tileWidth = level->GetTileWidth();
 	int tileHeight = level->GetTileHeight();
@@ -124,36 +124,36 @@ void Actor::GetTileCollisionInfo(Edge & xEdge, Edge & yEdge, int & xPenetration,
 	double xVel = _speed.GetX();
 	if (xVel)
 	{
-		xEdge = xVel > 0 ? Edge::RIGHT : Edge::LEFT;
+		colEdge = xVel > 0 ? Edge::RIGHT : Edge::LEFT;
 
 		// If we're moving right, we need to test x + width; if we're moving left, we need to test x
 		int testSideX = xVel > 0 ? (int)ceil(rightBound) : (int)floor(leftBound);
 
 		// If we aren't flush with a tile column border, check whether we're intersecting any tiles of interest
-		xPenetration = testSideX % tileWidth;
+		colPenetration = testSideX % tileWidth;
 		int col = testSideX / tileWidth;
-		level->GetTileRange(topRow, bottomRow + 1, col, col + 1, xIntersect);		
+		level->GetTileRange(topRow, bottomRow + 1, col, col + 1, colIntersect);
 	}
 	else
 	{
-		xEdge = Edge::NONE;
+		colEdge = Edge::NONE;
 	}
 
 	double yVel = _speed.GetY();
 	if (yVel)
 	{
-		yEdge = yVel > 0 ? Edge::BOTTOM : Edge::TOP;
+		rowEdge = yVel > 0 ? Edge::BOTTOM : Edge::TOP;
 
 		// If we're moving right, we need to test x + width; if we're moving left, we need to test x
 		int testSideY = yVel > 0 ? (int)ceil(bottomBound) : (int)floor(topBound);
 
-		yPenetration = testSideY % tileHeight;
+		rowPenetration = testSideY % tileHeight;
 		int row = testSideY / tileHeight;
-		level->GetTileRange(row, row, leftCol, rightCol + 1, yIntersect);
+		level->GetTileRange(row, row + 1, leftCol, rightCol + 1, rowIntersect);
 	}
 	else
 	{
-		yEdge = Edge::NONE;
+		rowEdge = Edge::NONE;
 	}
 }
 
