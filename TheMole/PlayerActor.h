@@ -34,6 +34,8 @@ public:
 	// Updates position of the agent by adding _speed to it.
 	virtual void UpdatePosition(double elapsedSecs);
 
+	bool CollisionCheck(Actor &otherAI);
+
 private:
 
 };
