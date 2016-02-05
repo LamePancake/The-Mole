@@ -38,12 +38,17 @@ int DenLevelScreen::Update(double elasepdSecs)
 		exit(0);
 	}
 
-	if (_mgr->inputManager->ActionOccured("LEFT", Input::Pressed)) {
-		_player->SetSpeed(Vector2(_player->GetSpeed().GetX() - 2, _player->GetSpeed().GetY()));
+	if (_mgr->inputManager->ActionOccured("LEFT", Input::Held)) 
+	{
+		_player->SetSpeed(Vector2(-2.0f, _player->GetSpeed().GetY()));
 	}
-
-	if (_mgr->inputManager->ActionOccured("RIGHT", Input::Pressed)) {
-		_player->SetSpeed(Vector2(_player->GetSpeed().GetX() + 2, _player->GetSpeed().GetY()));
+	else if (_mgr->inputManager->ActionOccured("RIGHT", Input::Held))
+	{
+		_player->SetSpeed(Vector2(2.0f, _player->GetSpeed().GetY()));
+	}
+	else
+	{
+		_player->SetSpeed(Vector2(0.0f, _player->GetSpeed().GetY()));
 	}
 
 	for (size_t i = 0; i < _level->GetEnemySize(); ++i)
