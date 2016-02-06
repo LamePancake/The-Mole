@@ -2,7 +2,7 @@
 #include "GameManager.h"
 #include "Vector2.h"
 
-const std::shared_ptr<Level> GameScreen::GetLevel() const
+std::shared_ptr<Level> GameScreen::GetLevel() const
 {
 	return _level;
 }
@@ -32,6 +32,9 @@ int GameScreen::Update(double elapsedSecs)
 	SDL_PumpEvents();
 	_mgr->inputManager->UpdateKeyboardState();
 
+	//Update Player
+	_player->Update(elapsedSecs);
+
 	if (_mgr->inputManager->ActionOccurred("QUIT", Input::Pressed)) {
 		exit(0);
 	}
@@ -40,51 +43,6 @@ int GameScreen::Update(double elapsedSecs)
 	{
 		GameManager::GetInstance()->SetNextScreen("menu");
 		return SCREEN_FINISH;
-	}
-
-	if (_mgr->inputManager->ActionOccurred("LEFT", Input::Held))
-	{
-		if (!_player->Dig('L', _level))
-		{
-			_player->SetSpeed(Vector2(Math::Clamp(_player->GetSpeed().GetX() - 5.0f, -120.0f, 0.0f), _player->GetSpeed().GetY()));
-			_player->SetActorDirection(SpriteSheet::XAxisDirection::LEFT);
-		}
-	}
-	else if (_mgr->inputManager->ActionOccurred("RIGHT", Input::Held))
-	{
-		if (!_player->Dig('R', _level))
-		{
-			_player->SetSpeed(Vector2(Math::Clamp(_player->GetSpeed().GetX() + 5.0f, 0.0f, 120.0f), _player->GetSpeed().GetY()));
-			_player->SetActorDirection(SpriteSheet::XAxisDirection::RIGHT);
-		}
-	}
-	else
-	{
-		_player->SetSpeed(Vector2(0.0f, _player->GetSpeed().GetY()));
-	}
-
-	if (_mgr->inputManager->ActionOccurred("UP", Input::Held))
-	{
-		if (!_player->Dig('U', _level))
-		{
-			_player->SetSpeed(Vector2(_player->GetSpeed().GetX(), Math::Clamp(_player->GetSpeed().GetY() - 120.0f, 0.0f, -120.0f)));
-		}
-	}
-	else if (_mgr->inputManager->ActionOccurred("DOWN", Input::Held))
-	{
-		if (!_player->Dig('D', _level))
-		{
-			_player->SetSpeed(Vector2(_player->GetSpeed().GetX(), Math::Clamp(_player->GetSpeed().GetY() + 120.0f, 0.0f, 120.0f)));
-		}
-	}
-	else if (_mgr->inputManager->ActionOccurred("JUMP", Input::Pressed))
-	{
-		_player->SetJumpVelocity(800.0f);
-		_player->SetMaximumJumpVelocity(800.0f);
-	}
-	else
-	{
-		_player->SetSpeed(Vector2(_player->GetSpeed().GetX(), 0.0f));
 	}
 
 	if (_player->GetJumpVelocity() > -_player->GetMaximumJumpVelocity())
@@ -96,17 +54,14 @@ int GameScreen::Update(double elapsedSecs)
 	// Update Enemies
 	for (size_t i = 0; i < _level->GetEnemySize(); ++i)
 	{
-		_level->GetEnemy(i)->Update(elapsedSecs, _level);
+		_level->GetEnemy(i)->Update(elapsedSecs);
 	}
 
 	// Update NPCs
 	for (size_t i = 0; i < _level->GetNPCSize(); ++i)
 	{
-		_level->GetNPC(i)->Update(elapsedSecs, _level);
+		_level->GetNPC(i)->Update(elapsedSecs);
 	}
-
-	//Update Player
-	_player->Update(elapsedSecs, _level);
 
 	return SCREEN_CONTINUE;
 }

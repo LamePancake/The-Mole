@@ -30,7 +30,7 @@ public:
 	virtual void Draw(Camera& camera) override;
 
 	// All the state changing stuff happens in here.
-	virtual void Update(double elapsedSecs, std::shared_ptr<Level> & level);
+	virtual void Update(double elapsedSecs) override;
 
 private:
 	//Will probably store dialog here.

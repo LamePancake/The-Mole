@@ -28,7 +28,7 @@ public:
 	 *
 	 * @return	The level associated with this GameScreen.
 	 */
-	const std::shared_ptr<Level> GetLevel() const;
+	std::shared_ptr<Level> GetLevel() const;
 
 protected:
 	Camera* _camera;

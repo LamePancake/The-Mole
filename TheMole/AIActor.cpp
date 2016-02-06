@@ -1,12 +1,13 @@
 #include "AIActor.h"
+#include "GameScreen.h"
 
 AIActor::~AIActor()
 {
 }
 
-void AIActor::Update(double elapsedSecs, std::shared_ptr<Level> & level)
+void AIActor::Update(double elapsedSecs)
 {
-	Actor::Update(elapsedSecs, level);
+	Actor::Update(elapsedSecs);
 
 	// While the AI is alive, do stuff.
 	const Uint8* keys = SDL_GetKeyboardState(nullptr);
@@ -15,11 +16,11 @@ void AIActor::Update(double elapsedSecs, std::shared_ptr<Level> & level)
 	{
 		//std::cout << "Dead\n";
 	}
-	if (_health > 0)
+	else
 	{
 		_aabb.UpdatePosition(*this);
 		UpdatePosition(elapsedSecs);
-		ScanNeighbouringTiles(level);
+		ScanNeighbouringTiles(_gameScreen->GetLevel());
 	}
 }
 ;
@@ -44,39 +45,45 @@ void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level>& level)
 
 	GetTileCollisionInfo(rowEdge, colEdge, rowPenetration, colPenetration, rowIntersection, colIntersection, level);
 
-	float correctedYPos = _position.GetY();
-	if (rowEdge == Edge::BOTTOM) correctedYPos -= rowPenetration;
-	else if (rowEdge == Edge::TOP) correctedYPos += rowPenetration; 
-
-	for (auto& tile : rowIntersection)
+	if (rowEdge != Edge::NONE)
 	{
-		switch (tile->GetID())
+		float correctedYPos = _position.GetY();
+		if (rowEdge == Edge::BOTTOM) correctedYPos -= rowPenetration;
+		else if (rowEdge == Edge::TOP) correctedYPos += rowPenetration;
+
+		for (auto& tile : rowIntersection)
 		{
-		case Tile::blank:
-			break;
-		default:
-			_position.SetY(correctedYPos);
-			break;
+			switch (tile->GetID())
+			{
+			case Tile::blank:
+				break;
+			default:
+				_position.SetY(correctedYPos);
+				break;
+			}
 		}
 	}
 	
-	float correctedXPos = _position.GetX();
-	if (colEdge == Edge::RIGHT) correctedXPos -= colPenetration;
-	else if (colEdge == Edge::LEFT) correctedXPos += colPenetration;
-
-	float reverseX = _speed.GetX() * -1;
-	SpriteSheet::XAxisDirection reverseDir = _actorDir == SpriteSheet::XAxisDirection::LEFT ? SpriteSheet::XAxisDirection::RIGHT : SpriteSheet::XAxisDirection::LEFT;
-	for (auto& tile : colIntersection)
+	if (colEdge != Edge::NONE)
 	{
-		switch (tile->GetID())
+		float correctedXPos = _position.GetX();
+		if (colEdge == Edge::RIGHT) correctedXPos -= colPenetration;
+		else if (colEdge == Edge::LEFT) correctedXPos += colPenetration;
+
+		float reverseX = _speed.GetX() * -1;
+		SpriteSheet::XAxisDirection reverseDir = _actorDir == SpriteSheet::XAxisDirection::LEFT ? SpriteSheet::XAxisDirection::RIGHT : SpriteSheet::XAxisDirection::LEFT;
+		for (auto& tile : colIntersection)
 		{
-		case Tile::blank:
-			break;
-		default:
-			_position.SetX(correctedXPos);
-			_speed.SetX(reverseX);
-			_actorDir = reverseDir;
-			break;
+			switch (tile->GetID())
+			{
+			case Tile::blank:
+				break;
+			default:
+				_position.SetX(correctedXPos);
+				_speed.SetX(reverseX);
+				_actorDir = reverseDir;
+				break;
+			}
 		}
 	}
 }

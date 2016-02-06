@@ -30,20 +30,10 @@ public:
 	virtual void Draw(Camera& camera) override;
 
 	// All the state changing stuff happens in here.
-	virtual void Update(double elapsedSecs, std::shared_ptr<Level> & level);
+	virtual void Update(double elapsedSecs) override;
 
 	// Updates position of the agent by adding _speed to it.
 	virtual void UpdatePosition(double elapsedSecs);
-
-	/**
-	 * Digs the given level.
-	 *
-	 * @param	dir			 	The dir.
-	 * @param [in,out]	level	The level.
-	 *
-	 * @return	true if it succeeds, false if it fails.
-	 */
-	bool Dig(char dir, std::shared_ptr<Level> & level);
 
 	/**
 	 * Collision check.
@@ -89,6 +79,24 @@ public:
 	**/
 	float GetMaximumJumpVelocity();
 private:
+
+	/**
+	 * @brief	Updates all player properties influenced by the user's input.
+	 *
+	 * @author	Shane
+	 * @date	2/6/2016
+	 */
+	void UpdateInput();
+
+	/**
+	 * @brief	Updates all collisions (with tiles and enemies).
+	 *
+	 * @author	Shane
+	 * @date	2/6/2016
+	 */
+	void UpdateCollisions();
+
 	float _jumpVelocity;
 	float _maxJumpVel;
+	char _digDir;
 };

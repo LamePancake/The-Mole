@@ -1,7 +1,8 @@
 #include "Actor.h"
+#include "GameScreen.h"
 
 Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::string texturePath, int framesPerSecond)
-	:_position(position), _mgr(&manager), _speed(spd)
+	:_position(position), _mgr(&manager), _speed(spd), _gameScreen(std::dynamic_pointer_cast<GameScreen>(manager.GetCurrentScreen()))
 {
 	_health = 100;
 	
@@ -75,7 +76,7 @@ void Actor::SetActorDirection(SpriteSheet::XAxisDirection dir)
 	_actorDir = dir;
 }
 
-void Actor::Update(double elapsedSecs, std::shared_ptr<Level>& level)
+void Actor::Update(double elapsedSecs)
 {
 	_sprite->Update(elapsedSecs);
 	_spriteShadow->Update(elapsedSecs);

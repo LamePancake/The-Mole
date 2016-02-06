@@ -1,4 +1,6 @@
-#pragma once
+#ifndef ACTOR_H
+#define ACTOR_H
+
 #include <SDL2pp\SDL2pp.hh>
 #include <string>
 #include <memory>
@@ -8,6 +10,8 @@
 #include "Level.h"
 #include "Camera.h"
 #include "SpriteSheet.h"
+
+class GameScreen;
 
 class Actor
 {
@@ -101,7 +105,7 @@ public:
 	void SetActorDirection(SpriteSheet::XAxisDirection dir);
 
 	// All the state changing stuff happens in here. 
-	virtual void Update(double elapsedSecs, std::shared_ptr<Level> & level);
+	virtual void Update(double elapsedSecs);
 
 	// Updates position of the agent by adding _speed to it.
 	virtual void UpdatePosition(double elapsedSecs);
@@ -146,6 +150,10 @@ protected:
 	/** The manager. */
 	GameManager* _mgr;
 
+
+	/** @brief	A pointer to the current game screen. */
+	std::shared_ptr<GameScreen> _gameScreen;
+
 	SpriteSheet::XAxisDirection _actorDir;
 
 	/**
@@ -165,3 +173,5 @@ protected:
 	void GetTileCollisionInfo(Edge & rowEdge, Edge & colEdge, int & rowPenetration, int & colPenetration,
 		std::vector<std::shared_ptr<Tile>>& rowIntersect, std::vector<std::shared_ptr<Tile>>& colIntersect, std::shared_ptr<Level>& level);
 };
+
+#endif

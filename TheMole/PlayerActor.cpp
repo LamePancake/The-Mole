@@ -10,19 +10,19 @@ void PlayerActor::Draw(Camera& camera)
 	Actor::Draw(camera);
 }
 
-void PlayerActor::Update(double elapsedSecs, std::shared_ptr<Level>& level)
+void PlayerActor::Update(double elapsedSecs)
 {
-	Actor::Update(elapsedSecs, level);
-	_aabb.UpdatePosition(*this);
+	Actor::Update(elapsedSecs);
+	UpdateInput();
 	UpdatePosition(elapsedSecs);
-	
-	for (int i = 0; i < level->GetEnemySize(); ++i)
-	{
-		if (CollisionCheck(*level->GetEnemy(i)))
-		{
-			_health = 0;
-		}
-	}
+	_aabb.UpdatePosition(*this);
+
+	UpdateCollisions();
+}
+
+void PlayerActor::UpdateCollisions()
+{
+	std::shared_ptr<Level> level = _gameScreen->GetLevel();
 
 	Edge colEdge, rowEdge;
 	int colPenetration, rowPenetration;
@@ -30,8 +30,10 @@ void PlayerActor::Update(double elapsedSecs, std::shared_ptr<Level>& level)
 
 	GetTileCollisionInfo(rowEdge, colEdge, rowPenetration, colPenetration, rowIntersection, colIntersection, level);
 
+
 	if (rowEdge != Edge::NONE)
 	{
+		bool canDig = (_digDir == 'U' && rowEdge == Edge::TOP) || (_digDir == 'D' && rowEdge == Edge::BOTTOM);
 		float correctedYPos = _position.GetY();
 		if (rowEdge == Edge::BOTTOM) correctedYPos -= rowPenetration;
 		else if (rowEdge == Edge::TOP) correctedYPos += rowPenetration;
@@ -42,6 +44,9 @@ void PlayerActor::Update(double elapsedSecs, std::shared_ptr<Level>& level)
 			{
 			case Tile::blank:
 				break;
+			case Tile::dirt:
+				if (canDig)	tile->SetID(Tile::blank);
+				break;
 			default:
 				_position.SetY(correctedYPos);
 				break;
@@ -51,6 +56,7 @@ void PlayerActor::Update(double elapsedSecs, std::shared_ptr<Level>& level)
 
 	if (colEdge != Edge::NONE)
 	{
+		bool canDig = (_digDir == 'R' && colEdge == Edge::RIGHT) ||	(_digDir == 'L' && colEdge == Edge::LEFT);
 		float correctedXPos = _position.GetX();
 		if (colEdge == Edge::RIGHT) correctedXPos -= colPenetration;
 		else if (colEdge == Edge::LEFT) correctedXPos += colPenetration;
@@ -61,11 +67,58 @@ void PlayerActor::Update(double elapsedSecs, std::shared_ptr<Level>& level)
 			{
 			case Tile::blank:
 				break;
+			case Tile::dirt:
+				if (canDig)	tile->SetID(Tile::blank);
+				break;
 			default:
 				_position.SetX(correctedXPos);
 				break;
 			}
 		}
+	}
+}
+
+void PlayerActor::UpdateInput()
+{
+	_digDir = ' ';
+
+	if (_mgr->inputManager->ActionOccurred("LEFT", Input::Held))
+	{
+		_digDir = 'L';
+		SetSpeed(Vector2(Math::Clamp(_speed.GetX() - 5.0f, -120.0f, 0.0f), _speed.GetY()));
+		SetActorDirection(SpriteSheet::XAxisDirection::LEFT);
+	}
+	else if (_mgr->inputManager->ActionOccurred("RIGHT", Input::Held))
+	{
+		_digDir = 'R';
+		
+		SetSpeed(Vector2(Math::Clamp(_speed.GetX() + 5.0f, 0.0f, 120.0f), _speed.GetY()));
+		SetActorDirection(SpriteSheet::XAxisDirection::RIGHT);
+	
+	}
+	else
+	{
+		SetSpeed(Vector2(0.0f, _speed.GetY()));
+	}
+
+	if (_mgr->inputManager->ActionOccurred("UP", Input::Held))
+	{
+		_digDir = 'U';
+		SetSpeed(Vector2(_speed.GetX(), Math::Clamp(_speed.GetY() - 120.0f, 0.0f, -120.0f)));
+	}
+	else if (_mgr->inputManager->ActionOccurred("DOWN", Input::Held))
+	{
+		_digDir = 'D';
+		SetSpeed(Vector2(_speed.GetX(), Math::Clamp(_speed.GetY() + 120.0f, 0.0f, 120.0f)));
+	}
+	else if (_mgr->inputManager->ActionOccurred("JUMP", Input::Pressed))
+	{
+		SetJumpVelocity(800.0f);
+		SetMaximumJumpVelocity(800.0f);
+	}
+	else
+	{
+		_speed.SetY(0);
 	}
 }
 
@@ -75,63 +128,6 @@ void PlayerActor::UpdatePosition(double elapsedSecs)
 	const std::shared_ptr<Level> level = gameScreen->GetLevel();
 	_position.SetX(Math::Clamp(_position.GetX() + _speed.GetX() * (float)elapsedSecs, 0, level->GetLevelSize().x * level->GetTileWidth()));
 	_position.SetY(Math::Clamp(_position.GetY() + _speed.GetY() * (float)elapsedSecs, 0, level->GetLevelSize().y * level->GetTileHeight()));
-}
-
-bool PlayerActor::Dig(char dir, std::shared_ptr<Level>& level)
-{
-	int levelSizeX = level->GetLevelSize().x - 1;
-	int levelSizeY = level->GetLevelSize().y - 1;
-
-	int xInd = Math::Clamp((int)(GetPosition().GetX() / level->GetTileWidth()), 0, levelSizeX);
-	int yInd = Math::Clamp((int)(GetPosition().GetY() / level->GetTileHeight()), 0, levelSizeY);
-
-	switch (toupper(dir))
-	{
-		case 'L':
-		{
-			std::shared_ptr<Tile> tile = level->GetTileFromLevel(Math::Clamp(xInd - 1, 0, levelSizeX), yInd);
-			if (tile->GetID() == Tile::dirt)
-			{
-				tile->SetID(Tile::blank);
-				return true;
-			}
-			return false;
-		}
-		case 'R':
-		{
-			std::shared_ptr<Tile> tile = level->GetTileFromLevel(Math::Clamp(xInd + 1, 0, levelSizeX), yInd);
-			if (tile->GetID() == Tile::dirt)
-			{
-				tile->SetID(Tile::blank);
-				return true;
-			}
-			return false;
-		}
-		case 'U':
-		{
-			std::shared_ptr<Tile> tile = level->GetTileFromLevel(xInd, Math::Clamp(yInd - 1, 0, levelSizeY));
-			if (tile->GetID() == Tile::dirt)
-			{
-				tile->SetID(Tile::blank);
-				return true;
-			}
-			return false;
-		}
-		case 'D':
-		{
-			std::shared_ptr<Tile> tile = level->GetTileFromLevel(xInd, Math::Clamp(yInd + 1, 0, levelSizeY));
-			if (tile->GetID() == Tile::dirt)
-			{
-				tile->SetID(Tile::blank);
-				return false;
-			}
-			return false;
-		}
-		default:
-		{
-			return false;
-		}
-	}
 }
 
 bool PlayerActor::CollisionCheck(Actor & otherAI)
