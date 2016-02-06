@@ -15,7 +15,7 @@ public:
 	 * @param	texturePath	   	Full pathname of the texture file.
 	 */
 	PlayerActor(Vector2 position, GameManager & manager, Vector2 spd, std::string texturePath) 
-		: Actor(position, manager, spd, texturePath, 8), _maxJumpVel(0), _jumpVelocity(0) {}
+		: Actor(position, manager, spd, texturePath, 8), _maxJumpVel(0), _jumpVelocity(0), _atGoal(false) {}
 
 	/** Destructor. */
 	~PlayerActor();
@@ -62,6 +62,13 @@ public:
 	bool IsDead();
 
 	/**
+	 * Determines if player is at the goal.
+	 *
+	 * @return	true if it succeeds, false if it fails.
+	 */
+	bool AtGoal();
+
+	/**
 	* Set jump velocity of the player.
 	*
 	* @param initial velocity in the Y axis.
@@ -89,6 +96,7 @@ public:
 	**/
 	float GetMaximumJumpVelocity();
 private:
+	bool _atGoal;
 	float _jumpVelocity;
 	float _maxJumpVel;
 };
