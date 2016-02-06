@@ -53,7 +53,10 @@ void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level>& level)
 	colIntersection.erase(std::remove_if(colIntersection.begin(), colIntersection.end() - 1, pruneColIntersections));
 	rowIntersection.erase(std::remove_if(rowIntersection.begin(), rowIntersection.end() - 1, pruneRowIntersections));
 
-	double correctedYPos = _position.GetY() + (rowEdge == Edge::TOP ? rowPenetration : -rowPenetration);
+	float correctedYPos = _position.GetY();
+	if (rowEdge == Edge::BOTTOM) correctedYPos -= rowPenetration;
+	else if (rowEdge == Edge::TOP) correctedYPos += level->GetTileHeight() - rowPenetration; 
+
 	for (auto& tile : rowIntersection)
 	{
 		switch (tile->GetID())
@@ -85,10 +88,6 @@ void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level>& level)
 			break;
 		}
 	}
-
-	// 
-	//_speed.SetX(_speed.GetX() * -1);
-	//_actorDir = _actorDir == SpriteSheet::XAxisDirection::RIGHT ? SpriteSheet::XAxisDirection::LEFT : SpriteSheet::XAxisDirection::RIGHT;
 }
 
 void AIActor::Draw(Camera& camera)
