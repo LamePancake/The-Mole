@@ -45,6 +45,18 @@
 				level->AddNPC(n);
 				tile->SetID(Tile::blank);
 			}
+			else if(toupper((*it)) == Tile::checkpoint)
+			{
+				std::shared_ptr<ObjectActor> f = std::make_shared<ObjectActor>(tile->GetWorldPosition(), *GameManager::GetInstance(), Vector2(0, 0), ".\\Assets\\Textures\\Flag_raise.png", ObjectActor::flag, 6);
+				level->AddActorObject(f);
+				tile->SetID(Tile::blank);
+			}
+			else if (toupper((*it)) == Tile::collectible)
+			{
+				std::shared_ptr<ObjectActor> c = std::make_shared<ObjectActor>(tile->GetWorldPosition(), *GameManager::GetInstance(), Vector2(0, 0), ".\\Assets\\Textures\\Pancake.png", ObjectActor::pancake, 1);
+				level->AddActorObject(c);
+				tile->SetID(Tile::blank);
+			}
 
 			level->AddTileToLevel(tile, levelHeight);
 			level->AddPositions(toupper((*it)), SDL2pp::Point(levelWidth, levelHeight));

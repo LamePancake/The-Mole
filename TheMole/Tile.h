@@ -26,7 +26,8 @@ public:
 		collectible = 'C',
 		tunnel      = 'T',
 		origin      = 'O',
-		npc         = 'N'
+		npc         = 'N',
+		checkpoint  = 'F',
 	};
 
 	/** Default constuctor. Initilizes everying to default values. */
