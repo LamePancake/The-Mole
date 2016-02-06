@@ -143,6 +143,7 @@
     <ClCompile Include="LevelRenderer.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MenuScreen.cpp" />
+    <ClCompile Include="NPCActor.cpp" />
     <ClCompile Include="PlayerActor.cpp" />
     <ClCompile Include="AIActor.cpp" />
     <ClCompile Include="SpriteSheet.cpp" />
@@ -156,6 +157,7 @@
     <ClInclude Include="DenLevelScreen.h" />
     <ClInclude Include="GameScreen.h" />
     <ClInclude Include="Math.h" />
+    <ClInclude Include="NPCActor.h" />
     <ClInclude Include="PlayerActor.h" />
     <ClInclude Include="SpriteSheet.h" />
     <ClInclude Include="Tile.h" />
