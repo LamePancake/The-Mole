@@ -16,7 +16,7 @@ public:
 	} XAxisDirection;
 
 	/**
-	 * @brief	Constructor.
+	 * Constructor.
 	 *
 	 * @author	Shane
 	 * @date	2/3/2016
@@ -109,6 +109,14 @@ public:
 	 */
 	SDL2pp::Texture& GetTexture();
 
+	void SetDraw(bool draw);
+	
+	bool CanDraw();
+
+	bool IsRepeating();
+
+	void SetRepeating(bool repeating);
+
 private:
 	SDL2pp::Texture _sheet;
 	SDL2pp::Point _spriteSize;
@@ -119,6 +127,8 @@ private:
 	double _currentFrameElapsed;
 	GameManager* _mgr;
 	XAxisDirection _defaultFacing;
+	bool _toDraw;
+	bool _isRepeating;
 };
 
 #endif

@@ -120,10 +120,10 @@ private:
 	std::shared_ptr<SpriteSheet> _spriteVerticalDig;
 
 	/** The sprite shadow digging. */
-	std::shared_ptr<SpriteSheet> _spriteIdleShadow;
+	std::shared_ptr<SpriteSheet> _spriteWalkShadow;
 
 	/** The spritesheet for digging. */
-	std::shared_ptr<SpriteSheet> _spriteIdle;
+	std::shared_ptr<SpriteSheet> _spriteWalk;
 
 	/** The current sprite animating. */
 	std::shared_ptr<SpriteSheet> _currentSpriteSheet;

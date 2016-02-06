@@ -36,7 +36,7 @@
 			}
 			else if (toupper((*it)) == Tile::origin)
 			{
-				player = std::make_shared<PlayerActor>(tile->GetWorldPosition(), *GameManager::GetInstance(), Vector2(0.0f, 0.0f), ".\\Assets\\Textures\\Borin_walk.png");
+				player = std::make_shared<PlayerActor>(tile->GetWorldPosition(), *GameManager::GetInstance(), Vector2(0.0f, 0.0f), ".\\Assets\\Textures\\Borin_idle.png");
 				tile->SetID(Tile::blank);
 			}
 			else if (toupper((*it)) == Tile::npc)

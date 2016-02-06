@@ -23,11 +23,7 @@ public:
 	 * @param	id			   	The identifier.
 	 * @param	framesPerSecond	The frames per second.
 	 */
-	ObjectActor(Vector2 position, GameManager & manager, Vector2 spd, std::string texturePath, int id, int framesPerSecond)
-		: Actor(position, manager, spd, texturePath, framesPerSecond), _id(id), _isVisible(true) {
-		_sprite->Stop();
-		_spriteShadow->Stop();
-	}
+	ObjectActor(Vector2 position, GameManager & manager, Vector2 spd, std::string texturePath, int id, int framesPerSecond);
 
 	/** Destructor. */
 	~ObjectActor();
@@ -67,13 +63,9 @@ public:
 	 */
 	void SetID(int id);
 
-	bool IsVisisble();
-
 private:
 
 	int _id;
-
-	bool _isVisible;
 
 	void FlagUpdate(double elapsedSecs);
 
