@@ -89,14 +89,14 @@ void PlayerActor::UpdateInput()
 	if (_mgr->inputManager->ActionOccurred("LEFT", Input::Held))
 	{
 		_digDir = 'L';
-		SetSpeed(Vector2(Math::Clamp(_speed.GetX() - 5.0f, -120.0f, 0.0f), _speed.GetY()));
+		SetSpeed(Vector2(Math::Clamp(_speed.GetX() - 400.0f, -400.0f, 0.0f), _speed.GetY()));
 		SetActorDirection(SpriteSheet::XAxisDirection::LEFT);
 	}
 	else if (_mgr->inputManager->ActionOccurred("RIGHT", Input::Held))
 	{
 		_digDir = 'R';
 		
-		SetSpeed(Vector2(Math::Clamp(_speed.GetX() + 5.0f, 0.0f, 120.0f), _speed.GetY()));
+		SetSpeed(Vector2(Math::Clamp(_speed.GetX() + 400.0f, 400.0f, 400.0f), _speed.GetY()));
 		SetActorDirection(SpriteSheet::XAxisDirection::RIGHT);
 	
 	}
@@ -108,12 +108,12 @@ void PlayerActor::UpdateInput()
 	if (_mgr->inputManager->ActionOccurred("UP", Input::Held))
 	{
 		_digDir = 'U';
-		SetSpeed(Vector2(_speed.GetX(), Math::Clamp(_speed.GetY() - 120.0f, 0.0f, -120.0f)));
+		SetSpeed(Vector2(_speed.GetX(), Math::Clamp(_speed.GetY() - 400.0f, 0.0f, -400.0f)));
 	}
 	else if (_mgr->inputManager->ActionOccurred("DOWN", Input::Held))
 	{
 		_digDir = 'D';
-		SetSpeed(Vector2(_speed.GetX(), Math::Clamp(_speed.GetY() + 120.0f, 0.0f, 120.0f)));
+		SetSpeed(Vector2(_speed.GetX(), Math::Clamp(_speed.GetY() + 400.0f, 0.0f, 400.0f)));
 	}
 	else if (_mgr->inputManager->ActionOccurred("JUMP", Input::Pressed))
 	{
@@ -124,6 +124,7 @@ void PlayerActor::UpdateInput()
 	{
 		_speed.SetY(0);
 	}
+
 }
 
 void PlayerActor::UpdatePosition(double elapsedSecs)
