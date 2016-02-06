@@ -17,6 +17,16 @@ void PlayerActor::Update(double elapsedSecs)
 	UpdatePosition(elapsedSecs);
 	_aabb.UpdatePosition(*this);
 
+	const std::shared_ptr<GameScreen> screen = std::dynamic_pointer_cast<GameScreen>(_mgr->GetCurrentScreen());
+	for (int i = 0; i < screen->GetLevel()->GetEnemySize(); ++i)
+	{
+		if (CollisionCheck(*screen->GetLevel()->GetEnemy(i)))
+		{
+			_health = 0;
+			std::cout << "You lose." << std::endl;
+		}
+	}
+
 	UpdateCollisions();
 }
 
@@ -86,6 +96,9 @@ void PlayerActor::UpdateCollisions()
 			}
 		}
 	}
+
+	if (_atGoal)
+		std::cout << "You Win." << std::endl;
 }
 
 void PlayerActor::UpdateInput()
