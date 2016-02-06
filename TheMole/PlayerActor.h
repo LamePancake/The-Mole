@@ -61,6 +61,34 @@ public:
 	 */
 	bool IsDead();
 
-private:
+	/**
+	* Set jump velocity of the player.
+	*
+	* @param initial velocity in the Y axis.
+	**/
+	void SetJumpVelocity(float initVel);
 
+	/**
+	* Get jump velocity of the player.
+	*
+	* @return float that is the velocity of the jump in the Y axis.
+	**/
+	float GetJumpVelocity();
+
+	/**
+	* Set max jump velocity of the player.
+	*
+	* @param initial velocity in the Y axis.
+	**/
+	void SetMaximumJumpVelocity(float initVel);
+
+	/**
+	* Get max jump velocity.
+	*
+	* @return float that is the velocity of the jump in the Y axis.
+	**/
+	float GetMaximumJumpVelocity();
+private:
+	float _jumpVelocity;
+	float _maxJumpVel;
 };

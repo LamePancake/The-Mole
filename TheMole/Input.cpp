@@ -54,7 +54,7 @@ bool Input::KeyPressed(SDL_Scancode key)
 {
 	if (key == NULL)
 		return false;
-	if (_prevKeyboardState[key] && !_curKeyboardState[key])
+	if (!_prevKeyboardState[key] && _curKeyboardState[key])
 		return true;
 	else
 		return false;

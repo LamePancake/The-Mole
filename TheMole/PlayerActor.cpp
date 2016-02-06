@@ -97,3 +97,23 @@ bool PlayerActor::IsDead()
 {
 	return _health == 0 ? true : false;
 }
+
+void PlayerActor::SetJumpVelocity(float initVel)
+{
+	_jumpVelocity = initVel;
+}
+
+float PlayerActor::GetJumpVelocity()
+{
+	return _jumpVelocity;
+}
+
+void PlayerActor::SetMaximumJumpVelocity(float initVel)
+{
+	_maxJumpVel = initVel;
+}
+
+float PlayerActor::GetMaximumJumpVelocity()
+{
+	return _maxJumpVel;
+}

@@ -76,15 +76,24 @@ int GameScreen::Update(double elapsedSecs)
 			//_player->SetActorDirection(SpriteSheet::XAxisDirection::DOWN);
 		}
 	}
-	else if (_mgr->inputManager->ActionOccured("JUMP", Input::Held))
+	else if (_mgr->inputManager->ActionOccured("JUMP", Input::Pressed))
 	{
-		_player->SetSpeed(Vector2(_player->GetSpeed().GetX(), Math::Clamp(_player->GetSpeed().GetY() - 120.0f, 0.0f, -120.0f)));
+		_player->SetJumpVelocity(240.0f);
+		_player->SetMaximumJumpVelocity(240.0f);
 		//_player->SetActorDirection(SpriteSheet::XAxisDirection::JUMP);
 	}
-	else if (!_mgr->inputManager->ActionOccured("JUMP", Input::Held))
+	else
 	{
 		_player->SetSpeed(Vector2(_player->GetSpeed().GetX(), 0.0f));
 	}
+
+	if (_player->GetJumpVelocity() > -_player->GetMaximumJumpVelocity())
+	{
+		_player->SetSpeed(Vector2(_player->GetSpeed().GetX(), _player->GetSpeed().GetY() - _player->GetJumpVelocity()));
+		_player->SetJumpVelocity(_player->GetJumpVelocity() - elapsedSecs * 100.0f);
+	}
+	std::cout << _player->GetJumpVelocity() << "jump vel" << std::endl;
+	std::cout << _player->GetMaximumJumpVelocity() << "max vel" << std::endl;
 
 	for (size_t i = 0; i < _level->GetEnemySize(); ++i)
 	{

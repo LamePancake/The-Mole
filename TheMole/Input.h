@@ -20,6 +20,9 @@ public:
 		Down,
 		/// The button/key was up in this update (previous state is not considered).
 		Up,
+		/// Button released
+		Released,
+		/// Button held
 		Held
 	};
 
@@ -60,15 +63,20 @@ private:
 	//Probably won't be using this one anymore
 	void On_Key_Up(SDL_Keysym);
 
-	/// Checks keyboard states to determine if a key was pressed
+	/// Checks keyboard states to determine if a key was released
 	/// @param key keyboard key id
 	/// @return bool True if pressed, False if not
-	bool KeyPressed(SDL_Scancode key);
+	bool KeyReleased(SDL_Scancode key);
 
 	/// Checks keyboard states to determine if a key is being held
 	/// @param key keyboard key id
 	/// @return bool True if held, False if not
 	bool KeyHeld(SDL_Scancode key);
+
+	/// Checks keyboard states to determine if a key is being pressed
+	/// @param key keyboard key id
+	/// @return bool True if held, False if not
+	bool KeyPressed(SDL_Scancode key);
 
 	//-------------------Variables---------------
 	//state of keyboard == relevant key presses and actions
