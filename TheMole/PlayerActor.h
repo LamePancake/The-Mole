@@ -106,5 +106,5 @@ private:
 	bool _atGoal;
 	float _jumpVelocity;
 	float _maxJumpVel;
-	char _digDir;
+	char _digDir[2];
 };

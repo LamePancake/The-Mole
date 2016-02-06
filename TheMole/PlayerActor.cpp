@@ -33,7 +33,7 @@ void PlayerActor::UpdateCollisions()
 
 	if (rowEdge != Edge::NONE)
 	{
-		bool canDig = (_digDir == 'U' && rowEdge == Edge::TOP) || (_digDir == 'D' && rowEdge == Edge::BOTTOM);
+		bool canDig = (_digDir[1] == 'U' && rowEdge == Edge::TOP) || (_digDir[1] == 'D' && rowEdge == Edge::BOTTOM);
 		float correctedYPos = _position.GetY();
 		if (rowEdge == Edge::BOTTOM) correctedYPos -= rowPenetration;
 		else if (rowEdge == Edge::TOP) correctedYPos += rowPenetration;
@@ -45,7 +45,10 @@ void PlayerActor::UpdateCollisions()
 			case Tile::blank:
 				break;
 			case Tile::dirt:
-				if (canDig)	tile->SetID(Tile::blank);
+				if (canDig)
+				{
+					tile->SetID(Tile::blank);
+				}
 				break;
 			case Tile::goal:
 				_atGoal = true;
@@ -58,7 +61,7 @@ void PlayerActor::UpdateCollisions()
 
 	if (colEdge != Edge::NONE)
 	{
-		bool canDig = (_digDir == 'R' && colEdge == Edge::RIGHT) ||	(_digDir == 'L' && colEdge == Edge::LEFT);
+		bool canDig = (_digDir[0] == 'R' && colEdge == Edge::RIGHT) ||	(_digDir[0] == 'L' && colEdge == Edge::LEFT);
 		float correctedXPos = _position.GetX();
 		if (colEdge == Edge::RIGHT) correctedXPos -= colPenetration;
 		else if (colEdge == Edge::LEFT) correctedXPos += colPenetration;
@@ -70,7 +73,10 @@ void PlayerActor::UpdateCollisions()
 			case Tile::blank:
 				break;
 			case Tile::dirt:
-				if (canDig)	tile->SetID(Tile::blank);
+				if (canDig)
+				{
+					tile->SetID(Tile::blank);
+				}
 				break;
 			case Tile::goal:
 				_atGoal = true;
@@ -84,17 +90,17 @@ void PlayerActor::UpdateCollisions()
 
 void PlayerActor::UpdateInput()
 {
-	_digDir = ' ';
-
+	_digDir[0] = ' ';
+	_digDir[1] = ' ';
 	if (_mgr->inputManager->ActionOccurred("LEFT", Input::Held))
 	{
-		_digDir = 'L';
+		_digDir[0] = 'L';
 		SetSpeed(Vector2(Math::Clamp(_speed.GetX() - 400.0f, -400.0f, 0.0f), _speed.GetY()));
 		SetActorDirection(SpriteSheet::XAxisDirection::LEFT);
 	}
 	else if (_mgr->inputManager->ActionOccurred("RIGHT", Input::Held))
 	{
-		_digDir = 'R';
+		_digDir[0] = 'R';
 		
 		SetSpeed(Vector2(Math::Clamp(_speed.GetX() + 400.0f, 400.0f, 400.0f), _speed.GetY()));
 		SetActorDirection(SpriteSheet::XAxisDirection::RIGHT);
@@ -107,12 +113,12 @@ void PlayerActor::UpdateInput()
 
 	if (_mgr->inputManager->ActionOccurred("UP", Input::Held))
 	{
-		_digDir = 'U';
+		_digDir[1] = 'U';
 		SetSpeed(Vector2(_speed.GetX(), Math::Clamp(_speed.GetY() - 400.0f, 0.0f, -400.0f)));
 	}
 	else if (_mgr->inputManager->ActionOccurred("DOWN", Input::Held))
 	{
-		_digDir = 'D';
+		_digDir[1] = 'D';
 		SetSpeed(Vector2(_speed.GetX(), Math::Clamp(_speed.GetY() + 400.0f, 0.0f, 400.0f)));
 	}
 	else if (_mgr->inputManager->ActionOccurred("JUMP", Input::Pressed))

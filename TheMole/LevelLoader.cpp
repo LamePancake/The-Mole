@@ -49,7 +49,7 @@
 			{
 				std::shared_ptr<ObjectActor> f = std::make_shared<ObjectActor>(tile->GetWorldPosition(), *GameManager::GetInstance(), Vector2(0, 0), ".\\Assets\\Textures\\Flag_raise.png", ObjectActor::flag, 6);
 				level->AddActorObject(f);
-				tile->SetID(Tile::goal);
+				tile->SetID(Tile::blank);
 			}
 			else if (toupper((*it)) == Tile::collectible)
 			{
