@@ -22,6 +22,50 @@ void PlayerActor::Update(double elapsedSecs, std::shared_ptr<Level>& level)
 			_health = 0;
 		}
 	}
+
+	Edge colEdge, rowEdge;
+	int colPenetration, rowPenetration;
+	std::vector<std::shared_ptr<Tile>> rowIntersection, colIntersection;
+
+	GetTileCollisionInfo(rowEdge, colEdge, rowPenetration, colPenetration, rowIntersection, colIntersection, level);
+
+	if (rowEdge != Edge::NONE)
+	{
+		float correctedYPos = _position.GetY();
+		if (rowEdge == Edge::BOTTOM) correctedYPos -= rowPenetration;
+		else if (rowEdge == Edge::TOP) correctedYPos += rowPenetration;
+
+		for (auto& tile : rowIntersection)
+		{
+			switch (tile->GetID())
+			{
+			case Tile::blank:
+				break;
+			default:
+				_position.SetY(correctedYPos);
+				break;
+			}
+		}
+	}
+
+	if (colEdge != Edge::NONE)
+	{
+		float correctedXPos = _position.GetX();
+		if (colEdge == Edge::RIGHT) correctedXPos -= colPenetration;
+		else if (colEdge == Edge::LEFT) correctedXPos += colPenetration;
+
+		for (auto& tile : colIntersection)
+		{
+			switch (tile->GetID())
+			{
+			case Tile::blank:
+				break;
+			default:
+				_position.SetX(correctedXPos);
+				break;
+			}
+		}
+	}
 }
 
 void PlayerActor::UpdatePosition(double elapsedSecs)

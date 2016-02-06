@@ -46,7 +46,7 @@ void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level>& level)
 
 	float correctedYPos = _position.GetY();
 	if (rowEdge == Edge::BOTTOM) correctedYPos -= rowPenetration;
-	else if (rowEdge == Edge::TOP) correctedYPos += level->GetTileHeight() - rowPenetration; 
+	else if (rowEdge == Edge::TOP) correctedYPos += rowPenetration; 
 
 	for (auto& tile : rowIntersection)
 	{
@@ -62,7 +62,7 @@ void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level>& level)
 	
 	float correctedXPos = _position.GetX();
 	if (colEdge == Edge::RIGHT) correctedXPos -= colPenetration;
-	else if (colEdge == Edge::LEFT) correctedXPos += level->GetTileWidth() - colPenetration;
+	else if (colEdge == Edge::LEFT) correctedXPos += colPenetration;
 
 	float reverseX = _speed.GetX() * -1;
 	SpriteSheet::XAxisDirection reverseDir = _actorDir == SpriteSheet::XAxisDirection::LEFT ? SpriteSheet::XAxisDirection::RIGHT : SpriteSheet::XAxisDirection::LEFT;

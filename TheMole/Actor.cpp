@@ -109,10 +109,10 @@ void Actor::GetTileCollisionInfo(Edge & rowEdge, Edge & colEdge, int & rowPenetr
 
 	// Calculate the actor's bounds
 	// Note that this should use the AABB, but it's reporting incorrect positions currently
-	double rightBound = _position.GetX() + _sprite->GetFrameWidth();
-	double leftBound = _position.GetX();
-	double topBound = _position.GetY();
-	double bottomBound = _position.GetY() + _sprite->GetFrameHeight();
+	double rightBound = ceil(_position.GetX() + _sprite->GetFrameWidth());
+	double leftBound = floor(_position.GetX());
+	double topBound = floor(_position.GetY());
+	double bottomBound = ceil(_position.GetY() + _sprite->GetFrameHeight());
 
 	// Determine which tiles we intersect
 	// If the bottom or right is exactly flush, we subtract one so that we don't test against tiles in the next row/column
@@ -129,8 +129,10 @@ void Actor::GetTileCollisionInfo(Edge & rowEdge, Edge & colEdge, int & rowPenetr
 		// If we're moving right, we need to test x + width; if we're moving left, we need to test x
 		int testSideX = xVel > 0 ? (int)ceil(rightBound) : (int)floor(leftBound);
 
-		// If we aren't flush with a tile column border, check whether we're intersecting any tiles of interest
+		// Determine by how much we're intersecting (left edge must be adjusted since we want the distance from the tile's right side)
 		colPenetration = testSideX % tileWidth;
+		if (colEdge == Edge::LEFT) colPenetration = level->GetTileWidth() - colPenetration;
+
 		int col = testSideX / tileWidth;
 		level->GetTileRange(topRow, bottomRow + 1, col, col + 1, colIntersect);
 	}
@@ -147,7 +149,10 @@ void Actor::GetTileCollisionInfo(Edge & rowEdge, Edge & colEdge, int & rowPenetr
 		// If we're moving right, we need to test x + width; if we're moving left, we need to test x
 		int testSideY = yVel > 0 ? (int)ceil(bottomBound) : (int)floor(topBound);
 
+		// Determine by how much we're intersecting (top edge must be adjusted since we want the distance from the tile's bottom side)
 		rowPenetration = testSideY % tileHeight;
+		if (rowEdge == Edge::TOP) rowPenetration = level->GetTileHeight() - rowPenetration;
+
 		int row = testSideY / tileHeight;
 		level->GetTileRange(row, row + 1, leftCol, rightCol + 1, rowIntersect);
 	}
@@ -156,14 +161,39 @@ void Actor::GetTileCollisionInfo(Edge & rowEdge, Edge & colEdge, int & rowPenetr
 		rowEdge = Edge::NONE;
 	}
 
-	// Prune any tiles that won't actually be collided with (i.e. tiles that are only currently being "collided" with because we're partly embedded in a wall)
-	int pruneRow = rowIntersect[0]->GetIndices().y;
-	int pruneCol = colIntersect[0]->GetIndices().x;
+	if (rowEdge != Edge::NONE && colEdge != Edge::NONE)
+	{
+		int pruneRow = rowIntersect[0]->GetIndices().y;
+		int pruneCol = colIntersect[0]->GetIndices().x;
 
-	const auto pruneColIntersections = [pruneRow](std::shared_ptr<Tile>& tile) {return tile->GetIndices().y == pruneRow; };
-	const auto pruneRowIntersections = [pruneCol](std::shared_ptr<Tile>& tile) {return tile->GetIndices().x == pruneCol; };
+		// The tile common to both ranges
+		std::shared_ptr<Tile> cornerTile = level->GetTileFromLevel(pruneCol, pruneRow);
 
-	colIntersect.erase(std::remove_if(colIntersect.begin(), colIntersect.end() - 1, pruneColIntersections));
-	rowIntersect.erase(std::remove_if(rowIntersect.begin(), rowIntersect.end() - 1, pruneRowIntersections));
+		if (cornerTile->GetID() != Tile::blank)
+		{
+			// Try to find a tile that's not blank in one of the ranges so that we can prune the common tile from the other one
+			const auto nonCornerSolidTileFinder = [cornerTile](std::shared_ptr<Tile>& tile) {return tile != cornerTile && tile->GetID() != Tile::blank; };
+			if (std::find_if(rowIntersect.begin(), rowIntersect.end(), nonCornerSolidTileFinder) != rowIntersect.end())
+			{
+				colIntersect.erase(remove(colIntersect.begin(), colIntersect.end() - 1, cornerTile));
+			}
+			else if (std::find_if(colIntersect.begin(), colIntersect.end(), nonCornerSolidTileFinder) != colIntersect.end())
+			{
+				rowIntersect.erase(remove(rowIntersect.begin(), rowIntersect.end() - 1, cornerTile));
+			}
+			else
+			{
+				// We'll prefer the side tiles because it will probably look more realistic thanks to gravity... maybe (we can change this later for visual effects if necessary)
+				if (colPenetration <= rowPenetration)
+				{
+					rowIntersect.erase(remove(rowIntersect.begin(), rowIntersect.end() - 1, cornerTile));
+				}
+				else
+				{
+					colIntersect.erase(remove(colIntersect.begin(), colIntersect.end() - 1, cornerTile));
+				}
+			}
+		}
+	}
 }
 

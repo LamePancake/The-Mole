@@ -92,8 +92,8 @@ int GameScreen::Update(double elapsedSecs)
 		_player->SetSpeed(Vector2(_player->GetSpeed().GetX(), _player->GetSpeed().GetY() - _player->GetJumpVelocity()));
 		_player->SetJumpVelocity(_player->GetJumpVelocity() - elapsedSecs * 100.0f);
 	}
-	std::cout << _player->GetJumpVelocity() << "jump vel" << std::endl;
-	std::cout << _player->GetMaximumJumpVelocity() << "max vel" << std::endl;
+	//std::cout << _player->GetJumpVelocity() << "jump vel" << std::endl;
+	//std::cout << _player->GetMaximumJumpVelocity() << "max vel" << std::endl;
 
 	for (size_t i = 0; i < _level->GetEnemySize(); ++i)
 	{
