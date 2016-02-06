@@ -107,6 +107,29 @@ public:
 	size_t GetEnemySize() const;
 
 	/**
+	 * Adds an npc to the npc array.
+	 *
+	 * @param	n	The std::shared_ptr&lt;SimpleAgent&gt; to process.
+	 */
+	void AddNPC(std::shared_ptr<Actor> n);
+
+	/**
+	 * Gets an NPC.
+	 *
+	 * @param	idx	The index into the npc array.
+	 *
+	 * @return	The npc.
+	 */
+	std::shared_ptr<Actor> GetNPC(size_t idx);
+
+	/**
+	 * Gets npc array size.
+	 *
+	 * @return	The npc size.
+	 */
+	size_t GetNPCSize() const;
+
+	/**
 	 * Gets tile width.
 	 *
 	 * @return	The tile width.
@@ -138,6 +161,9 @@ private:
 	
 	/** The enemies in the level. */
 	std::vector<std::shared_ptr<Actor>> _enemies;
+
+	/** The enemies in the level. */
+	std::vector<std::shared_ptr<Actor>> _NPCs;
 
 	std::map<char, std::vector<SDL2pp::Point>> _tilePositions;
 

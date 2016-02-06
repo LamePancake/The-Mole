@@ -9,14 +9,13 @@ public:
 	/**
 	 * Constructor that initializes _position to the input parameter.
 	 *
-	 * @param	position		 	starting position of the agent.
-	 * @param [in,out]	manager  	game manager.
-	 * @param	spd				 	speed.
-	 * @param	texturePath		 	Full pathname of the texture file.
-	 * @param	shadowTexturePath	Full pathname of the shadow texture file.
+	 * @param	position	   	starting position of the agent.
+	 * @param [in,out]	manager	game manager.
+	 * @param	spd			   	speed.
+	 * @param	texturePath	   	Full pathname of the texture file.
 	 */
-	PlayerActor(Vector2 position, GameManager & manager, Vector2 spd, std::string texturePath, std::string shadowTexturePath) 
-		: Actor(position, manager, spd, texturePath, shadowTexturePath), _maxJumpVel(0), _jumpVelocity(0) {}
+	PlayerActor(Vector2 position, GameManager & manager, Vector2 spd, std::string texturePath) 
+		: Actor(position, manager, spd, texturePath, 8), _maxJumpVel(0), _jumpVelocity(0) {}
 
 	/** Destructor. */
 	~PlayerActor();

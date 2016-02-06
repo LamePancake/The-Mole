@@ -36,6 +36,12 @@ int GameScreen::Update(double elapsedSecs)
 		exit(0);
 	}
 
+	if (_player->IsDead())
+	{
+		GameManager::GetInstance()->SetNextScreen("menu");
+		return SCREEN_FINISH;
+	}
+
 	if (_mgr->inputManager->ActionOccurred("LEFT", Input::Held))
 	{
 		if (!_player->Dig('L', _level))
@@ -86,20 +92,21 @@ int GameScreen::Update(double elapsedSecs)
 		_player->SetSpeed(Vector2(_player->GetSpeed().GetX(), _player->GetSpeed().GetY() - _player->GetJumpVelocity()));
 		_player->SetJumpVelocity(_player->GetJumpVelocity() - elapsedSecs * 100.0f);
 	}
-	//std::cout << _player->GetJumpVelocity() << "jump vel" << std::endl;
-	//std::cout << _player->GetMaximumJumpVelocity() << "max vel" << std::endl;
 
+	// Update Enemies
 	for (size_t i = 0; i < _level->GetEnemySize(); ++i)
 	{
 		_level->GetEnemy(i)->Update(elapsedSecs, _level);
 	}
-	_player->Update(elapsedSecs, _level);
 
-	if (_player->IsDead())
+	// Update NPCs
+	for (size_t i = 0; i < _level->GetNPCSize(); ++i)
 	{
-		GameManager::GetInstance()->SetNextScreen("menu");
-		return SCREEN_FINISH;
+		_level->GetNPC(i)->Update(elapsedSecs, _level);
 	}
+
+	//Update Player
+	_player->Update(elapsedSecs, _level);
 
 	return SCREEN_CONTINUE;
 }
@@ -113,11 +120,22 @@ void GameScreen::Draw()
 	rend.Copy(*_background, SDL2pp::NullOpt, SDL2pp::NullOpt);
 	_camera->CentreView(_player->GetPosition());
 
+	// Render Level
 	_levelRenderer.RenderLevel(_level, *_camera);
+
+	// Render enemies
 	for (size_t i = 0; i < _level->GetEnemySize(); ++i)
 	{
 		_level->GetEnemy(i)->Draw(*_camera);
 	}
+
+	// Render NPCs
+	for (size_t i = 0; i < _level->GetNPCSize(); ++i)
+	{
+		_level->GetNPC(i)->Draw(*_camera);
+	}
+
+	// Render Player
 	_player->Draw(*_camera);
 
 	rend.Present();

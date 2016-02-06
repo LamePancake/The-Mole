@@ -66,6 +66,25 @@ size_t Level::GetEnemySize() const
 	return _enemies.size();
 }
 
+void Level::AddNPC(std::shared_ptr<Actor> n)
+{
+	_NPCs.push_back(n);
+}
+
+std::shared_ptr<Actor> Level::GetNPC(size_t idx)
+{
+	if (idx > _NPCs.size())
+		return nullptr;
+
+	return _NPCs[idx];
+}
+
+size_t Level::GetNPCSize() const
+{
+	return _NPCs.size();
+}
+
+
 size_t Level::GetTileWidth() const
 {
 	return _tileWidth;

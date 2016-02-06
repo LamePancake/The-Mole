@@ -11,6 +11,7 @@
 #include "Vector2.h"
 #include "Actor.h"
 #include "PlayerActor.h"
+#include "NPCActor.h"
 
 /** Loads a level from a text file and returns a vector of tiles that represent the level. */
 class LevelLoader

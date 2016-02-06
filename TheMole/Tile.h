@@ -25,7 +25,8 @@ public:
 		goal        = 'G',
 		collectible = 'C',
 		tunnel      = 'T',
-		origin      = 'O'
+		origin      = 'O',
+		npc         = 'N'
 	};
 
 	/** Default constuctor. Initilizes everying to default values. */

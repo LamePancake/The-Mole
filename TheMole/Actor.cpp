@@ -1,12 +1,12 @@
 #include "Actor.h"
 
-Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::string texturePath, std::string shadowTexturePath)
+Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::string texturePath, int framesPerSecond)
 	:_position(position), _mgr(&manager), _speed(spd)
 {
 	_health = 100;
 	
-	_sprite = std::make_shared<SpriteSheet>(texturePath, 8, 1.0, SpriteSheet::XAxisDirection::RIGHT);
-	_spriteShadow = std::make_shared<SpriteSheet>(shadowTexturePath, 8, 1.0, SpriteSheet::XAxisDirection::RIGHT);
+	_sprite = std::make_shared<SpriteSheet>(texturePath, framesPerSecond, 1.0, SpriteSheet::XAxisDirection::RIGHT);
+	_spriteShadow = std::make_shared<SpriteSheet>(texturePath, framesPerSecond, 1.0, SpriteSheet::XAxisDirection::RIGHT);
 
 	_aabb = AABB(_sprite->GetFrameWidth(), _sprite->GetFrameHeight(), *this);
 

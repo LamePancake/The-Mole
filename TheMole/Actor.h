@@ -20,9 +20,9 @@ public:
 	 * @param [in,out]	manager  	game manager.
 	 * @param	spd				 	speed.
 	 * @param	texturePath		 	Full pathname of the texture file.
-	 * @param	shadowTexturePath	Full pathname of the shadow texture file.
+	 * @param	framesPerSecond  	The frames per second.
 	 */
-	Actor(Vector2 position, GameManager & manager, Vector2 spd, std::string texturePath, std::string shadowTexturePath);
+	Actor(Vector2 position, GameManager & manager, Vector2 spd, std::string texturePath, int framesPerSecond);
 
 	/** Destructor. */
 	~Actor();
