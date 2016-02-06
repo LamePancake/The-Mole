@@ -4,6 +4,9 @@
 #include <map>
 
 class Actor;
+class AIActor;
+class NPCActor;
+class ObjectActor;
 
 #include "Tile.h"
 
@@ -88,7 +91,7 @@ public:
 	 *
 	 * @param	e	The std::shared_ptr&lt;SimpleAgent&gt; to process.
 	 */
-	void AddEnemy(std::shared_ptr<Actor> e);
+	void AddEnemy(std::shared_ptr<AIActor> e);
 
 	/**
 	 * Gets an enemy.
@@ -111,7 +114,7 @@ public:
 	 *
 	 * @param	n	The std::shared_ptr&lt;SimpleAgent&gt; to process.
 	 */
-	void AddNPC(std::shared_ptr<Actor> n);
+	void AddNPC(std::shared_ptr<NPCActor> n);
 
 	/**
 	 * Gets an NPC.
@@ -128,6 +131,29 @@ public:
 	 * @return	The npc size.
 	 */
 	size_t GetNPCSize() const;
+
+	/**
+	 * Adds an actor object to the object array.
+	 *
+	 * @param	o	The std::shared_ptr&lt;SimpleAgent&gt; to process.
+	 */
+	void AddActorObject(std::shared_ptr<ObjectActor> o);
+
+	/**
+	* Gets an Actor Object.
+	*
+	* @param	idx	The index into the object array.
+	*
+	* @return	The object.
+	*/
+	std::shared_ptr<Actor> GetActorObject(size_t idx);
+
+	/**
+	* Gets object array size.
+	*
+	* @return	The object size.
+	*/
+	size_t GetActorObjectSize() const;
 
 	/**
 	 * Gets tile width.
@@ -160,10 +186,13 @@ public:
 private:
 	
 	/** The enemies in the level. */
-	std::vector<std::shared_ptr<Actor>> _enemies;
+	std::vector<std::shared_ptr<AIActor>> _enemies;
 
-	/** The enemies in the level. */
-	std::vector<std::shared_ptr<Actor>> _NPCs;
+	/** The npcs in the level. */
+	std::vector<std::shared_ptr<NPCActor>> _NPCs;
+
+	/** Other actors in the level, like checkpoints */
+	std::vector<std::shared_ptr<ObjectActor>> _objects;
 
 	std::map<char, std::vector<SDL2pp::Point>> _tilePositions;
 

@@ -30,6 +30,13 @@ public:
 	 */
 	std::shared_ptr<Level> GetLevel() const;
 
+	/**
+	 * Gets the player.
+	 *
+	 * @return	The player.
+	 */
+	const std::shared_ptr<PlayerActor> GetPlayer() const;
+
 protected:
 	Camera* _camera;
 	GameManager* _mgr;

@@ -47,6 +47,8 @@ void PlayerActor::UpdateCollisions()
 			case Tile::dirt:
 				if (canDig)	tile->SetID(Tile::blank);
 				break;
+			case Tile::goal:
+				_atGoal = true;
 			default:
 				_position.SetY(correctedYPos);
 				break;
@@ -70,6 +72,8 @@ void PlayerActor::UpdateCollisions()
 			case Tile::dirt:
 				if (canDig)	tile->SetID(Tile::blank);
 				break;
+			case Tile::goal:
+				_atGoal = true;
 			default:
 				_position.SetX(correctedXPos);
 				break;
@@ -138,6 +142,11 @@ bool PlayerActor::CollisionCheck(Actor & otherAI)
 bool PlayerActor::IsDead()
 {
 	return _health == 0 ? true : false;
+}
+
+bool PlayerActor::AtGoal()
+{
+	return _atGoal;
 }
 
 void PlayerActor::SetJumpVelocity(float initVel)

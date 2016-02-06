@@ -1,5 +1,8 @@
 #include "Level.h"
 #include "Actor.h"
+#include "AIActor.h"
+#include "NPCActor.h"
+#include "ObjectActor.h"
 
 int Level::AddTileToLevel(std::shared_ptr<Tile> tile, int row)
 {
@@ -48,7 +51,7 @@ SDL2pp::Point Level::GetPosition(char key, size_t idx)
 	return _tilePositions[key][idx];
 }
 
-void Level::AddEnemy(std::shared_ptr<Actor> e)
+void Level::AddEnemy(std::shared_ptr<AIActor> e)
 {
 	_enemies.push_back(e);
 }
@@ -66,7 +69,7 @@ size_t Level::GetEnemySize() const
 	return _enemies.size();
 }
 
-void Level::AddNPC(std::shared_ptr<Actor> n)
+void Level::AddNPC(std::shared_ptr<NPCActor> n)
 {
 	_NPCs.push_back(n);
 }
@@ -84,6 +87,23 @@ size_t Level::GetNPCSize() const
 	return _NPCs.size();
 }
 
+void Level::AddActorObject(std::shared_ptr<ObjectActor> o)
+{
+	_objects.push_back(o);
+}
+
+std::shared_ptr<Actor> Level::GetActorObject(size_t idx)
+{
+	if (idx > _objects.size())
+		return nullptr;
+
+	return _objects[idx];
+}
+
+size_t Level::GetActorObjectSize() const
+{
+	return _objects.size();
+}
 
 size_t Level::GetTileWidth() const
 {

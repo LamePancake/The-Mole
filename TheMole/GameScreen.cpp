@@ -7,6 +7,11 @@ std::shared_ptr<Level> GameScreen::GetLevel() const
 	return _level;
 }
 
+const std::shared_ptr<PlayerActor> GameScreen::GetPlayer() const
+{
+	return _player;
+}
+
 int GameScreen::Load(std::string levelAddress, std::string textureAddress)
 {
 	_mgr = GameManager::GetInstance();
@@ -39,7 +44,7 @@ int GameScreen::Update(double elapsedSecs)
 		exit(0);
 	}
 
-	if (_player->IsDead())
+	if (_player->IsDead() || _player->AtGoal())
 	{
 		GameManager::GetInstance()->SetNextScreen("menu");
 		return SCREEN_FINISH;
@@ -55,6 +60,12 @@ int GameScreen::Update(double elapsedSecs)
 	for (size_t i = 0; i < _level->GetEnemySize(); ++i)
 	{
 		_level->GetEnemy(i)->Update(elapsedSecs);
+	}
+
+	// Update objects
+	for (size_t i = 0; i < _level->GetActorObjectSize(); ++i)
+	{
+		_level->GetActorObject(i)->Update(elapsedSecs);
 	}
 
 	// Update NPCs
@@ -82,6 +93,12 @@ void GameScreen::Draw()
 	for (size_t i = 0; i < _level->GetEnemySize(); ++i)
 	{
 		_level->GetEnemy(i)->Draw(*_camera);
+	}
+
+	// Render objects
+	for (size_t i = 0; i < _level->GetActorObjectSize(); ++i)
+	{
+		_level->GetActorObject(i)->Draw(*_camera);
 	}
 
 	// Render NPCs
