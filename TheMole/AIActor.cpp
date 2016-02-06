@@ -66,10 +66,11 @@ void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level>& level)
 		}
 	}
 	
+	float correctedXPos = _position.GetX();
+	if (colEdge == Edge::RIGHT) correctedXPos -= colPenetration;
+	else if (colEdge == Edge::LEFT) correctedXPos += level->GetTileWidth() - colPenetration;
 
-	// The new Y position to use in case any of the blocks was solid
-	double correctedXPos = _position.GetX() + (colEdge == Edge::LEFT ? colPenetration : -colPenetration);
-	double reverseX = _speed.GetX() * -1;
+	float reverseX = _speed.GetX() * -1;
 	SpriteSheet::XAxisDirection reverseDir = _actorDir == SpriteSheet::XAxisDirection::LEFT ? SpriteSheet::XAxisDirection::RIGHT : SpriteSheet::XAxisDirection::LEFT;
 	for (auto& tile : colIntersection)
 	{

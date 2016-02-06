@@ -46,13 +46,13 @@
 			levelWidth++;
 		}
 
-		level->SetTileWidth(tileWidth);
-		level->SetTileHeight(tileHeight);
-
 		levelWidth = 0;
 		levelHeight++;
 	}
-	
+
+	level->SetTileWidth(tileWidth);
+	level->SetTileHeight(tileHeight);
+
 	inFile.close();
 
 	return level;

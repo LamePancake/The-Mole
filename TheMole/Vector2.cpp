@@ -15,12 +15,12 @@ Vector2::Vector2(float x, float y)
 	_y = y;
 }
 
-float Vector2::GetX()
+float Vector2::GetX() const
 {
 	return _x;
 }
 
-float Vector2::GetY()
+float Vector2::GetY() const
 {
 	return _y;
 }

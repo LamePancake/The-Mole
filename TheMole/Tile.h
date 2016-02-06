@@ -8,10 +8,10 @@ class Tile
 public:
 
 	/** The default width in pixels of the tile. */
-	const static int DEFAULT_TILE_WIDTH = 64;
+	const static size_t DEFAULT_TILE_WIDTH = 64;
 
 	/** The default height in pixels of the tile. */
-	const static int DEFAULT_TILE_HEIGHT = 64;
+	const static size_t DEFAULT_TILE_HEIGHT = 64;
 
 	/** Values that represent tile types. */
 	enum TileType : char
@@ -29,11 +29,11 @@ public:
 	};
 
 	/** Default constuctor. Initilizes everying to default values. */
-	Tile(): _width(DEFAULT_TILE_WIDTH), 
-		    _height(DEFAULT_TILE_HEIGHT),
-			_xIndex(0),
-			_yIndex(0),
-			_id(blank) {}
+	Tile(): _xIndex(0),
+		    _yIndex(0),
+		    _id(blank),
+		    _width(DEFAULT_TILE_WIDTH), 
+		    _height(DEFAULT_TILE_HEIGHT) {}
 
 	/**
 	 * Constructor.
@@ -45,11 +45,11 @@ public:
 	 * @param	height	The height of the tile.
 	 */
 	Tile(int x, int y, char id, int width = DEFAULT_TILE_WIDTH, int height = DEFAULT_TILE_HEIGHT ) : 
-		_width(width),
-		_height(height),
 		_xIndex(x),
-	    _yIndex(y),
-		_id(id) {}
+		_yIndex(y),
+		_id(id),
+		_width(width),
+		_height(height) {}
 
 	/** OVERRIDE. Handles drawing the tile. */
 	virtual void Draw();
@@ -66,28 +66,28 @@ public:
 	 *
 	 * @return	The width of the tile.
 	 */
-	int const GetWidth() const;
+	size_t const GetWidth() const;
 
 	/**
 	 * Returns the height in pixels of the tile.
 	 *
 	 * @return	The height of the tile.
 	 */
-	int const GetHeight() const;
+	size_t const GetHeight() const;
 
 	/**
 	 * Sets the width in pixels of the tile.
 	 *
 	 * @param	width	The new width of the tile in pixels.
 	 */
-	void SetWidth(int width);
+	void SetWidth(size_t width);
 
 	/**
 	 * Sets the height of the tile in pixels.
 	 *
 	 * @param	height	The height of the tile in pixels.
 	 */
-	void SetHeight(int height);
+	void SetHeight(size_t height);
 
 	/**
 	 * Returns the x, y pair of cached indices of the tile in an array of tiles.
@@ -128,10 +128,10 @@ public:
 
 private:
 	/** The width of the tile in pixels. */
-	int _width;
+	size_t _width;
 
 	/** The height of the tile in pixels. */
-	int _height;
+	size_t _height;
 
 	/** The x index of the tile in an array of tiles (cached). */
 	int _xIndex;

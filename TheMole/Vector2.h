@@ -19,21 +19,21 @@ public:
 	*
 	*@return _x, a float
 	*/
-	float GetX();
+	float GetX() const;
 
 	/**
 	* Returns y component of vector
 	*
 	*@return _y, a float
 	*/
-	float GetY();
+	float GetY() const;
 
 	/**
 	* Sets x component of vector
 	*
 	*@param new x value, in float
 	*/
-	void SetX(float  x);
+	void SetX(float x);
 	
 	/**
 	* Sets y component of vector
@@ -41,7 +41,7 @@ public:
 	*@param new y value, in float
 	*/
 	void SetY(float y);
-private:
+
 	float _x;
 	float _y;
 };

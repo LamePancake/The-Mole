@@ -10,22 +10,22 @@ void Tile::Update(float deltaTime)
 	//Update code goes here
 }
 
-int const Tile::GetWidth() const
+size_t const Tile::GetWidth() const
 {
 	return _width; 
 }
 
-int const Tile::GetHeight() const
+size_t const Tile::GetHeight() const
 {
 	return _height; 
 }
 
-void Tile::SetWidth(int width)
+void Tile::SetWidth(size_t width)
 {
 	_width = width;
 }
 
-void Tile::SetHeight(int height)
+void Tile::SetHeight(size_t height)
 {
 	_height = height;
 }
