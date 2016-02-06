@@ -30,6 +30,11 @@ void SpriteSheet::Draw(const SDL2pp::Point&& position, XAxisDirection facingDir)
 	rend.Copy(_sheet, frameRect, screenRect, 0, NullOpt, renderFlags);
 }
 
+bool SpriteSheet::IsAnimating() const
+{
+	return _isRunning;
+}
+
 void SpriteSheet::Start()
 {
 	_isRunning = true;

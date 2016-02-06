@@ -1,6 +1,43 @@
 #include "PlayerActor.h"
 #include "GameScreen.h"
 
+PlayerActor::PlayerActor(Vector2 position, GameManager & manager, Vector2 spd, std::string texturePath)
+	: Actor(position, manager, spd, texturePath, 8), _maxJumpVel(0), _jumpVelocity(0), _atGoal(false)
+{
+	_spriteSideDig = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_sidedig.png", 4, 1.0, SpriteSheet::XAxisDirection::RIGHT);
+	_spriteSideDigShadow = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_sidedig.png", 4, 1.0, SpriteSheet::XAxisDirection::RIGHT);
+
+	_spriteVerticalDig = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_downdig.png", 4, 1.0, SpriteSheet::XAxisDirection::RIGHT);
+	_spriteVerticalDigShadow = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_downdig.png", 4, 1.0, SpriteSheet::XAxisDirection::RIGHT);
+
+	_spriteIdle = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_idle.png", 4, 1.0, SpriteSheet::XAxisDirection::RIGHT);
+	_spriteIdleShadow = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_idle.png", 4, 1.0, SpriteSheet::XAxisDirection::RIGHT);
+
+	SDL_SetTextureColorMod(_spriteSideDigShadow->GetTexture().Get(), 127, 127, 127);
+	SDL_SetTextureAlphaMod(_spriteSideDigShadow->GetTexture().Get(), 127);
+
+	SDL_SetTextureColorMod(_spriteVerticalDigShadow->GetTexture().Get(), 127, 127, 127);
+	SDL_SetTextureAlphaMod(_spriteVerticalDigShadow->GetTexture().Get(), 127);
+
+	SDL_SetTextureColorMod(_spriteIdleShadow->GetTexture().Get(), 127, 127, 127);
+	SDL_SetTextureAlphaMod(_spriteIdleShadow->GetTexture().Get(), 127);
+
+	_sprite->Stop();
+	_spriteShadow->Stop();
+
+	_spriteSideDig->Stop();
+	_spriteSideDigShadow->Stop();
+
+	_spriteVerticalDig->Stop();
+	_spriteVerticalDigShadow->Stop();
+
+	_spriteIdle->Start();
+	_spriteIdleShadow->Start();
+
+	_currentSpriteSheet = _spriteIdle;
+	_currentSpriteSheetShadow = _spriteIdleShadow;
+}
+
 PlayerActor::~PlayerActor()
 {
 }
@@ -8,11 +45,47 @@ PlayerActor::~PlayerActor()
 void PlayerActor::Draw(Camera& camera)
 {
 	Actor::Draw(camera);
+
+	const SDL2pp::Rect& viewport = camera.GetViewport();
+	int offsetX = 4;
+	int offsetY = 0;
+
+	SDL2pp::Renderer& rend = _mgr->GetRenderer();
+	SDL2pp::Point tempPoint;
+
+	tempPoint = { (int)_position.GetX(), (int)_position.GetY() };
+
+	if (_spriteSideDig->IsAnimating())
+	{
+		_spriteSideDigShadow->Draw(tempPoint + SDL2pp::Point(offsetX - viewport.x, offsetY - viewport.y), _actorDir);
+		_spriteSideDig->Draw(tempPoint + SDL2pp::Point(-viewport.x, -viewport.y), _actorDir);
+	}
+	else if (_spriteVerticalDig->IsAnimating())
+	{
+		_spriteVerticalDigShadow->Draw(tempPoint + SDL2pp::Point(offsetX - viewport.x, offsetY - viewport.y), _actorDir);
+		_spriteVerticalDig->Draw(tempPoint + SDL2pp::Point(-viewport.x, -viewport.y), _actorDir);
+	}
+	else if(_spriteIdle->IsAnimating())
+	{
+		_spriteIdleShadow->Draw(tempPoint + SDL2pp::Point(offsetX - viewport.x, offsetY - viewport.y), _actorDir);
+		_spriteIdle->Draw(tempPoint + SDL2pp::Point(-viewport.x, -viewport.y), _actorDir);
+	}
+	
 }
 
 void PlayerActor::Update(double elapsedSecs)
 {
 	Actor::Update(elapsedSecs);
+
+	_spriteIdle->Update(elapsedSecs);
+	_spriteIdleShadow->Update(elapsedSecs);
+
+	_spriteSideDig->Update(elapsedSecs);
+	_spriteSideDigShadow->Update(elapsedSecs);
+
+	_spriteVerticalDig->Update(elapsedSecs);
+	_spriteVerticalDigShadow->Update(elapsedSecs);
+
 	UpdateInput();
 	UpdatePosition(elapsedSecs);
 	_aabb.UpdatePosition(*this);
@@ -105,11 +178,21 @@ void PlayerActor::UpdateInput()
 {
 	_digDir[0] = ' ';
 	_digDir[1] = ' ';
+
+	_currentSpriteSheet->Pause();
+	_currentSpriteSheetShadow->Pause();
+
+	std::shared_ptr<SpriteSheet> prevSheet = _currentSpriteSheet;
+	std::shared_ptr<SpriteSheet> prevSheetShadow = _currentSpriteSheetShadow;
+
 	if (_mgr->inputManager->ActionOccurred("LEFT", Input::Held))
 	{
 		_digDir[0] = 'L';
 		SetSpeed(Vector2(Math::Clamp(_speed.GetX() - 400.0f, -400.0f, 0.0f), _speed.GetY()));
 		SetActorDirection(SpriteSheet::XAxisDirection::LEFT);
+
+		_currentSpriteSheet = _sprite;
+		_currentSpriteSheetShadow = _spriteShadow;
 	}
 	else if (_mgr->inputManager->ActionOccurred("RIGHT", Input::Held))
 	{
@@ -118,10 +201,15 @@ void PlayerActor::UpdateInput()
 		SetSpeed(Vector2(Math::Clamp(_speed.GetX() + 400.0f, 400.0f, 400.0f), _speed.GetY()));
 		SetActorDirection(SpriteSheet::XAxisDirection::RIGHT);
 	
+		_currentSpriteSheet = _sprite;
+		_currentSpriteSheetShadow = _spriteShadow;
 	}
 	else
 	{
 		SetSpeed(Vector2(0.0f, _speed.GetY()));
+
+		_currentSpriteSheet = _spriteIdle;
+		_currentSpriteSheetShadow = _spriteIdleShadow;
 	}
 
 	if (_mgr->inputManager->ActionOccurred("UP", Input::Held))
@@ -144,6 +232,14 @@ void PlayerActor::UpdateInput()
 		_speed.SetY(0);
 	}
 
+	if (_currentSpriteSheet != prevSheet)
+	{
+		prevSheet->Stop();
+		prevSheetShadow->Stop();
+	}
+
+	_currentSpriteSheet->Start();
+	_currentSpriteSheetShadow->Start();
 }
 
 void PlayerActor::UpdatePosition(double elapsedSecs)

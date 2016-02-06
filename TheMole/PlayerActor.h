@@ -14,8 +14,7 @@ public:
 	 * @param	spd			   	speed.
 	 * @param	texturePath	   	Full pathname of the texture file.
 	 */
-	PlayerActor(Vector2 position, GameManager & manager, Vector2 spd, std::string texturePath) 
-		: Actor(position, manager, spd, texturePath, 8), _maxJumpVel(0), _jumpVelocity(0), _atGoal(false) {}
+	PlayerActor(Vector2 position, GameManager & manager, Vector2 spd, std::string texturePath);
 
 	/** Destructor. */
 	~PlayerActor();
@@ -107,4 +106,28 @@ private:
 	float _jumpVelocity;
 	float _maxJumpVel;
 	char _digDir[2];
+
+	/** The sprite shadow digging. */
+	std::shared_ptr<SpriteSheet> _spriteSideDigShadow;
+
+	/** The spritesheet for digging. */
+	std::shared_ptr<SpriteSheet> _spriteSideDig;
+
+	/** The sprite shadow digging. */
+	std::shared_ptr<SpriteSheet> _spriteVerticalDigShadow;
+
+	/** The spritesheet for digging. */
+	std::shared_ptr<SpriteSheet> _spriteVerticalDig;
+
+	/** The sprite shadow digging. */
+	std::shared_ptr<SpriteSheet> _spriteIdleShadow;
+
+	/** The spritesheet for digging. */
+	std::shared_ptr<SpriteSheet> _spriteIdle;
+
+	/** The current sprite animating. */
+	std::shared_ptr<SpriteSheet> _currentSpriteSheet;
+
+	/** The current shadow animating */
+	std::shared_ptr<SpriteSheet> _currentSpriteSheetShadow;
 };

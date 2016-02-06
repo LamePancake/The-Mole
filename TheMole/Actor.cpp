@@ -89,6 +89,9 @@ void Actor::UpdatePosition(double elapsedSecs)
 
 void Actor::Draw(Camera& camera)
 {
+	if (!_sprite->IsAnimating())
+		return;
+
 	const SDL2pp::Rect& viewport = camera.GetViewport();
 	int offsetX = 4;
 	int offsetY = 0;
