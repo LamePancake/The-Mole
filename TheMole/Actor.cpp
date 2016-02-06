@@ -127,7 +127,7 @@ void Actor::GetTileCollisionInfo(Edge & rowEdge, Edge & colEdge, int & rowPenetr
 		colEdge = xVel > 0 ? Edge::RIGHT : Edge::LEFT;
 
 		// If we're moving right, we need to test x + width; if we're moving left, we need to test x
-		int testSideX = xVel > 0 ? (int)ceil(rightBound) : (int)floor(leftBound);
+		int testSideX = xVel > 0 ? (int)rightBound : (int)leftBound;
 
 		// Determine by how much we're intersecting (left edge must be adjusted since we want the distance from the tile's right side)
 		colPenetration = testSideX % tileWidth;
@@ -146,7 +146,7 @@ void Actor::GetTileCollisionInfo(Edge & rowEdge, Edge & colEdge, int & rowPenetr
 	{
 		rowEdge = yVel > 0 ? Edge::BOTTOM : Edge::TOP;
 
-		// If we're moving right, we need to test x + width; if we're moving left, we need to test x
+		// If we're moving right, we need to test y + height; if we're moving left, we need to test y
 		int testSideY = yVel > 0 ? (int)ceil(bottomBound) : (int)floor(topBound);
 
 		// Determine by how much we're intersecting (top edge must be adjusted since we want the distance from the tile's bottom side)
@@ -173,7 +173,7 @@ void Actor::GetTileCollisionInfo(Edge & rowEdge, Edge & colEdge, int & rowPenetr
 		{
 			// Try to find a tile that's not blank in one of the ranges so that we can prune the common tile from the other one
 			// If neither is blank, we'll choose a row or column appropriately
-			const auto nonCornerSolidTileFinder = [cornerTile](std::shared_ptr<Tile>& tile) {return tile != cornerTile && tile->GetID() != Tile::blank; };
+			const auto nonCornerSolidTileFinder = [cornerTile](std::shared_ptr<Tile>& tile) {return tile->GetID() != Tile::blank && tile != cornerTile; };
 			if (std::find_if(rowIntersect.begin(), rowIntersect.end(), nonCornerSolidTileFinder) != rowIntersect.end())
 			{
 				colIntersect.erase(remove(colIntersect.begin(), colIntersect.end() - 1, cornerTile));
@@ -184,6 +184,7 @@ void Actor::GetTileCollisionInfo(Edge & rowEdge, Edge & colEdge, int & rowPenetr
 			}
 			else
 			{
+				// Use the side that's least penetrated as the one that pushes us out
 				// We'll prefer the side tiles for tie breakers because it will probably look more realistic thanks to gravity... maybe (we can change this later for visual effects if necessary)
 				if (colPenetration <= rowPenetration)
 				{

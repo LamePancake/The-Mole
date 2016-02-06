@@ -79,6 +79,9 @@ private:
 		inputManager->AddKeyToMap("DOWN", Input::InputAction(SDL_SCANCODE_S));
 		inputManager->AddKeyToMap("JUMP", Input::InputAction(SDL_SCANCODE_SPACE));
 		inputManager->AddKeyToMap("QUIT", Input::InputAction(SDL_SCANCODE_ESCAPE));
+		inputManager->AddKeyToMap("PAUSE", Input::InputAction(SDL_SCANCODE_P));
+		inputManager->AddKeyToMap("STOP", Input::InputAction(SDL_SCANCODE_O));
+		inputManager->AddKeyToMap("START", Input::InputAction(SDL_SCANCODE_I));
 	}
 
 	/**

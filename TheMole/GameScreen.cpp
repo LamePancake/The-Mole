@@ -32,11 +32,11 @@ int GameScreen::Update(double elapsedSecs)
 	SDL_PumpEvents();
 	_mgr->inputManager->UpdateKeyboardState();
 
-	if (_mgr->inputManager->ActionOccured("QUIT", Input::Pressed)) {
+	if (_mgr->inputManager->ActionOccurred("QUIT", Input::Pressed)) {
 		exit(0);
 	}
 
-	if (_mgr->inputManager->ActionOccured("LEFT", Input::Held))
+	if (_mgr->inputManager->ActionOccurred("LEFT", Input::Held))
 	{
 		if (!_player->Dig('L', _level))
 		{
@@ -44,7 +44,7 @@ int GameScreen::Update(double elapsedSecs)
 			_player->SetActorDirection(SpriteSheet::XAxisDirection::LEFT);
 		}
 	}
-	else if (_mgr->inputManager->ActionOccured("RIGHT", Input::Held))
+	else if (_mgr->inputManager->ActionOccurred("RIGHT", Input::Held))
 	{
 		if (!_player->Dig('R', _level))
 		{
@@ -57,23 +57,21 @@ int GameScreen::Update(double elapsedSecs)
 		_player->SetSpeed(Vector2(0.0f, _player->GetSpeed().GetY()));
 	}
 
-	if (_mgr->inputManager->ActionOccured("UP", Input::Held))
+	if (_mgr->inputManager->ActionOccurred("UP", Input::Held))
 	{
 		if (!_player->Dig('U', _level))
 		{
 			_player->SetSpeed(Vector2(_player->GetSpeed().GetX(), Math::Clamp(_player->GetSpeed().GetY() - 120.0f, 0.0f, -120.0f)));
-			//_player->SetActorDirection(SpriteSheet::XAxisDirection::UP);
 		}
 	}
-	else if (_mgr->inputManager->ActionOccured("DOWN", Input::Held))
+	else if (_mgr->inputManager->ActionOccurred("DOWN", Input::Held))
 	{
 		if (!_player->Dig('D', _level))
 		{
 			_player->SetSpeed(Vector2(_player->GetSpeed().GetX(), Math::Clamp(_player->GetSpeed().GetY() + 120.0f, 0.0f, 120.0f)));
-			//_player->SetActorDirection(SpriteSheet::XAxisDirection::DOWN);
 		}
 	}
-	else if (_mgr->inputManager->ActionOccured("JUMP", Input::Pressed))
+	else if (_mgr->inputManager->ActionOccurred("JUMP", Input::Pressed))
 	{
 		_player->SetJumpVelocity(800.0f);
 		_player->SetMaximumJumpVelocity(800.0f);

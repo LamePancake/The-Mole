@@ -48,7 +48,7 @@ public:
 	/// This should be called every frame
 	void UpdateKeyboardState();
 	/// 
-	bool ActionOccured(std::string actionName, ActionType actionType);
+	bool ActionOccurred(std::string actionName, ActionType actionType);
 
 	/**
 	* Adds key and input action pair into map.

@@ -48,6 +48,32 @@ public:
 	 */
 	void Draw(const SDL2pp::Point&& position, XAxisDirection facingDir);
 
+	bool IsAnimating() const;
+
+	/**
+	 * @brief	Starts or resumes the sprite sheet's animation. If the sheet is already animating, this does nothing.
+	 *
+	 * @author	Shane
+	 * @date	2/5/2016
+	 */
+	void Start();
+
+	/**
+	 * @brief	Pauses the sheet's animation. Has no effect if the sheet is already paused or stopped.
+	 *
+	 * @author	Shane
+	 * @date	2/5/2016
+	 */
+	void Pause();
+
+	/**
+	 * @brief	Stops and resets the sprite sheet's animation.
+	 *
+	 * @author	Shane
+	 * @date	2/5/2016
+	 */
+	void Stop();
+
 	/**
 	 * @brief	Immediately resets the animation to the first frame.
 	 *
@@ -86,6 +112,7 @@ public:
 private:
 	SDL2pp::Texture _sheet;
 	SDL2pp::Point _spriteSize;
+	bool _isRunning;
 	int _currentFrame;
 	int _numFrames;
 	double _frameTime;

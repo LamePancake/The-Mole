@@ -20,7 +20,7 @@ void Input::UpdateKeyboardState() {
 	memcpy(_curKeyboardState, SDL_GetKeyboardState(NULL), sizeof(Uint8) * SDL_NUM_SCANCODES);
 }
 
-bool Input::ActionOccured(string actionName, ActionType actionType) {
+bool Input::ActionOccurred(string actionName, ActionType actionType) {
 	switch (actionType) {
 	case Pressed:
 		return KeyPressed(_actionMap[actionName]->actionKey);
