@@ -33,7 +33,7 @@ public:
 	 * @param elapsedSecs: The number of seconds that elapsed since the last update.
 	 * @return SCREEN_CONTINUE, SCREEN_OVERLAY or SCREEN_FINISH as described above.
 	 */
-	virtual int Update(double elasepdSecs) = 0;
+	virtual int Update(double elapsedSecs) = 0;
 
 	/**
 	 * Perform all rendering operations here.

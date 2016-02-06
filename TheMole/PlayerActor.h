@@ -1,5 +1,6 @@
 #pragma once
 #include "Actor.h"
+#include "Math.h"
 
 class PlayerActor : public Actor
 {
@@ -34,6 +35,60 @@ public:
 	// Updates position of the agent by adding _speed to it.
 	virtual void UpdatePosition(double elapsedSecs);
 
-private:
+	/**
+	 * Digs the given level.
+	 *
+	 * @param	dir			 	The dir.
+	 * @param [in,out]	level	The level.
+	 *
+	 * @return	true if it succeeds, false if it fails.
+	 */
+	bool Dig(char dir, std::shared_ptr<Level> & level);
 
+	/**
+	 * Collision check.
+	 *
+	 * @param [in,out]	otherAI	The other an i.
+	 *
+	 * @return	true if it succeeds, false if it fails.
+	 */
+	bool CollisionCheck(Actor &otherAI);
+
+	/**
+	 * Query if this object is dead.
+	 *
+	 * @return	true if dead, false if not.
+	 */
+	bool IsDead();
+
+	/**
+	* Set jump velocity of the player.
+	*
+	* @param initial velocity in the Y axis.
+	**/
+	void SetJumpVelocity(float initVel);
+
+	/**
+	* Get jump velocity of the player.
+	*
+	* @return float that is the velocity of the jump in the Y axis.
+	**/
+	float GetJumpVelocity();
+
+	/**
+	* Set max jump velocity of the player.
+	*
+	* @param initial velocity in the Y axis.
+	**/
+	void SetMaximumJumpVelocity(float initVel);
+
+	/**
+	* Get max jump velocity.
+	*
+	* @return float that is the velocity of the jump in the Y axis.
+	**/
+	float GetMaximumJumpVelocity();
+private:
+	float _jumpVelocity;
+	float _maxJumpVel;
 };

@@ -1,6 +1,7 @@
 #pragma once
-namespace Math
+class Math
 {
+public:
 	/**
 	* Clamps value between minimum and maximum input.
 	*
@@ -9,7 +10,7 @@ namespace Math
 	* @param max = upper bound of the clamp
 	*
 	**/
-	float Clamp(float val, float min, float max)
+	static float Clamp(float val, float min, float max)
 	{
 		float minVal;
 		float maxVal;
@@ -36,4 +37,4 @@ namespace Math
 		}
 		return val;
 	}
-}
+};

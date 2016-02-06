@@ -12,14 +12,15 @@ public:
 	enum ActionType {
 		/// The button/key was down and is now up.
 		Pressed,
-		/// The button/key was down in the previous update and is still down.
-		StillDown,
+		/// Button released
+		Released,
 		/// The button/key was up in the previous update and is still up.
 		StillUp,
 		/// The button/key was down in this update (previous state is not considered).
 		Down,
 		/// The button/key was up in this update (previous state is not considered).
 		Up,
+		/// Button held
 		Held
 	};
 
@@ -57,18 +58,29 @@ public:
 
 private:
 	//-------------------Functions---------------
-	//Probably won't be using this one anymore
-	void On_Key_Up(SDL_Keysym);
 
-	/// Checks keyboard states to determine if a key was pressed
+	/// Checks keyboard states to determine if a key was released
 	/// @param key keyboard key id
 	/// @return bool True if pressed, False if not
+	bool KeyReleased(SDL_Scancode key);
+
+	/// Checks keyboard states to determine if a key is being pressed
+	/// @param key keyboard key id
+	/// @return bool True if held, False if not
 	bool KeyPressed(SDL_Scancode key);
 
 	/// Checks keyboard states to determine if a key is being held
 	/// @param key keyboard key id
 	/// @return bool True if held, False if not
 	bool KeyHeld(SDL_Scancode key);
+
+	bool KeyStillUp(SDL_Scancode key);
+
+	bool KeyUp(SDL_Scancode key);
+
+	bool KeyDown(SDL_Scancode key);
+
+	
 
 	//-------------------Variables---------------
 	//state of keyboard == relevant key presses and actions
