@@ -12,7 +12,9 @@ public:
 
 	typedef enum {
 		RIGHT,
-		LEFT
+		LEFT,
+		UP,
+		DOWN,
 	} XAxisDirection;
 
 	/**

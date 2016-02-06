@@ -107,6 +107,8 @@ private:
 	float _maxJumpVel;
 	char _digDir[2];
 
+	bool _isDigging;
+
 	/** The sprite shadow digging. */
 	std::shared_ptr<SpriteSheet> _spriteSideDigShadow;
 

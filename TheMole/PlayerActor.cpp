@@ -2,16 +2,16 @@
 #include "GameScreen.h"
 
 PlayerActor::PlayerActor(Vector2 position, GameManager & manager, Vector2 spd, std::string texturePath)
-	: Actor(position, manager, spd, texturePath, 4), _maxJumpVel(0), _jumpVelocity(0), _atGoal(false)
+	: Actor(position, manager, spd, texturePath, 4), _maxJumpVel(0), _jumpVelocity(0), _atGoal(false), _isDigging(false)
 {
-	_spriteSideDig = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_sidedig.png", 4, 1.0, SpriteSheet::XAxisDirection::RIGHT);
-	_spriteSideDigShadow = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_sidedig.png", 4, 1.0, SpriteSheet::XAxisDirection::RIGHT);
+	_spriteSideDig = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_sidedig.png", 4, 0.30, SpriteSheet::XAxisDirection::RIGHT);
+	_spriteSideDigShadow = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_sidedig.png", 4, 0.30, SpriteSheet::XAxisDirection::RIGHT);
 
-	_spriteVerticalDig = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_downdig.png", 4, 1.0, SpriteSheet::XAxisDirection::RIGHT);
-	_spriteVerticalDigShadow = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_downdig.png", 4, 1.0, SpriteSheet::XAxisDirection::RIGHT);
+	_spriteVerticalDig = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_downdig.png", 4, 0.30, SpriteSheet::XAxisDirection::RIGHT);
+	_spriteVerticalDigShadow = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_downdig.png", 4, 0.30, SpriteSheet::XAxisDirection::RIGHT);
 
-	_spriteWalk = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_walk.png", 8, 1.0, SpriteSheet::XAxisDirection::RIGHT);
-	_spriteWalkShadow = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_walk.png", 8, 1.0, SpriteSheet::XAxisDirection::RIGHT);
+	_spriteWalk = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_walk.png", 8, 1, SpriteSheet::XAxisDirection::RIGHT);
+	_spriteWalkShadow = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_walk.png", 8, 1, SpriteSheet::XAxisDirection::RIGHT);
 
 	SDL_SetTextureColorMod(_spriteSideDigShadow->GetTexture().Get(), 127, 127, 127);
 	SDL_SetTextureAlphaMod(_spriteSideDigShadow->GetTexture().Get(), 127);
@@ -33,6 +33,12 @@ PlayerActor::PlayerActor(Vector2 position, GameManager & manager, Vector2 spd, s
 
 	_spriteWalk->Stop();
 	_spriteWalkShadow->Stop();
+
+	_spriteSideDig->SetRepeating(false);
+	_spriteSideDigShadow->SetRepeating(false);
+
+	_spriteVerticalDig->SetRepeating(false);
+	_spriteVerticalDigShadow->SetRepeating(false);
 
 	_currentSpriteSheet = _sprite;
 	_currentSpriteSheetShadow = _spriteShadow;
@@ -76,6 +82,19 @@ void PlayerActor::Draw(Camera& camera)
 void PlayerActor::Update(double elapsedSecs)
 {
 	Actor::Update(elapsedSecs);
+
+	if ((_currentSpriteSheet == _spriteSideDig && !_currentSpriteSheet->IsAnimating()) ||
+		(_currentSpriteSheet == _spriteVerticalDig && !_currentSpriteSheet->IsAnimating()))
+	{
+		_spriteSideDig->Stop();
+		_spriteVerticalDig->Stop();
+		_spriteSideDigShadow->Stop();
+		_spriteVerticalDigShadow->Stop();
+
+		SetActorDirection(SpriteSheet::XAxisDirection::RIGHT);
+
+		_isDigging = false;
+	}
 
 	_spriteWalk->Update(elapsedSecs);
 	_spriteWalkShadow->Update(elapsedSecs);
@@ -131,6 +150,26 @@ void PlayerActor::UpdateCollisions()
 				if (canDig)
 				{
 					tile->SetID(Tile::blank);
+					_isDigging = true;
+
+					if (_currentSpriteSheet != _spriteVerticalDig)
+					{
+						_currentSpriteSheet->Stop();
+						_currentSpriteSheetShadow->Stop();
+						_currentSpriteSheet->SetDraw(false);
+						_currentSpriteSheetShadow->SetDraw(false);
+
+						_currentSpriteSheet = _spriteVerticalDig;
+						_currentSpriteSheetShadow = _spriteVerticalDigShadow;
+						
+						_currentSpriteSheet->Start();
+						_currentSpriteSheetShadow->Start();
+						_currentSpriteSheet->SetDraw(true);
+						_currentSpriteSheetShadow->SetDraw(true);
+						SetSpeed(Vector2(0.0f, 0.0f));
+
+						if(_digDir[1] == 'U') SetActorDirection(SpriteSheet::XAxisDirection::UP);
+					}
 				}
 				break;
 			case Tile::goal:
@@ -159,6 +198,24 @@ void PlayerActor::UpdateCollisions()
 				if (canDig)
 				{
 					tile->SetID(Tile::blank);
+					_isDigging = true;
+
+					if (_currentSpriteSheet != _spriteSideDig)
+					{
+						_currentSpriteSheet->Stop();
+						_currentSpriteSheetShadow->Stop();
+						_currentSpriteSheet->SetDraw(false);
+						_currentSpriteSheetShadow->SetDraw(false);
+
+						_currentSpriteSheet = _spriteSideDig;
+						_currentSpriteSheetShadow = _spriteSideDigShadow;
+						
+						_currentSpriteSheet->Start();
+						_currentSpriteSheetShadow->Start();
+						_currentSpriteSheet->SetDraw(true);
+						_currentSpriteSheetShadow->SetDraw(true);
+						SetSpeed(Vector2(0.0f, 0.0f));
+					}
 				}
 				break;
 			case Tile::goal:
@@ -176,6 +233,8 @@ void PlayerActor::UpdateCollisions()
 
 void PlayerActor::UpdateInput()
 {
+	if (_isDigging) return;
+
 	_digDir[0] = ' ';
 	_digDir[1] = ' ';
 

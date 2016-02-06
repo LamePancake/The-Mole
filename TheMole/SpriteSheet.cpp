@@ -35,6 +35,8 @@ void SpriteSheet::Draw(const SDL2pp::Point&& position, XAxisDirection facingDir)
 	if (!_toDraw) return;
 
 	int renderFlags = facingDir == _defaultFacing ? 0 : SDL_FLIP_HORIZONTAL;
+	renderFlags = facingDir == UP ? SDL_FLIP_VERTICAL : renderFlags;
+
 	Renderer& rend = _mgr->GetRenderer();
 	Rect frameRect((int)(_currentFrame * _spriteSize.x), 0, _spriteSize.x, _spriteSize.x);
 	Rect screenRect(position, _spriteSize);
