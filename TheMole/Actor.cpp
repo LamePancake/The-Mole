@@ -172,6 +172,7 @@ void Actor::GetTileCollisionInfo(Edge & rowEdge, Edge & colEdge, int & rowPenetr
 		if (cornerTile->GetID() != Tile::blank)
 		{
 			// Try to find a tile that's not blank in one of the ranges so that we can prune the common tile from the other one
+			// If neither is blank, we'll choose a row or column appropriately
 			const auto nonCornerSolidTileFinder = [cornerTile](std::shared_ptr<Tile>& tile) {return tile != cornerTile && tile->GetID() != Tile::blank; };
 			if (std::find_if(rowIntersect.begin(), rowIntersect.end(), nonCornerSolidTileFinder) != rowIntersect.end())
 			{
@@ -183,7 +184,7 @@ void Actor::GetTileCollisionInfo(Edge & rowEdge, Edge & colEdge, int & rowPenetr
 			}
 			else
 			{
-				// We'll prefer the side tiles because it will probably look more realistic thanks to gravity... maybe (we can change this later for visual effects if necessary)
+				// We'll prefer the side tiles for tie breakers because it will probably look more realistic thanks to gravity... maybe (we can change this later for visual effects if necessary)
 				if (colPenetration <= rowPenetration)
 				{
 					rowIntersect.erase(remove(rowIntersect.begin(), rowIntersect.end() - 1, cornerTile));

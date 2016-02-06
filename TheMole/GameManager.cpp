@@ -28,6 +28,11 @@ void GameManager::ClearBackStack() {
 	}
 }
 
+const shared_ptr<Screen> GameManager::GetCurrentScreen() const
+{
+	return _curScreen;
+}
+
 void GameManager::OverlayScreen(shared_ptr<Screen> screen) {
 	_backStack.push(screen);
 	_curScreen = screen;

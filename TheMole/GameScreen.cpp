@@ -2,12 +2,9 @@
 #include "GameManager.h"
 #include "Vector2.h"
 
-///Don't use this 
-int GameScreen::Load()
+const std::shared_ptr<Level> GameScreen::GetLevel() const
 {
-	_mgr = GameManager::GetInstance();
-
-	return SCREEN_LOAD_SUCCESS;
+	return _level;
 }
 
 int GameScreen::Load(std::string levelAddress, std::string textureAddress)
@@ -78,9 +75,8 @@ int GameScreen::Update(double elapsedSecs)
 	}
 	else if (_mgr->inputManager->ActionOccured("JUMP", Input::Pressed))
 	{
-		_player->SetJumpVelocity(240.0f);
-		_player->SetMaximumJumpVelocity(240.0f);
-		//_player->SetActorDirection(SpriteSheet::XAxisDirection::JUMP);
+		_player->SetJumpVelocity(800.0f);
+		_player->SetMaximumJumpVelocity(800.0f);
 	}
 	else
 	{

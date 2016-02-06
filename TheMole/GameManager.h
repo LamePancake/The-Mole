@@ -25,14 +25,26 @@ public:
 	void SetNextScreen(const char* nextScreenName);
 
 	/**
-	 * Starts the game loop with the specified starting screen.
+	 * @brief Starts the game loop with the specified starting screen.
+	 * 
+	 * @param startScreen The name of the screen with which to start running the game.
 	 */
 	void Loop(std::string& startScreen);
 
 	/**
-	 * Clears the back stack 
+	 * @brief Clears the back stack (unloads all screens currently on the back stack).
 	 */
 	void ClearBackStack();
+
+	/**
+	 * @brief	Gets the current screen.
+	 *
+	 * @author	Shane
+	 * @date	2/5/2016
+	 *
+	 * @return	The currently runnin screen.
+	 */
+	const std::shared_ptr<Screen> GetCurrentScreen() const;
 
 	// SDL accessor methods
 	SDL2pp::SDL& GetSDL() const { return _sdl; }

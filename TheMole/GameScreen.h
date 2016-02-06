@@ -20,6 +20,16 @@ public:
 	virtual void Draw() override;
 	virtual void Unload() override;
 
+	/**
+	 * @brief	Gets the level associated with this GameScreen.
+	 *
+	 * @author	Shane
+	 * @date	2/5/2016
+	 *
+	 * @return	The level associated with this GameScreen.
+	 */
+	const std::shared_ptr<Level> GetLevel() const;
+
 protected:
 	Camera* _camera;
 	GameManager* _mgr;

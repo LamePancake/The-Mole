@@ -1,4 +1,5 @@
 #include "PlayerActor.h"
+#include "GameScreen.h"
 
 PlayerActor::~PlayerActor()
 {
@@ -70,9 +71,10 @@ void PlayerActor::Update(double elapsedSecs, std::shared_ptr<Level>& level)
 
 void PlayerActor::UpdatePosition(double elapsedSecs)
 {
-	Actor::UpdatePosition(elapsedSecs);
-	_position.SetX(_position.GetX() + _speed.GetX() * (float)elapsedSecs);
-	_position.SetY(_position.GetY() + _speed.GetY() * (float)elapsedSecs);
+	const std::shared_ptr<GameScreen> gameScreen = std::dynamic_pointer_cast<GameScreen>(_mgr->GetCurrentScreen());
+	const std::shared_ptr<Level> level = gameScreen->GetLevel();
+	_position.SetX(Math::Clamp(_position.GetX() + _speed.GetX() * (float)elapsedSecs, 0, level->GetLevelSize().x * level->GetTileWidth()));
+	_position.SetY(Math::Clamp(_position.GetY() + _speed.GetY() * (float)elapsedSecs, 0, level->GetLevelSize().y * level->GetTileHeight()));
 }
 
 bool PlayerActor::Dig(char dir, std::shared_ptr<Level>& level)
