@@ -155,5 +155,15 @@ void Actor::GetTileCollisionInfo(Edge & rowEdge, Edge & colEdge, int & rowPenetr
 	{
 		rowEdge = Edge::NONE;
 	}
+
+	// Prune any tiles that won't actually be collided with (i.e. tiles that are only currently being "collided" with because we're partly embedded in a wall)
+	int pruneRow = rowIntersect[0]->GetIndices().y;
+	int pruneCol = colIntersect[0]->GetIndices().x;
+
+	const auto pruneColIntersections = [pruneRow](std::shared_ptr<Tile>& tile) {return tile->GetIndices().y == pruneRow; };
+	const auto pruneRowIntersections = [pruneCol](std::shared_ptr<Tile>& tile) {return tile->GetIndices().x == pruneCol; };
+
+	colIntersect.erase(std::remove_if(colIntersect.begin(), colIntersect.end() - 1, pruneColIntersections));
+	rowIntersect.erase(std::remove_if(rowIntersect.begin(), rowIntersect.end() - 1, pruneRowIntersections));
 }
 

@@ -44,15 +44,6 @@ void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level>& level)
 
 	GetTileCollisionInfo(rowEdge, colEdge, rowPenetration, colPenetration, rowIntersection, colIntersection, level);
 
-	int pruneRow = rowIntersection[0]->GetIndices().y;
-	int pruneCol = colIntersection[0]->GetIndices().x;
-
-	const auto pruneColIntersections = [pruneRow](std::shared_ptr<Tile>& tile) {return tile->GetIndices().y == pruneRow; };
-	const auto pruneRowIntersections = [pruneCol](std::shared_ptr<Tile>& tile) {return tile->GetIndices().x == pruneCol; };
-
-	colIntersection.erase(std::remove_if(colIntersection.begin(), colIntersection.end() - 1, pruneColIntersections));
-	rowIntersection.erase(std::remove_if(rowIntersection.begin(), rowIntersection.end() - 1, pruneRowIntersections));
-
 	float correctedYPos = _position.GetY();
 	if (rowEdge == Edge::BOTTOM) correctedYPos -= rowPenetration;
 	else if (rowEdge == Edge::TOP) correctedYPos += level->GetTileHeight() - rowPenetration; 

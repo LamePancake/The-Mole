@@ -14,7 +14,7 @@ class GameScreen :
 	public Screen
 {
 public:
-	virtual int Load() override;
+	virtual int Load() = 0;
 	int Load(std::string levelAddress, std::string textureAddress);
 	virtual int Update(double elapasedSecs) override;
 	virtual void Draw() override;
