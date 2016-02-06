@@ -43,7 +43,7 @@ int GameScreen::Update(double elapsedSecs)
 	{
 		if (!_player->Dig('L', _level))
 		{
-			_player->SetSpeed(Vector2(Math::Clamp(_player->GetSpeed().GetX() - 120.0f, -120.0f, 0.0f), _player->GetSpeed().GetY()));
+			_player->SetSpeed(Vector2(Math::Clamp(_player->GetSpeed().GetX() - 5.0f, -120.0f, 0.0f), _player->GetSpeed().GetY()));
 			_player->SetActorDirection(SpriteSheet::XAxisDirection::LEFT);
 		}
 	}
@@ -51,7 +51,7 @@ int GameScreen::Update(double elapsedSecs)
 	{
 		if (!_player->Dig('R', _level))
 		{
-			_player->SetSpeed(Vector2(Math::Clamp(_player->GetSpeed().GetX() + 120.0f, 0.0f, 120.0f), _player->GetSpeed().GetY()));
+			_player->SetSpeed(Vector2(Math::Clamp(_player->GetSpeed().GetX() + 5.0f, 0.0f, 120.0f), _player->GetSpeed().GetY()));
 			_player->SetActorDirection(SpriteSheet::XAxisDirection::RIGHT);
 		}
 	}
