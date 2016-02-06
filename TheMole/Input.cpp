@@ -25,8 +25,20 @@ bool Input::ActionOccured(string actionName, ActionType actionType) {
 	case Pressed:
 		return KeyPressed(_actionMap[actionName]->actionKey);
 		break;
+	case Released:
+		return KeyReleased(_actionMap[actionName]->actionKey);
+		break;
 	case Held:
 		return KeyHeld(_actionMap[actionName]->actionKey);
+		break;
+	case StillUp:
+		return KeyStillUp(_actionMap[actionName]->actionKey);
+		break;
+	case Down:
+		return KeyDown(_actionMap[actionName]->actionKey);
+		break;
+	case Up:
+		return KeyUp(_actionMap[actionName]->actionKey);
 		break;
 	}
 	return false;
@@ -34,18 +46,18 @@ bool Input::ActionOccured(string actionName, ActionType actionType) {
 
 void Input::PollEvent()
 {
-	while (SDL_PollEvent(&_generalEvent))
-	{
-		switch (_generalEvent.type)
-		{
-		case SDL_KEYDOWN:
-			//Doesn't do anything at this point
-		case SDL_KEYUP:
-			On_Key_Up(_generalEvent.key.keysym);
-		default:
-			break;
-		}
-	}
+	//while (SDL_PollEvent(&_generalEvent))
+	//{
+	//	switch (_generalEvent.type)
+	//	{
+	//	case SDL_KEYDOWN:
+	//		//Doesn't do anything at this point
+	//	case SDL_KEYUP:
+	//		On_Key_Up(_generalEvent.key.keysym);
+	//	default:
+	//		break;
+	//	}
+	//}
 }
 
 //The parameter value should be an enumerated value that matches
@@ -55,6 +67,18 @@ bool Input::KeyPressed(SDL_Scancode key)
 	if (key == NULL)
 		return false;
 	if (!_prevKeyboardState[key] && _curKeyboardState[key])
+		return true;
+	else
+		return false;
+}
+
+//The parameter value should be an enumerated value that matches
+//SDL_Scancode values
+bool Input::KeyReleased(SDL_Scancode key)
+{
+	if (key == NULL)
+		return false;
+	if (_prevKeyboardState[key] && !_curKeyboardState[key])
 		return true;
 	else
 		return false;
@@ -72,25 +96,34 @@ bool Input::KeyHeld(SDL_Scancode key)
 		return false;
 }
 
-void Input::On_Key_Up(SDL_Keysym keysym)
+bool Input::KeyStillUp(SDL_Scancode key)
 {
-	switch (keysym.sym)
-	{
-	case SDLK_a:
-		printf("\nLeft");
-		break;
-	case SDLK_w:
-		printf("\nUp");
-		break;
-	case SDLK_s:
-		printf("\nDown");
-		break;
-	case SDLK_f:
-		printf("\nRight");
-		break;
-	default:
-		break;
-	}
+	if (key == NULL)
+		return false;
+	if (!_prevKeyboardState[key] && !_curKeyboardState[key])
+		return true;
+	else
+		return false;
+}
+
+bool Input::KeyUp(SDL_Scancode key)
+{
+	if (key == NULL)
+		return false;
+	if (!_curKeyboardState[key])
+		return true;
+	else
+		return false;
+}
+
+bool Input::KeyDown(SDL_Scancode key)
+{
+	if (key == NULL)
+		return false;
+	if (_curKeyboardState[key])
+		return true;
+	else
+		return false;
 }
 
 void Input::AddKeyToMap(string key, InputAction &inputAct)
