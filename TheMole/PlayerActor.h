@@ -107,6 +107,8 @@ private:
 	float _maxJumpVel;
 	char _digDir[2];
 
+	SpriteSheet::XAxisDirection _prevDirection;
+
 	bool _isDigging;
 
 	/** The sprite shadow digging. */
