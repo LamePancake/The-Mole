@@ -51,12 +51,6 @@ int GameScreen::Update(double elapsedSecs)
 		return SCREEN_FINISH;
 	}
 
-	if (_player->GetJumpVelocity() > -_player->GetMaximumJumpVelocity())
-	{
-		_player->SetSpeed(Vector2(_player->GetSpeed().GetX(), _player->GetSpeed().GetY() - _player->GetJumpVelocity()));
-		_player->SetJumpVelocity(_player->GetJumpVelocity() - elapsedSecs * 100.0f);
-	}
-
 	// Update Enemies
 	for (size_t i = 0; i < _level->GetEnemySize(); ++i)
 	{

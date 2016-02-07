@@ -119,10 +119,10 @@ void PlayerActor::Update(double elapsedSecs)
 		}
 	}
 
-	UpdateCollisions();
+	UpdateCollisions(elapsedSecs);
 }
 
-void PlayerActor::UpdateCollisions()
+void PlayerActor::UpdateCollisions(double elapsedSecs)
 {
 	std::shared_ptr<Level> level = _gameScreen->GetLevel();
 
@@ -145,6 +145,14 @@ void PlayerActor::UpdateCollisions()
 			switch (tile->GetID())
 			{
 			case Tile::blank:
+				if (_jumpVelocity != 0)
+				{
+					if (!(_jumpVelocity <= _maxJumpVel))
+					{
+						// acceleration of gravity * 64 pixels per metre * time per frame * -1 because negative is up for us
+						_jumpVelocity += -9.8 * 64 * elapsedSecs * -1.0f;
+					}
+				}
 				break;
 			case Tile::dirt:
 				if (canDig)
@@ -197,6 +205,14 @@ void PlayerActor::UpdateCollisions()
 			switch (tile->GetID())
 			{
 			case Tile::blank:
+				if (_jumpVelocity != 0)
+				{
+					if (!(_jumpVelocity < _maxJumpVel))
+					{
+						// acceleration of gravity * 64 pixels per metre * time per frame * -1 because negative is up for us
+						_jumpVelocity += -9.8 * 64 * elapsedSecs * -1.0f;
+					}
+				}
 				break;
 			case Tile::dirt:
 				if (canDig)
@@ -291,13 +307,18 @@ void PlayerActor::UpdateInput()
 	}
 	else if (_mgr->inputManager->ActionOccurred("JUMP", Input::Pressed))
 	{
-		SetJumpVelocity(800.0f);
-		SetMaximumJumpVelocity(800.0f);
+		// jump 12 tiles tall of 1 metre each, at 64 pixels per metre, multiplied by -1 because positive moves down in our world
+		SetJumpVelocity(12.0f * 1.0f * 64.0f * -1.0f);
+		SetMaximumJumpVelocity(12.0f * 1.0f * 64.0f * -1.0f);
 	}
 	else
 	{
-		_speed.SetY(0);
+		// reset jump velocity
+		//SetJumpVelocity(0.0f);
+		//_speed.SetY(0);
 	}
+
+	SetSpeed(Vector2(_speed.GetX(), GetJumpVelocity()));
 
 	if (_currentSpriteSheet != prevSheet)
 	{

@@ -97,15 +97,18 @@ private:
 	/**
 	 * @brief	Updates all collisions (with tiles and enemies).
 	 *
-	 * @author	Shane
+	 * @author	Shane	 
 	 * @date	2/6/2016
+	 * @editor  Tim (added parameter)
+	 * @date    2/6/2016
 	 */
-	void UpdateCollisions();
+	void UpdateCollisions(double elapsedSecs);
 
 	bool _atGoal;
 	float _jumpVelocity;
 	float _maxJumpVel;
 	char _digDir[2];
+	bool _jumped;
 
 	bool _isDigging;
 
