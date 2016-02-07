@@ -110,6 +110,8 @@ private:
 	char _digDir[2];
 	bool _jumped;
 
+	SpriteSheet::XAxisDirection _prevDirection;
+
 	bool _isDigging;
 
 	/** The sprite shadow digging. */

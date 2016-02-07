@@ -2,7 +2,7 @@
 #include "GameScreen.h"
 
 PlayerActor::PlayerActor(Vector2 position, GameManager & manager, Vector2 spd, std::string texturePath)
-	: Actor(position, manager, spd, texturePath, 4), _maxJumpVel(0), _jumpVelocity(0), _atGoal(false), _isDigging(false)
+	: Actor(position, manager, spd, texturePath, 4), _maxJumpVel(0), _jumpVelocity(0), _atGoal(false), _isDigging(false), _prevDirection(SpriteSheet::XAxisDirection::RIGHT)
 {
 	_spriteSideDig = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_sidedig_56x56.png", 4, 0.30, SpriteSheet::XAxisDirection::RIGHT);
 	_spriteSideDigShadow = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_sidedig_56x56.png", 4, 0.30, SpriteSheet::XAxisDirection::RIGHT);
@@ -91,7 +91,7 @@ void PlayerActor::Update(double elapsedSecs)
 		_spriteSideDigShadow->Stop();
 		_spriteVerticalDigShadow->Stop();
 
-		SetActorDirection(SpriteSheet::XAxisDirection::RIGHT);
+		SetActorDirection(_prevDirection);
 
 		_isDigging = false;
 	}
@@ -131,7 +131,6 @@ void PlayerActor::UpdateCollisions(double elapsedSecs)
 	std::vector<std::shared_ptr<Tile>> rowIntersection, colIntersection;
 
 	GetTileCollisionInfo(rowEdge, colEdge, rowPenetration, colPenetration, rowIntersection, colIntersection, level);
-
 
 	if (rowEdge != Edge::NONE)
 	{
@@ -177,6 +176,7 @@ void PlayerActor::UpdateCollisions(double elapsedSecs)
 						SetSpeed(Vector2(0.0f, 0.0f));
 
 						if(_digDir[1] == 'U') SetActorDirection(SpriteSheet::XAxisDirection::UP);
+						else SetActorDirection(SpriteSheet::XAxisDirection::DOWN);
 					}
 				}
 				break;
@@ -235,6 +235,9 @@ void PlayerActor::UpdateCollisions(double elapsedSecs)
 						_currentSpriteSheet->SetDraw(true);
 						_currentSpriteSheetShadow->SetDraw(true);
 						SetSpeed(Vector2(0.0f, 0.0f));
+
+						if (_digDir[0] == 'R') SetActorDirection(SpriteSheet::XAxisDirection::RIGHT);
+						else SetActorDirection(SpriteSheet::XAxisDirection::LEFT);
 					}
 				}
 				break;
@@ -267,6 +270,8 @@ void PlayerActor::UpdateInput()
 
 	std::shared_ptr<SpriteSheet> prevSheet = _currentSpriteSheet;
 	std::shared_ptr<SpriteSheet> prevSheetShadow = _currentSpriteSheetShadow;
+
+	_prevDirection = GetActorDirection();
 
 	if (_mgr->inputManager->ActionOccurred("LEFT", Input::Held))
 	{
