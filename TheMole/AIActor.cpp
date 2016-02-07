@@ -57,6 +57,8 @@ void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level>& level)
 			{
 			case Tile::blank:
 				break;
+			case Tile::spike:
+				_health = 0;
 			default:
 				_position.SetY(correctedYPos);
 				break;
@@ -78,6 +80,8 @@ void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level>& level)
 			{
 			case Tile::blank:
 				break;
+			case Tile::spike:
+				_health = 0;
 			default:
 				_position.SetX(correctedXPos);
 				_speed.SetX(reverseX);
