@@ -4,14 +4,14 @@
 PlayerActor::PlayerActor(Vector2 position, GameManager & manager, Vector2 spd, std::string texturePath)
 	: Actor(position, manager, spd, texturePath, 4), _maxJumpVel(0), _jumpVelocity(0), _atGoal(false), _isDigging(false)
 {
-	_spriteSideDig = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_sidedig.png", 4, 0.30, SpriteSheet::XAxisDirection::RIGHT);
-	_spriteSideDigShadow = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_sidedig.png", 4, 0.30, SpriteSheet::XAxisDirection::RIGHT);
+	_spriteSideDig = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_sidedig_56x56.png", 4, 0.30, SpriteSheet::XAxisDirection::RIGHT);
+	_spriteSideDigShadow = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_sidedig_56x56.png", 4, 0.30, SpriteSheet::XAxisDirection::RIGHT);
 
-	_spriteVerticalDig = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_downdig.png", 4, 0.30, SpriteSheet::XAxisDirection::RIGHT);
-	_spriteVerticalDigShadow = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_downdig.png", 4, 0.30, SpriteSheet::XAxisDirection::RIGHT);
+	_spriteVerticalDig = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_downdig_56x56.png", 4, 0.30, SpriteSheet::XAxisDirection::RIGHT);
+	_spriteVerticalDigShadow = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_downdig_56x56.png", 4, 0.30, SpriteSheet::XAxisDirection::RIGHT);
 
-	_spriteWalk = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_walk.png", 8, 1, SpriteSheet::XAxisDirection::RIGHT);
-	_spriteWalkShadow = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_walk.png", 8, 1, SpriteSheet::XAxisDirection::RIGHT);
+	_spriteWalk = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_walk_56x56.png", 8, 1, SpriteSheet::XAxisDirection::RIGHT);
+	_spriteWalkShadow = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_walk_56x56.png", 8, 1, SpriteSheet::XAxisDirection::RIGHT);
 
 	SDL_SetTextureColorMod(_spriteSideDigShadow->GetTexture().Get(), 127, 127, 127);
 	SDL_SetTextureAlphaMod(_spriteSideDigShadow->GetTexture().Get(), 127);
@@ -174,6 +174,10 @@ void PlayerActor::UpdateCollisions()
 				break;
 			case Tile::goal:
 				_atGoal = true;
+				break;
+			case Tile::spike:
+				_health = 0;
+				break;
 			default:
 				_position.SetY(correctedYPos);
 				break;
@@ -220,6 +224,10 @@ void PlayerActor::UpdateCollisions()
 				break;
 			case Tile::goal:
 				_atGoal = true;
+				break;
+			case Tile::spike:
+				_health = 0;
+				break;
 			default:
 				_position.SetX(correctedXPos);
 				break;
