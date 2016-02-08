@@ -1,20 +1,19 @@
 #include "Actor.h"
 #include "GameScreen.h"
 
-Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::string texturePath, int framesPerSecond)
-	:_position(position), _mgr(&manager), _speed(spd), _gameScreen(std::dynamic_pointer_cast<GameScreen>(manager.GetCurrentScreen()))
+Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
+			const std::string&& startSprite, SpriteSheet::XAxisDirection startXDirection, SpriteSheet::YAxisDirection startYDirection)
+	:_position(position), _mgr(&manager), _speed(spd), _gameScreen(std::dynamic_pointer_cast<GameScreen>(manager.GetCurrentScreen())), _isVisible(true)
 {
 	_health = 100;
 	
-	_sprite = std::make_shared<SpriteSheet>(texturePath, framesPerSecond, 1.0, SpriteSheet::XAxisDirection::RIGHT);
-	_spriteShadow = std::make_shared<SpriteSheet>(texturePath, framesPerSecond, 1.0, SpriteSheet::XAxisDirection::RIGHT);
+	// Copy the list of sprites
+	_sprites = sprites;
+	_currentSpriteSheet = startSprite;
 
-	_aabb = AABB(_sprite->GetFrameWidth(), _sprite->GetFrameHeight(), *this);
-
-	SDL_SetTextureColorMod(_spriteShadow->GetTexture().Get(), 127, 127, 127);
-	SDL_SetTextureAlphaMod(_spriteShadow->GetTexture().Get() , 127);
-
-	_actorDir = SpriteSheet::XAxisDirection::RIGHT;
+	_aabb = AABB(_sprites[startSprite]->GetFrameWidth(), _sprites[startSprite]->GetFrameHeight(), *this);
+	_spriteXDir = startXDirection;
+	_spriteYDir = startYDirection;
 }
 
 Actor::~Actor()
@@ -28,12 +27,12 @@ AABB Actor::GetAABB()
 
 std::shared_ptr<SpriteSheet> Actor::GetTexture()
 {
-	return _sprite;
+	return _sprites[_currentSpriteSheet];
 }
 
 std::shared_ptr<SpriteSheet> Actor::GetTextureShadow()
 {
-	return _spriteShadow;
+	return _sprites[_currentSpriteSheet];
 }
 
 Vector2 Actor::GetPosition()
@@ -66,43 +65,72 @@ void Actor::SetPosition(Vector2 pos)
 	_position = pos;
 }
 
-SpriteSheet::XAxisDirection Actor::GetActorDirection()
+SpriteSheet::XAxisDirection Actor::GetActorXDirection() const
 {
-	return _actorDir;
+	return _spriteXDir;
 }
 
-void Actor::SetActorDirection(SpriteSheet::XAxisDirection dir)
+SpriteSheet::YAxisDirection Actor::GetActorYDirection() const
 {
-	_actorDir = dir;
+	return _spriteYDir;
+}
+
+void Actor::SetActorXDirection(SpriteSheet::XAxisDirection dir)
+{
+	_spriteXDir = dir;
+}
+
+void Actor::SetActorYDirection(SpriteSheet::YAxisDirection dir)
+{
+	_spriteYDir = dir;
+}
+
+void Actor::SetVisibility(bool isVisible)
+{
+	_isVisible = isVisible;
+}
+
+bool Actor::IsVisible() const
+{
+	return _isVisible;
 }
 
 void Actor::Update(double elapsedSecs)
 {
-	_sprite->Update(elapsedSecs);
-	_spriteShadow->Update(elapsedSecs);
+	_sprites[_currentSpriteSheet]->Update(elapsedSecs);
 }
 
 void Actor::UpdatePosition(double elapsedSecs)
 {
 }
 
-
 void Actor::Draw(Camera& camera)
 {
+	if (!_isVisible) return;
+
 	const SDL2pp::Rect& viewport = camera.GetViewport();
 	int offsetX = 4;
 	int offsetY = 0;
-			
+
 	SDL2pp::Renderer& rend = _mgr->GetRenderer();
 	SDL2pp::Point tempPoint;
 
 	tempPoint = { (int)_position.GetX(), (int)_position.GetY() };
 
-	_spriteShadow->Draw(tempPoint + SDL2pp::Point(offsetX - viewport.x, offsetY - viewport.y), _actorDir);
-	_sprite->Draw(tempPoint + SDL2pp::Point(-viewport.x, -viewport.y), _actorDir);
+	std::shared_ptr<SpriteSheet> spriteSheet = _sprites[_currentSpriteSheet];
+	SDL_Texture* rawTexture = spriteSheet->GetTexture().Get();
+
+	// Draw shadow first, so we need to adjust drawing parameters
+	SDL_SetTextureColorMod(rawTexture, 127, 127, 127);
+	SDL_SetTextureAlphaMod(rawTexture, 127);
+	spriteSheet->Draw(tempPoint + SDL2pp::Point(offsetX - viewport.x, offsetY - viewport.y), _spriteXDir, _spriteYDir);
+
+	SDL_SetTextureColorMod(rawTexture, 255, 255, 255);
+	SDL_SetTextureAlphaMod(rawTexture, 255);
+	spriteSheet->Draw(tempPoint + SDL2pp::Point(-viewport.x, -viewport.y), _spriteXDir, _spriteYDir);
 }
 
-void Actor::GetTileCollisionInfo(Edge & rowEdge, Edge & colEdge, int & rowPenetration, int & colPenetration, 
+void Actor::DetectTileCollisions(Edge & rowEdge, Edge & colEdge, int & rowPenetration, int & colPenetration, 
 	std::vector<std::shared_ptr<Tile>>& rowIntersect, std::vector<std::shared_ptr<Tile>>& colIntersect, std::shared_ptr<Level>& level)
 {
 	int tileWidth = level->GetTileWidth();
@@ -110,10 +138,10 @@ void Actor::GetTileCollisionInfo(Edge & rowEdge, Edge & colEdge, int & rowPenetr
 
 	// Calculate the actor's bounds
 	// Note that this should use the AABB, but it's reporting incorrect positions currently
-	double rightBound = ceil(_position.GetX() + _sprite->GetFrameWidth());
+	double rightBound = ceil(_position.GetX() + _sprites[_currentSpriteSheet]->GetFrameWidth());
 	double leftBound = floor(_position.GetX());
 	double topBound = floor(_position.GetY());
-	double bottomBound = ceil(_position.GetY() + _sprite->GetFrameHeight());
+	double bottomBound = ceil(_position.GetY() + _sprites[_currentSpriteSheet]->GetFrameHeight());
 
 	// Determine which tiles we intersect
 	// If the bottom or right is exactly flush, we subtract one so that we don't test against tiles in the next row/column
@@ -186,7 +214,8 @@ void Actor::GetTileCollisionInfo(Edge & rowEdge, Edge & colEdge, int & rowPenetr
 			else
 			{
 				// Use the side that's least penetrated as the one that pushes us out
-				// We'll prefer the side tiles for tie breakers because it will probably look more realistic thanks to gravity... maybe (we can change this later for visual effects if necessary)
+				// We'll prefer the side (parallel to the y-axis) tiles for tie breakers because it will probably look more realistic thanks to gravity... maybe
+				// (we can change this later for visual effects if necessary)
 				if (colPenetration <= rowPenetration)
 				{
 					rowIntersect.erase(remove(rowIntersect.begin(), rowIntersect.end() - 1, cornerTile));

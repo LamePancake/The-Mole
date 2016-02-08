@@ -19,6 +19,14 @@
 		return nullptr;
 	}
 
+	GameManager& gameManager = *GameManager::GetInstance();
+
+	// Welcome to not wanting to properly make a texture cache
+	// So long as we don't have *too* many repeated textures, I'm sure that this list will be totally manageable :):):):):):)
+	std::shared_ptr<SDL2pp::Texture> baddieWalkSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\Baddie_walk_56x56.png");
+	std::shared_ptr<SDL2pp::Texture> flagSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\Flag_raise.png");
+	std::shared_ptr<SDL2pp::Texture> pancakeSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\Pancake.png");
+
 	while (std::getline(inFile, line))
 	{
 		for (auto it = line.begin(); it != line.end(); ++it)
@@ -27,35 +35,64 @@
 					
 			tileWidth  = tile->GetWidth();
 			tileHeight = tile->GetHeight();
+			char tileType = toupper(*it);
 
-			if (toupper((*it)) == Tile::enemy)
+			switch (tileType)
 			{
-				std::shared_ptr<AIActor> e = std::make_shared<AIActor>(tile->GetWorldPosition(), *GameManager::GetInstance(), Vector2(100.0f, 200.0f), ".\\Assets\\Textures\\Baddie_walk_56x56.png");
-				level->AddEnemy(e);
-				tile->SetID(Tile::blank);
-			}
-			else if (toupper((*it)) == Tile::origin)
-			{
-				player = std::make_shared<PlayerActor>(tile->GetWorldPosition(), *GameManager::GetInstance(), Vector2(0.0f, 0.0f), ".\\Assets\\Textures\\Borin_idle_56x56.png");
-				tile->SetID(Tile::blank);
-			}
-			else if (toupper((*it)) == Tile::npc)
-			{
-				std::shared_ptr<NPCActor> n = std::make_shared<NPCActor>(tile->GetWorldPosition(), *GameManager::GetInstance(), Vector2(0, 0), ".\\Assets\\Textures\\Toad_idle.png");
-				level->AddNPC(n);
-				tile->SetID(Tile::blank);
-			}
-			else if(toupper((*it)) == Tile::checkpoint)
-			{
-				std::shared_ptr<ObjectActor> f = std::make_shared<ObjectActor>(tile->GetWorldPosition(), *GameManager::GetInstance(), Vector2(0, 0), ".\\Assets\\Textures\\Flag_raise.png", ObjectActor::flag, 6);
-				level->AddActorObject(f);
-				tile->SetID(Tile::blank);
-			}
-			else if (toupper((*it)) == Tile::collectible)
-			{
-				std::shared_ptr<ObjectActor> c = std::make_shared<ObjectActor>(tile->GetWorldPosition(), *GameManager::GetInstance(), Vector2(0, 0), ".\\Assets\\Textures\\Pancake.png", ObjectActor::pancake, 1);
-				level->AddActorObject(c);
-				tile->SetID(Tile::blank);
+			case Tile::enemy:
+				{
+					std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> enemySprites;
+					enemySprites["walk"] = std::make_shared<SpriteSheet>(baddieWalkSheet, 8, 1.f);
+
+					std::shared_ptr<AIActor> e = std::make_shared<AIActor>(tile->GetWorldPosition(), gameManager, Vector2(100.0f, 200.0f), enemySprites, "walk");
+					level->AddEnemy(e);
+					tile->SetID(Tile::blank);
+				}
+				break;
+			case Tile::origin:
+				{
+					std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
+					sprites.reserve(4);
+					sprites["sideDig"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_sidedig_56x56.png", 4, 0.30, false);
+					sprites["verticalDig"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_downdig_56x56.png", 4, 0.30, false);
+					sprites["walk"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_walk_56x56.png", 8, 1);
+					sprites["idle"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_idle_56x56.png", 4, 0.5);
+
+					player = std::make_shared<PlayerActor>(tile->GetWorldPosition(), gameManager, Vector2(0.0f, 0.0f), sprites, "idle");
+					tile->SetID(Tile::blank);
+				}
+				break;
+			case Tile::npc:
+				{
+					std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
+					sprites["idle"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Toad_idle.png", 6, 0.50, false, SpriteSheet::XAxisDirection::LEFT);
+
+					std::shared_ptr<NPCActor> npc = std::make_shared<NPCActor>(tile->GetWorldPosition(), gameManager, Vector2(0, 0), sprites, "idle", SpriteSheet::XAxisDirection::LEFT);
+					level->AddNPC(npc);
+					tile->SetID(Tile::blank);
+				}
+				break;
+			case Tile::checkpoint:
+				{
+					std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
+					sprites["raise"] = std::make_shared<SpriteSheet>(flagSheet, 6, 1.0, false);
+
+					std::shared_ptr<ObjectActor> flag = std::make_shared<ObjectActor>(tile->GetWorldPosition(), gameManager, Vector2(0, 0), ObjectActor::flag, sprites, "raise");
+					level->AddActorObject(flag);
+					tile->SetID(Tile::blank);
+				}
+				break;
+			case Tile::collectible:
+				{
+					std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
+					double infinity = std::numeric_limits<double>::infinity();
+					sprites["whateverPancakesDo"] = std::make_shared<SpriteSheet>(pancakeSheet, 1, infinity);
+
+					std::shared_ptr<ObjectActor> collectible = std::make_shared<ObjectActor>(tile->GetWorldPosition(), gameManager, Vector2(0, 0), ObjectActor::pancake, sprites, "whateverPancakesDo");
+					level->AddActorObject(collectible);
+					tile->SetID(Tile::blank);
+				}
+				break;
 			}
 
 			level->AddTileToLevel(tile, levelHeight);

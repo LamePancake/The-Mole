@@ -13,9 +13,12 @@ public:
 	typedef enum {
 		RIGHT,
 		LEFT,
+	} XAxisDirection;
+
+	typedef enum {
 		UP,
 		DOWN,
-	} XAxisDirection;
+	} YAxisDirection;
 
 	/**
 	 * Constructor.
@@ -23,12 +26,31 @@ public:
 	 * @author	Shane
 	 * @date	2/3/2016
 	 *
-	 * @param [in,out]	filename	  	Filename of the spritesheet file.
-	 * @param	numFrames			  	The number of frames in the animation.
-	 * @param	duration			  	The duration (in seconds) for the animation.
-	 * @param	defaultFacingDirection	The default direction that the sprite is facing.
+	 * @param 	spritesheetFile			Name of the file containing the sprite sheet. Must be in a format supported by SDL_Image.
+	 * @param	numFrames				The number of frames in the animation.
+	 * @param	duration				The duration (in seconds) for the animation.
+	 * @param	isRepeating				Whether the animation automatically repeats. Defaults to true.
+	 * @param	defaultXAxisDirection	The default direction that the sprite is facing in the x-axis.
+	 * @param	defaultYAxisDirection	The default direction that the sprite is facing in the y-axis.
 	 */
-	SpriteSheet(std::string& filename, int numFrames, double duration, XAxisDirection defaultFacingDirection);
+	SpriteSheet(std::string&& spritesheetFile, int numFrames, double duration, bool isRepeating = true,
+				XAxisDirection defaultXAxisDirection = XAxisDirection::RIGHT, YAxisDirection defaultYAxisDirection = YAxisDirection::UP);
+
+	/**
+	* Constructor.
+	*
+	* @author	Shane
+	* @date	2/3/2016
+	*
+	* @param 	texture					Pointer to a texture containing the sprite sheet's animation frames.
+	* @param	numFrames				The number of frames in the animation.
+	* @param	duration				The duration (in seconds) for the animation.
+	* @param	isRepeating				Whether the animation automatically repeats. Defaults to true.
+	* @param	defaultXAxisDirection	The default direction that the sprite is facing in the x-axis.
+	* @param	defaultYAxisDirection	The default direction that the sprite is facing in the y-axis.
+	*/
+	SpriteSheet(std::shared_ptr<SDL2pp::Texture>& texture, int numFrames, double duration, bool isRepeating = true,
+		XAxisDirection defaultXAxisDirection = XAxisDirection::RIGHT, YAxisDirection defaultYAxisDirection = YAxisDirection::UP);
 
 	/**
 	 * @brief	Updates the sprite sheet based on the current elapsed time.
@@ -46,10 +68,20 @@ public:
 	 * @author	Shane
 	 * @date	2/3/2016
 	 *
-	 * @param [in]	position	The position to draw the sprite.
+	 * @param position	The position (upper-left corner) to draw the sprite.
+	 * @param xAxisDir	The direction that the sprite should face in the x axis (XAxisDirection::RIGHT or XAxisDirection::LEFT).
+	 * @param yAxisDir	The direction that the sprite should face in the y axis (YAxisDirection::UP or YAxisDirection::DOWN).
 	 */
-	void Draw(const SDL2pp::Point&& position, XAxisDirection facingDir);
+	void Draw(const SDL2pp::Point&& position, XAxisDirection xAxisDir, YAxisDirection yAxisDir);
 
+	/**
+	 * @brief	Query if this object is animating.
+	 *
+	 * @author	Shane
+	 * @date	2/7/2016
+	 *
+	 * @return	true if animating, false if not.
+	 */
 	bool IsAnimating() const;
 
 	/**
@@ -69,7 +101,7 @@ public:
 	void Pause();
 
 	/**
-	 * @brief	Stops and resets the sprite sheet's animation.
+	 * @brief	Stops and Reset()s the sprite sheet's animation.
 	 *
 	 * @author	Shane
 	 * @date	2/5/2016
@@ -105,22 +137,28 @@ public:
 	int GetFrameHeight();
 
 	/**
-	 * Gets the texture.
+	 * Gets the texture associated with the sprite.
 	 *
 	 * @return	The texture.
 	 */
 	SDL2pp::Texture& GetTexture();
 
-	void SetDraw(bool draw);
-	
-	bool CanDraw();
-
+	/**
+	 * @brief	Determine if this sprite sheet's animation automatically loops.
+	 * 
+	 * @return	true if repeating, false if not.
+	 */
 	bool IsRepeating();
 
+	/**
+	 * @brief	Sets whether this sprite sheet's animation should automatically loop.
+	 *
+	 * @param	repeating	true to repeating.
+	 */
 	void SetRepeating(bool repeating);
 
 private:
-	SDL2pp::Texture _sheet;
+	std::shared_ptr<SDL2pp::Texture> _sheet;
 	SDL2pp::Point _spriteSize;
 	bool _isRunning;
 	int _currentFrame;
@@ -128,8 +166,8 @@ private:
 	double _frameTime;
 	double _currentFrameElapsed;
 	GameManager* _mgr;
-	XAxisDirection _defaultFacing;
-	bool _toDraw;
+	XAxisDirection _defaultXDir;
+	YAxisDirection _defaultYDir;
 	bool _isRepeating;
 };
 

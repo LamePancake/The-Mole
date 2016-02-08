@@ -3,11 +3,14 @@
 
 using namespace SDL2pp;
 
-SpriteSheet::SpriteSheet(std::string& filename, int numFrames, double duration, XAxisDirection defaultFacingDirection) :
-	_sheet(GameManager::GetInstance()->GetRenderer(), filename), _frameTime(duration / numFrames), _currentFrame(0), _numFrames(numFrames),
-	_currentFrameElapsed(0), _defaultFacing(defaultFacingDirection), _isRunning(true), _isRepeating(true), _toDraw(true) {
+SpriteSheet::SpriteSheet(std::string&& filename, int numFrames, double duration, bool isRepeating, XAxisDirection defaultXAxisDirection, YAxisDirection defaultYAxisDirection) 
+	: SpriteSheet(std::make_shared<SDL2pp::Texture>(GameManager::GetInstance()->GetRenderer(), filename), numFrames, duration, isRepeating, defaultXAxisDirection, defaultYAxisDirection)
+{}
 
-	_spriteSize = { (int)_sheet.GetWidth() / _numFrames, (int)_sheet.GetHeight() };
+SpriteSheet::SpriteSheet(std::shared_ptr<SDL2pp::Texture>& texture, int numFrames, double duration, bool isRepeating, XAxisDirection defaultXAxisDirection, YAxisDirection defaultYAxisDirection)
+	: _sheet(texture), _numFrames(numFrames), _frameTime(duration / numFrames), _isRepeating(isRepeating), _defaultXDir(defaultXAxisDirection), _defaultYDir(defaultYAxisDirection)
+{
+	_spriteSize = { (int)_sheet->GetWidth() / _numFrames, (int)_sheet->GetHeight() };
 	_mgr = GameManager::GetInstance();
 }
 
@@ -22,8 +25,7 @@ void SpriteSheet::Update(double elapsedTime) {
 		// Stop the animation at the last frame, if it is not repeating
 		if (!_isRepeating && _currentFrame == _numFrames)
 		{
-			_isRunning = false;
-			_currentFrame--;
+			Stop();
 			return;
 		}
 
@@ -31,16 +33,16 @@ void SpriteSheet::Update(double elapsedTime) {
 	}
 }
 
-void SpriteSheet::Draw(const SDL2pp::Point&& position, XAxisDirection facingDir) {
-	if (!_toDraw) return;
-
-	int renderFlags = facingDir == _defaultFacing ? 0 : SDL_FLIP_HORIZONTAL;
-	renderFlags = facingDir == UP ? SDL_FLIP_VERTICAL : renderFlags;
+void SpriteSheet::Draw(const SDL2pp::Point&& position, XAxisDirection xAxisDir, YAxisDirection yAxisDir) {
+	// Determine which axes to flip the sprite on, if any
+	int renderFlags = 0;
+	renderFlags |= (xAxisDir == _defaultXDir ? 0 : SDL_FLIP_HORIZONTAL);
+	renderFlags |= (yAxisDir == _defaultYDir ? 0 : SDL_FLIP_VERTICAL);
 
 	Renderer& rend = _mgr->GetRenderer();
 	Rect frameRect((int)(_currentFrame * _spriteSize.x), 0, _spriteSize.x, _spriteSize.x);
 	Rect screenRect(position, _spriteSize);
-	rend.Copy(_sheet, frameRect, screenRect, 0, NullOpt, renderFlags);
+	rend.Copy(*_sheet, frameRect, screenRect, 0, NullOpt, renderFlags);
 }
 
 bool SpriteSheet::IsAnimating() const
@@ -81,17 +83,7 @@ int SpriteSheet::GetFrameHeight()
 
 SDL2pp::Texture & SpriteSheet::GetTexture()
 {
-	return _sheet;
-}
-
-void SpriteSheet::SetDraw(bool draw)
-{
-	_toDraw = draw;
-}
-
-bool SpriteSheet::CanDraw()
-{
-	return _toDraw;
+	return *_sheet;
 }
 
 bool SpriteSheet::IsRepeating()

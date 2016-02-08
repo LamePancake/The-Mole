@@ -1,47 +1,11 @@
 #include "PlayerActor.h"
 #include "GameScreen.h"
 
-PlayerActor::PlayerActor(Vector2 position, GameManager & manager, Vector2 spd, std::string texturePath)
-	: Actor(position, manager, spd, texturePath, 4), _maxJumpVel(0), _jumpVelocity(0), _atGoal(false), _isDigging(false), _prevDirection(SpriteSheet::XAxisDirection::RIGHT)
+PlayerActor::PlayerActor(Vector2 position, GameManager& manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
+	const std::string&& startSprite, SpriteSheet::XAxisDirection startXDir, SpriteSheet::YAxisDirection startYDir)
+	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDir, startYDir), _prevDirection(startXDir), _atGoal(false)
 {
-	_spriteSideDig = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_sidedig_56x56.png", 4, 0.30, SpriteSheet::XAxisDirection::RIGHT);
-	_spriteSideDigShadow = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_sidedig_56x56.png", 4, 0.30, SpriteSheet::XAxisDirection::RIGHT);
 
-	_spriteVerticalDig = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_downdig_56x56.png", 4, 0.30, SpriteSheet::XAxisDirection::RIGHT);
-	_spriteVerticalDigShadow = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_downdig_56x56.png", 4, 0.30, SpriteSheet::XAxisDirection::RIGHT);
-
-	_spriteWalk = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_walk_56x56.png", 8, 1, SpriteSheet::XAxisDirection::RIGHT);
-	_spriteWalkShadow = std::make_shared<SpriteSheet>((std::string)".\\Assets\\Textures\\Borin_walk_56x56.png", 8, 1, SpriteSheet::XAxisDirection::RIGHT);
-
-	SDL_SetTextureColorMod(_spriteSideDigShadow->GetTexture().Get(), 127, 127, 127);
-	SDL_SetTextureAlphaMod(_spriteSideDigShadow->GetTexture().Get(), 127);
-
-	SDL_SetTextureColorMod(_spriteVerticalDigShadow->GetTexture().Get(), 127, 127, 127);
-	SDL_SetTextureAlphaMod(_spriteVerticalDigShadow->GetTexture().Get(), 127);
-
-	SDL_SetTextureColorMod(_spriteWalkShadow->GetTexture().Get(), 127, 127, 127);
-	SDL_SetTextureAlphaMod(_spriteWalkShadow->GetTexture().Get(), 127);
-
-	_sprite->Start();
-	_spriteShadow->Start();
-
-	_spriteSideDig->Stop();
-	_spriteSideDigShadow->Stop();
-
-	_spriteVerticalDig->Stop();
-	_spriteVerticalDigShadow->Stop();
-
-	_spriteWalk->Stop();
-	_spriteWalkShadow->Stop();
-
-	_spriteSideDig->SetRepeating(false);
-	_spriteSideDigShadow->SetRepeating(false);
-
-	_spriteVerticalDig->SetRepeating(false);
-	_spriteVerticalDigShadow->SetRepeating(false);
-
-	_currentSpriteSheet = _sprite;
-	_currentSpriteSheetShadow = _spriteShadow;
 }
 
 PlayerActor::~PlayerActor()
@@ -51,59 +15,21 @@ PlayerActor::~PlayerActor()
 void PlayerActor::Draw(Camera& camera)
 {
 	Actor::Draw(camera);
-
-	const SDL2pp::Rect& viewport = camera.GetViewport();
-	int offsetX = 4;
-	int offsetY = 0;
-
-	SDL2pp::Renderer& rend = _mgr->GetRenderer();
-	SDL2pp::Point tempPoint;
-
-	tempPoint = { (int)_position.GetX(), (int)_position.GetY() };
-
-	if (_spriteSideDig->IsAnimating())
-	{
-		_spriteSideDigShadow->Draw(tempPoint + SDL2pp::Point(offsetX - viewport.x, offsetY - viewport.y), _actorDir);
-		_spriteSideDig->Draw(tempPoint + SDL2pp::Point(-viewport.x, -viewport.y), _actorDir);
-	}
-	else if (_spriteVerticalDig->IsAnimating())
-	{
-		_spriteVerticalDigShadow->Draw(tempPoint + SDL2pp::Point(offsetX - viewport.x, offsetY - viewport.y), _actorDir);
-		_spriteVerticalDig->Draw(tempPoint + SDL2pp::Point(-viewport.x, -viewport.y), _actorDir);
-	}
-	else if(_spriteWalk->IsAnimating())
-	{
-		_spriteWalkShadow->Draw(tempPoint + SDL2pp::Point(offsetX - viewport.x, offsetY - viewport.y), _actorDir);
-		_spriteWalk->Draw(tempPoint + SDL2pp::Point(-viewport.x, -viewport.y), _actorDir);
-	}
-	
 }
 
 void PlayerActor::Update(double elapsedSecs)
 {
 	Actor::Update(elapsedSecs);
 
-	if ((_currentSpriteSheet == _spriteSideDig && !_currentSpriteSheet->IsAnimating()) ||
-		(_currentSpriteSheet == _spriteVerticalDig && !_currentSpriteSheet->IsAnimating()))
+	// Check whether we're finished digging and update sprites accordingly
+	if (!_sprites[_currentSpriteSheet]->IsAnimating() && _isDigging)
 	{
-		_spriteSideDig->Stop();
-		_spriteVerticalDig->Stop();
-		_spriteSideDigShadow->Stop();
-		_spriteVerticalDigShadow->Stop();
-
-		SetActorDirection(_prevDirection);
+		_currentSpriteSheet = "idle";
+		SetActorXDirection(_prevDirection);
+		_sprites[_currentSpriteSheet]->Start();
 
 		_isDigging = false;
 	}
-
-	_spriteWalk->Update(elapsedSecs);
-	_spriteWalkShadow->Update(elapsedSecs);
-
-	_spriteSideDig->Update(elapsedSecs);
-	_spriteSideDigShadow->Update(elapsedSecs);
-
-	_spriteVerticalDig->Update(elapsedSecs);
-	_spriteVerticalDigShadow->Update(elapsedSecs);
 
 	UpdateInput();
 	UpdatePosition(elapsedSecs);
@@ -130,89 +56,51 @@ void PlayerActor::UpdateCollisions(double elapsedSecs)
 	int colPenetration, rowPenetration;
 	std::vector<std::shared_ptr<Tile>> rowIntersection, colIntersection;
 
-	GetTileCollisionInfo(rowEdge, colEdge, rowPenetration, colPenetration, rowIntersection, colIntersection, level);
+	DetectTileCollisions(rowEdge, colEdge, rowPenetration, colPenetration, rowIntersection, colIntersection, level);
 
 	if (rowEdge != Edge::NONE)
 	{
-		bool canDig = (_digDir[1] == 'U' && rowEdge == Edge::TOP) || (_digDir[1] == 'D' && rowEdge == Edge::BOTTOM);
 		float correctedYPos = _position.GetY();
 		if (rowEdge == Edge::BOTTOM) correctedYPos -= rowPenetration;
 		else if (rowEdge == Edge::TOP) correctedYPos += rowPenetration;
-
-		for (auto& tile : rowIntersection)
-		{
-			switch (tile->GetID())
-			{
-			case Tile::blank:
-				if (_jumpVelocity != 0)
-				{
-					if (!(_jumpVelocity <= _maxJumpVel))
-					{
-						// acceleration of gravity * 64 pixels per metre * time per frame * -1 because negative is up for us
-						_jumpVelocity += -9.8 * 64 * elapsedSecs * -1.0f;
-					}
-				}
-				break;
-			case Tile::dirt:
-				if (canDig)
-				{
-					tile->SetID(Tile::blank);
-					_isDigging = true;
-
-					if (_currentSpriteSheet != _spriteVerticalDig)
-					{
-						_currentSpriteSheet->Stop();
-						_currentSpriteSheetShadow->Stop();
-						_currentSpriteSheet->SetDraw(false);
-						_currentSpriteSheetShadow->SetDraw(false);
-
-						_currentSpriteSheet = _spriteVerticalDig;
-						_currentSpriteSheetShadow = _spriteVerticalDigShadow;
-						
-						_currentSpriteSheet->Start();
-						_currentSpriteSheetShadow->Start();
-						_currentSpriteSheet->SetDraw(true);
-						_currentSpriteSheetShadow->SetDraw(true);
-						SetSpeed(Vector2(0.0f, 0.0f));
-
-						if(_digDir[1] == 'U') SetActorDirection(SpriteSheet::XAxisDirection::UP);
-						else SetActorDirection(SpriteSheet::XAxisDirection::DOWN);
-					}
-				}
-				break;
-			case Tile::goal:
-				_atGoal = true;
-				break;
-			case Tile::spike:
-				_health = 0;
-				break;
-			default:
-				_position.SetY(correctedYPos);
-				break;
-			}
-		}
+		DefaultTileCollisionHandler(rowIntersection, rowEdge, correctedYPos);
 	}
 
 	if (colEdge != Edge::NONE)
 	{
-		bool canDig = (_digDir[0] == 'R' && colEdge == Edge::RIGHT) ||	(_digDir[0] == 'L' && colEdge == Edge::LEFT);
 		float correctedXPos = _position.GetX();
 		if (colEdge == Edge::RIGHT) correctedXPos -= colPenetration;
 		else if (colEdge == Edge::LEFT) correctedXPos += colPenetration;
+		DefaultTileCollisionHandler(colIntersection, colEdge, correctedXPos);
+	}
 
-		for (auto& tile : colIntersection)
+	if (_atGoal)
+		std::cout << "You Win." << std::endl;
+}
+
+void PlayerActor::DefaultTileCollisionHandler(std::vector<std::shared_ptr<Tile>>& tiles, Edge edge, float correctedPos)
+{
+	bool canDig = (_digDir[1] == 'U' && edge == Edge::TOP) ||
+		(_digDir[1] == 'D' && edge == Edge::BOTTOM) ||
+		(_digDir[0] == 'R' && edge == Edge::RIGHT) ||
+		(_digDir[0] == 'L' && edge == Edge::LEFT);
+
+	// Did you think I was done hacking? You were wrong
+	// Still confusing af with naming here... If we're processing columns of tiles, i.e. things that would be collided with by travelling along the x axis, then we're looking at the x direction
+	bool isXDirection = edge == Edge::RIGHT || edge == Edge::LEFT;
+
+	// Set what *could* be our new direction in a given axis (keeping in mind that if the a given _digDir is ' ', we're probably not processing that part anyway... I hope)
+	SpriteSheet::XAxisDirection digXDirection = _digDir[0] == 'R' ? SpriteSheet::XAxisDirection::RIGHT : SpriteSheet::XAxisDirection::LEFT;
+	SpriteSheet::YAxisDirection digYDirection = _digDir[1] == 'U' ? SpriteSheet::YAxisDirection::UP : SpriteSheet::YAxisDirection::DOWN;
+	std::string digSheet = isXDirection ? "sideDig" : "verticalDig";
+
+	if (edge != Edge::NONE)
+	{
+		for (auto& tile : tiles)
 		{
 			switch (tile->GetID())
 			{
 			case Tile::blank:
-				if (_jumpVelocity != 0)
-				{
-					if (!(_jumpVelocity < _maxJumpVel))
-					{
-						// acceleration of gravity * 64 pixels per metre * time per frame * -1 because negative is up for us
-						_jumpVelocity += -9.8 * 64 * elapsedSecs * -1.0f;
-					}
-				}
 				break;
 			case Tile::dirt:
 				if (canDig)
@@ -220,25 +108,23 @@ void PlayerActor::UpdateCollisions(double elapsedSecs)
 					tile->SetID(Tile::blank);
 					_isDigging = true;
 
-					if (_currentSpriteSheet != _spriteSideDig)
+					// If we haven't started the dig animation, do that now
+					if (_currentSpriteSheet != digSheet)
 					{
-						_currentSpriteSheet->Stop();
-						_currentSpriteSheetShadow->Stop();
-						_currentSpriteSheet->SetDraw(false);
-						_currentSpriteSheetShadow->SetDraw(false);
-
-						_currentSpriteSheet = _spriteSideDig;
-						_currentSpriteSheetShadow = _spriteSideDigShadow;
-						
-						_currentSpriteSheet->Start();
-						_currentSpriteSheetShadow->Start();
-						_currentSpriteSheet->SetDraw(true);
-						_currentSpriteSheetShadow->SetDraw(true);
 						SetSpeed(Vector2(0.0f, 0.0f));
+						_sprites[_currentSpriteSheet]->Stop();
+						_currentSpriteSheet = digSheet;
+						_sprites[_currentSpriteSheet]->Start();
 
-						if (_digDir[0] == 'R') SetActorDirection(SpriteSheet::XAxisDirection::RIGHT);
-						else SetActorDirection(SpriteSheet::XAxisDirection::LEFT);
+						if (isXDirection) SetActorXDirection(digXDirection);
+						else SetActorYDirection(digYDirection);
 					}
+				}
+				else
+				{
+					if(isXDirection) _position.SetX(correctedPos);
+					else _position.SetY(correctedPos);
+					_jumpVelocity = 0.0f;
 				}
 				break;
 			case Tile::goal:
@@ -248,14 +134,13 @@ void PlayerActor::UpdateCollisions(double elapsedSecs)
 				_health = 0;
 				break;
 			default:
-				_position.SetX(correctedXPos);
+				if (isXDirection) _position.SetX(correctedPos);
+				else _position.SetY(correctedPos);
+				_jumpVelocity = 0.0f;
 				break;
 			}
 		}
 	}
-
-	if (_atGoal)
-		std::cout << "You Win." << std::endl;
 }
 
 void PlayerActor::UpdateInput()
@@ -265,39 +150,26 @@ void PlayerActor::UpdateInput()
 	_digDir[0] = ' ';
 	_digDir[1] = ' ';
 
-	_currentSpriteSheet->Pause();
-	_currentSpriteSheetShadow->Pause();
-
-	std::shared_ptr<SpriteSheet> prevSheet = _currentSpriteSheet;
-	std::shared_ptr<SpriteSheet> prevSheetShadow = _currentSpriteSheetShadow;
-
-	_prevDirection = GetActorDirection();
-
 	if (_mgr->inputManager->ActionOccurred("LEFT", Input::Held))
 	{
 		_digDir[0] = 'L';
 		SetSpeed(Vector2(Math::Clamp(_speed.GetX() - 400.0f, -400.0f, 0.0f), _speed.GetY()));
-		SetActorDirection(SpriteSheet::XAxisDirection::LEFT);
-
-		_currentSpriteSheet = _spriteWalk;
-		_currentSpriteSheetShadow = _spriteWalkShadow;
+		SetActorXDirection(SpriteSheet::XAxisDirection::LEFT);
 	}
 	else if (_mgr->inputManager->ActionOccurred("RIGHT", Input::Held))
 	{
 		_digDir[0] = 'R';
 		
 		SetSpeed(Vector2(Math::Clamp(_speed.GetX() + 400.0f, 400.0f, 400.0f), _speed.GetY()));
-		SetActorDirection(SpriteSheet::XAxisDirection::RIGHT);
-	
-		_currentSpriteSheet = _spriteWalk;
-		_currentSpriteSheetShadow = _spriteWalkShadow;
+		SetActorXDirection(SpriteSheet::XAxisDirection::RIGHT);
 	}
 	else
 	{
+		// If we're not trying to move in a given direction, stop all motion on the x axis and use the idle animation
 		SetSpeed(Vector2(0.0f, _speed.GetY()));
-
-		_currentSpriteSheet = _sprite;
-		_currentSpriteSheetShadow = _spriteShadow;
+		_sprites[_currentSpriteSheet]->Stop();
+		_currentSpriteSheet = "idle";
+		_sprites[_currentSpriteSheet]->Start();
 	}
 
 	if (_mgr->inputManager->ActionOccurred("UP", Input::Held))
@@ -324,19 +196,6 @@ void PlayerActor::UpdateInput()
 	}
 
 	SetSpeed(Vector2(_speed.GetX(), GetJumpVelocity()));
-
-	if (_currentSpriteSheet != prevSheet)
-	{
-		prevSheet->Stop();
-		prevSheetShadow->Stop();
-		prevSheet->SetDraw(false);
-		prevSheetShadow->SetDraw(false);
-	}
-
-	_currentSpriteSheet->Start();
-	_currentSpriteSheetShadow->Start();
-	_currentSpriteSheet->SetDraw(true);
-	_currentSpriteSheetShadow->SetDraw(true);
 }
 
 void PlayerActor::UpdatePosition(double elapsedSecs)

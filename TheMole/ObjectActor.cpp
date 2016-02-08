@@ -2,11 +2,11 @@
 #include "PlayerActor.h"
 #include "GameScreen.h"
 
-ObjectActor::ObjectActor(Vector2 position, GameManager & manager, Vector2 spd, std::string texturePath, int id, int framesPerSecond)
-	: Actor(position, manager, spd, texturePath, framesPerSecond), _id(id)
+ObjectActor::ObjectActor(Vector2 position, GameManager & manager, Vector2 spd, int id, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites, const std::string&& startSprite,
+	SpriteSheet::XAxisDirection startXDirection, SpriteSheet::YAxisDirection startYDirection)
+	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection), _id(id)
 {
-	_sprite->Pause();
-	_spriteShadow->Pause();
+	_sprites[_currentSpriteSheet]->Pause();
 }
 
 ObjectActor::~ObjectActor()
@@ -38,9 +38,9 @@ void ObjectActor::Update(double elapsedSecs)
 	}
 }
 
-bool ObjectActor::CollisionCheck(Actor & otherAI)
+bool ObjectActor::CollisionCheck(Actor & otherActor)
 {
-	return _aabb.CheckCollision(otherAI.GetAABB());
+	return _aabb.CheckCollision(otherActor.GetAABB());
 }
 
 int ObjectActor::GetID()
@@ -58,10 +58,8 @@ void ObjectActor::FlagUpdate(double elapsedSecs)
 	const std::shared_ptr<GameScreen> screen = std::dynamic_pointer_cast<GameScreen>(_mgr->GetCurrentScreen());
 	if (CollisionCheck(*(screen->GetPlayer())))
 	{
-		_sprite->Start();
-		_spriteShadow->Start();
-		_sprite->SetRepeating(false);
-		_spriteShadow->SetRepeating(false);
+		_sprites[_currentSpriteSheet]->Start();
+		_sprites[_currentSpriteSheet]->SetRepeating(false);
 	}
 }
 
@@ -70,10 +68,8 @@ void ObjectActor::PancakeUpdate(double elapsedSecs)
 	const std::shared_ptr<GameScreen> screen = std::dynamic_pointer_cast<GameScreen>(_mgr->GetCurrentScreen());
 	if (CollisionCheck(*(screen->GetPlayer())))
 	{
-		_sprite->Stop();
-		_spriteShadow->Stop();
-		_sprite->SetDraw(false);
-		_spriteShadow->SetDraw(false);
+		_sprites[_currentSpriteSheet]->Stop();
+		SetVisibility(false);
 	}
 }
 

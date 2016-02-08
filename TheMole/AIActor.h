@@ -13,15 +13,22 @@ class AIActor : public Actor
 public:
 
 	/**
-	 * Constructor that initializes _position to the input parameter.
-	 *
-	 * @param	position	   	starting position of the agent.
-	 * @param [in,out]	manager	game manager.
-	 * @param	spd			   	speed.
-	 * @param	texturePath	   	Full pathname of the texture file.
-	 */
-	AIActor(Vector2 position, GameManager & manager, Vector2 spd, std::string texturePath) 
-		: Actor(position, manager, spd, texturePath, 8) {}
+	* @brief	Creates a new AI actor with the given parameters.
+	*
+	* @author	Shane
+	* @date	2/8/2016
+	*
+	* @param	position	    The AI's start position.
+	* @param [in,out]	manager	A reference to the game manager.
+	* @param	spd			   	The AI's starting speed.
+	* @param [in,out]	sprites	A named list of sprite sheets that can be used to draw the AI.
+	* @param	startSprite	   	The default sprite sheet to draw.
+	* @param	startXDirection	The actor's default facing direction along the x axis.
+	* @param	startYDirection	The actor's default facing direction along the y axis.
+	*/
+	AIActor(Vector2 position, GameManager & manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites, const std::string&& startSprite,
+		SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP)
+		: Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection) {}
 
 	/** Destructor. */
 	~AIActor();

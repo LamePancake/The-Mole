@@ -16,14 +16,17 @@ public:
 	/**
 	 * Constructor that initializes _position to the input parameter.
 	 *
-	 * @param	position	   	starting position of the agent.
-	 * @param [in,out]	manager	game manager.
-	 * @param	spd			   	speed.
-	 * @param	texturePath	   	Full pathname of the texture file.
-	 * @param	id			   	The identifier.
-	 * @param	framesPerSecond	The frames per second.
+	 * @param	position		starting position of the actor.
+	 * @param [in,out]	manager A reference to the game manager.
+	 * @param	spd				The actor's starting velocity.
+	 * @param	id				The type of object (pancake or flag) that this object represents. Should probably be broken into sub-classes.
+	 * @param	sprites			A map of names to sprite sheets.
+	 * @param	startSprite		The name of the sprite to show by default.
+	 * @param	startXDirection	The direction in the x axis which the actor will face at the start.
+	 * @param	startYDirection	The direction in the y axis which the actor will face at the start.
 	 */
-	ObjectActor(Vector2 position, GameManager & manager, Vector2 spd, std::string texturePath, int id, int framesPerSecond);
+	ObjectActor(Vector2 position, GameManager & manager, Vector2 spd, int id, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites, const std::string&& startSprite,
+		SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP);
 
 	/** Destructor. */
 	~ObjectActor();

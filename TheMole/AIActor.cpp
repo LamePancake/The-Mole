@@ -32,9 +32,9 @@ void AIActor::UpdatePosition(double elapsedSecs)
 	_position.SetY(_position.GetY() + _speed.GetY() * elapsedSecs);
 }
 
-bool AIActor::CollisionCheck(Actor &otherAI)
+bool AIActor::CollisionCheck(Actor &otherActor)
 {
-	return _aabb.CheckCollision(otherAI.GetAABB());
+	return _aabb.CheckCollision(otherActor.GetAABB());
 }
 
 void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level>& level)
@@ -43,7 +43,7 @@ void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level>& level)
 	int colPenetration, rowPenetration;
 	std::vector<std::shared_ptr<Tile>> rowIntersection, colIntersection;
 
-	GetTileCollisionInfo(rowEdge, colEdge, rowPenetration, colPenetration, rowIntersection, colIntersection, level);
+	DetectTileCollisions(rowEdge, colEdge, rowPenetration, colPenetration, rowIntersection, colIntersection, level);
 
 	if (rowEdge != Edge::NONE)
 	{
@@ -73,7 +73,7 @@ void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level>& level)
 		else if (colEdge == Edge::LEFT) correctedXPos += colPenetration;
 
 		float reverseX = _speed.GetX() * -1;
-		SpriteSheet::XAxisDirection reverseDir = _actorDir == SpriteSheet::XAxisDirection::LEFT ? SpriteSheet::XAxisDirection::RIGHT : SpriteSheet::XAxisDirection::LEFT;
+		SpriteSheet::XAxisDirection reverseDir = _spriteXDir == SpriteSheet::XAxisDirection::LEFT ? SpriteSheet::XAxisDirection::RIGHT : SpriteSheet::XAxisDirection::LEFT;
 		for (auto& tile : colIntersection)
 		{
 			switch (tile->GetID())
@@ -85,7 +85,7 @@ void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level>& level)
 			default:
 				_position.SetX(correctedXPos);
 				_speed.SetX(reverseX);
-				_actorDir = reverseDir;
+				_spriteXDir = reverseDir;
 				break;
 			}
 		}

@@ -4,6 +4,7 @@
 #include <SDL2pp\SDL2pp.hh>
 #include <string>
 #include <memory>
+#include <unordered_map>
 #include "Vector2.h"
 #include "AABB.h"
 #include "GameManager.h"
@@ -18,15 +19,18 @@ class Actor
 public:
 
 	/**
-	 * Constructor that initializes _position to the input parameter.
+	 * Creates a new Actor, which has a position and the potential to be drawn in the game world.
 	 *
-	 * @param	position		 	starting position of the agent.
-	 * @param [in,out]	manager  	game manager.
-	 * @param	spd				 	speed.
-	 * @param	texturePath		 	Full pathname of the texture file.
-	 * @param	framesPerSecond  	The frames per second.
+	 * @param	position		starting position of the actor.
+	 * @param [in,out]	manager A reference to the game manager.
+	 * @param	spd				The actor's starting velocity.
+	 * @param	sprites			A map of names to sprite sheets.
+	 * @param	startSprite		The name of the sprite to show by default.
+	 * @param	startXDirection	The direction in the x axis which the actor will face at the start.
+	 * @param	startYDirection	The direction in the y axis which the actor will face at the start.
 	 */
-	Actor(Vector2 position, GameManager & manager, Vector2 spd, std::string texturePath, int framesPerSecond);
+	Actor(Vector2 position, GameManager & manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites, const std::string&& startSprite,
+			SpriteSheet::XAxisDirection startXDirection, SpriteSheet::YAxisDirection startYDirection);
 
 	/** Destructor. */
 	~Actor();
@@ -95,14 +99,51 @@ public:
 	 *
 	 * @return	The actor direction.
 	 */
-	SpriteSheet::XAxisDirection GetActorDirection();
+	SpriteSheet::XAxisDirection GetActorXDirection() const;
+
+	/**
+	 * @brief	Gets actor y coordinate direction.
+	 *
+	 * @author	Shane
+	 * @date	2/7/2016
+	 *
+	 * @return	The actor y coordinate direction.
+	 */
+	SpriteSheet::YAxisDirection GetActorYDirection() const;
 
 	/**
 	 * Sets actor direction.
 	 *
 	 * @param	dir	The direction.
 	 */
-	void SetActorDirection(SpriteSheet::XAxisDirection dir);
+	void SetActorXDirection(SpriteSheet::XAxisDirection dir);
+
+	/**
+	* Sets actor direction.
+	*
+	* @param	dir	The direction.
+	*/
+	void SetActorYDirection(SpriteSheet::YAxisDirection dir);
+
+	/**
+	 * @brief	Sets whether this actor is visible.
+	 *
+	 * @author	Shane
+	 * @date	2/8/2016
+	 *
+	 * @param	isVisible	true if this object is visible.
+	 */
+	void SetVisibility(bool isVisible);
+
+	/**
+	 * @brief	Query if this object is visible.
+	 *
+	 * @author	Shane
+	 * @date	2/8/2016
+	 *
+	 * @return	true if visible, false if not.
+	 */
+	bool IsVisible() const;
 
 	// All the state changing stuff happens in here. 
 	virtual void Update(double elapsedSecs);
@@ -141,36 +182,44 @@ protected:
 	/** The aabb. */
 	AABB _aabb;
 
-	/** The sprite shadow. */
-	std::shared_ptr<SpriteSheet> _spriteShadow;
+	/** @brief	The name of the current spritesheet and its associated sprite sheet shadow. */
+	std::string _currentSpriteSheet;
 	
 	/** The sprite. */
-	std::shared_ptr<SpriteSheet> _sprite;
+	std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> _sprites;
 
-	/** The manager. */
+	/** The game manager which drives the game loop. */
 	GameManager* _mgr;
-
-
+	
 	/** @brief	A pointer to the current game screen. */
 	std::shared_ptr<GameScreen> _gameScreen;
 
-	SpriteSheet::XAxisDirection _actorDir;
+	/** @brief	The direction that the sprite is facing along the x axis. */
+	SpriteSheet::XAxisDirection _spriteXDir;
+
+	/** @brief	The direction that the sprite is facing along the y axis. */
+	SpriteSheet::YAxisDirection _spriteYDir;
+
+	/** @brief	true if this object is visible. */
+	bool _isVisible;
 
 	/**
-	 * @brief	Gets tile collision information.
+	 * @brief	Determines the tiles with which this actor is colliding.
 	 *
 	 * @author	Shane
 	 * @date	2/5/2016
 	 *
-	 * @param [in,out]	rowEdge		  	The row edge.
-	 * @param [in,out]	colEdge		  	The col edge.
-	 * @param [in,out]	rowPenetration	The row penetration.
-	 * @param [in,out]	colPenetration	The col penetration.
-	 * @param [in,out]	rowIntersect  	The row intersect.
-	 * @param [in,out]	colIntersect  	The col intersect.
-	 * @param [in,out]	level		  	The level.
+	 * @param [in,out]	rowEdge		  	Whether the row of tiles contained in rowIntersect is above (Edge::TOP) or below (Edge::BOTTOM) this actor.
+	 * 									Edge::NONE means that the actor hasn't moved in this axis.
+	 * @param [in,out]	colEdge		  	Whether the column of tiles contained in colIntersect is to the right (Edge::RIGHT) or left (Edge::LEFT) of this actor.
+	 * 									Edge::NONE means that the actor hasn't moved in this axis.
+	 * @param [in,out]	rowPenetration	The number of pixels by which this actor has penetrated the row of tiles the tiles in rowIntersect.
+	 * @param [in,out]	colPenetration	The number of pixels by which this actor has penetrated the column of tiles in colIntersetc.
+	 * @param [in,out]	rowIntersect	The list of tiles parallel to the x-axis with which one of this actor's edges (specified in rowEdge) is colliding.
+	 * @param [in,out]	colIntersect  	The list of tiles parallel to the y-axis with which one of this actor's edges (specified in colEdge) is colliding.
+	 * @param [in,out]	level		  	The level containing the actor and the tiles.
 	 */
-	void GetTileCollisionInfo(Edge & rowEdge, Edge & colEdge, int & rowPenetration, int & colPenetration,
+	void DetectTileCollisions(Edge & rowEdge, Edge & colEdge, int & rowPenetration, int & colPenetration,
 		std::vector<std::shared_ptr<Tile>>& rowIntersect, std::vector<std::shared_ptr<Tile>>& colIntersect, std::shared_ptr<Level>& level);
 };
 

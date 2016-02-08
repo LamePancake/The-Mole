@@ -7,14 +7,21 @@ class PlayerActor : public Actor
 public:
 
 	/**
-	 * Constructor that initializes _position to the input parameter.
+	 * @brief	Creates a new player actor with the given parameters.
 	 *
-	 * @param	position	   	starting position of the agent.
-	 * @param [in,out]	manager	game manager.
-	 * @param	spd			   	speed.
-	 * @param	texturePath	   	Full pathname of the texture file.
+	 * @author	Shane
+	 * @date	2/8/2016
+	 *
+	 * @param	position	    The player's start position.
+	 * @param [in,out]	manager	A reference to the game manager.
+	 * @param	spd			   	The player's starting speed.
+	 * @param	sprites			The list of sprite sheets for the player.
+	 * @param	startSprite	   	The default sprite to draw.
+	 * @param	startXDirection	The actor's default facing direction along the x axis.
+	 * @param	startYDirection	The actor's default facing direction along the y axis.
 	 */
-	PlayerActor(Vector2 position, GameManager & manager, Vector2 spd, std::string texturePath);
+	PlayerActor(Vector2 position, GameManager & manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites, const std::string&& startSprite,
+		SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP);
 
 	/** Destructor. */
 	~PlayerActor();
@@ -99,10 +106,19 @@ private:
 	 *
 	 * @author	Shane	 
 	 * @date	2/6/2016
+	 * 
 	 * @editor  Tim (added parameter)
 	 * @date    2/6/2016
 	 */
 	void UpdateCollisions(double elapsedSecs);
+
+	/**
+	 * @brief	Handles collisions with tiles.
+	 *
+	 * @author	Shane
+	 * @date	2/7/2016
+	 */
+	void DefaultTileCollisionHandler(std::vector<std::shared_ptr<Tile>>& tiles, Edge edge, float correctedPos);
 
 	bool _atGoal;
 	float _jumpVelocity;
@@ -113,28 +129,4 @@ private:
 	SpriteSheet::XAxisDirection _prevDirection;
 
 	bool _isDigging;
-
-	/** The sprite shadow digging. */
-	std::shared_ptr<SpriteSheet> _spriteSideDigShadow;
-
-	/** The spritesheet for digging. */
-	std::shared_ptr<SpriteSheet> _spriteSideDig;
-
-	/** The sprite shadow digging. */
-	std::shared_ptr<SpriteSheet> _spriteVerticalDigShadow;
-
-	/** The spritesheet for digging. */
-	std::shared_ptr<SpriteSheet> _spriteVerticalDig;
-
-	/** The sprite shadow digging. */
-	std::shared_ptr<SpriteSheet> _spriteWalkShadow;
-
-	/** The spritesheet for digging. */
-	std::shared_ptr<SpriteSheet> _spriteWalk;
-
-	/** The current sprite animating. */
-	std::shared_ptr<SpriteSheet> _currentSpriteSheet;
-
-	/** The current shadow animating */
-	std::shared_ptr<SpriteSheet> _currentSpriteSheetShadow;
 };
