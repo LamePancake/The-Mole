@@ -25,7 +25,7 @@ void PlayerActor::Update(double elapsedSecs)
 	if (!_sprites[_currentSpriteSheet]->IsAnimating() && _isDigging)
 	{
 		_currentSpriteSheet = "idle";
-		SetActorXDirection(_prevDirection);
+		SetActorYDirection(SpriteSheet::YAxisDirection::UP);
 		_sprites[_currentSpriteSheet]->Start();
 
 		_isDigging = false;
@@ -80,20 +80,17 @@ void PlayerActor::UpdateCollisions(double elapsedSecs)
 
 void PlayerActor::DefaultTileCollisionHandler(std::vector<std::shared_ptr<Tile>>& tiles, Edge edge, float correctedPos)
 {
-	bool canDig = (_digDir[1] == 'U' && edge == Edge::TOP) ||
-		(_digDir[1] == 'D' && edge == Edge::BOTTOM) ||
-		(_digDir[0] == 'R' && edge == Edge::RIGHT) ||
-		(_digDir[0] == 'L' && edge == Edge::LEFT);
+	bool canDig = (_spriteYDir == SpriteSheet::YAxisDirection::UP && edge == Edge::TOP) ||
+		(_spriteYDir == SpriteSheet::YAxisDirection::DOWN && edge == Edge::BOTTOM) ||
+		(_spriteYDir == SpriteSheet::XAxisDirection::RIGHT && edge == Edge::RIGHT) ||
+		(_spriteYDir == SpriteSheet::XAxisDirection::LEFT && edge == Edge::LEFT);
+	
+	canDig = canDig && _isDigging;
 
 	// Did you think I was done hacking? You were wrong
 	// Still confusing af with naming here... If we're processing columns of tiles, i.e. things that would be collided with by travelling along the x axis, then we're looking at the x direction
 	bool isXDirection = edge == Edge::RIGHT || edge == Edge::LEFT;
-
-	// Set what *could* be our new direction in a given axis (keeping in mind that if the a given _digDir is ' ', we're probably not processing that part anyway... I hope)
-	SpriteSheet::XAxisDirection digXDirection = _digDir[0] == 'R' ? SpriteSheet::XAxisDirection::RIGHT : SpriteSheet::XAxisDirection::LEFT;
-	SpriteSheet::YAxisDirection digYDirection = _digDir[1] == 'U' ? SpriteSheet::YAxisDirection::UP : SpriteSheet::YAxisDirection::DOWN;
-	std::string digSheet = isXDirection ? "sideDig" : "verticalDig";
-
+	
 	if (edge != Edge::NONE)
 	{
 		for (auto& tile : tiles)
@@ -106,19 +103,6 @@ void PlayerActor::DefaultTileCollisionHandler(std::vector<std::shared_ptr<Tile>>
 				if (canDig)
 				{
 					tile->SetID(Tile::blank);
-					_isDigging = true;
-
-					// If we haven't started the dig animation, do that now
-					if (_currentSpriteSheet != digSheet)
-					{
-						SetSpeed(Vector2(0.0f, 0.0f));
-						_sprites[_currentSpriteSheet]->Stop();
-						_currentSpriteSheet = digSheet;
-						_sprites[_currentSpriteSheet]->Start();
-
-						if (isXDirection) SetActorXDirection(digXDirection);
-						else SetActorYDirection(digYDirection);
-					}
 				}
 				else
 				{
@@ -147,34 +131,54 @@ void PlayerActor::UpdateInput()
 {
 	if (_isDigging) return;
 
-	_digDir[0] = ' ';
-	_digDir[1] = ' ';
+	bool triedDigging = _mgr->inputManager->ActionOccurred("DIG", Input::Held);
 
 	if (_mgr->inputManager->ActionOccurred("LEFT", Input::Held))
 	{
-		_digDir[0] = 'L';
-		SetSpeed(Vector2(Math::Clamp(_speed.GetX() - 400.0f, -400.0f, 0.0f), _speed.GetY()));
 		SetActorXDirection(SpriteSheet::XAxisDirection::LEFT);
 
-		if (_currentSpriteSheet != "walk")
+		if (triedDigging)
 		{
+			_isDigging = true;
+			SetSpeed(Vector2(0.0f, 0.0f));
 			_sprites[_currentSpriteSheet]->Stop();
-			_currentSpriteSheet = "walk";
+			_currentSpriteSheet = "sideDig";
 			_sprites[_currentSpriteSheet]->Start();
 		}
+		else
+		{
+			SetSpeed(Vector2(Math::Clamp(_speed.GetX() - 50.0f, -300.0f, -50.0f), _speed.GetY()));
+			if (_currentSpriteSheet != "walk")
+			{
+				_sprites[_currentSpriteSheet]->Stop();
+				_currentSpriteSheet = "walk";
+				_sprites[_currentSpriteSheet]->Start();
+			}
+		}
+		
 	}
 	else if (_mgr->inputManager->ActionOccurred("RIGHT", Input::Held))
 	{
-		_digDir[0] = 'R';
-		
-		SetSpeed(Vector2(Math::Clamp(_speed.GetX() + 400.0f, 400.0f, 400.0f), _speed.GetY()));
 		SetActorXDirection(SpriteSheet::XAxisDirection::RIGHT);
 
-		if (_currentSpriteSheet != "walk")
+		if (triedDigging)
 		{
+			_isDigging = true;
+			SetSpeed(Vector2(0.0f, 0.0f));
 			_sprites[_currentSpriteSheet]->Stop();
-			_currentSpriteSheet = "walk";
+			_currentSpriteSheet = "sideDig";
 			_sprites[_currentSpriteSheet]->Start();
+		}
+		else
+		{
+			SetSpeed(Vector2(Math::Clamp(_speed.GetX() + 50.0f, 50.0f, 300.0f), _speed.GetY()));
+
+			if (_currentSpriteSheet != "walk")
+			{
+				_sprites[_currentSpriteSheet]->Stop();
+				_currentSpriteSheet = "walk";
+				_sprites[_currentSpriteSheet]->Start();
+			}
 		}
 	}
 	else
@@ -191,13 +195,27 @@ void PlayerActor::UpdateInput()
 
 	if (_mgr->inputManager->ActionOccurred("UP", Input::Held))
 	{
-		_digDir[1] = 'U';
-		SetSpeed(Vector2(_speed.GetX(), Math::Clamp(_speed.GetY() - 400.0f, 0.0f, -400.0f)));
+		if (triedDigging)
+		{
+			_isDigging = true;
+			SetSpeed(Vector2(0.0f, 0.0f));
+			SetActorYDirection(SpriteSheet::YAxisDirection::UP);
+			_sprites[_currentSpriteSheet]->Stop();
+			_currentSpriteSheet = "verticalDig";
+			_sprites[_currentSpriteSheet]->Start();
+		}
 	}
 	else if (_mgr->inputManager->ActionOccurred("DOWN", Input::Held))
 	{
-		_digDir[1] = 'D';
-		SetSpeed(Vector2(_speed.GetX(), Math::Clamp(_speed.GetY() + 400.0f, 0.0f, 400.0f)));
+		if (triedDigging)
+		{
+			_isDigging = true;
+			SetActorYDirection(SpriteSheet::YAxisDirection::DOWN);
+			SetSpeed(Vector2(0.0f, 0.0f));
+			_sprites[_currentSpriteSheet]->Stop();
+			_currentSpriteSheet = "verticalDig";
+			_sprites[_currentSpriteSheet]->Start();
+		}
 	}
 	else if (_mgr->inputManager->ActionOccurred("JUMP", Input::Pressed))
 	{
