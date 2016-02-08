@@ -8,7 +8,8 @@ SpriteSheet::SpriteSheet(std::string&& filename, int numFrames, double duration,
 {}
 
 SpriteSheet::SpriteSheet(std::shared_ptr<SDL2pp::Texture>& texture, int numFrames, double duration, bool isRepeating, XAxisDirection defaultXAxisDirection, YAxisDirection defaultYAxisDirection)
-	: _sheet(texture), _numFrames(numFrames), _frameTime(duration / numFrames), _isRepeating(isRepeating), _defaultXDir(defaultXAxisDirection), _defaultYDir(defaultYAxisDirection)
+	: _sheet(texture), _numFrames(numFrames), _frameTime(duration / numFrames), _isRepeating(isRepeating), _defaultXDir(defaultXAxisDirection), _defaultYDir(defaultYAxisDirection), _isRunning(true),
+	_currentFrame(0), _currentFrameElapsed(0)
 {
 	_spriteSize = { (int)_sheet->GetWidth() / _numFrames, (int)_sheet->GetHeight() };
 	_mgr = GameManager::GetInstance();

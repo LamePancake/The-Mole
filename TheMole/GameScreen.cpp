@@ -28,7 +28,6 @@ int GameScreen::Load(std::string levelAddress, std::string textureAddress)
 	_camera = new Camera(playerPos, viewportSize, levelSize);
 
 	_background = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), textureAddress);
-	_player->SetSpeed({ 400.f, 400.f });
 
 	return SCREEN_LOAD_SUCCESS;
 }

@@ -3,9 +3,9 @@
 
 PlayerActor::PlayerActor(Vector2 position, GameManager& manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
 	const std::string&& startSprite, SpriteSheet::XAxisDirection startXDir, SpriteSheet::YAxisDirection startYDir)
-	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDir, startYDir), _prevDirection(startXDir), _atGoal(false)
+	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDir, startYDir), _prevDirection(startXDir), _atGoal(false), _jumpVelocity(0), _maxJumpVel(400),
+	_digDir{' ' , ' '}, _jumped(false), _isDigging(false)
 {
-
 }
 
 PlayerActor::~PlayerActor()
@@ -155,6 +155,13 @@ void PlayerActor::UpdateInput()
 		_digDir[0] = 'L';
 		SetSpeed(Vector2(Math::Clamp(_speed.GetX() - 400.0f, -400.0f, 0.0f), _speed.GetY()));
 		SetActorXDirection(SpriteSheet::XAxisDirection::LEFT);
+
+		if (_currentSpriteSheet != "walk")
+		{
+			_sprites[_currentSpriteSheet]->Stop();
+			_currentSpriteSheet = "walk";
+			_sprites[_currentSpriteSheet]->Start();
+		}
 	}
 	else if (_mgr->inputManager->ActionOccurred("RIGHT", Input::Held))
 	{
@@ -162,14 +169,24 @@ void PlayerActor::UpdateInput()
 		
 		SetSpeed(Vector2(Math::Clamp(_speed.GetX() + 400.0f, 400.0f, 400.0f), _speed.GetY()));
 		SetActorXDirection(SpriteSheet::XAxisDirection::RIGHT);
+
+		if (_currentSpriteSheet != "walk")
+		{
+			_sprites[_currentSpriteSheet]->Stop();
+			_currentSpriteSheet = "walk";
+			_sprites[_currentSpriteSheet]->Start();
+		}
 	}
 	else
 	{
 		// If we're not trying to move in a given direction, stop all motion on the x axis and use the idle animation
 		SetSpeed(Vector2(0.0f, _speed.GetY()));
-		_sprites[_currentSpriteSheet]->Stop();
-		_currentSpriteSheet = "idle";
-		_sprites[_currentSpriteSheet]->Start();
+		if (_currentSpriteSheet != "idle")
+		{
+			_sprites[_currentSpriteSheet]->Stop();
+			_currentSpriteSheet = "idle";
+			_sprites[_currentSpriteSheet]->Start();
+		}
 	}
 
 	if (_mgr->inputManager->ActionOccurred("UP", Input::Held))
@@ -200,10 +217,9 @@ void PlayerActor::UpdateInput()
 
 void PlayerActor::UpdatePosition(double elapsedSecs)
 {
-	const std::shared_ptr<GameScreen> gameScreen = std::dynamic_pointer_cast<GameScreen>(_mgr->GetCurrentScreen());
-	const std::shared_ptr<Level> level = gameScreen->GetLevel();
-	_position.SetX(Math::Clamp(_position.GetX() + _speed.GetX() * (float)elapsedSecs, 0, level->GetLevelSize().x * level->GetTileWidth()));
-	_position.SetY(Math::Clamp(_position.GetY() + _speed.GetY() * (float)elapsedSecs, 0, level->GetLevelSize().y * level->GetTileHeight()));
+	const std::shared_ptr<Level> level = _gameScreen->GetLevel();
+	_position.SetX(Math::Clamp(_position.GetX() + _speed.GetX() * (float)elapsedSecs, 0, level->GetLevelSize().x * level->GetTileWidth() - _sprites[_currentSpriteSheet]->GetFrameWidth()));
+	_position.SetY(Math::Clamp(_position.GetY() + _speed.GetY() * (float)elapsedSecs, 0, level->GetLevelSize().y * level->GetTileHeight() - _sprites[_currentSpriteSheet]->GetFrameHeight()));
 }
 
 bool PlayerActor::CollisionCheck(Actor & otherAI)

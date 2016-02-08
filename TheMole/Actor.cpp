@@ -14,6 +14,7 @@ Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::unordere
 	_aabb = AABB(_sprites[startSprite]->GetFrameWidth(), _sprites[startSprite]->GetFrameHeight(), *this);
 	_spriteXDir = startXDirection;
 	_spriteYDir = startYDirection;
+	_sprites[_currentSpriteSheet]->Start();
 }
 
 Actor::~Actor()

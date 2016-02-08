@@ -31,11 +31,11 @@
 	{
 		for (auto it = line.begin(); it != line.end(); ++it)
 		{
-			std::shared_ptr<Tile> tile = std::make_shared<Tile>(levelWidth, levelHeight, toupper((*it)));
+			char tileType = toupper(*it);
+			std::shared_ptr<Tile> tile = std::make_shared<Tile>(levelWidth, levelHeight, tileType);
 					
 			tileWidth  = tile->GetWidth();
 			tileHeight = tile->GetHeight();
-			char tileType = toupper(*it);
 
 			switch (tileType)
 			{
@@ -56,7 +56,7 @@
 					sprites["sideDig"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_sidedig_56x56.png", 4, 0.30, false);
 					sprites["verticalDig"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_downdig_56x56.png", 4, 0.30, false);
 					sprites["walk"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_walk_56x56.png", 8, 1);
-					sprites["idle"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_idle_56x56.png", 4, 0.5);
+					sprites["idle"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_idle_56x56.png", 4, 0.8);
 
 					player = std::make_shared<PlayerActor>(tile->GetWorldPosition(), gameManager, Vector2(0.0f, 0.0f), sprites, "idle");
 					tile->SetID(Tile::blank);
