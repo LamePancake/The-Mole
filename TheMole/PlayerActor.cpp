@@ -32,6 +32,7 @@ void PlayerActor::Update(double elapsedSecs)
 	// Check whether we're finished digging and update sprites accordingly
 	if (!_sprites[_currentSpriteSheet]->IsAnimating() && _isDigging)
 	{
+		_sprites[_currentSpriteSheet]->Stop();
 		_currentSpriteSheet = "idle";
 		SetActorYDirection(SpriteSheet::YAxisDirection::UP);
 		_sprites[_currentSpriteSheet]->Start();
