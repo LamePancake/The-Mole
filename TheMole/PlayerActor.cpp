@@ -4,7 +4,7 @@
 PlayerActor::PlayerActor(Vector2 position, GameManager& manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
 	const std::string&& startSprite, SpriteSheet::XAxisDirection startXDir, SpriteSheet::YAxisDirection startYDir)
 	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDir, startYDir), _prevDirection(startXDir), _atGoal(false), _jumpVelocity(0), _maxJumpVel(400),
-	_digDir{' ' , ' '}, _jumped(false), _isDigging(false), _jumpDuration(0.75), _jumpTimeElapsed(0)
+	_digDir{' ' , ' '}, _jumped(false), _isDigging(false), _jumpDuration(0.75), _jumpTimeElapsed(0), _godMode(false)
 {
 }
 
@@ -49,7 +49,11 @@ void PlayerActor::Update(double elapsedSecs)
 	{
 		if (CollisionCheck(*screen->GetLevel()->GetEnemy(i)))
 		{
-			_health = 0;
+			_health -= 100;
+			std::cout << "You got hit!" << std::endl;
+		}
+		if (_health == 0)
+		{
 			std::cout << "You lose." << std::endl;
 		}
 	}
@@ -220,6 +224,10 @@ void PlayerActor::UpdateInput()
 			_currentSpriteSheet = "verticalDig";
 			_sprites[_currentSpriteSheet]->Start();
 		}
+		if (_godMode)
+		{
+			SetSpeed(Vector2(_speed.GetX(), Math::Clamp(_speed.GetY() - 50.0f, -50.0f, -300.0f)));
+		}
 	}
 	else if (_mgr->inputManager->ActionOccurred("DOWN", Input::Held))
 	{
@@ -231,6 +239,10 @@ void PlayerActor::UpdateInput()
 			_currentSpriteSheet = "verticalDig";
 			_sprites[_currentSpriteSheet]->Start();
 		}
+		if (_godMode)
+		{
+			SetSpeed(Vector2(_speed.GetX(), Math::Clamp(_speed.GetY() + 50.0f, 50.0f, 300.0f)));
+		}
 	}
 	else if (_mgr->inputManager->ActionOccurred("JUMP", Input::Pressed) && _wasOnGround)
 	{
@@ -239,15 +251,17 @@ void PlayerActor::UpdateInput()
 		SetJumpVelocity(8.0f * 1.0f * 64.0f * -1.0f);
 		SetMaximumJumpVelocity(8.0f * 1.0f * 64.0f * -1.0f);
 	}
-	else
+	else if(_mgr->inputManager->ActionOccurred("GODMODE", Input::Pressed))
 	{
-		// reset jump velocity
-		//SetJumpVelocity(0.0f);
-		//_speed.SetY(0);
+		_godMode = !_godMode;
+		_health = 40000000;
 	}
 
-	//COMMENT OUT THIS LINE TO DISABLE JUMP
-	SetSpeed(Vector2(_speed.GetX(), GetJumpVelocity()));
+	if (!_godMode)
+	{
+		//COMMENT OUT THIS LINE TO DISABLE JUMP
+		SetSpeed(Vector2(_speed.GetX(), GetJumpVelocity()));
+	}
 }
 
 void PlayerActor::UpdatePosition(double elapsedSecs)

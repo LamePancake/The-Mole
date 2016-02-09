@@ -139,4 +139,5 @@ private:
 	SpriteSheet::XAxisDirection _prevDirection;
 
 	bool _isDigging;
+	bool _godMode;
 };

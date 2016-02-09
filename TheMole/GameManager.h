@@ -80,6 +80,7 @@ private:
 		inputManager->AddKeyToMap("JUMP", Input::InputAction(SDL_SCANCODE_SPACE));
 		inputManager->AddKeyToMap("QUIT", Input::InputAction(SDL_SCANCODE_ESCAPE));
 		inputManager->AddKeyToMap("DIG", Input::InputAction(SDL_SCANCODE_J));
+		inputManager->AddKeyToMap("GODMODE", Input::InputAction(SDL_SCANCODE_G));
 	}
 
 	/**
