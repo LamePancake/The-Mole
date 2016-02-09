@@ -44,7 +44,7 @@
 					std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> enemySprites;
 					enemySprites["walk"] = std::make_shared<SpriteSheet>(baddieWalkSheet, 8, 1.f);
 
-					std::shared_ptr<AIActor> e = std::make_shared<AIActor>(tile->GetWorldPosition(), gameManager, Vector2(100.0f, 200.0f), enemySprites, "walk");
+					std::shared_ptr<AIActor> e = std::make_shared<AIActor>(tile->GetWorldPosition(), gameManager, Vector2(100.0f, 341.3f), enemySprites, "walk");
 					level->AddEnemy(e);
 					tile->SetID(Tile::blank);
 				}
@@ -58,7 +58,7 @@
 					sprites["walk"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_walk_56x56.png", 8, 1);
 					sprites["idle"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_idle_56x56.png", 4, 0.8);
 
-					player = std::make_shared<PlayerActor>(tile->GetWorldPosition(), gameManager, Vector2(0.0f, 0.0f), sprites, "idle");
+					player = std::make_shared<PlayerActor>(tile->GetWorldPosition(), gameManager, Vector2(0.0f, 341.3f), sprites, "idle");
 					tile->SetID(Tile::blank);
 				}
 				break;

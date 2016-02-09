@@ -4,7 +4,7 @@
 PlayerActor::PlayerActor(Vector2 position, GameManager& manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
 	const std::string&& startSprite, SpriteSheet::XAxisDirection startXDir, SpriteSheet::YAxisDirection startYDir)
 	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDir, startYDir), _prevDirection(startXDir), _atGoal(false), _jumpVelocity(0), _maxJumpVel(400),
-	_digDir{' ' , ' '}, _jumped(false), _isDigging(false)
+	_digDir{' ' , ' '}, _jumped(false), _isDigging(false), _jumpDuration(0.75), _jumpTimeElapsed(0)
 {
 }
 
@@ -20,6 +20,14 @@ void PlayerActor::Draw(Camera& camera)
 void PlayerActor::Update(double elapsedSecs)
 {
 	Actor::Update(elapsedSecs);
+	if (_jumped)
+	{
+		_jumpVelocity += -9.8 * 64 * elapsedSecs * -1.0f;
+		if (_jumpVelocity >= _maxJumpVel)
+		{
+			StopJumping();
+		}
+	}
 
 	// Check whether we're finished digging and update sprites accordingly
 	if (!_sprites[_currentSpriteSheet]->IsAnimating() && _isDigging)
@@ -78,6 +86,13 @@ void PlayerActor::UpdateCollisions(double elapsedSecs)
 		std::cout << "You Win." << std::endl;
 }
 
+void PlayerActor::StopJumping()
+{
+	_jumped = false;
+	_speed.SetY(-_maxJumpVel);
+	_jumpTimeElapsed = 0;
+}
+
 void PlayerActor::DefaultTileCollisionHandler(std::vector<std::shared_ptr<Tile>>& tiles, Edge edge, float correctedPos)
 {
 	bool canDig = (_spriteYDir == SpriteSheet::YAxisDirection::UP && edge == Edge::TOP) ||
@@ -90,7 +105,10 @@ void PlayerActor::DefaultTileCollisionHandler(std::vector<std::shared_ptr<Tile>>
 	// Did you think I was done hacking? You were wrong
 	// Still confusing af with naming here... If we're processing columns of tiles, i.e. things that would be collided with by travelling along the x axis, then we're looking at the x direction
 	bool isXDirection = edge == Edge::RIGHT || edge == Edge::LEFT;
-	
+
+	// Assume we weren't on the ground until proven otherwise, but only do this when we're looking at tiles above/below us
+	if (!isXDirection) _wasOnGround = false;
+
 	if (edge != Edge::NONE)
 	{
 		for (auto& tile : tiles)
@@ -107,8 +125,12 @@ void PlayerActor::DefaultTileCollisionHandler(std::vector<std::shared_ptr<Tile>>
 				else
 				{
 					if(isXDirection) _position.SetX(correctedPos);
-					else _position.SetY(correctedPos);
-					_jumpVelocity = 0.0f;
+					else
+					{
+						_position.SetY(correctedPos);
+						if (edge == Edge::BOTTOM) _wasOnGround = true;
+						if (_jumped) StopJumping();
+					}
 				}
 				break;
 			case Tile::goal:
@@ -119,8 +141,12 @@ void PlayerActor::DefaultTileCollisionHandler(std::vector<std::shared_ptr<Tile>>
 				break;
 			default:
 				if (isXDirection) _position.SetX(correctedPos);
-				else _position.SetY(correctedPos);
-				_jumpVelocity = 0.0f;
+				else
+				{
+					_position.SetY(correctedPos); 
+					if (edge == Edge::BOTTOM) _wasOnGround = true;
+					if (_jumped) StopJumping();
+				}
 				break;
 			}
 		}
@@ -136,49 +162,39 @@ void PlayerActor::UpdateInput()
 	if (_mgr->inputManager->ActionOccurred("LEFT", Input::Held))
 	{
 		SetActorXDirection(SpriteSheet::XAxisDirection::LEFT);
+		SetSpeed(Vector2(Math::Clamp(_speed.GetX() - 50.0f, -300.0f, -50.0f), _speed.GetY()));
 
 		if (triedDigging)
 		{
 			_isDigging = true;
-			SetSpeed(Vector2(0.0f, 0.0f));
 			_sprites[_currentSpriteSheet]->Stop();
 			_currentSpriteSheet = "sideDig";
 			_sprites[_currentSpriteSheet]->Start();
 		}
-		else
+		else if (_currentSpriteSheet != "walk")
 		{
-			SetSpeed(Vector2(Math::Clamp(_speed.GetX() - 50.0f, -300.0f, -50.0f), _speed.GetY()));
-			if (_currentSpriteSheet != "walk")
-			{
-				_sprites[_currentSpriteSheet]->Stop();
-				_currentSpriteSheet = "walk";
-				_sprites[_currentSpriteSheet]->Start();
-			}
+			_sprites[_currentSpriteSheet]->Stop();
+			_currentSpriteSheet = "walk";
+			_sprites[_currentSpriteSheet]->Start();
 		}
-		
 	}
 	else if (_mgr->inputManager->ActionOccurred("RIGHT", Input::Held))
 	{
 		SetActorXDirection(SpriteSheet::XAxisDirection::RIGHT);
+		SetSpeed(Vector2(Math::Clamp(_speed.GetX() + 50.0f, 50.0f, 300.0f), _speed.GetY()));
 
 		if (triedDigging)
 		{
 			_isDigging = true;
-			SetSpeed(Vector2(0.0f, 0.0f));
 			_sprites[_currentSpriteSheet]->Stop();
 			_currentSpriteSheet = "sideDig";
 			_sprites[_currentSpriteSheet]->Start();
 		}
-		else
+		else if (_currentSpriteSheet != "walk")
 		{
-			SetSpeed(Vector2(Math::Clamp(_speed.GetX() + 50.0f, 50.0f, 300.0f), _speed.GetY()));
-
-			if (_currentSpriteSheet != "walk")
-			{
-				_sprites[_currentSpriteSheet]->Stop();
-				_currentSpriteSheet = "walk";
-				_sprites[_currentSpriteSheet]->Start();
-			}
+			_sprites[_currentSpriteSheet]->Stop();
+			_currentSpriteSheet = "walk";
+			_sprites[_currentSpriteSheet]->Start();
 		}
 	}
 	else
@@ -198,7 +214,6 @@ void PlayerActor::UpdateInput()
 		if (triedDigging)
 		{
 			_isDigging = true;
-			SetSpeed(Vector2(0.0f, 0.0f));
 			SetActorYDirection(SpriteSheet::YAxisDirection::UP);
 			_sprites[_currentSpriteSheet]->Stop();
 			_currentSpriteSheet = "verticalDig";
@@ -211,15 +226,15 @@ void PlayerActor::UpdateInput()
 		{
 			_isDigging = true;
 			SetActorYDirection(SpriteSheet::YAxisDirection::DOWN);
-			SetSpeed(Vector2(0.0f, 0.0f));
 			_sprites[_currentSpriteSheet]->Stop();
 			_currentSpriteSheet = "verticalDig";
 			_sprites[_currentSpriteSheet]->Start();
 		}
 	}
-	else if (_mgr->inputManager->ActionOccurred("JUMP", Input::Pressed))
+	else if (_mgr->inputManager->ActionOccurred("JUMP", Input::Pressed) && _wasOnGround)
 	{
 		// jump 12 tiles tall of 1 metre each, at 64 pixels per metre, multiplied by -1 because positive moves down in our world
+		_jumped = true;
 		SetJumpVelocity(12.0f * 1.0f * 64.0f * -1.0f);
 		SetMaximumJumpVelocity(12.0f * 1.0f * 64.0f * -1.0f);
 	}
@@ -230,7 +245,7 @@ void PlayerActor::UpdateInput()
 		//_speed.SetY(0);
 	}
 
-	SetSpeed(Vector2(_speed.GetX(), GetJumpVelocity()));
+	//SetSpeed(Vector2(_speed.GetX(), GetJumpVelocity()));
 }
 
 void PlayerActor::UpdatePosition(double elapsedSecs)

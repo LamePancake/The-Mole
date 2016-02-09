@@ -113,6 +113,14 @@ private:
 	void UpdateCollisions(double elapsedSecs);
 
 	/**
+	 * @brief	Stops any jump in progress.
+	 *
+	 * @author	Shane
+	 * @date	2/8/2016
+	 */
+	void StopJumping();
+
+	/**
 	 * @brief	Handles collisions with tiles.
 	 *
 	 * @author	Shane
@@ -125,7 +133,9 @@ private:
 	float _maxJumpVel;
 	char _digDir[2];
 	bool _jumped;
-
+	double _jumpDuration;
+	double _jumpTimeElapsed;
+	bool _wasOnGround; // Tracks whether the player was on the ground in the previous frame
 	SpriteSheet::XAxisDirection _prevDirection;
 
 	bool _isDigging;
