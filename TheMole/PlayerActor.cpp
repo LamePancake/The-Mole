@@ -58,7 +58,10 @@ void PlayerActor::Update(double elapsedSecs)
 		}
 	}
 
-	UpdateCollisions(elapsedSecs);
+	if (!_godMode)
+	{
+		UpdateCollisions(elapsedSecs);
+	}
 }
 
 void PlayerActor::UpdateCollisions(double elapsedSecs)
