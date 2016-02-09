@@ -250,7 +250,7 @@ void PlayerActor::UpdateInput()
 	{
 		// jump 8 tiles tall of 1 metre each, at 64 pixels per metre, multiplied by -1 because positive moves down in our world
 		_jumped = true;
-		SetJumpVelocity(6.0f * 1.0f * 64.0f * -1.0f);
+		SetJumpVelocity(7.5f * 1.0f * 64.0f * -1.0f);
 		//SetMaximumJumpVelocity(3.0f * 1.0f * 64.0f * -1.0f);
 	}
 	else if(_mgr->inputManager->ActionOccurred("GODMODE", Input::Pressed))
