@@ -58,7 +58,7 @@
 					sprites["walk"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_walk_56x56.png", 8, 1);
 					sprites["idle"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_idle_56x56.png", 4, 0.8);
 
-					player = std::make_shared<PlayerActor>(tile->GetWorldPosition(), gameManager, Vector2(0.0f, 341.3f), sprites, "idle");
+					player = std::make_shared<PlayerActor>(tile->GetWorldPosition(), gameManager, Vector2(.0f, 341.3f), sprites, "idle");
 					tile->SetID(Tile::blank);
 				}
 				break;

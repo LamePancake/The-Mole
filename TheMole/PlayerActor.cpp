@@ -20,13 +20,13 @@ void PlayerActor::Draw(Camera& camera)
 void PlayerActor::Update(double elapsedSecs)
 {
 	Actor::Update(elapsedSecs);
-	if (_jumped)
+	if (!_jumped)
 	{
 		_jumpVelocity += -9.8 * 64 * elapsedSecs * -1.0f;
-		if (_jumpVelocity >= _maxJumpVel)
-		{
-			StopJumping();
-		}
+	}
+	if (_jumpVelocity <= _maxJumpVel)
+	{
+		StopJumping();
 	}
 
 	// Check whether we're finished digging and update sprites accordingly
@@ -89,7 +89,7 @@ void PlayerActor::UpdateCollisions(double elapsedSecs)
 void PlayerActor::StopJumping()
 {
 	_jumped = false;
-	_speed.SetY(-_maxJumpVel);
+	//_speed.SetY(-_maxJumpVel);
 	_jumpTimeElapsed = 0;
 }
 
@@ -233,10 +233,10 @@ void PlayerActor::UpdateInput()
 	}
 	else if (_mgr->inputManager->ActionOccurred("JUMP", Input::Pressed) && _wasOnGround)
 	{
-		// jump 12 tiles tall of 1 metre each, at 64 pixels per metre, multiplied by -1 because positive moves down in our world
+		// jump 8 tiles tall of 1 metre each, at 64 pixels per metre, multiplied by -1 because positive moves down in our world
 		_jumped = true;
-		SetJumpVelocity(12.0f * 1.0f * 64.0f * -1.0f);
-		SetMaximumJumpVelocity(12.0f * 1.0f * 64.0f * -1.0f);
+		SetJumpVelocity(8.0f * 1.0f * 64.0f * -1.0f);
+		SetMaximumJumpVelocity(8.0f * 1.0f * 64.0f * -1.0f);
 	}
 	else
 	{
@@ -245,7 +245,8 @@ void PlayerActor::UpdateInput()
 		//_speed.SetY(0);
 	}
 
-	//SetSpeed(Vector2(_speed.GetX(), GetJumpVelocity()));
+	//COMMENT OUT THIS LINE TO DISABLE JUMP
+	SetSpeed(Vector2(_speed.GetX(), GetJumpVelocity()));
 }
 
 void PlayerActor::UpdatePosition(double elapsedSecs)
