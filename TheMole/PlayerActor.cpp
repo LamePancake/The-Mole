@@ -20,14 +20,16 @@ void PlayerActor::Draw(Camera& camera)
 void PlayerActor::Update(double elapsedSecs)
 {
 	Actor::Update(elapsedSecs);
+	_jumpVelocity = Math::Clamp(_jumpVelocity, -_maxJumpVel, _maxJumpVel);
 	if (!_jumped)
 	{
-		_jumpVelocity += -9.8 * 64 * elapsedSecs * -1.0f;
+		_jumpVelocity += -9.8 * 64 * elapsedSecs * -1.0f;//-9.8 * 64 * elapsedSecs * -1.0f;
 	}
 	if (_jumpVelocity <= _maxJumpVel)
 	{
 		StopJumping();
 	}
+
 
 	// Check whether we're finished digging and update sprites accordingly
 	if (!_sprites[_currentSpriteSheet]->IsAnimating() && _isDigging)
@@ -248,8 +250,8 @@ void PlayerActor::UpdateInput()
 	{
 		// jump 8 tiles tall of 1 metre each, at 64 pixels per metre, multiplied by -1 because positive moves down in our world
 		_jumped = true;
-		SetJumpVelocity(8.0f * 1.0f * 64.0f * -1.0f);
-		SetMaximumJumpVelocity(8.0f * 1.0f * 64.0f * -1.0f);
+		SetJumpVelocity(6.0f * 1.0f * 64.0f * -1.0f);
+		//SetMaximumJumpVelocity(3.0f * 1.0f * 64.0f * -1.0f);
 	}
 	else if(_mgr->inputManager->ActionOccurred("GODMODE", Input::Pressed))
 	{
