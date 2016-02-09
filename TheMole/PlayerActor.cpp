@@ -158,7 +158,7 @@ void PlayerActor::UpdateInput()
 {
 	if (_isDigging) return;
 
-	bool triedDigging = _mgr->inputManager->ActionOccurred("DIG", Input::Held);
+	bool triedDigging = _mgr->inputManager->ActionOccurred("DIG", Input::Pressed);
 
 	if (_mgr->inputManager->ActionOccurred("LEFT", Input::Held))
 	{
