@@ -1,9 +1,9 @@
 #include "Actor.h"
 #include "GameScreen.h"
 
-Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
+Actor::Actor(SDL2pp::Point position, GameManager & manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
 			const std::string&& startSprite, SpriteSheet::XAxisDirection startXDirection, SpriteSheet::YAxisDirection startYDirection)
-	:_position(position), _mgr(&manager), _speed(spd), _gameScreen(std::dynamic_pointer_cast<GameScreen>(manager.GetCurrentScreen())), _isVisible(true)
+	:_curKinematic{ position, spd }, _prevKinematic{ position, spd }, _mgr(&manager), _gameScreen(std::dynamic_pointer_cast<GameScreen>(manager.GetCurrentScreen())), _isVisible(true)
 {
 	_health = 100;
 	
@@ -36,14 +36,14 @@ std::shared_ptr<SpriteSheet> Actor::GetTextureShadow()
 	return _sprites[_currentSpriteSheet];
 }
 
-Vector2 Actor::GetPosition()
+SDL2pp::Point Actor::GetPosition()
 {
-	return _position;
+	return _curKinematic.position;
 }
 
 Vector2 Actor::GetSpeed()
 {
-	return _speed;
+	return _curKinematic.velocity;
 }
 
 size_t Actor::GetHealth()
@@ -53,7 +53,7 @@ size_t Actor::GetHealth()
 
 void Actor::SetSpeed(Vector2 spd)
 {
-	_speed = spd;
+	_curKinematic.velocity = spd;
 }
 
 void Actor::SetHealth(size_t health)
@@ -61,9 +61,9 @@ void Actor::SetHealth(size_t health)
 	_health = health;
 }
 
-void Actor::SetPosition(Vector2 pos)
+void Actor::SetPosition(SDL2pp::Point pos)
 {
-	_position = pos;
+	_curKinematic.position = pos;
 }
 
 SpriteSheet::XAxisDirection Actor::GetActorXDirection() const
@@ -114,9 +114,6 @@ void Actor::Draw(Camera& camera)
 	int offsetY = 0;
 
 	SDL2pp::Renderer& rend = _mgr->GetRenderer();
-	SDL2pp::Point tempPoint;
-
-	tempPoint = { (int)_position.GetX(), (int)_position.GetY() };
 
 	std::shared_ptr<SpriteSheet> spriteSheet = _sprites[_currentSpriteSheet];
 	SDL_Texture* rawTexture = spriteSheet->GetTexture().Get();
@@ -124,109 +121,64 @@ void Actor::Draw(Camera& camera)
 	// Draw shadow first, so we need to adjust drawing parameters
 	SDL_SetTextureColorMod(rawTexture, 127, 127, 127);
 	SDL_SetTextureAlphaMod(rawTexture, 127);
-	spriteSheet->Draw(tempPoint + SDL2pp::Point(offsetX - viewport.x, offsetY - viewport.y), _spriteXDir, _spriteYDir);
+	spriteSheet->Draw(_curKinematic.position + SDL2pp::Point(offsetX - viewport.x, offsetY - viewport.y), _spriteXDir, _spriteYDir);
 
 	SDL_SetTextureColorMod(rawTexture, 255, 255, 255);
 	SDL_SetTextureAlphaMod(rawTexture, 255);
-	spriteSheet->Draw(tempPoint + SDL2pp::Point(-viewport.x, -viewport.y), _spriteXDir, _spriteYDir);
+	spriteSheet->Draw(_curKinematic.position + SDL2pp::Point(-viewport.x, -viewport.y), _spriteXDir, _spriteYDir);
 }
 
-void Actor::DetectTileCollisions(Edge & rowEdge, Edge & colEdge, int & rowPenetration, int & colPenetration, 
+void Actor::DetectTileCollisions(Edge & rowEdge, Edge & colEdge, int & rowPenetration, int & colPenetration,
 	std::vector<std::shared_ptr<Tile>>& rowIntersect, std::vector<std::shared_ptr<Tile>>& colIntersect, std::shared_ptr<Level>& level)
 {
 	int tileWidth = level->GetTileWidth();
 	int tileHeight = level->GetTileHeight();
 
-	// Calculate the actor's bounds
-	// Note that this should use the AABB, but it's reporting incorrect positions currently
-	double rightBound = ceil(_position.GetX() + _sprites[_currentSpriteSheet]->GetFrameWidth());
-	double leftBound = floor(_position.GetX());
-	double topBound = floor(_position.GetY());
-	double bottomBound = ceil(_position.GetY() + _sprites[_currentSpriteSheet]->GetFrameHeight());
+	Bounds curBounds;
+	Bounds prevBounds;
 
-	// Determine which tiles we intersect
-	// If the bottom or right is exactly flush, we subtract one so that we don't test against tiles in the next row/column
-	int topRow = (int)floor(topBound / tileHeight);
-	int bottomRow = (int)floor(bottomBound / tileHeight) - ((int)bottomBound % tileHeight == 0 ? 1 : 0);
-	int leftCol = (int)floor(leftBound / tileWidth);
-	int rightCol = (int)floor(rightBound / tileWidth) - ((int)rightBound % tileWidth == 0 ? 1 : 0);
+	GetBounds(_curKinematic, curBounds);
+	GetBounds(_prevKinematic, prevBounds);
 
-	double xVel = _speed.GetX();
-	if (xVel)
+	colEdge = Edge::NONE;
+	rowEdge = Edge::NONE;
+
+	// Only check things that have changed
+	if (curBounds.leftCol != prevBounds.leftCol)
 	{
-		colEdge = xVel > 0 ? Edge::RIGHT : Edge::LEFT;
 
-		// If we're moving right, we need to test x + width; if we're moving left, we need to test x
-		int testSideX = xVel > 0 ? (int)rightBound : (int)leftBound;
-
-		// Determine by how much we're intersecting (left edge must be adjusted since we want the distance from the tile's right side)
-		colPenetration = testSideX % tileWidth;
-		if (colEdge == Edge::LEFT) colPenetration = level->GetTileWidth() - colPenetration;
-
-		int col = testSideX / tileWidth;
-		level->GetTileRange(topRow, bottomRow + 1, col, col + 1, colIntersect);
 	}
-	else
+	if (curBounds.rightCol != prevBounds.rightCol)
 	{
-		colEdge = Edge::NONE;
+
 	}
 
-	double yVel = _speed.GetY();
-	if (yVel)
+	if (curBounds.topRow != prevBounds.topRow)
 	{
-		rowEdge = yVel > 0 ? Edge::BOTTOM : Edge::TOP;
 
-		// If we're moving right, we need to test y + height; if we're moving left, we need to test y
-		int testSideY = yVel > 0 ? (int)ceil(bottomBound) : (int)floor(topBound);
-
-		// Determine by how much we're intersecting (top edge must be adjusted since we want the distance from the tile's bottom side)
-		rowPenetration = testSideY % tileHeight;
-		if (rowEdge == Edge::TOP) rowPenetration = level->GetTileHeight() - rowPenetration;
-
-		int row = testSideY / tileHeight;
-		level->GetTileRange(row, row + 1, leftCol, rightCol + 1, rowIntersect);
 	}
-	else
+	if (curBounds.bottomRow != prevBounds.bottomRow)
 	{
-		rowEdge = Edge::NONE;
-	}
 
-	if (rowEdge != Edge::NONE && colEdge != Edge::NONE)
-	{
-		int pruneRow = rowIntersect[0]->GetIndices().y;
-		int pruneCol = colIntersect[0]->GetIndices().x;
-
-		// The tile common to both ranges
-		std::shared_ptr<Tile> cornerTile = level->GetTileFromLevel(pruneCol, pruneRow);
-
-		if (cornerTile->GetID() != Tile::blank)
-		{
-			// Try to find a tile that's not blank in one of the ranges so that we can prune the common tile from the other one
-			// If neither is blank, we'll choose a row or column appropriately
-			const auto nonCornerSolidTileFinder = [cornerTile](std::shared_ptr<Tile>& tile) {return tile->GetID() != Tile::blank && tile != cornerTile; };
-			if (std::find_if(rowIntersect.begin(), rowIntersect.end(), nonCornerSolidTileFinder) != rowIntersect.end())
-			{
-				colIntersect.erase(remove(colIntersect.begin(), colIntersect.end() - 1, cornerTile));
-			}
-			else if (std::find_if(colIntersect.begin(), colIntersect.end(), nonCornerSolidTileFinder) != colIntersect.end())
-			{
-				rowIntersect.erase(remove(rowIntersect.begin(), rowIntersect.end() - 1, cornerTile));
-			}
-			else
-			{
-				// Use the side that's least penetrated as the one that pushes us out
-				// We'll prefer the side (parallel to the y-axis) tiles for tie breakers because it will probably look more realistic thanks to gravity... maybe
-				// (we can change this later for visual effects if necessary)
-				if (colPenetration <= rowPenetration)
-				{
-					rowIntersect.erase(remove(rowIntersect.begin(), rowIntersect.end() - 1, cornerTile));
-				}
-				else
-				{
-					colIntersect.erase(remove(colIntersect.begin(), colIntersect.end() - 1, cornerTile));
-				}
-			}
-		}
 	}
 }
 
+void Actor::GetBounds(const KinematicState & state, Bounds & bounds)
+{
+	int tileWidth = _gameScreen->GetLevel()->GetTileWidth();
+	int tileHeight = _gameScreen->GetLevel()->GetTileHeight();
+
+	// Calculate the actor's bounds
+	// Note that this should use the AABB, but it's reporting incorrect positions currently
+	bounds.rightBound = state.position.x + _sprites[_currentSpriteSheet]->GetFrameWidth();
+	bounds.leftBound = state.position.x;
+	bounds.topBound = state.position.y;
+	bounds.bottomBound = state.position.y + _sprites[_currentSpriteSheet]->GetFrameHeight();
+
+	// Determine which tiles we intersect
+	// If the bottom or right is exactly flush, we subtract one so that we don't test against tiles in the next row/column
+	bounds.topRow = (int)floor(bounds.topBound / tileHeight);
+	bounds.bottomRow = (int)floor(bounds.bottomBound / tileHeight) - ((int)bounds.bottomBound % tileHeight == 0 ? 1 : 0);
+	bounds.leftCol = (int)floor(bounds.leftBound / tileWidth);
+	bounds.rightCol = (int)floor(bounds.rightBound / tileWidth) - ((int)bounds.rightBound % tileWidth == 0 ? 1 : 0);
+}

@@ -18,6 +18,24 @@ class Actor
 {
 public:
 
+   /**
+	* Contains the actor's current kinematic properties (position, velocity, rotation and angular speed in radians).
+	*/
+	struct KinematicState
+	{
+		KinematicState()
+			: position(0, 0), velocity(0, 0), rotation(0), angular(0) {}
+
+		KinematicState(SDL2pp::Point startPos, Vector2 startVel, float startRot = 0.f, float startAng = 0.f)
+			: position(startPos), velocity(startVel), rotation(startRot), angular(startAng) {}
+
+		SDL2pp::Point position;
+		Vector2 velocity;
+
+		float rotation;
+		float angular;
+	};
+
 	/**
 	 * Creates a new Actor, which has a position and the potential to be drawn in the game world.
 	 *
@@ -29,17 +47,17 @@ public:
 	 * @param	startXDirection	The direction in the x axis which the actor will face at the start.
 	 * @param	startYDirection	The direction in the y axis which the actor will face at the start.
 	 */
-	Actor(Vector2 position, GameManager & manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites, const std::string&& startSprite,
+	Actor(SDL2pp::Point position, GameManager & manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites, const std::string&& startSprite,
 			SpriteSheet::XAxisDirection startXDirection, SpriteSheet::YAxisDirection startYDirection);
 
 	/** Destructor. */
 	~Actor();
 
-	/**
+   /**
 	* Return AABB of the agent
 	*
 	* @return _aabb
-	**/
+	*/
 	AABB GetAABB();
 
 	/**
@@ -57,7 +75,7 @@ public:
 	std::shared_ptr<SpriteSheet> GetTextureShadow();
 
 	// Returns position of the agent.
-	Vector2 GetPosition();
+	SDL2pp::Point GetPosition();
 
 	/**
 	 * Gets the speed.
@@ -92,7 +110,7 @@ public:
 	 *
 	 * @param	pos	The position.
 	 */
-	void SetPosition(Vector2 pos);
+	void SetPosition(SDL2pp::Point pos);
 
 	/**
 	 * Gets actor direction.
@@ -170,14 +188,20 @@ protected:
 		NONE
 	} Edge;
 
+	// TEMPORARY struct to hold actor bounds while I figure out something more elegant (it's probably going to stay forever though)
+	struct Bounds {
+		double rightBound, leftBound, topBound, bottomBound;
+		int rightCol, leftCol, topRow, bottomRow;
+	};
+
 	/** The health. */
 	size_t _health;
 
-	/** The speed. */
-	Vector2 _speed;
+	/** The actor's current kinematic state. */
+	KinematicState _curKinematic;
 
-	/** The position. */
-	Vector2 _position;
+	/** The actor's kinematic state in the last update.*/
+	KinematicState _prevKinematic;
 
 	/** The aabb. */
 	AABB _aabb;
@@ -221,6 +245,17 @@ protected:
 	 */
 	void DetectTileCollisions(Edge & rowEdge, Edge & colEdge, int & rowPenetration, int & colPenetration,
 		std::vector<std::shared_ptr<Tile>>& rowIntersect, std::vector<std::shared_ptr<Tile>>& colIntersect, std::shared_ptr<Level>& level);
+
+	/**
+	 * @brief	Determines the actor's bounding box and which tiles they intersect at the given kinematic state.
+	 *
+	 * @author	Shane
+	 * @date	2/5/2016
+	 *
+ 	 * @param state				A KinematicState object specifying the state of the actor for which to calculate the bounds.
+	 * @param [in,out]	bounds	A Bounds struct to hold calculated bounds.
+	 */
+	void GetBounds(const KinematicState & state, Bounds & bounds);
 };
 
 #endif
