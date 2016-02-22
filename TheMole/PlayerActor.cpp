@@ -1,7 +1,7 @@
 #include "PlayerActor.h"
 #include "GameScreen.h"
 
-PlayerActor::PlayerActor(SDL2pp::Point position, GameManager& manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
+PlayerActor::PlayerActor(Vector2 position, GameManager& manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
 	const std::string&& startSprite, SpriteSheet::XAxisDirection startXDir, SpriteSheet::YAxisDirection startYDir)
 	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDir, startYDir), _prevDirection(startXDir), _atGoal(false), _jumpVelocity(0), _maxJumpVel(400),
 	_digDir{' ' , ' '}, _jumped(false), _isDigging(false), _jumpDuration(0.75), _jumpTimeElapsed(0), _godMode(false)
@@ -61,6 +61,7 @@ void PlayerActor::Update(double elapsedSecs)
 	}
 
 	UpdateCollisions(elapsedSecs);
+    _prevKinematic = _curKinematic;
 }
 
 void PlayerActor::UpdateCollisions(double elapsedSecs)
@@ -75,7 +76,7 @@ void PlayerActor::UpdateCollisions(double elapsedSecs)
 
 	if (rowEdge != Edge::NONE)
 	{
-		float correctedYPos = _curKinematic.position.y;
+		float correctedYPos = _curKinematic.position.GetY();
 		if (rowEdge == Edge::BOTTOM) correctedYPos -= rowPenetration;
 		else if (rowEdge == Edge::TOP) correctedYPos += rowPenetration;
 		DefaultTileCollisionHandler(rowIntersection, rowEdge, correctedYPos);
@@ -83,7 +84,7 @@ void PlayerActor::UpdateCollisions(double elapsedSecs)
 
 	if (colEdge != Edge::NONE)
 	{
-		float correctedXPos = _curKinematic.position.x;
+		float correctedXPos = _curKinematic.position.GetX();
 		if (colEdge == Edge::RIGHT) correctedXPos -= colPenetration;
 		else if (colEdge == Edge::LEFT) correctedXPos += colPenetration;
 		DefaultTileCollisionHandler(colIntersection, colEdge, correctedXPos);
@@ -131,10 +132,10 @@ void PlayerActor::DefaultTileCollisionHandler(std::vector<std::shared_ptr<Tile>>
 				}
 				else
 				{
-					if(isXDirection) _curKinematic.position.x = correctedPos;
+					if(isXDirection) _curKinematic.position.SetX(correctedPos);
 					else
 					{
-						_curKinematic.position.y = correctedPos;
+						_curKinematic.position.SetY(correctedPos);
 						if (edge == Edge::BOTTOM) _wasOnGround = true;
 						if (_jumped) StopJumping();
 					}
@@ -147,10 +148,10 @@ void PlayerActor::DefaultTileCollisionHandler(std::vector<std::shared_ptr<Tile>>
 				_health = 0;
 				break;
 			default:
-				if (isXDirection) _curKinematic.position.x = correctedPos;
+				if (isXDirection) _curKinematic.position.SetX(correctedPos);
 				else
 				{
-					_curKinematic.position.y = correctedPos; 
+					_curKinematic.position.SetY(correctedPos); 
 					if (edge == Edge::BOTTOM) _wasOnGround = true;
 					if (_jumped) StopJumping();
 				}
@@ -269,12 +270,12 @@ void PlayerActor::UpdateInput()
 void PlayerActor::UpdatePosition(double elapsedSecs)
 {
 	const std::shared_ptr<Level> level = _gameScreen->GetLevel();
-	_curKinematic.position.x = Math::Clamp(_curKinematic.position.x + _curKinematic.velocity.GetX() * (float)elapsedSecs, 
+	_curKinematic.position.SetX(Math::Clamp((float)_curKinematic.position.GetX() + _curKinematic.velocity.GetX() * (float)elapsedSecs, 
                                             0, 
-                                            level->GetLevelSize().x * level->GetTileWidth() - _sprites[_currentSpriteSheet]->GetFrameWidth());
-	_curKinematic.position.y = Math::Clamp(_curKinematic.position.y + _curKinematic.velocity.GetY() * (float)elapsedSecs, 
+                                            level->GetLevelSize().x * level->GetTileWidth() - _sprites[_currentSpriteSheet]->GetFrameWidth()));
+	_curKinematic.position.SetY(Math::Clamp((float)_curKinematic.position.GetY() + _curKinematic.velocity.GetY() * (float)elapsedSecs, 
                                             0,
-                                            level->GetLevelSize().y * level->GetTileHeight() - _sprites[_currentSpriteSheet]->GetFrameHeight());
+                                            level->GetLevelSize().y * level->GetTileHeight() - _sprites[_currentSpriteSheet]->GetFrameHeight()));
 }
 
 bool PlayerActor::CollisionCheck(Actor & otherAI)

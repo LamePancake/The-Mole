@@ -22,8 +22,9 @@ void AIActor::Update(double elapsedSecs)
 		UpdatePosition(elapsedSecs);
 		ScanNeighbouringTiles(_gameScreen->GetLevel());
 	}
+    _prevKinematic = _curKinematic;
 }
-;
+
 void AIActor::UpdatePosition(double elapsedSecs)
 {
 	// Copy everything over so that we can use this in collision detection stuff later
@@ -31,8 +32,8 @@ void AIActor::UpdatePosition(double elapsedSecs)
 
 	Actor::UpdatePosition(elapsedSecs);
 
-	_curKinematic.position.x += _curKinematic.velocity.GetX() * elapsedSecs;
-	_curKinematic.position.y += _curKinematic.velocity.GetY() * elapsedSecs;
+	_curKinematic.position.SetX(_curKinematic.position.GetX() + _curKinematic.velocity.GetX() * elapsedSecs);
+	_curKinematic.position.SetY(_curKinematic.position.GetY() + _curKinematic.velocity.GetY() * elapsedSecs);
 }
 
 bool AIActor::CollisionCheck(Actor &otherActor)
@@ -50,7 +51,7 @@ void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level>& level)
 
 	if (rowEdge != Edge::NONE)
 	{
-		float correctedYPos = _curKinematic.position.y;
+		float correctedYPos = _curKinematic.position.GetY();
 		if (rowEdge == Edge::BOTTOM) correctedYPos -= rowPenetration;
 		else if (rowEdge == Edge::TOP) correctedYPos += rowPenetration;
 
@@ -63,7 +64,7 @@ void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level>& level)
 			case Tile::spike:
 				_health = 0;
 			default:
-				_curKinematic.position.y = correctedYPos;
+				_curKinematic.position.SetY(correctedYPos);
 				break;
 			}
 		}
@@ -71,7 +72,7 @@ void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level>& level)
 	
 	if (colEdge != Edge::NONE)
 	{
-		float correctedXPos = _curKinematic.position.x;
+		float correctedXPos = _curKinematic.position.GetX();
 		if (colEdge == Edge::RIGHT) correctedXPos -= colPenetration;
 		else if (colEdge == Edge::LEFT) correctedXPos += colPenetration;
 
@@ -86,7 +87,8 @@ void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level>& level)
 			case Tile::spike:
 				_health = 0;
 			default:
-				_curKinematic.position.x = correctedXPos;
+                if (colPenetration == 0) continue;
+				_curKinematic.position.SetX(correctedXPos);
 				_curKinematic.velocity.SetX(reverseX);
 				_spriteXDir = reverseDir;
 				break;

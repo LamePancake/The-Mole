@@ -6,7 +6,7 @@
 using namespace SDL2pp;
 
 int DenLevelScreen::Load() {
-	GameScreen::Load(".\\Assets\\Levels\\test_level.txt", ".\\Assets\\Textures\\den_bg.png");
+	GameScreen::Load(".\\Assets\\Levels\\den_level.txt", ".\\Assets\\Textures\\den_bg.png");
 
 	return SCREEN_LOAD_SUCCESS;
 }

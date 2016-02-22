@@ -19,7 +19,7 @@ public:
 	* @param	startXDirection	The actor's default facing direction along the x axis.
 	* @param	startYDirection	The actor's default facing direction along the y axis.
 	*/
-	NPCActor(SDL2pp::Point position, GameManager & manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites, const std::string&& startSprite,
+	NPCActor(Vector2 position, GameManager & manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites, const std::string&& startSprite,
 		SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP)
 		: Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection) {}
 

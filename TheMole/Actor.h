@@ -26,10 +26,10 @@ public:
 		KinematicState()
 			: position(0, 0), velocity(0, 0), rotation(0), angular(0) {}
 
-		KinematicState(SDL2pp::Point startPos, Vector2 startVel, float startRot = 0.f, float startAng = 0.f)
+		KinematicState(Vector2 startPos, Vector2 startVel, float startRot = 0.f, float startAng = 0.f)
 			: position(startPos), velocity(startVel), rotation(startRot), angular(startAng) {}
 
-		SDL2pp::Point position;
+        Vector2 position;
 		Vector2 velocity;
 
 		float rotation;
@@ -47,7 +47,7 @@ public:
 	 * @param	startXDirection	The direction in the x axis which the actor will face at the start.
 	 * @param	startYDirection	The direction in the y axis which the actor will face at the start.
 	 */
-	Actor(SDL2pp::Point position, GameManager & manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites, const std::string&& startSprite,
+	Actor(Vector2 position, GameManager & manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites, const std::string&& startSprite,
 			SpriteSheet::XAxisDirection startXDirection, SpriteSheet::YAxisDirection startYDirection);
 
 	/** Destructor. */
@@ -75,7 +75,7 @@ public:
 	std::shared_ptr<SpriteSheet> GetTextureShadow();
 
 	// Returns position of the agent.
-	SDL2pp::Point GetPosition();
+    Vector2 GetPosition();
 
 	/**
 	 * Gets the speed.
@@ -110,7 +110,7 @@ public:
 	 *
 	 * @param	pos	The position.
 	 */
-	void SetPosition(SDL2pp::Point pos);
+	void SetPosition(Vector2 pos);
 
 	/**
 	 * Gets actor direction.

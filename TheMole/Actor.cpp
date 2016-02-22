@@ -1,7 +1,7 @@
 #include "Actor.h"
 #include "GameScreen.h"
 
-Actor::Actor(SDL2pp::Point position, GameManager & manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
+Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
 			const std::string&& startSprite, SpriteSheet::XAxisDirection startXDirection, SpriteSheet::YAxisDirection startYDirection)
 	:_curKinematic{ position, spd }, _prevKinematic{ position, spd }, _mgr(&manager), _gameScreen(std::dynamic_pointer_cast<GameScreen>(manager.GetCurrentScreen())), _isVisible(true)
 {
@@ -36,7 +36,7 @@ std::shared_ptr<SpriteSheet> Actor::GetTextureShadow()
 	return _sprites[_currentSpriteSheet];
 }
 
-SDL2pp::Point Actor::GetPosition()
+Vector2 Actor::GetPosition()
 {
 	return _curKinematic.position;
 }
@@ -61,7 +61,7 @@ void Actor::SetHealth(size_t health)
 	_health = health;
 }
 
-void Actor::SetPosition(SDL2pp::Point pos)
+void Actor::SetPosition(Vector2 pos)
 {
 	_curKinematic.position = pos;
 }
@@ -117,15 +117,16 @@ void Actor::Draw(Camera& camera)
 
 	std::shared_ptr<SpriteSheet> spriteSheet = _sprites[_currentSpriteSheet];
 	SDL_Texture* rawTexture = spriteSheet->GetTexture().Get();
+    SDL2pp::Point tempPoint = SDL2pp::Point(_curKinematic.position.GetX(), _curKinematic.position.GetY());
 
 	// Draw shadow first, so we need to adjust drawing parameters
 	SDL_SetTextureColorMod(rawTexture, 127, 127, 127);
 	SDL_SetTextureAlphaMod(rawTexture, 127);
-	spriteSheet->Draw(_curKinematic.position + SDL2pp::Point(offsetX - viewport.x, offsetY - viewport.y), _spriteXDir, _spriteYDir);
+	spriteSheet->Draw(tempPoint + SDL2pp::Point(offsetX - viewport.x, offsetY - viewport.y), _spriteXDir, _spriteYDir);
 
 	SDL_SetTextureColorMod(rawTexture, 255, 255, 255);
 	SDL_SetTextureAlphaMod(rawTexture, 255);
-	spriteSheet->Draw(_curKinematic.position + SDL2pp::Point(-viewport.x, -viewport.y), _spriteXDir, _spriteYDir);
+	spriteSheet->Draw(tempPoint + SDL2pp::Point(-viewport.x, -viewport.y), _spriteXDir, _spriteYDir);
 }
 
 void Actor::DetectTileCollisions(Edge & rowEdge, Edge & colEdge, int & rowPenetration, int & colPenetration,
@@ -162,14 +163,14 @@ void Actor::DetectTileCollisions(Edge & rowEdge, Edge & colEdge, int & rowPenetr
             curCol = curBounds.rightCol;
             prevCol = prevBounds.rightCol;
             std::shared_ptr<Tile> tile = level->GetTileFromLevel(curCol, 0);
-            actualColPenetration = (int)(curBounds.rightBound - tile->GetWorldPosition().GetX());
+            actualColPenetration = (int)ceil((curBounds.rightBound - tile->GetWorldPosition().GetX()));
         }
         else
         {
             curCol = curBounds.leftCol;
             prevCol = prevBounds.leftCol;
             std::shared_ptr<Tile> tile = level->GetTileFromLevel(curCol, 0);
-            actualColPenetration = (int)(tile->GetWorldPosition().GetX() + tileWidth - curBounds.leftBound);
+            actualColPenetration = (int)ceil((tile->GetWorldPosition().GetX() + tileWidth - curBounds.leftBound));
         }
 
         level->GetTileRange(curBounds.topRow, curBounds.bottomRow + 1, curCol, curCol + 1, colIntersect);
@@ -180,13 +181,13 @@ void Actor::DetectTileCollisions(Edge & rowEdge, Edge & colEdge, int & rowPenetr
         {
             curRow = curBounds.topRow;
             prevRow = prevBounds.topRow;
-            actualRowPenetration = (int)(level->GetTileFromLevel(0, curRow)->GetWorldPosition().GetY() + tileHeight - curBounds.topBound);
+            actualRowPenetration = (int)ceil((level->GetTileFromLevel(0, curRow)->GetWorldPosition().GetY() + tileHeight - curBounds.topBound));
         }
         else
         {
             curRow = curBounds.bottomRow;
             prevRow = prevBounds.bottomRow;
-            actualRowPenetration = (int)(curBounds.bottomBound - level->GetTileFromLevel(0, curRow)->GetWorldPosition().GetY());
+            actualRowPenetration = (int)ceil((curBounds.bottomBound - level->GetTileFromLevel(0, curRow)->GetWorldPosition().GetY()));
         }
 
         level->GetTileRange(curRow, curRow + 1, curBounds.leftCol, curBounds.rightCol + 1, rowIntersect);
@@ -245,8 +246,8 @@ void Actor::DetectTileCollisions(Edge & rowEdge, Edge & colEdge, int & rowPenetr
             if (tile->GetID() != Tile::blank)
             {
                 colPenetration = colEdge == Edge::LEFT
-                    ? (int)(tile->GetWorldPosition().GetX() + tileWidth - curBounds.leftBound)
-                    : (int)(curBounds.rightBound - tile->GetWorldPosition().GetX());
+                    ? (int)ceil((tile->GetWorldPosition().GetX() + tileWidth - curBounds.leftBound))
+                    : (int)ceil((curBounds.rightBound - tile->GetWorldPosition().GetX()));
                 break;
             }
         }
@@ -262,8 +263,8 @@ void Actor::DetectTileCollisions(Edge & rowEdge, Edge & colEdge, int & rowPenetr
             if (tile->GetID() != Tile::blank)
             {
                 rowPenetration = rowEdge == Edge::TOP
-                    ? (int)(tile->GetWorldPosition().GetY() + tileHeight - curBounds.topBound)
-                    : (int)(curBounds.bottomBound - tile->GetWorldPosition().GetY());
+                    ? (int)ceil((tile->GetWorldPosition().GetY() + tileHeight - curBounds.topBound))
+                    : (int)ceil((curBounds.bottomBound - tile->GetWorldPosition().GetY()));
                 break;
             }
         }
@@ -277,15 +278,14 @@ void Actor::GetBounds(const KinematicState & state, Bounds & bounds)
 
 	// Calculate the actor's bounds
 	// Note that this should use the AABB, but it's reporting incorrect positions currently
-	bounds.rightBound = state.position.x + _sprites[_currentSpriteSheet]->GetFrameWidth();
-	bounds.leftBound = state.position.x;
-	bounds.topBound = state.position.y;
-	bounds.bottomBound = state.position.y + _sprites[_currentSpriteSheet]->GetFrameHeight();
+	bounds.rightBound = state.position.GetX() + _sprites[_currentSpriteSheet]->GetFrameWidth();
+	bounds.leftBound = state.position.GetX();
+	bounds.topBound = state.position.GetY();
+	bounds.bottomBound = state.position.GetY() + _sprites[_currentSpriteSheet]->GetFrameHeight();
 
 	// Determine which tiles we intersect
-	// If the bottom or right is exactly flush, we subtract one so that we don't test against tiles in the next row/column
-	bounds.topRow = (int)floor(bounds.topBound / tileHeight);
-	bounds.bottomRow = (int)floor(bounds.bottomBound / tileHeight) - ((int)bounds.bottomBound % tileHeight == 0 ? 1 : 0);
-	bounds.leftCol = (int)floor(bounds.leftBound / tileWidth);
-	bounds.rightCol = (int)floor(bounds.rightBound / tileWidth) - ((int)bounds.rightBound % tileWidth == 0 ? 1 : 0);
+	bounds.topRow = (int)(bounds.topBound / tileHeight);
+	bounds.bottomRow = (int)(bounds.bottomBound / tileHeight);
+	bounds.leftCol = (int)(bounds.leftBound / tileWidth);
+	bounds.rightCol = (int)(bounds.rightBound / tileWidth);
 }

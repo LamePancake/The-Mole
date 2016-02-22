@@ -41,9 +41,9 @@ void Tile::SetIndices(int x, int y)
 	_yIndex = y;
 }
 
-SDL2pp::Point Tile::GetWorldPosition()
+Vector2 Tile::GetWorldPosition()
 {
-	return SDL2pp::Point(_xIndex * _width, _yIndex * _height);
+	return Vector2(_xIndex * _width, _yIndex * _height);
 }
 
 char Tile::GetID() const
