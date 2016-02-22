@@ -117,6 +117,25 @@ void PlayerActor::DefaultTileCollisionHandler(std::vector<std::shared_ptr<Tile>>
 	// Assume we weren't on the ground until proven otherwise, but only do this when we're looking at tiles above/below us
 	if (!isXDirection) _wasOnGround = false;
 
+    // If the tile we're intersecting with or a very close one directly below it is solid, then we were on the ground
+    if (edge == Edge::BOTTOM)
+    {
+        if (correctedPos == _curKinematic.position.GetY())
+        {
+            SDL2pp::Point indices = tiles[0]->GetIndices();
+            if (indices.y < _gameScreen->GetLevel()->GetLevelSize().y)
+            {
+                std::shared_ptr<Tile> below = _gameScreen->GetLevel()->GetTileFromLevel(indices.x, indices.y + 1);
+                float bottomBound = _curKinematic.position.GetY() + _sprites[_currentSpriteSheet]->GetFrameHeight();
+                _wasOnGround = below->GetID() != Tile::blank && (below->GetWorldPosition().GetY() - bottomBound < 3);
+            }
+        }
+        else
+        {
+            _wasOnGround = true;
+        }
+    }
+
 	if (edge != Edge::NONE)
 	{
 		for (auto& tile : tiles)
@@ -136,7 +155,6 @@ void PlayerActor::DefaultTileCollisionHandler(std::vector<std::shared_ptr<Tile>>
 					else
 					{
 						_curKinematic.position.SetY(correctedPos);
-						if (edge == Edge::BOTTOM) _wasOnGround = true;
 						if (_jumped) StopJumping();
 					}
 				}
@@ -152,7 +170,6 @@ void PlayerActor::DefaultTileCollisionHandler(std::vector<std::shared_ptr<Tile>>
 				else
 				{
 					_curKinematic.position.SetY(correctedPos); 
-					if (edge == Edge::BOTTOM) _wasOnGround = true;
 					if (_jumped) StopJumping();
 				}
 				break;
@@ -247,12 +264,15 @@ void PlayerActor::UpdateInput()
 			SetSpeed(Vector2(_curKinematic.velocity.GetX(), Math::Clamp(_curKinematic.velocity.GetY() + 50.0f, 50.0f, 300.0f)));
 		}
 	}
-	else if (_mgr->inputManager->ActionOccurred("JUMP", Input::Pressed) && _wasOnGround)
+	else if (_mgr->inputManager->ActionOccurred("JUMP", Input::Pressed))
 	{
-		// jump 8 tiles tall of 1 metre each, at 64 pixels per metre, multiplied by -1 because positive moves down in our world
-		_jumped = true;
-		SetJumpVelocity(7.5f * 1.0f * 64.0f * -1.0f);
-		//SetMaximumJumpVelocity(3.0f * 1.0f * 64.0f * -1.0f);
+        if(_wasOnGround)
+        {
+		    // jump 8 tiles tall of 1 metre each, at 64 pixels per metre, multiplied by -1 because positive moves down in our world
+	    	_jumped = true;
+		    SetJumpVelocity(7.5f * 1.0f * 64.0f * -1.0f);
+		    //SetMaximumJumpVelocity(3.0f * 1.0f * 64.0f * -1.0f);
+		}
 	}
 	else if(_mgr->inputManager->ActionOccurred("GODMODE", Input::Pressed))
 	{
