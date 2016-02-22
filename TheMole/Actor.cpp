@@ -142,25 +142,99 @@ void Actor::DetectTileCollisions(Edge & rowEdge, Edge & colEdge, int & rowPenetr
 
 	colEdge = Edge::NONE;
 	rowEdge = Edge::NONE;
+    rowPenetration = 0;
+    colPenetration = 0;
 
-	// Only check things that have changed
-	if (curBounds.leftCol != prevBounds.leftCol)
+	// Only check things that have changed and in the correct direction (for now...)
+	if (_curKinematic.velocity.GetX() < 0 && curBounds.leftCol != prevBounds.leftCol)
 	{
-
+        level->GetTileRange(curBounds.topRow, curBounds.bottomRow + 1, curBounds.leftCol, curBounds.leftCol + 1, colIntersect);
+        colEdge = Edge::LEFT;
 	}
-	if (curBounds.rightCol != prevBounds.rightCol)
+	else if (_curKinematic.velocity.GetX() > 0 && curBounds.rightCol != prevBounds.rightCol)
 	{
-
+        level->GetTileRange(curBounds.topRow, curBounds.bottomRow + 1, curBounds.rightCol, curBounds.rightCol + 1, colIntersect);
+        colEdge = Edge::RIGHT;
 	}
 
-	if (curBounds.topRow != prevBounds.topRow)
+	if (_curKinematic.velocity.GetY() > 0 && curBounds.topRow != prevBounds.topRow)
 	{
-
+        level->GetTileRange(curBounds.topRow, curBounds.topRow + 1, curBounds.leftCol, curBounds.rightCol + 1, rowIntersect);
+        rowEdge = Edge::TOP;
 	}
-	if (curBounds.bottomRow != prevBounds.bottomRow)
+	else if (_curKinematic.velocity.GetY() < 0 &&  curBounds.bottomRow != prevBounds.bottomRow)
 	{
-
+        level->GetTileRange(curBounds.bottomRow, curBounds.bottomRow + 1, curBounds.leftCol, curBounds.rightCol + 1, rowIntersect);
+        rowEdge = Edge::BOTTOM;
 	}
+
+    if (!rowIntersect.empty() && !colIntersect.empty())
+    {
+        std::shared_ptr<Tile> corner = level->GetTileFromLevel(rowIntersect[0]->GetIndices().y, colIntersect[0]->GetIndices().x);
+
+        // Determine the number of blank tiles in each set of tiles
+        int blankRowTiles = 0;
+        for (auto tile : rowIntersect)
+        {
+            if (tile != corner && tile->GetID() != Tile::blank)
+                break;
+            else
+                blankRowTiles++;
+        }
+
+        int blankColTiles = 0;
+        for (auto tile : colIntersect)
+        {
+            if (tile != corner && tile->GetID() != Tile::blank)
+                break;
+            else
+                blankColTiles++;
+        }
+
+        Vector2 cornerPos = corner->GetWorldPosition();
+
+        // We've found a non-corner tile in both sets that pushes us out, so correct both
+        if (blankRowTiles < rowIntersect.size() && blankColTiles < colIntersect.size())
+        {
+            rowPenetration = _curKinematic.velocity.GetY() < 0 
+                ? (int)(curBounds.bottomBound - cornerPos.GetY())
+                : (int)(cornerPos.GetY() + tileHeight - curBounds.topBound);
+
+            colPenetration = _curKinematic.velocity.GetX() < 0
+                ? (int)(curBounds.rightBound - cornerPos.GetX())
+                : (int)(cornerPos.GetX() + tileWidth - curBounds.leftBound);
+        }
+        else if (blankColTiles < colIntersect.size())
+        {
+            colPenetration = _curKinematic.velocity.GetX() < 0
+                ? (int)(curBounds.rightBound - cornerPos.GetX())
+                : (int)(cornerPos.GetX() + tileWidth - curBounds.leftBound);
+        }
+        else if (blankRowTiles < rowIntersect.size())
+        {
+            rowPenetration = _curKinematic.velocity.GetY() < 0
+                ? (int)(curBounds.bottomBound - cornerPos.GetY())
+                : (int)(cornerPos.GetY() + tileHeight - curBounds.topBound);
+        }
+        else if (corner->GetID() != Tile::blank)
+        {
+            rowPenetration = _curKinematic.velocity.GetY() < 0
+                ? (int)(curBounds.bottomBound - cornerPos.GetY())
+                : (int)(cornerPos.GetY() + tileHeight - curBounds.topBound);
+
+            colPenetration = _curKinematic.velocity.GetX() < 0
+                ? (int)(curBounds.rightBound - cornerPos.GetX())
+                : (int)(cornerPos.GetX() + tileWidth - curBounds.leftBound);
+        }
+    }
+    else if (!rowIntersect.empty())
+    {
+        // Correct y
+    }
+    else if (!colIntersect.empty())
+    {
+        // Correct x
+    }
 }
 
 void Actor::GetBounds(const KinematicState & state, Bounds & bounds)
