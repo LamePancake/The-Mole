@@ -145,95 +145,128 @@ void Actor::DetectTileCollisions(Edge & rowEdge, Edge & colEdge, int & rowPenetr
     rowPenetration = 0;
     colPenetration = 0;
 
-	// Only check things that have changed and in the correct direction (for now...)
-	if (_curKinematic.velocity.GetX() < 0 && curBounds.leftCol != prevBounds.leftCol)
-	{
-        level->GetTileRange(curBounds.topRow, curBounds.bottomRow + 1, curBounds.leftCol, curBounds.leftCol + 1, colIntersect);
-        colEdge = Edge::LEFT;
-	}
-	else if (_curKinematic.velocity.GetX() > 0 && curBounds.rightCol != prevBounds.rightCol)
-	{
-        level->GetTileRange(curBounds.topRow, curBounds.bottomRow + 1, curBounds.rightCol, curBounds.rightCol + 1, colIntersect);
-        colEdge = Edge::RIGHT;
-	}
+    float xVel = _curKinematic.velocity.GetX();
+    float yVel = _curKinematic.velocity.GetY();
 
-	if (_curKinematic.velocity.GetY() > 0 && curBounds.topRow != prevBounds.topRow)
-	{
-        level->GetTileRange(curBounds.topRow, curBounds.topRow + 1, curBounds.leftCol, curBounds.rightCol + 1, rowIntersect);
-        rowEdge = Edge::TOP;
-	}
-	else if (_curKinematic.velocity.GetY() < 0 &&  curBounds.bottomRow != prevBounds.bottomRow)
-	{
-        level->GetTileRange(curBounds.bottomRow, curBounds.bottomRow + 1, curBounds.leftCol, curBounds.rightCol + 1, rowIntersect);
-        rowEdge = Edge::BOTTOM;
-	}
-
-    if (!rowIntersect.empty() && !colIntersect.empty())
+    if (xVel != 0 && yVel != 0)
     {
-        std::shared_ptr<Tile> corner = level->GetTileFromLevel(rowIntersect[0]->GetIndices().y, colIntersect[0]->GetIndices().x);
+        colEdge = xVel > 0 ? Edge::RIGHT : Edge::LEFT;
+        rowEdge = yVel > 0 ? Edge::BOTTOM : Edge::TOP;
 
-        // Determine the number of blank tiles in each set of tiles
-        int blankRowTiles = 0;
-        for (auto tile : rowIntersect)
+        int curCol;
+        int prevCol;
+        int actualRowPenetration;
+        int actualColPenetration;
+        if (colEdge == Edge::RIGHT)
         {
-            if (tile != corner && tile->GetID() != Tile::blank)
-                break;
-            else
-                blankRowTiles++;
+            curCol = curBounds.rightCol;
+            prevCol = prevBounds.rightCol;
+            std::shared_ptr<Tile> tile = level->GetTileFromLevel(curCol, 0);
+            actualColPenetration = (int)(curBounds.rightBound - tile->GetWorldPosition().GetX());
+        }
+        else
+        {
+            curCol = curBounds.leftCol;
+            prevCol = prevBounds.leftCol;
+            std::shared_ptr<Tile> tile = level->GetTileFromLevel(curCol, 0);
+            actualColPenetration = (int)(tile->GetWorldPosition().GetX() + tileWidth - curBounds.leftBound);
         }
 
-        int blankColTiles = 0;
+        level->GetTileRange(curBounds.topRow, curBounds.bottomRow + 1, curCol, curCol + 1, colIntersect);
+
+        int curRow;
+        int prevRow;
+        if (rowEdge == Edge::TOP)
+        {
+            curRow = curBounds.topRow;
+            prevRow = prevBounds.topRow;
+            actualRowPenetration = (int)(level->GetTileFromLevel(0, curRow)->GetWorldPosition().GetY() + tileHeight - curBounds.topBound);
+        }
+        else
+        {
+            curRow = curBounds.bottomRow;
+            prevRow = prevBounds.bottomRow;
+            actualRowPenetration = (int)(curBounds.bottomBound - level->GetTileFromLevel(0, curRow)->GetWorldPosition().GetY());
+        }
+
+        level->GetTileRange(curRow, curRow + 1, curBounds.leftCol, curBounds.rightCol + 1, rowIntersect);
+
+        std::shared_ptr<Tile> corner = level->GetTileFromLevel(curCol, curRow);
+
+        int colNonCornerBlanks = 0;
         for (auto tile : colIntersect)
         {
             if (tile != corner && tile->GetID() != Tile::blank)
+            {
+                colPenetration = actualColPenetration;
                 break;
+            }
             else
-                blankColTiles++;
+            {
+                colNonCornerBlanks++;
+            }
         }
 
-        Vector2 cornerPos = corner->GetWorldPosition();
-
-        // We've found a non-corner tile in both sets that pushes us out, so correct both
-        if (blankRowTiles < rowIntersect.size() && blankColTiles < colIntersect.size())
+        int rowNonCornerBlanks = 0;
+        for (auto tile : rowIntersect)
         {
-            rowPenetration = _curKinematic.velocity.GetY() < 0 
-                ? (int)(curBounds.bottomBound - cornerPos.GetY())
-                : (int)(cornerPos.GetY() + tileHeight - curBounds.topBound);
-
-            colPenetration = _curKinematic.velocity.GetX() < 0
-                ? (int)(curBounds.rightBound - cornerPos.GetX())
-                : (int)(cornerPos.GetX() + tileWidth - curBounds.leftBound);
+            if (tile != corner && tile->GetID() != Tile::blank)
+            {
+                rowPenetration = actualRowPenetration;
+                break;
+            }
+            else
+            {
+                rowNonCornerBlanks++;
+            }
         }
-        else if (blankColTiles < colIntersect.size())
-        {
-            colPenetration = _curKinematic.velocity.GetX() < 0
-                ? (int)(curBounds.rightBound - cornerPos.GetX())
-                : (int)(cornerPos.GetX() + tileWidth - curBounds.leftBound);
-        }
-        else if (blankRowTiles < rowIntersect.size())
-        {
-            rowPenetration = _curKinematic.velocity.GetY() < 0
-                ? (int)(curBounds.bottomBound - cornerPos.GetY())
-                : (int)(cornerPos.GetY() + tileHeight - curBounds.topBound);
-        }
-        else if (corner->GetID() != Tile::blank)
-        {
-            rowPenetration = _curKinematic.velocity.GetY() < 0
-                ? (int)(curBounds.bottomBound - cornerPos.GetY())
-                : (int)(cornerPos.GetY() + tileHeight - curBounds.topBound);
 
-            colPenetration = _curKinematic.velocity.GetX() < 0
-                ? (int)(curBounds.rightBound - cornerPos.GetX())
-                : (int)(cornerPos.GetX() + tileWidth - curBounds.leftBound);
+        if (corner->GetID() != Tile::blank && colNonCornerBlanks == colIntersect.size() && rowNonCornerBlanks == rowIntersect.size())
+        {
+            // Only correct in a direction if we weren't already there
+            if (curCol != prevCol)
+            {
+                colPenetration = actualColPenetration;
+            }
+            if (curRow != prevRow)
+            {
+                rowPenetration = actualRowPenetration;
+            }
         }
     }
-    else if (!rowIntersect.empty())
+    else if (xVel != 0)
     {
-        // Correct y
+        colEdge = xVel > 0 ? Edge::RIGHT : Edge::LEFT;
+        int col = colEdge == Edge::RIGHT ? curBounds.rightCol : curBounds.leftCol;
+        level->GetTileRange(curBounds.topRow, curBounds.bottomRow + 1, col, col + 1, colIntersect);
+
+        for (auto tile : colIntersect)
+        {
+            if (tile->GetID() != Tile::blank)
+            {
+                colPenetration = colEdge == Edge::LEFT
+                    ? (int)(tile->GetWorldPosition().GetX() + tileWidth - curBounds.leftBound)
+                    : (int)(curBounds.rightBound - tile->GetWorldPosition().GetX());
+                break;
+            }
+        }
     }
-    else if (!colIntersect.empty())
+    else if (yVel != 0)
     {
-        // Correct x
+        rowEdge = yVel > 0 ? Edge::BOTTOM : Edge::TOP;
+        int row = rowEdge == Edge::TOP ? curBounds.topRow : curBounds.bottomRow;
+        level->GetTileRange(row, row + 1, curBounds.leftCol, curBounds.rightCol + 1, rowIntersect);
+
+        for (auto tile : rowIntersect)
+        {
+            if (tile->GetID() != Tile::blank)
+            {
+                rowPenetration = rowEdge == Edge::TOP
+                    ? (int)(tile->GetWorldPosition().GetY() + tileHeight - curBounds.topBound)
+                    : (int)(curBounds.bottomBound - tile->GetWorldPosition().GetY());
+                break;
+            }
+        }
     }
 }
 

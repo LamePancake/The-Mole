@@ -1,7 +1,7 @@
 #include "PlayerActor.h"
 #include "GameScreen.h"
 
-PlayerActor::PlayerActor(Vector2 position, GameManager& manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
+PlayerActor::PlayerActor(SDL2pp::Point position, GameManager& manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
 	const std::string&& startSprite, SpriteSheet::XAxisDirection startXDir, SpriteSheet::YAxisDirection startYDir)
 	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDir, startYDir), _prevDirection(startXDir), _atGoal(false), _jumpVelocity(0), _maxJumpVel(400),
 	_digDir{' ' , ' '}, _jumped(false), _isDigging(false), _jumpDuration(0.75), _jumpTimeElapsed(0), _godMode(false)
@@ -75,7 +75,7 @@ void PlayerActor::UpdateCollisions(double elapsedSecs)
 
 	if (rowEdge != Edge::NONE)
 	{
-		float correctedYPos = _position.GetY();
+		float correctedYPos = _curKinematic.position.y;
 		if (rowEdge == Edge::BOTTOM) correctedYPos -= rowPenetration;
 		else if (rowEdge == Edge::TOP) correctedYPos += rowPenetration;
 		DefaultTileCollisionHandler(rowIntersection, rowEdge, correctedYPos);
@@ -83,7 +83,7 @@ void PlayerActor::UpdateCollisions(double elapsedSecs)
 
 	if (colEdge != Edge::NONE)
 	{
-		float correctedXPos = _position.GetX();
+		float correctedXPos = _curKinematic.position.x;
 		if (colEdge == Edge::RIGHT) correctedXPos -= colPenetration;
 		else if (colEdge == Edge::LEFT) correctedXPos += colPenetration;
 		DefaultTileCollisionHandler(colIntersection, colEdge, correctedXPos);
@@ -131,10 +131,10 @@ void PlayerActor::DefaultTileCollisionHandler(std::vector<std::shared_ptr<Tile>>
 				}
 				else
 				{
-					if(isXDirection) _position.SetX(correctedPos);
+					if(isXDirection) _curKinematic.position.x = correctedPos;
 					else
 					{
-						_position.SetY(correctedPos);
+						_curKinematic.position.y = correctedPos;
 						if (edge == Edge::BOTTOM) _wasOnGround = true;
 						if (_jumped) StopJumping();
 					}
@@ -147,10 +147,10 @@ void PlayerActor::DefaultTileCollisionHandler(std::vector<std::shared_ptr<Tile>>
 				_health = 0;
 				break;
 			default:
-				if (isXDirection) _position.SetX(correctedPos);
+				if (isXDirection) _curKinematic.position.x = correctedPos;
 				else
 				{
-					_position.SetY(correctedPos); 
+					_curKinematic.position.y = correctedPos; 
 					if (edge == Edge::BOTTOM) _wasOnGround = true;
 					if (_jumped) StopJumping();
 				}
@@ -169,7 +169,7 @@ void PlayerActor::UpdateInput()
 	if (_mgr->inputManager->ActionOccurred("LEFT", Input::Held))
 	{
 		SetActorXDirection(SpriteSheet::XAxisDirection::LEFT);
-		SetSpeed(Vector2(Math::Clamp(_speed.GetX() - 50.0f, -300.0f, -50.0f), _speed.GetY()));
+		SetSpeed(Vector2(Math::Clamp(_curKinematic.velocity.GetX() - 50.0f, -300.0f, -50.0f), _curKinematic.velocity.GetY()));
 
 		if (triedDigging)
 		{
@@ -188,7 +188,7 @@ void PlayerActor::UpdateInput()
 	else if (_mgr->inputManager->ActionOccurred("RIGHT", Input::Held))
 	{
 		SetActorXDirection(SpriteSheet::XAxisDirection::RIGHT);
-		SetSpeed(Vector2(Math::Clamp(_speed.GetX() + 50.0f, 50.0f, 300.0f), _speed.GetY()));
+		SetSpeed(Vector2(Math::Clamp(_curKinematic.velocity.GetX() + 50.0f, 50.0f, 300.0f), _curKinematic.velocity.GetY()));
 
 		if (triedDigging)
 		{
@@ -207,7 +207,7 @@ void PlayerActor::UpdateInput()
 	else
 	{
 		// If we're not trying to move in a given direction, stop all motion on the x axis and use the idle animation
-		SetSpeed(Vector2(0.0f, _speed.GetY()));
+		SetSpeed(Vector2(0.0f, _curKinematic.velocity.GetY()));
 		if (_currentSpriteSheet != "idle")
 		{
 			_sprites[_currentSpriteSheet]->Stop();
@@ -228,7 +228,7 @@ void PlayerActor::UpdateInput()
 		}
 		if (_godMode)
 		{
-			SetSpeed(Vector2(_speed.GetX(), Math::Clamp(_speed.GetY() - 50.0f, -50.0f, -300.0f)));
+			SetSpeed(Vector2(_curKinematic.velocity.GetX(), Math::Clamp(_curKinematic.velocity.GetY() - 50.0f, -50.0f, -300.0f)));
 		}
 	}
 	else if (_mgr->inputManager->ActionOccurred("DOWN", Input::Held))
@@ -243,7 +243,7 @@ void PlayerActor::UpdateInput()
 		}
 		if (_godMode)
 		{
-			SetSpeed(Vector2(_speed.GetX(), Math::Clamp(_speed.GetY() + 50.0f, 50.0f, 300.0f)));
+			SetSpeed(Vector2(_curKinematic.velocity.GetX(), Math::Clamp(_curKinematic.velocity.GetY() + 50.0f, 50.0f, 300.0f)));
 		}
 	}
 	else if (_mgr->inputManager->ActionOccurred("JUMP", Input::Pressed) && _wasOnGround)
@@ -262,15 +262,19 @@ void PlayerActor::UpdateInput()
 	if (!_godMode)
 	{
 		//COMMENT OUT THIS LINE TO DISABLE JUMP
-		SetSpeed(Vector2(_speed.GetX(), GetJumpVelocity()));
+		SetSpeed(Vector2(_curKinematic.velocity.GetX(), GetJumpVelocity()));
 	}
 }
 
 void PlayerActor::UpdatePosition(double elapsedSecs)
 {
 	const std::shared_ptr<Level> level = _gameScreen->GetLevel();
-	_position.SetX(Math::Clamp(_position.GetX() + _speed.GetX() * (float)elapsedSecs, 0, level->GetLevelSize().x * level->GetTileWidth() - _sprites[_currentSpriteSheet]->GetFrameWidth()));
-	_position.SetY(Math::Clamp(_position.GetY() + _speed.GetY() * (float)elapsedSecs, 0, level->GetLevelSize().y * level->GetTileHeight() - _sprites[_currentSpriteSheet]->GetFrameHeight()));
+	_curKinematic.position.x = Math::Clamp(_curKinematic.position.x + _curKinematic.velocity.GetX() * (float)elapsedSecs, 
+                                            0, 
+                                            level->GetLevelSize().x * level->GetTileWidth() - _sprites[_currentSpriteSheet]->GetFrameWidth());
+	_curKinematic.position.y = Math::Clamp(_curKinematic.position.y + _curKinematic.velocity.GetY() * (float)elapsedSecs, 
+                                            0,
+                                            level->GetLevelSize().y * level->GetTileHeight() - _sprites[_currentSpriteSheet]->GetFrameHeight());
 }
 
 bool PlayerActor::CollisionCheck(Actor & otherAI)

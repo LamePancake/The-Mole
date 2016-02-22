@@ -112,7 +112,7 @@ public:
 	 *
 	 * @return	The world position of the tile.
 	 */
-	Vector2 GetWorldPosition();
+    SDL2pp::Point GetWorldPosition();
 
 	/**
 	 * Gets the identifier for the type of tile this is.
