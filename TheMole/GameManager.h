@@ -49,7 +49,7 @@ public:
 	// SDL accessor methods
 	SDL2pp::SDL& GetSDL() const { return _sdl; }
 	SDL2pp::SDLImage& GetSDLImage() const { return _sdlImage; }
-	SDL2pp::SDLMixer& GetSDLMixer() const { return _sdlMixer; }
+	SDL2pp::Mixer& GetMixer() const { return _mixer; }
 	SDL2pp::SDLTTF& GetSDLTTF() const { return _sdlTtf; }
 	SDL2pp::Window& GetWindow() const { return _window; }
 	SDL2pp::Renderer& GetRenderer() const { return _renderer; }
@@ -66,9 +66,9 @@ private:
 	/**
 	 * Creates a new GameManager object with references to the SDL libraries, a window, and the map of screens to be used in the game.
 	 */
-	GameManager(SDL2pp::SDL& sdl, SDL2pp::SDLImage& sdlImage, SDL2pp::SDLMixer& sdlMixer, SDL2pp::SDLTTF& sdlTtf,
+	GameManager(SDL2pp::SDL& sdl, SDL2pp::SDLImage& sdlImage, SDL2pp::Mixer& mixer, SDL2pp::SDLTTF& sdlTtf,
 		SDL2pp::Window& window, SDL2pp::Renderer& renderer, std::unordered_map<std::string, std::shared_ptr<Screen>>& screens)
-		:_sdl(sdl), _sdlImage(sdlImage), _sdlMixer(sdlMixer), _sdlTtf(sdlTtf),
+		:_sdl(sdl), _sdlImage(sdlImage), _mixer(mixer), _sdlTtf(sdlTtf),
 		_window(window), _renderer(renderer), _screens(screens){
 
 		// Initialise the input manager's key maps
@@ -104,7 +104,7 @@ private:
 
 	SDL2pp::SDL& _sdl;
 	SDL2pp::SDLImage& _sdlImage;
-	SDL2pp::SDLMixer& _sdlMixer;
+	SDL2pp::Mixer& _mixer;
 	SDL2pp::SDLTTF& _sdlTtf;
 	SDL2pp::Window& _window;
 	SDL2pp::Renderer& _renderer;

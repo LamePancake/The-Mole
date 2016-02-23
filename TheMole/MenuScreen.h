@@ -20,5 +20,6 @@ private:
 	SDL2pp::Texture* _play;
 	SDL2pp::Texture* _settings;
 	SDL2pp::Texture* _quit;
+    SDL2pp::Music* _menuTheme;
 	Uint8* _prevKeyState;
 };

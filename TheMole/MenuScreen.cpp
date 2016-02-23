@@ -7,9 +7,13 @@ using namespace SDL2pp;
 
 int MenuScreen::Load() {
 	_mgr = GameManager::GetInstance();	
-	_play = new Texture(_mgr->GetRenderer(), ".\\Assets\\GUI\\Main_Menu\\main_menu_play.png");
+	
+    _play = new Texture(_mgr->GetRenderer(), ".\\Assets\\GUI\\Main_Menu\\main_menu_play.png");
 	_quit = new Texture(_mgr->GetRenderer(), ".\\Assets\\GUI\\Main_Menu\\main_menu_quit.png");
 	_settings = new Texture(_mgr->GetRenderer(), ".\\Assets\\GUI\\Main_Menu\\main_menu_settings.png");
+    
+    _menuTheme = new Music(".\\Assets\\Audio\\menu_theme.ogg");
+    _mgr->GetMixer().PlayMusic(*_menuTheme);
 
 	_curMenuItem = 0;
 	_menuItems[0] = _play;
@@ -39,6 +43,7 @@ int MenuScreen::Update(double elapsedSecs) {
 	if (keys[SDL_SCANCODE_RETURN]) {
 		switch (_curMenuItem) {
 		case 0:
+            _mgr->GetMixer().HaltMusic();
 			_mgr->SetNextScreen("denlevel");
 			return SCREEN_FINISH;
 		case 1:
@@ -71,5 +76,6 @@ void MenuScreen::Unload() {
 	delete _play;
 	delete _quit;
 	delete _settings;
+    delete _menuTheme;
 	free(_prevKeyState);
 }

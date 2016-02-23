@@ -22,7 +22,8 @@ int main(int argc, char** argv) {
 		SDL sdl(subsystems);
 		SDLTTF sdl_ttf;
 		SDLImage image;
-		SDLMixer mixer;
+		SDLMixer sdlMixer(MIX_INIT_OGG | MIX_INIT_MP3);
+        Mixer mixer(44100, MIX_DEFAULT_FORMAT, 2, 2048);
 
 		// Straightforward wrappers around corresponding SDL2 objects
 		// These take full care of proper object destruction and error checking
