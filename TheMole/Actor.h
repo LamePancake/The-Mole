@@ -194,6 +194,29 @@ protected:
 		int rightCol, leftCol, topRow, bottomRow;
 	};
 
+    struct TileCollisionInfo {
+        /**
+         * Whether the row of tiles contained in rowIntersect is above(Edge::TOP) or below(Edge::BOTTOM) this actor.
+         * Edge::NONE means that the actor hasn't moved in this axis.
+         */
+        Edge rowEdge;
+        /**
+         * Whether the column of tiles contained in colIntersect is to the right (Edge::RIGHT) or left (Edge::LEFT) of this actor.
+         * Edge::NONE means that the actor hasn't moved in this axis.
+         */
+        Edge colEdge;
+
+        /** The list of tiles parallel to the x-axis with which one of this actor's edges (specified in rowEdge) is colliding. */
+        std::vector<std::shared_ptr<Tile>> rowIntersect;
+        /** The list of tiles parallel to the y-axis with which one of this actor's edges (specified in colEdge) is colliding. */
+        std::vector<std::shared_ptr<Tile>> colIntersect;
+
+        /** The number of pixels by which this actor has penetrated the row of tiles the tiles in rowIntersect. */
+        int rowPenetration;
+        /** The number of pixels by which this actor has penetrated the column of tiles in colIntersect. */
+        int colPenetration;
+    };
+
 	/** The health. */
 	size_t _health;
 
@@ -202,6 +225,9 @@ protected:
 
 	/** The actor's kinematic state in the last update.*/
 	KinematicState _prevKinematic;
+
+    /** Contains the tiles with which the actor intersected.*/
+    TileCollisionInfo _collisionInfo;
 
 	/** The aabb. */
 	AABB _aabb;
@@ -233,18 +259,9 @@ protected:
 	 * @author	Shane
 	 * @date	2/5/2016
 	 *
-	 * @param [in,out]	rowEdge		  	Whether the row of tiles contained in rowIntersect is above (Edge::TOP) or below (Edge::BOTTOM) this actor.
-	 * 									Edge::NONE means that the actor hasn't moved in this axis.
-	 * @param [in,out]	colEdge		  	Whether the column of tiles contained in colIntersect is to the right (Edge::RIGHT) or left (Edge::LEFT) of this actor.
-	 * 									Edge::NONE means that the actor hasn't moved in this axis.
-	 * @param [in,out]	rowPenetration	The number of pixels by which this actor has penetrated the row of tiles the tiles in rowIntersect.
-	 * @param [in,out]	colPenetration	The number of pixels by which this actor has penetrated the column of tiles in colIntersetc.
-	 * @param [in,out]	rowIntersect	The list of tiles parallel to the x-axis with which one of this actor's edges (specified in rowEdge) is colliding.
-	 * @param [in,out]	colIntersect  	The list of tiles parallel to the y-axis with which one of this actor's edges (specified in colEdge) is colliding.
 	 * @param [in,out]	level		  	The level containing the actor and the tiles.
 	 */
-	void DetectTileCollisions(Edge & rowEdge, Edge & colEdge, int & rowPenetration, int & colPenetration,
-		std::vector<std::shared_ptr<Tile>>& rowIntersect, std::vector<std::shared_ptr<Tile>>& colIntersect, std::shared_ptr<Level>& level);
+	void DetectTileCollisions(TileCollisionInfo& colInfo, std::shared_ptr<Level>& level);
 
 	/**
 	 * @brief	Determines the actor's bounding box and which tiles they intersect at the given kinematic state.

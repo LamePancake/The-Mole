@@ -43,19 +43,17 @@ bool AIActor::CollisionCheck(Actor &otherActor)
 
 void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level>& level)
 {
-	Edge colEdge, rowEdge;
-	int colPenetration, rowPenetration;
-	std::vector<std::shared_ptr<Tile>> rowIntersection, colIntersection;
+    _collisionInfo.colIntersect.clear();
+    _collisionInfo.rowIntersect.clear();
+	DetectTileCollisions(_collisionInfo, level);
 
-	DetectTileCollisions(rowEdge, colEdge, rowPenetration, colPenetration, rowIntersection, colIntersection, level);
-
-	if (rowEdge != Edge::NONE)
+	if (_collisionInfo.rowEdge != Edge::NONE)
 	{
 		float correctedYPos = _curKinematic.position.GetY();
-		if (rowEdge == Edge::BOTTOM) correctedYPos -= rowPenetration;
-		else if (rowEdge == Edge::TOP) correctedYPos += rowPenetration;
+		if (_collisionInfo.rowEdge == Edge::BOTTOM) correctedYPos -= _collisionInfo.rowPenetration;
+		else if (_collisionInfo.rowEdge == Edge::TOP) correctedYPos += _collisionInfo.rowPenetration;
 
-		for (auto& tile : rowIntersection)
+		for (auto& tile : _collisionInfo.rowIntersect)
 		{
 			switch (tile->GetID())
 			{
@@ -70,15 +68,15 @@ void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level>& level)
 		}
 	}
 	
-	if (colEdge != Edge::NONE)
+	if (_collisionInfo.colEdge != Edge::NONE)
 	{
 		float correctedXPos = _curKinematic.position.GetX();
-		if (colEdge == Edge::RIGHT) correctedXPos -= colPenetration;
-		else if (colEdge == Edge::LEFT) correctedXPos += colPenetration;
+		if (_collisionInfo.colEdge == Edge::RIGHT) correctedXPos -= _collisionInfo.colPenetration;
+		else if (_collisionInfo.colEdge == Edge::LEFT) correctedXPos += _collisionInfo.colPenetration;
 
 		float reverseX = _curKinematic.velocity.GetX() * -1;
 		SpriteSheet::XAxisDirection reverseDir = _spriteXDir == SpriteSheet::XAxisDirection::LEFT ? SpriteSheet::XAxisDirection::RIGHT : SpriteSheet::XAxisDirection::LEFT;
-		for (auto& tile : colIntersection)
+		for (auto& tile : _collisionInfo.colIntersect)
 		{
 			switch (tile->GetID())
 			{
@@ -87,7 +85,7 @@ void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level>& level)
 			case Tile::spike:
 				_health = 0;
 			default:
-                if (colPenetration == 0) continue;
+                if (_collisionInfo.colPenetration == 0) continue;
 				_curKinematic.position.SetX(correctedXPos);
 				_curKinematic.velocity.SetX(reverseX);
 				_spriteXDir = reverseDir;

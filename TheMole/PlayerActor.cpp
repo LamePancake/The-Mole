@@ -4,7 +4,7 @@
 PlayerActor::PlayerActor(Vector2 position, GameManager& manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
 	const std::string&& startSprite, SpriteSheet::XAxisDirection startXDir, SpriteSheet::YAxisDirection startYDir)
 	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDir, startYDir), _prevDirection(startXDir), _atGoal(false), _jumpVelocity(0), _maxJumpVel(400),
-	_digDir{' ' , ' '}, _jumped(false), _isDigging(false), _jumpDuration(0.75), _jumpTimeElapsed(0), _godMode(false)
+	_digDir{Edge::NONE}, _jumped(false), _jumpDuration(0.75), _jumpTimeElapsed(0), _godMode(false)
 {
 }
 
@@ -32,14 +32,14 @@ void PlayerActor::Update(double elapsedSecs)
 
 
 	// Check whether we're finished digging and update sprites accordingly
-	if (!_sprites[_currentSpriteSheet]->IsAnimating() && _isDigging)
+	if (!_sprites[_currentSpriteSheet]->IsAnimating() && _digDir != Edge::NONE)
 	{
 		_sprites[_currentSpriteSheet]->Stop();
 		_currentSpriteSheet = "idle";
 		SetActorYDirection(SpriteSheet::YAxisDirection::UP);
 		_sprites[_currentSpriteSheet]->Start();
 
-		_isDigging = false;
+        _digDir = Edge::NONE;
 	}
 
 	UpdateInput();
@@ -59,35 +59,32 @@ void PlayerActor::Update(double elapsedSecs)
 			std::cout << "You lose." << std::endl;
 		}
 	}
-
+    DetectTileCollisions(_collisionInfo, _gameScreen->GetLevel());
+    Dig();
 	UpdateCollisions(elapsedSecs);
     _prevKinematic = _curKinematic;
+    _collisionInfo.colIntersect.clear();
+    _collisionInfo.rowIntersect.clear();
 }
 
 void PlayerActor::UpdateCollisions(double elapsedSecs)
 {
 	std::shared_ptr<Level> level = _gameScreen->GetLevel();
 
-	Edge colEdge, rowEdge;
-	int colPenetration, rowPenetration;
-	std::vector<std::shared_ptr<Tile>> rowIntersection, colIntersection;
-
-	DetectTileCollisions(rowEdge, colEdge, rowPenetration, colPenetration, rowIntersection, colIntersection, level);
-
-	if (rowEdge != Edge::NONE)
+	if (_collisionInfo.rowEdge != Edge::NONE)
 	{
 		float correctedYPos = _curKinematic.position.GetY();
-		if (rowEdge == Edge::BOTTOM) correctedYPos -= rowPenetration;
-		else if (rowEdge == Edge::TOP) correctedYPos += rowPenetration;
-		DefaultTileCollisionHandler(rowIntersection, rowEdge, correctedYPos);
+		if (_collisionInfo.rowEdge == Edge::BOTTOM) correctedYPos -= _collisionInfo.rowPenetration;
+		else if (_collisionInfo.rowEdge == Edge::TOP) correctedYPos += _collisionInfo.rowPenetration;
+		DefaultTileCollisionHandler(_collisionInfo.rowIntersect, _collisionInfo.rowEdge, correctedYPos);
 	}
 
-	if (colEdge != Edge::NONE)
+	if (_collisionInfo.colEdge != Edge::NONE)
 	{
 		float correctedXPos = _curKinematic.position.GetX();
-		if (colEdge == Edge::RIGHT) correctedXPos -= colPenetration;
-		else if (colEdge == Edge::LEFT) correctedXPos += colPenetration;
-		DefaultTileCollisionHandler(colIntersection, colEdge, correctedXPos);
+		if (_collisionInfo.colEdge == Edge::RIGHT) correctedXPos -= _collisionInfo.colPenetration;
+		else if (_collisionInfo.colEdge == Edge::LEFT) correctedXPos += _collisionInfo.colPenetration;
+		DefaultTileCollisionHandler(_collisionInfo.colIntersect, _collisionInfo.colEdge, correctedXPos);
 	}
 
 	if (_atGoal)
@@ -103,13 +100,6 @@ void PlayerActor::StopJumping()
 
 void PlayerActor::DefaultTileCollisionHandler(std::vector<std::shared_ptr<Tile>>& tiles, Edge edge, float correctedPos)
 {
-	bool canDig = (_spriteYDir == SpriteSheet::YAxisDirection::UP && edge == Edge::TOP) ||
-		(_spriteYDir == SpriteSheet::YAxisDirection::DOWN && edge == Edge::BOTTOM) ||
-		(_spriteYDir == SpriteSheet::XAxisDirection::RIGHT && edge == Edge::RIGHT) ||
-		(_spriteYDir == SpriteSheet::XAxisDirection::LEFT && edge == Edge::LEFT);
-	
-	canDig = canDig && _isDigging;
-
 	// Did you think I was done hacking? You were wrong
 	// Still confusing af with naming here... If we're processing columns of tiles, i.e. things that would be collided with by travelling along the x axis, then we're looking at the x direction
 	bool isXDirection = edge == Edge::RIGHT || edge == Edge::LEFT;
@@ -123,7 +113,7 @@ void PlayerActor::DefaultTileCollisionHandler(std::vector<std::shared_ptr<Tile>>
         if (correctedPos == _curKinematic.position.GetY())
         {
             SDL2pp::Point indices = tiles[0]->GetIndices();
-            if (indices.y < _gameScreen->GetLevel()->GetLevelSize().y)
+            if (indices.y < _gameScreen->GetLevel()->GetLevelSize().y - 1)
             {
                 std::shared_ptr<Tile> below = _gameScreen->GetLevel()->GetTileFromLevel(indices.x, indices.y + 1);
                 float bottomBound = _curKinematic.position.GetY() + _sprites[_currentSpriteSheet]->GetFrameHeight();
@@ -143,21 +133,6 @@ void PlayerActor::DefaultTileCollisionHandler(std::vector<std::shared_ptr<Tile>>
 			switch (tile->GetID())
 			{
 			case Tile::blank:
-				break;
-			case Tile::dirt:
-				if (canDig)
-				{
-					tile->SetID(Tile::blank);
-				}
-				else
-				{
-					if(isXDirection) _curKinematic.position.SetX(correctedPos);
-					else
-					{
-						_curKinematic.position.SetY(correctedPos);
-						if (_jumped) StopJumping();
-					}
-				}
 				break;
 			case Tile::goal:
 				_atGoal = true;
@@ -180,7 +155,7 @@ void PlayerActor::DefaultTileCollisionHandler(std::vector<std::shared_ptr<Tile>>
 
 void PlayerActor::UpdateInput()
 {
-	if (_isDigging) return;
+	if (_digDir != Edge::NONE) return;
 
 	bool triedDigging = _mgr->inputManager->ActionOccurred("DIG", Input::Pressed);
 
@@ -191,7 +166,7 @@ void PlayerActor::UpdateInput()
 
 		if (triedDigging)
 		{
-			_isDigging = true;
+			_digDir = Edge::LEFT;
 			_sprites[_currentSpriteSheet]->Stop();
 			_currentSpriteSheet = "sideDig";
 			_sprites[_currentSpriteSheet]->Start();
@@ -210,7 +185,7 @@ void PlayerActor::UpdateInput()
 
 		if (triedDigging)
 		{
-			_isDigging = true;
+			_digDir = Edge::RIGHT;
 			_sprites[_currentSpriteSheet]->Stop();
 			_currentSpriteSheet = "sideDig";
 			_sprites[_currentSpriteSheet]->Start();
@@ -238,7 +213,7 @@ void PlayerActor::UpdateInput()
 	{
 		if (triedDigging)
 		{
-			_isDigging = true;
+			_digDir = Edge::TOP;
 			SetActorYDirection(SpriteSheet::YAxisDirection::UP);
 			_sprites[_currentSpriteSheet]->Stop();
 			_currentSpriteSheet = "verticalDig";
@@ -253,7 +228,7 @@ void PlayerActor::UpdateInput()
 	{
 		if (triedDigging)
 		{
-			_isDigging = true;
+			_digDir = Edge::BOTTOM;
 			SetActorYDirection(SpriteSheet::YAxisDirection::DOWN);
 			_sprites[_currentSpriteSheet]->Stop();
 			_currentSpriteSheet = "verticalDig";
@@ -285,6 +260,131 @@ void PlayerActor::UpdateInput()
 		//COMMENT OUT THIS LINE TO DISABLE JUMP
 		SetSpeed(Vector2(_curKinematic.velocity.GetX(), GetJumpVelocity()));
 	}
+}
+
+void PlayerActor::Dig()
+{
+    std::shared_ptr<Level> level = _gameScreen->GetLevel();
+    bool dug;
+
+    // We check the tile we're intersecting and the tile directly next to it (provided it's close enough)
+    switch (_digDir)
+    {
+    case Edge::LEFT:
+    {
+        for (auto tile : _collisionInfo.colIntersect)
+        {
+            if (tile->GetID() == Tile::dirt)
+            {
+                dug = true;
+                tile->SetID(Tile::blank);
+            }
+        }
+        if (!dug && _curKinematic.position.GetX() / level->GetTileWidth() > 0)
+        {
+            int nextRow = _collisionInfo.colIntersect[0]->GetIndices().y;
+            int nextCol = _collisionInfo.colIntersect[0]->GetIndices().x - 1;
+            float dist = _curKinematic.position.GetX() - (level->GetTileFromLevel(nextCol, nextRow)->GetWorldPosition().GetX() + level->GetTileWidth());
+            if (dist < 3)
+            {
+                for (auto tile : _collisionInfo.colIntersect)
+                {
+                    std::shared_ptr<Tile> neighbour = level->GetTileFromLevel(nextCol, tile->GetIndices().y);
+                    if (tile->GetID() == Tile::dirt)
+                    {
+                        tile->SetID(Tile::blank);
+                    }
+                }
+            }
+        }
+    }
+    case Edge::RIGHT:
+    {
+        for (auto tile : _collisionInfo.colIntersect)
+        {
+            if (tile->GetID() == Tile::dirt)
+            {
+                dug = true;
+                tile->SetID(Tile::blank);
+            }
+        }
+        if (!dug && _curKinematic.position.GetX() / level->GetTileWidth() < level->GetLevelSize().x - 1)
+        {
+            int nextRow = _collisionInfo.colIntersect[0]->GetIndices().y;
+            int nextCol = _collisionInfo.colIntersect[0]->GetIndices().x + 1;
+            float dist = (level->GetTileFromLevel(nextCol, nextRow)->GetWorldPosition().GetX() + level->GetTileWidth()) - _curKinematic.position.GetX();
+            if (dist < 3)
+            {
+                for (auto tile : _collisionInfo.colIntersect)
+                {
+                    std::shared_ptr<Tile> neighbour = level->GetTileFromLevel(nextCol, tile->GetIndices().y);
+                    if (tile->GetID() == Tile::dirt)
+                    {
+                        tile->SetID(Tile::blank);
+                    }
+                }
+            }
+        }
+    }
+
+    case Edge::TOP:
+    {
+        for (auto tile : _collisionInfo.rowIntersect)
+        {
+            if (tile->GetID() == Tile::dirt)
+            {
+                dug = true;
+                tile->SetID(Tile::blank);
+            }
+        }
+        if (!dug && _curKinematic.position.GetY() / level->GetTileHeight() > 0)
+        {
+            int nextRow = _collisionInfo.colIntersect[0]->GetIndices().y - 1;
+            int nextCol = _collisionInfo.colIntersect[0]->GetIndices().x;
+            float dist = _curKinematic.position.GetY() - (level->GetTileFromLevel(nextCol, nextRow)->GetWorldPosition().GetY() + level->GetTileHeight());
+            if (dist < 3)
+            {
+                for (auto tile : _collisionInfo.colIntersect)
+                {
+                    std::shared_ptr<Tile> neighbour = level->GetTileFromLevel(tile->GetIndices().x, nextRow);
+                    if (tile->GetID() == Tile::dirt)
+                    {
+                        tile->SetID(Tile::blank);
+                    }
+                }
+            }
+        }
+    }
+
+    case Edge::BOTTOM:
+    {
+        for (auto tile : _collisionInfo.rowIntersect)
+        {
+            if (tile->GetID() == Tile::dirt)
+            {
+                dug = true;
+                tile->SetID(Tile::blank);
+            }
+        }
+        if (!dug && _curKinematic.position.GetY() / level->GetTileHeight() < level->GetLevelSize().x - 1)
+        {
+            int nextRow = _collisionInfo.colIntersect[0]->GetIndices().y + 1;
+            int nextCol = _collisionInfo.colIntersect[0]->GetIndices().x;
+            float dist = level->GetTileFromLevel(nextCol, nextRow)->GetWorldPosition().GetY() - (_curKinematic.position.GetY() + _sprites[_currentSpriteSheet]->GetFrameHeight());
+            if (dist < 3)
+            {
+                for (auto tile : _collisionInfo.colIntersect)
+                {
+                    std::shared_ptr<Tile> neighbour = level->GetTileFromLevel(tile->GetIndices().x, nextRow);
+                    if (tile->GetID() == Tile::dirt)
+                    {
+                        tile->SetID(Tile::blank);
+                    }
+                }
+            }
+        }
+    }
+    }
 }
 
 void PlayerActor::UpdatePosition(double elapsedSecs)

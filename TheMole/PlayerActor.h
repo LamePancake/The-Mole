@@ -6,33 +6,31 @@ class PlayerActor : public Actor
 {
 public:
 
-	/**
-	 * @brief	Creates a new player actor with the given parameters.
-	 *
-	 * @author	Shane
-	 * @date	2/8/2016
-	 *
-	 * @param	position	    The player's start position.
-	 * @param [in,out]	manager	A reference to the game manager.
-	 * @param	spd			   	The player's starting speed.
-	 * @param	sprites			The list of sprite sheets for the player.
-	 * @param	startSprite	   	The default sprite to draw.
-	 * @param	startXDirection	The actor's default facing direction along the x axis.
-	 * @param	startYDirection	The actor's default facing direction along the y axis.
-	 */
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///<summary> Creates a new player actor with the given parameters.</summary>
+    ///
+    ///<param name="position">        The player's start position.</param>
+    ///<param name="manager">         [in,out] A reference to the game manager.</param>
+    ///<param name="spd">             The player's starting speed.</param>
+    ///<param name="sprites">         [in,out] The list of sprite sheets for the player.</param>
+    ///<param name="startSprite">     The default sprite to draw.</param>
+    ///<param name="startXDirection"> The actor's default facing direction along the x axis.</param>
+    ///<param name="startYDirection"> The actor's default facing direction along the y axis.</param>
+    ///
+    ///### <author> Shane.</author>
+    ///### <date> 2/8/2016.</date>
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
 	PlayerActor(Vector2 position, GameManager & manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites, const std::string&& startSprite,
 		SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP);
 
 	/** Destructor. */
 	~PlayerActor();
 
-	/**
-	 * Draws.
-	 *
-	 * @param [in,out]	level	The level.
-	 *
-	 * 	Draws this object.
-	 */
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///<summary> Draws this object with the given camera.</summary>
+    ///
+    ///<param name="camera"> [in,out] The camera to use for drawing.</param>
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
 	virtual void Draw(Camera& camera) override;
 
 	// All the state changing stuff happens in here.
@@ -41,103 +39,124 @@ public:
 	// Updates position of the agent by adding _speed to it.
 	virtual void UpdatePosition(double elapsedSecs);
 
-	/**
-	 * Collision check.
-	 *
-	 * @param [in,out]	otherAI	The other an i.
-	 *
-	 * @return	true if it succeeds, false if it fails.
-	 */
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///<summary> Collision check.</summary>
+    ///
+    ///<remarks> Shane, 2/22/2016.</remarks>
+    ///
+    ///<param name="otherAI"> [in,out] The other actor to check against.</param>
+    ///
+    ///<returns> true if the actors are colliding.</returns>
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
 	bool CollisionCheck(Actor &otherAI);
 
-	/**
-	 * Query if this object is dead.
-	 *
-	 * @return	true if dead, false if not.
-	 */
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///<summary> Query if this object is dead.</summary>
+    ///
+    ///<returns> true if dead, false if not.</returns>
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
 	bool IsDead();
 
-	/**
-	 * Determines if player is at the goal.
-	 *
-	 * @return	true if it succeeds, false if it fails.
-	 */
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///<summary> Determines if the player is at the goal.</summary>
+    ///
+    ///<returns> Whether the player is at the goal.</returns>
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
 	bool AtGoal();
 
-	/**
-	* Set jump velocity of the player.
-	*
-	* @param initial velocity in the Y axis.
-	**/
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///<summary> Sets jump velocity.</summary>
+    ///
+    ///<param name="initVel"> velocity in the Y axis.</param>
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
 	void SetJumpVelocity(float initVel);
 
-	/**
-	* Get jump velocity of the player.
-	*
-	* @return float that is the velocity of the jump in the Y axis.
-	**/
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///<summary> Gets player's jump velocity.</summary>
+    ///
+    ///<returns> float that is the velocity of the jump in the Y axis.</returns>
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	float GetJumpVelocity();
 
-	/**
-	* Set max jump velocity of the player.
-	*
-	* @param initial velocity in the Y axis.
-	**/
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///<summary> Sets maximum jump velocity.</summary>
+    ///
+    ///<param name="initVel"> initial velocity in the Y axis.</param>
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
 	void SetMaximumJumpVelocity(float initVel);
 
-	/**
-	* Get max jump velocity.
-	*
-	* @return float that is the velocity of the jump in the Y axis.
-	**/
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///<summary> Gets maximum jump velocity.</summary>
+    ///
+    ///<returns> float that is the velocity of the jump in the Y axis.</returns>
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
 	float GetMaximumJumpVelocity();
 private:
 
-	/**
-	 * @brief	Updates all player properties influenced by the user's input.
-	 *
-	 * @author	Shane
-	 * @date	2/6/2016
-	 */
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///<summary> Updates all player properties influenced by the user's input.</summary>
+    ///
+    ///<remarks> Shane, 2/22/2016.</remarks>
+    ///
+    ///### <author> Shane.</author>
+    ///### <date> 2/6/2016.</date>
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
 	void UpdateInput();
 
-	/**
-	 * @brief	Updates all collisions (with tiles and enemies).
-	 *
-	 * @author	Shane	 
-	 * @date	2/6/2016
-	 * 
-	 * @editor  Tim (added parameter)
-	 * @date    2/6/2016
-	 */
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///<summary> Attempts to dig in the current dig direction.</summary>
+    /// 
+    ///<remarks> Shane, 2/22/2016.</remarks>
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    void Dig();
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///<summary> Updates all collisions (with tiles and enemies).</summary>
+    ///
+    ///<param name="elapsedSecs"> The elapsed time in seconds.</param>
+    ///
+    ///### <author> Shane</author>
+    ///### <date> 2/6/2016</date>
+    ///           
+    ///<editor>Tim (added parameter)</editor>
+    ///<date>2/6/2016.</date>
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
 	void UpdateCollisions(double elapsedSecs);
 
-	/**
-	 * @brief	Stops any jump in progress.
-	 *
-	 * @author	Shane
-	 * @date	2/8/2016
-	 */
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///<summary> Stops any jump in progress.</summary>
+    ///
+    ///<remarks> Shane, 2/22/2016.</remarks>
+    ///
+    ///### <author> Shane.</author>
+    ///### <date> 2/8/2016.</date>
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
 	void StopJumping();
 
-	/**
-	 * @brief	Handles collisions with tiles.
-	 *
-	 * @author	Shane
-	 * @date	2/7/2016
-	 */
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///<summary> Handles collisions with tiles.</summary>
+    ///
+    ///<remarks> Shane, 2/22/2016.</remarks>
+    ///
+    ///<param name="tiles">        [in,out] The tiles.</param>
+    ///<param name="edge">         The edge.</param>
+    ///<param name="correctedPos"> The corrected position.</param>
+    ///
+    ///### <author> Shane.</author>
+    ///### <date> 2/7/2016.</date>
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
 	void DefaultTileCollisionHandler(std::vector<std::shared_ptr<Tile>>& tiles, Edge edge, float correctedPos);
 
 	bool _atGoal;
 	float _jumpVelocity;
 	float _maxJumpVel;
-	char _digDir[2];
 	bool _jumped;
 	double _jumpDuration;
 	double _jumpTimeElapsed;
 	bool _wasOnGround; // Tracks whether the player was on the ground in the previous frame
 	SpriteSheet::XAxisDirection _prevDirection;
 
-	bool _isDigging;
+    Edge _digDir;
 	bool _godMode;
 };
