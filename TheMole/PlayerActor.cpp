@@ -265,7 +265,7 @@ void PlayerActor::UpdateInput()
 void PlayerActor::Dig()
 {
     std::shared_ptr<Level> level = _gameScreen->GetLevel();
-    bool dug;
+    bool dug = false;
 
     // We check the tile we're intersecting and the tile directly next to it (provided it's close enough)
     switch (_digDir)
