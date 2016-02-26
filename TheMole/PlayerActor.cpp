@@ -277,6 +277,7 @@ void PlayerActor::Dig()
             if (tile->GetID() == Tile::dirt)
             {
                 dug = true;
+				level->AddDugTile(tile);
                 tile->SetID(Tile::blank);
             }
         }
@@ -292,6 +293,7 @@ void PlayerActor::Dig()
 					std::shared_ptr<Tile> neighbour = level->GetTileFromLevel(nextCol, tile->GetIndices().y);
 					if (tile->GetID() == Tile::dirt)
 					{
+						level->AddDugTile(tile);
 						tile->SetID(Tile::blank);
 					}
                 }
@@ -305,6 +307,7 @@ void PlayerActor::Dig()
             if (tile->GetID() == Tile::dirt)
             {
                 dug = true;
+				level->AddDugTile(tile);
                 tile->SetID(Tile::blank);
             }
         }
@@ -320,6 +323,7 @@ void PlayerActor::Dig()
 					std::shared_ptr<Tile> neighbour = level->GetTileFromLevel(nextCol, tile->GetIndices().y);
 					if (tile->GetID() == Tile::dirt)
 					{
+						level->AddDugTile(tile);
 						tile->SetID(Tile::blank);
 					}
                 }
@@ -333,6 +337,7 @@ void PlayerActor::Dig()
             if (tile->GetID() == Tile::dirt)
             {
                 dug = true;
+				level->AddDugTile(tile);
                 tile->SetID(Tile::blank);
             }
         }
@@ -348,6 +353,7 @@ void PlayerActor::Dig()
 					std::shared_ptr<Tile> neighbour = level->GetTileFromLevel(tile->GetIndices().x, nextRow);
 					if (tile->GetID() == Tile::dirt)
 					{
+						level->AddDugTile(tile);
 						tile->SetID(Tile::blank);
 					}
                 }
@@ -361,6 +367,7 @@ void PlayerActor::Dig()
             if (tile->GetID() == Tile::dirt)
             {
                 dug = true;
+				level->AddDugTile(tile);
                 tile->SetID(Tile::blank);
             }
         }
@@ -376,6 +383,7 @@ void PlayerActor::Dig()
 					std::shared_ptr<Tile> neighbour = level->GetTileFromLevel(tile->GetIndices().x, nextRow);
 					if (tile->GetID() == Tile::dirt)
 					{
+						level->AddDugTile(tile);
 						tile->SetID(Tile::blank);
 					}
                 }

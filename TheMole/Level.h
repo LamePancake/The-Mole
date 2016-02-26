@@ -2,6 +2,7 @@
 #include <vector>
 #include <memory>
 #include <map>
+#include <algorithm>
 
 class Actor;
 class AIActor;
@@ -200,8 +201,15 @@ public:
 	*/
 	void SetTileHeight(size_t height);
 
+	void AddDugTile(std::shared_ptr<Tile> t);
+
+	void UpdateDugTile(double deltaTime);
+
 private:
 	
+	std::vector<std::shared_ptr<Tile>> _dugDirt;
+	std::vector<double> _dugTimers;
+
 	/** The enemies in the level. */
 	std::vector<std::shared_ptr<AIActor>> _enemies;
 
