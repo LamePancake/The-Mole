@@ -338,12 +338,12 @@ void PlayerActor::Dig()
         }
         if (!dug && _curKinematic.position.GetY() / level->GetTileHeight() > 0)
         {
-            int nextRow = _collisionInfo.colIntersect[0]->GetIndices().y - 1 < 0 ? _collisionInfo.colIntersect[0]->GetIndices().y : _collisionInfo.colIntersect[0]->GetIndices().y -1;
-            int nextCol = _collisionInfo.colIntersect[0]->GetIndices().x;
+            int nextRow = _collisionInfo.rowIntersect[0]->GetIndices().y - 1 < 0 ? _collisionInfo.rowIntersect[0]->GetIndices().y : _collisionInfo.rowIntersect[0]->GetIndices().y -1;
+            int nextCol = _collisionInfo.rowIntersect[0]->GetIndices().x;
             float dist = _curKinematic.position.GetY() - (level->GetTileFromLevel(nextCol, nextRow)->GetWorldPosition().GetY() + level->GetTileHeight());
             if (dist < 3)
             {
-                for (auto tile : _collisionInfo.colIntersect)
+                for (auto tile : _collisionInfo.rowIntersect)
                 {
 					std::shared_ptr<Tile> neighbour = level->GetTileFromLevel(tile->GetIndices().x, nextRow);
 					if (tile->GetID() == Tile::dirt)
@@ -366,12 +366,12 @@ void PlayerActor::Dig()
         }
         if (!dug && _curKinematic.position.GetY() / level->GetTileHeight() < level->GetLevelSize().x - 1)
         {
-            int nextRow = _collisionInfo.colIntersect[0]->GetIndices().y + 1 > level->GetLevelSize().y ? _collisionInfo.colIntersect[0]->GetIndices().y : _collisionInfo.colIntersect[0]->GetIndices().y + 1;
-            int nextCol = _collisionInfo.colIntersect[0]->GetIndices().x;
+            int nextRow = _collisionInfo.rowIntersect[0]->GetIndices().y + 1 > level->GetLevelSize().y ? _collisionInfo.rowIntersect[0]->GetIndices().y : _collisionInfo.rowIntersect[0]->GetIndices().y + 1;
+            int nextCol = _collisionInfo.rowIntersect[0]->GetIndices().x;
             float dist = level->GetTileFromLevel(nextCol, nextRow)->GetWorldPosition().GetY() - (_curKinematic.position.GetY() + _sprites[_currentSpriteSheet]->GetFrameHeight());
             if (dist < 3)
             {
-                for (auto tile : _collisionInfo.colIntersect)
+                for (auto tile : _collisionInfo.rowIntersect)
                 {
 					std::shared_ptr<Tile> neighbour = level->GetTileFromLevel(tile->GetIndices().x, nextRow);
 					if (tile->GetID() == Tile::dirt)

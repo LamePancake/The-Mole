@@ -135,7 +135,6 @@
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="BossBehavTree.cpp" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="DenLevelScreen.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameScreen.cpp" />
     <ClCompile Include="Input.cpp" />
@@ -156,7 +155,6 @@
     <ClInclude Include="AABB.h" />
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Camera.h" />
-    <ClInclude Include="DenLevelScreen.h" />
     <ClInclude Include="GameScreen.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="NPCActor.h" />

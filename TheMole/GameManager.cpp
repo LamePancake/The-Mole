@@ -1,6 +1,5 @@
 #include "GameManager.h"
 #include "MenuScreen.h"
-#include "DenLevelScreen.h"
 
 using std::string;
 using std::shared_ptr;
@@ -12,8 +11,13 @@ GameManager* GameManager::GetInstance() {
 	return _instance;
 }
 
-void GameManager::SetNextScreen(const char* nextScreenName) {
-	if (nextScreenName == nullptr) {
+void GameManager::SetNextScreen(std::string&& nextScreenName) {
+	// nextScreenName becomes an lvalue, so we can call the version accepting a reference instead
+	SetNextScreen(nextScreenName);
+}
+
+void GameManager::SetNextScreen(const std::string& nextScreenName) {
+	if (nextScreenName.size() == 0) {
 		_nextScreen = nullptr;
 		return;
 	}
