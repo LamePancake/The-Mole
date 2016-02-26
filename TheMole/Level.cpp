@@ -82,6 +82,16 @@ std::shared_ptr<Actor> Level::GetNPC(size_t idx)
 	return _NPCs[idx];
 }
 
+void Level::AddBoss(std::shared_ptr<BossActor> n)
+{
+	_boss = n;
+}
+
+std::shared_ptr<BossActor> Level::GetBoss()
+{
+	return _boss;
+}
+
 size_t Level::GetNPCSize() const
 {
 	return _NPCs.size();

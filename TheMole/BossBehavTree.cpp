@@ -4,6 +4,8 @@
 
 BossBehavTree::BossBehavTree()
 {
+	_heat = 0;
+	_health = 100;
 	//Initialize Sequences and Selectors
 	_root = new Selector;
 	_selAlive = new Selector;

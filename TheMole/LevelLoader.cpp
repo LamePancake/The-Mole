@@ -93,6 +93,16 @@
 					tile->SetID(Tile::blank);
 				}
 				break;
+			case Tile::boss:
+				{
+					std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
+					sprites["idle"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Toad_idle.png", 6, 0.50, true, SpriteSheet::XAxisDirection::LEFT);
+
+					std::shared_ptr<BossActor> boss = std::make_shared<BossActor>(tile->GetWorldPosition(), gameManager, Vector2(0, 0), sprites, "idle", SpriteSheet::XAxisDirection::LEFT);
+					level->AddBoss(boss);
+					tile->SetID(Tile::blank);
+				}
+				break;
 			}
 
 			level->AddTileToLevel(tile, levelHeight);

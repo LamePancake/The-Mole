@@ -7,6 +7,7 @@ class Actor;
 class AIActor;
 class NPCActor;
 class ObjectActor;
+class BossActor;
 
 #include "Tile.h"
 
@@ -133,6 +134,22 @@ public:
 	size_t GetNPCSize() const;
 
 	/**
+	* Adds an boss to the boss array.
+	*
+	* @param	n	The std::shared_ptr&lt;BossActor&gt; to process.
+	*/
+	void Level::AddBoss(std::shared_ptr<BossActor> n);
+
+	/**
+	* Gets an boss.
+	*
+	* @param	idx	The index into the boss array.
+	*
+	* @return	The boss.
+	*/
+	std::shared_ptr<BossActor> Level::GetBoss();
+
+	/**
 	 * Adds an actor object to the object array.
 	 *
 	 * @param	o	The std::shared_ptr&lt;SimpleAgent&gt; to process.
@@ -198,6 +215,9 @@ private:
 
 	/** The level. */
 	std::vector<std::vector<std::shared_ptr<Tile>>> _level;
+
+	/** The bawss. */
+	std::shared_ptr<BossActor> _boss;
 
 	/** Width of the tile. */
 	size_t _tileWidth;

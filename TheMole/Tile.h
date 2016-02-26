@@ -28,6 +28,7 @@ public:
 		origin      = 'O',
 		npc         = 'N',
 		checkpoint  = 'F',
+		boss        = 'B',
 	};
 
 	/** Default constuctor. Initilizes everying to default values. */

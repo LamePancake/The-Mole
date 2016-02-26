@@ -67,12 +67,12 @@ public:
 	{
 		if (_btHeat < 100)
 		{
-			cout << "overheated" << endl;
+			cout << "not overheated" << endl;
 			return true;
 		}
 		else
 		{
-			cout << "not quite heated" << endl;
+			cout << "too heated" << endl;
 			return false;
 		}
 	}
@@ -264,7 +264,6 @@ class BossBehavTree
 public:
 	BossBehavTree();
 
-	~BossBehavTree();
 	void ExecuteTree();
 	void UpdateVariables(Vector2 pPos, Vector2 bPos, int health, int heat);
 private:
