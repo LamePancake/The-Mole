@@ -22,7 +22,9 @@ public:
 	 *
 	 * @param nextScreenName The name of the screen to be loaded.
 	 */
-	void SetNextScreen(const char* nextScreenName);
+	void SetNextScreen(std::string&& nextScreenName);
+
+	void SetNextScreen(const std::string& nextScreenName);
 
 	/**
 	 * @brief Starts the game loop with the specified starting screen.

@@ -14,8 +14,9 @@ class GameScreen :
 	public Screen
 {
 public:
-	virtual int Load() = 0;
-	int Load(std::string levelAddress, std::string textureAddress);
+	GameScreen(std::string levelPath, std::string backgroundPath, std::string nextLevel)
+		: _levelPath(levelPath), _backgroundPath(backgroundPath), _nextLevel(nextLevel) {}
+	virtual int Load();
 	virtual int Update(double elapasedSecs) override;
 	virtual void Draw() override;
 	virtual void Unload() override;
@@ -38,6 +39,10 @@ public:
 	const std::shared_ptr<PlayerActor> GetPlayer() const;
 
 protected:
+	std::string _levelPath;
+	std::string _backgroundPath;
+	std::string _nextLevel;
+
 	Camera* _camera;
 	GameManager* _mgr;
 	Uint8* _prevKeyState;

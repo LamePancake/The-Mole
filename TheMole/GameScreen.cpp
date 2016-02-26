@@ -12,12 +12,12 @@ const std::shared_ptr<PlayerActor> GameScreen::GetPlayer() const
 	return _player;
 }
 
-int GameScreen::Load(std::string levelAddress, std::string textureAddress)
+int GameScreen::Load()
 {
 	_mgr = GameManager::GetInstance();
 
 	// Load level one in order to render
-	_level = _levelLoader.LoadLevel(levelAddress, _player);
+	_level = _levelLoader.LoadLevel(_levelPath, _player);
 	_levelRenderer.Load(*_mgr);
 
 	SDL2pp::Point playerPos((int)(_player->GetPosition().GetX()), (int)(_player->GetPosition().GetY()));
@@ -27,7 +27,7 @@ int GameScreen::Load(std::string levelAddress, std::string textureAddress)
 	levelSize.y *= _level->GetTileHeight();
 	_camera = new Camera(playerPos, viewportSize, levelSize);
 
-	_background = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), textureAddress);
+	_background = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), _backgroundPath);
 
 	return SCREEN_LOAD_SUCCESS;
 }
@@ -44,9 +44,15 @@ int GameScreen::Update(double elapsedSecs)
 		exit(0);
 	}
 
-	if (_player->IsDead() || _player->AtGoal())
+	if (_player->IsDead())
 	{
 		GameManager::GetInstance()->SetNextScreen("menu");
+		return SCREEN_FINISH;
+	}
+
+	if (_player->AtGoal())
+	{
+		_mgr->SetNextScreen(_nextLevel);
 		return SCREEN_FINISH;
 	}
 

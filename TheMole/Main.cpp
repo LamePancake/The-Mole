@@ -5,8 +5,8 @@
 #include <SDL2\SDL_main.h>
 #include <memory>
 #include "GameManager.h"
+#include "GameScreen.h"
 #include "MenuScreen.h"
-#include "DenLevelScreen.h"
 #include "Input.h"
 
 using std::string;
@@ -32,9 +32,11 @@ int main(int argc, char** argv) {
 
 		unordered_map<string, shared_ptr<Screen>> screens;
 		shared_ptr<Screen> menu(new MenuScreen);
-		shared_ptr<Screen> den(new DenLevelScreen);
+		shared_ptr<Screen> den(new GameScreen(".\\Assets\\Levels\\den_level.txt", ".\\Assets\\Textures\\den_bg.png", "testlevel"));
+		shared_ptr<Screen> test(new GameScreen(".\\Assets\\Levels\\test_level.txt", ".\\Assets\\Textures\\den_bg.png", "menu"));
 		screens.insert({ "menu", menu });
 		screens.insert({ "denlevel", den });
+		screens.insert({ "testlevel", test });
 
 		GameManager::_instance = new GameManager(std::move(sdl), std::move(image), std::move(mixer), std::move(sdl_ttf), std::move(window), std::move(renderer), screens);
 		
