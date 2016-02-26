@@ -73,6 +73,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="BossActor.cpp">
+    <ClCompile Include="ProjectileActor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -138,6 +139,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="BossBehavTree.h">
+    <ClInclude Include="ProjectileActor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

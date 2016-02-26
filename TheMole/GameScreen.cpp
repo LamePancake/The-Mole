@@ -111,6 +111,11 @@ void GameScreen::Draw()
 		_level->GetNPC(i)->Draw(*_camera);
 	}
 
+	for (size_t i = 0; i < _level->GetProjectileActorSize(); ++i)
+	{
+		_level->GetProjectile(i)->Draw(*_camera);
+	}
+
 	// Render Player
 	_player->Draw(*_camera);
 

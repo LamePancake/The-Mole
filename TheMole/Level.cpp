@@ -1,5 +1,10 @@
 #include "Level.h"
 #include "GameScreen.h"
+#include "Actor.h"
+#include "AIActor.h"
+#include "NPCActor.h"
+#include "ObjectActor.h"
+#include "ProjectileActor.h"
 
 int Level::AddTileToLevel(std::shared_ptr<Tile> tile, int row)
 {
@@ -106,6 +111,25 @@ std::shared_ptr<Actor> Level::GetActorObject(size_t idx)
 
 	return _objects[idx];
 }
+
+void Level::AddProjectileObject(std::shared_ptr<ProjectileActor> prj)
+{
+	_projectiles.push_back(prj);
+}
+
+size_t Level::GetProjectileActorSize() const
+{
+	return _projectiles.size();
+}
+
+std::shared_ptr<ProjectileActor> Level::GetProjectile(size_t idx)
+{
+	if (idx > _projectiles.size())
+		return nullptr;
+
+	return _projectiles[idx];
+}
+
 
 size_t Level::GetActorObjectSize() const
 {
