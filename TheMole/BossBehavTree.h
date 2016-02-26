@@ -36,8 +36,9 @@ public:
 			{
 				return true;
 			}
-			return false;
+			
 		}
+		return false;
 	}
 };
 
@@ -52,8 +53,9 @@ public:
 			{
 				return false;
 			}
-			return true;
+			
 		}
+		return true;
 	}
 };
 
