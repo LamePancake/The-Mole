@@ -3,6 +3,7 @@
 #include "AIActor.h"
 #include "NPCActor.h"
 #include "ObjectActor.h"
+#include "ProjectileActor.h"
 
 int Level::AddTileToLevel(std::shared_ptr<Tile> tile, int row)
 {
@@ -98,6 +99,11 @@ std::shared_ptr<Actor> Level::GetActorObject(size_t idx)
 		return nullptr;
 
 	return _objects[idx];
+}
+
+void Level::AddProjectileObject(std::shared_ptr<ProjectileActor> prj)
+{
+	_projectiles.push_back(prj);
 }
 
 size_t Level::GetActorObjectSize() const

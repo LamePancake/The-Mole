@@ -7,6 +7,7 @@ class Actor;
 class AIActor;
 class NPCActor;
 class ObjectActor;
+class ProjectileActor;
 
 #include "Tile.h"
 
@@ -148,6 +149,9 @@ public:
 	*/
 	std::shared_ptr<Actor> GetActorObject(size_t idx);
 
+	///Should write something here
+	void AddProjectileObject(std::shared_ptr<ProjectileActor> prj);
+
 	/**
 	* Gets object array size.
 	*
@@ -193,6 +197,9 @@ private:
 
 	/** Other actors in the level, like checkpoints */
 	std::vector<std::shared_ptr<ObjectActor>> _objects;
+
+	/** Stores projectiles currently spawned */
+	std::vector<std::shared_ptr<ProjectileActor>> _projectiles;
 
 	std::map<char, std::vector<SDL2pp::Point>> _tilePositions;
 

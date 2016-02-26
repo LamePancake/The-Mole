@@ -38,9 +38,9 @@ void ObjectActor::Update(double elapsedSecs)
 	}
 }
 
-bool ObjectActor::CollisionCheck(Actor & otherActor)
+bool ObjectActor::CollisionCheck(Actor & otherAI)
 {
-	return _aabb.CheckCollision(otherActor.GetAABB());
+	return _aabb.CheckCollision(otherAI.GetAABB());
 }
 
 int ObjectActor::GetID()
@@ -62,8 +62,18 @@ void ObjectActor::FlagUpdate(double elapsedSecs)
 		_sprites[_currentSpriteSheet]->SetRepeating(false);
 	}
 }
-
+ 
 void ObjectActor::PancakeUpdate(double elapsedSecs)
+{
+	const std::shared_ptr<GameScreen> screen = std::dynamic_pointer_cast<GameScreen>(_mgr->GetCurrentScreen());
+	if (CollisionCheck(*(screen->GetPlayer())))
+	{
+		_sprites[_currentSpriteSheet]->Stop();
+		SetVisibility(false);
+	}
+}
+
+void ObjectActor::ProjectileThrowerUpdate(double elapseSecs)
 {
 	const std::shared_ptr<GameScreen> screen = std::dynamic_pointer_cast<GameScreen>(_mgr->GetCurrentScreen());
 	if (CollisionCheck(*(screen->GetPlayer())))

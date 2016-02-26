@@ -11,6 +11,7 @@ public:
 	{
 		flag,
 		pancake,
+		projectileThrower
 	};
 
 	/**
@@ -73,5 +74,7 @@ private:
 	void FlagUpdate(double elapsedSecs);
 
 	void PancakeUpdate(double elapsedSecs);
+
+	void ProjectileThrowerUpdate(double elapseSecs);
 };
 
