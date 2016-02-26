@@ -133,6 +133,7 @@
   <ItemGroup>
     <ClCompile Include="AABB.cpp" />
     <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="BossBehavTree.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="DenLevelScreen.cpp" />
     <ClCompile Include="GameManager.cpp" />
