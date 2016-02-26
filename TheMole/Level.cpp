@@ -106,6 +106,20 @@ void Level::AddProjectileObject(std::shared_ptr<ProjectileActor> prj)
 	_projectiles.push_back(prj);
 }
 
+size_t Level::GetProjectileActorSize() const
+{
+	return _projectiles.size();
+}
+
+std::shared_ptr<ProjectileActor> Level::GetProjectile(size_t idx)
+{
+	if (idx > _projectiles.size())
+		return nullptr;
+
+	return _projectiles[idx];
+}
+
+
 size_t Level::GetActorObjectSize() const
 {
 	return _objects.size();

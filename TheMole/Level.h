@@ -152,6 +152,10 @@ public:
 	///Should write something here
 	void AddProjectileObject(std::shared_ptr<ProjectileActor> prj);
 
+	size_t GetProjectileActorSize() const;
+
+	std::shared_ptr<ProjectileActor> GetProjectile(size_t idx);
+
 	/**
 	* Gets object array size.
 	*
