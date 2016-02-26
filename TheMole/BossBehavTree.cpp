@@ -1,178 +1,70 @@
 #include "BossBehavTree.h"
-using namespace std;
-class Node
-{
-public:
-	virtual bool run() = 0;
-};
 
-class CompositeNode : public Node
+
+
+BossBehavTree::BossBehavTree()
 {
-private:
-	list<Node*> children;
-public:
-	const list<Node*>& getChildren() const
+	//Initialize Sequences and Selectors
+	_root = new Selector;
+	_selAlive = new Selector;
+	_seqDead = new Sequence;
+	_seq1Close = new Sequence;
+	_seq1Far = new Sequence;
+	_seqOverHeat = new Sequence;
+
+	//Initialize Tasks
+	_tChkOverheat = new CheckIfOverheatedTask(_heat);
+	_tChkHeat = new CheckHeatTask(_heat);
+	_tChkAlive = new CheckAliveTask(_health);
+	_tChkDead = new CheckDeadTask(_health);
+	_tPrePunch = new PrePunchTask(_pDist);
+	_tPunch = new PunchTask();
+	_tPreRoll = new PreRollTask(_pDist);
+	_tRoll = new RollTask();
+	_tShortHop = new ShortHopTask();
+	_tShockWave = new ShockWaveTask();
+	_tIdle = new IdleTask();
+	_tEject = new EjectTask();
+
+	//Add alive/dead condition nodes
+	_root->addChild(_selAlive);
+	_root->addChild(_seqDead);
+
+	//Add alive sequences;
+	_selAlive->addChild(_seq1Close);
+	_selAlive->addChild(_seq1Far);
+	_selAlive->addChild(_seqOverHeat);
+
+	//Add all alive tasks
+	_seq1Close->addChild(_tChkHeat);
+	_seq1Close->addChild(_tChkAlive);
+	_seq1Close->addChild(_tPrePunch);
+	_seq1Close->addChild(_tPunch);
+	_seq1Close->addChild(_tIdle);
+
+	_seq1Far->addChild(_tChkHeat);
+	_seq1Far->addChild(_tChkAlive);
+	_seq1Far->addChild(_tPreRoll);
+	_seq1Far->addChild(_tRoll);
+	_seq1Far->addChild(_tShortHop);
+	_seq1Far->addChild(_tShockWave);
+	_seq1Far->addChild(_tPreRoll);
+
+	_seqOverHeat->addChild(_tChkOverheat);
+	_seqOverHeat->addChild(_tChkAlive);
+	_seqOverHeat->addChild(_tIdle);
+
+	//Add dead tasks
+	_seqDead->addChild(_tEject);
+}
+
+void BossBehavTree::ExecuteTree()
+{
+	while (!_root->run())
 	{
-		return children;
+		cout << "---------------------" << endl;
 	}
-	void addChild(Node* child)
-	{
-		children.emplace_back(child);
-	}
-};
-
-class Selector : public CompositeNode
-{
-public:
-	virtual bool run() override
-	{
-		for (Node* child : getChildren())
-		{
-			if (child->run())
-			{
-				return true;
-			}
-			return false;
-		}
-	}
-};
-
-class Sequence : public CompositeNode
-{
-public:
-	virtual bool run() override
-	{
-		for (Node* child : getChildren())
-		{
-			if (!child->run())
-			{
-				return false;
-			}
-			return true;
-		}
-	}
-};
-//
-//struct HeatStatus
-//{
-//	bool overheated;
-//	int heat;
-//};
-//
-//struct HealthStatus
-//{
-//	bool dead;
-//	int health;
-//};
-
-class CheckIfOverheatedTask : public Node
-{
-private:
-	int _btHeat;
-public:
-	CheckIfOverheatedTask(int heat) : _btHeat(heat){}
-	virtual bool run() override
-	{
-		if (_btHeat >= 100)
-		{
-			cout << "overheated" << endl;
-			return true;
-		}
-		else
-		{
-			cout << "not quite heated" << endl;
-			return false;
-		}		
-	}
-};
-
-class CheckHealthTask : public Node
-{
-private:
-	int _btHealth;
-public:
-	CheckHealthTask(int health) : _btHealth(health){}
-	virtual bool run() override
-	{
-		if (_btHealth > 50)
-		{
-			cout << "phase 1" << endl;
-			return true;
-		}
-		else
-		{
-			cout << "phase 2" << endl;
-			return false;
-		}
-	}
-};
-
-class CheckIfPlayerCloseTask : public Node
-{
-private:
-	float _btDist;
-public:
-	CheckIfPlayerCloseTask(float dist) : _btDist(dist) {}
-	virtual bool run() override
-	{
-		if (_btDist < 5)
-		{
-			cout << "close" << endl;
-			return true;
-		}
-		else
-		{
-			cout << "far" << endl;
-			return false;
-		}
-	}
-};
-
-class OverheatedTask : public Node
-{
-private:
-	bool _btOverheated;
-public:
-	OverheatedTask(bool overheated) : _btOverheated(overheated) {}
-	virtual bool run() override
-	{
-		if (_btOverheated)
-		{
-			cout << "#rekt, cooling down" << endl;
-			return true;
-		}
-		else
-		{
-			cout << "still going" << endl;
-			return false;
-		}
-	}	 
-};
-
-class PunchTask : public Node
-{
-private:
-	bool _btClose;
-public:
-	PunchTask(bool close) : _btClose(close) {}
-	virtual bool run() override
-	{
-		if (_btClose)
-		{
-			cout << "punch" << endl;
-			return true;
-		}
-		else
-		{
-			cout << "not punching" << endl;
-			return false;
-		}
-	}
-};
-
-void BossBehavTree::UpdateTree()
-{
-
+	cout << "Done Tree Execute" << endl;
 }
 
 void BossBehavTree::UpdateVariables(Vector2 pPos, Vector2 bPos, int health, int heat)

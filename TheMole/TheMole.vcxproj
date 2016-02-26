@@ -133,6 +133,7 @@
   <ItemGroup>
     <ClCompile Include="AABB.cpp" />
     <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="BossActor.cpp" />
     <ClCompile Include="BossBehavTree.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="GameManager.cpp" />
@@ -154,6 +155,8 @@
   <ItemGroup>
     <ClInclude Include="AABB.h" />
     <ClInclude Include="Actor.h" />
+    <ClInclude Include="BossActor.h" />
+    <ClInclude Include="BossBehavTree.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="GameScreen.h" />
     <ClInclude Include="Math.h" />

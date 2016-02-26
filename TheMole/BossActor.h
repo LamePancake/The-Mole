@@ -18,7 +18,7 @@ public:
 		_heat = 0;
 	}
 	~BossActor();
-	void UpdateWorldState();
+	void Update();
 
 private:
 	shared_ptr<PlayerActor> _player;
@@ -26,4 +26,4 @@ private:
 	int _health;
 	int _heat;
 };
-#endif // !BOSSACTOR_H
+#endif 
