@@ -19,7 +19,7 @@ class Level
 public:
 
 	/** Default constructor. */
-	Level(){}
+	Level(): _currentSpawnPoint(0, 0) {}
 
 	/**
 	 * Adds a tile to the level.
@@ -231,6 +231,12 @@ public:
 	*/
 	void Update(double deltaTime);
 
+	void Reset();
+
+	void SetSpawnPoint(Vector2 point);
+
+	Vector2 GetSpawnPoint();
+
 private:
 	
 	/** Stores the tiles that have been dug and need to be respawned. */
@@ -238,6 +244,9 @@ private:
 
 	/** The enemies in the level. */
 	std::vector<std::shared_ptr<AIActor>> _enemies;
+
+	/** Stores the spawn point of the enemies */
+	std::vector<SDL2pp::Point> _enemiesSpawns;
 
 	/** The npcs in the level. */
 	std::vector<std::shared_ptr<NPCActor>> _NPCs;
@@ -261,6 +270,8 @@ private:
 
 	/** height of the tile. */
 	size_t _tileHeight;
+
+	Vector2 _currentSpawnPoint;
 
 	/**
 	* Updates the dug tiles to see if they can be respaned.

@@ -30,6 +30,11 @@ void ProjectileActor::Update(double elapsedSecs)
 	//_prevKinematic = _curKinematic;
 }
 
+void ProjectileActor::Reset(Vector2 pos)
+{
+	Actor::Reset(pos);
+}
+
 void ProjectileActor::UpdatePosition(double elapsedSecs) {
 	// Copy everything over so that we can use this in collision detection stuff later
 	//_prevKinematic = _curKinematic;

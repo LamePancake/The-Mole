@@ -24,6 +24,9 @@ public:
 
 	virtual void Update(double elapsedSecs);
 
+	// Resets the actor
+	virtual void Reset(Vector2 pos);
+
 private:
 	BossBehavTree _bossTree;
 	int _heat;

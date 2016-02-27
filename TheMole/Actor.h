@@ -178,6 +178,14 @@ public:
 	 */
 	virtual void Draw(Camera& camera);
 
+	/**
+	* Resets the actor.
+	*
+	* @param [in,out]	Position to reset at.
+	*
+	*/
+	virtual void Reset(Vector2 pos);
+
 protected:
 
 	typedef enum {

@@ -38,6 +38,11 @@ void ObjectActor::Update(double elapsedSecs)
 	}
 }
 
+void ObjectActor::Reset(Vector2 pos)
+{
+	Actor::Reset(pos);
+}
+
 bool ObjectActor::CollisionCheck(Actor & otherAI)
 {
 	return _aabb.CheckCollision(otherAI.GetAABB());

@@ -481,3 +481,13 @@ float PlayerActor::GetMaximumJumpVelocity()
 {
 	return _maxJumpVel;
 }
+
+void PlayerActor::Reset(Vector2 pos)
+{
+	Actor::Reset(pos);
+	_jumped = false; 
+	_godMode = false;
+	_stoppedTime = false;
+	_atGoal = false;
+	_wasOnGround = true;
+}

@@ -236,3 +236,19 @@ void Level::Update(double deltaTime)
 {
 	UpdateDugTiles(deltaTime);
 }
+
+void Level::Reset()
+{
+	
+}
+
+void Level::SetSpawnPoint(Vector2 point)
+{
+	_currentSpawnPoint = point;
+}
+
+Vector2 Level::GetSpawnPoint()
+{
+	return _currentSpawnPoint;
+}
+

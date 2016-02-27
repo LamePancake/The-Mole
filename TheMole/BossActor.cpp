@@ -24,3 +24,8 @@ void BossActor::Update(double elapsedSecs)
 	_bossTree.UpdateVariables(_gameScreen->GetPlayer()->GetPosition(), _curKinematic.position, _health, _heat);
 	_bossTree.ExecuteTree();
 }
+
+void BossActor::Reset(Vector2 pos)
+{
+	Actor::Reset(pos);
+}

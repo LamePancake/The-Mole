@@ -50,8 +50,8 @@ int GameScreen::Update(double elapsedSecs)
 
 	if (_player->IsDead())
 	{
-		GameManager::GetInstance()->SetNextScreen("menu");
-		return SCREEN_FINISH;
+		_level->Reset();
+		_player->Reset(_level->GetSpawnPoint());
 	}
 
 	if (_player->AtGoal())

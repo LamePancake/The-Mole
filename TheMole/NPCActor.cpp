@@ -16,3 +16,8 @@ void NPCActor::Update(double elapsedSecs)
 	_aabb.UpdatePosition(*this);
 }
 
+void NPCActor::Reset(Vector2 pos)
+{
+	Actor::Reset(pos);
+}
+

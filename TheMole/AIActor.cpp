@@ -95,6 +95,11 @@ void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level>& level)
 	}
 }
 
+void AIActor::Reset(Vector2 pos)
+{
+	Actor::Reset(pos);
+}
+
 void AIActor::Draw(Camera& camera)
 {
 	if (!_isVisible) return;

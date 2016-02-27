@@ -43,6 +43,9 @@ public:
 
 	// All the state changing stuff happens in here.
 	virtual void Update(double elapsedSecs) override;
+
+	// Resets the actor
+	virtual void Reset(Vector2 pos);
 	
 	/**
 	* Collision check.
