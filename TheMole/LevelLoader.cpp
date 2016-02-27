@@ -96,6 +96,7 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 					std::shared_ptr<ObjectActor> collectible = std::make_shared<ObjectActor>(tile->GetWorldPosition(), gameManager, Vector2(0, 0), ObjectActor::pancake, sprites, "whateverPancakesDo");
 					level->AddActorObject(collectible);
 					tile->SetID(Tile::blank);
+					level->_totalPancakes++;
 				}
 				break;
 			case Tile::boss:

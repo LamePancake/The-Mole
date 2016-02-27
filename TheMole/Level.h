@@ -19,7 +19,7 @@ class Level
 public:
 
 	/** Default constructor. */
-	Level(): _currentSpawnPoint(0, 0) {}
+	Level(): _currentSpawnPoint(0, 0), _totalPancakes(0) {}
 
 	/**
 	 * Adds a tile to the level.
@@ -252,6 +252,8 @@ public:
 	void SetSpawnPoint(Vector2 point);
 
 	Vector2 GetSpawnPoint();
+
+	int _totalPancakes;
 
 private:
 	

@@ -51,10 +51,17 @@ int GameScreen::Update(double elapsedSecs)
 			_level->Reset();
 			_player->Reset(_level->GetSpawnPoint());
 		}
-		else
+		return SCREEN_CONTINUE;
+	}
+
+	if (_player->AtGoal())
+	{
+		if (_mgr->inputManager->ActionOccurred("CONFIRM", Input::Pressed))
 		{
-			return SCREEN_CONTINUE;
+			_mgr->SetNextScreen(_nextLevel);
+			return SCREEN_FINISH;
 		}
+		return SCREEN_CONTINUE;
 	}
 
 	_player->Update(elapsedSecs);
@@ -62,12 +69,6 @@ int GameScreen::Update(double elapsedSecs)
 	{
 		std::cout << ":SALKDJF:LSDKJF" << std::endl;
 		return SCREEN_CONTINUE;
-	}
-
-	if (_player->AtGoal())
-	{
-		_mgr->SetNextScreen(_nextLevel);
-		return SCREEN_FINISH;
 	}
 
 	// Update Enemies
@@ -137,7 +138,34 @@ void GameScreen::Draw()
 	{
 		SDL2pp::Point dim = GameManager::GetInstance()->GetWindow().GetSize();
 		rend.Copy(*_loseScreen, SDL2pp::NullOpt, SDL2pp::Rect((dim.x / 2) - (dim.x * 0.6 / 2), (dim.y / 2) - (dim.y * 0.6 / 2), dim.x * 0.6, dim.y * 0.6));
-		rend.Copy(*_pancake, SDL2pp::NullOpt, SDL2pp::Rect((dim.x / 2) - (_pancake->GetWidth() / 2), (dim.y / 2) - (_pancake->GetHeight() / 2), _pancake->GetWidth(), _pancake->GetHeight()));
+		int counter = 0;
+		for (int i = 0; i < _level->GetActorObjectSize(); i++)
+		{
+			if (!_level->GetActorObject(i)->IsVisible())
+				counter++;
+		}
+
+		if (counter > 0)
+		{
+			rend.Copy(*_pancake, SDL2pp::NullOpt, SDL2pp::Rect((dim.x / 2) - (_pancake->GetWidth() / 2), dim.y * 0.55 - (_pancake->GetHeight() / 2), _pancake->GetWidth(), _pancake->GetHeight()));
+		}
+	}
+
+	if (_player->AtGoal())
+	{
+		SDL2pp::Point dim = GameManager::GetInstance()->GetWindow().GetSize();
+		rend.Copy(*_winScreen, SDL2pp::NullOpt, SDL2pp::Rect((dim.x / 2) - (dim.x * 0.6 / 2), (dim.y / 2) - (dim.y * 0.6 / 2), dim.x * 0.6, dim.y * 0.6));
+		int counter = 0;
+		for (int i = 0; i < _level->GetActorObjectSize(); i++)
+		{
+			if (!_level->GetActorObject(i)->IsVisible())
+				counter++;
+		}
+
+		if (counter > 0)
+		{
+			rend.Copy(*_pancake, SDL2pp::NullOpt, SDL2pp::Rect((dim.x / 2) - (_pancake->GetWidth() / 2), dim.y * 0.55 - (_pancake->GetHeight() / 2), _pancake->GetWidth(), _pancake->GetHeight()));
+		}
 	}
 
 	rend.Present();
