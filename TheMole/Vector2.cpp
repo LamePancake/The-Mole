@@ -34,3 +34,14 @@ void Vector2::SetY(float y)
 {
 	_y = y;
 }
+
+float Vector2::Distance(Vector2 other)
+{
+	float x = _x - other._x;
+	float y = _y - other._y;
+	
+	x *= x;
+	y *= y;
+
+	return std::sqrtf(x + y);
+}

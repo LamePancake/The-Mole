@@ -1,4 +1,6 @@
 #pragma once
+#include <cmath>
+
 /**
 * Class that holds X,Y position in floats.
 **/
@@ -42,6 +44,17 @@ public:
 	*/
 	void SetY(float y);
 
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	///<summary> Gets the absolute distance to another vector.</summary>
+	/// 
+	///<remarks> Shane, 2/22/2016.</remarks>
+	///
+	///<param name="other">The other vector to which to compute the distance.</param>
+	///<returns>The distance to the other vector.</returns>
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	float Distance(Vector2 other);
+
+private:
 	float _x;
 	float _y;
 };

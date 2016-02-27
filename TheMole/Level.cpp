@@ -64,6 +64,11 @@ std::shared_ptr<Actor> Level::GetEnemy(size_t idx)
 	return _enemies[idx];
 }
 
+const std::vector<std::shared_ptr<AIActor>>& Level::GetEnemies() const
+{
+	return _enemies;
+}
+
 size_t Level::GetEnemySize() const
 {
 	return _enemies.size();

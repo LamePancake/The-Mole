@@ -1,10 +1,13 @@
 #include "PlayerActor.h"
 #include "GameScreen.h"
 
+using std::vector;
+using std::shared_ptr;
+
 PlayerActor::PlayerActor(Vector2 position, GameManager& manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
 	const std::string&& startSprite, SpriteSheet::XAxisDirection startXDir, SpriteSheet::YAxisDirection startYDir)
 	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDir, startYDir), _prevDirection(startXDir), _atGoal(false), _jumpVelocity(0), _maxJumpVel(400),
-	_digDir{Edge::NONE}, _jumped(false), _jumpDuration(0.75), _jumpTimeElapsed(0), _godMode(false)
+	_digDir{ Edge::NONE }, _jumped(false), _jumpDuration(0.75), _jumpTimeElapsed(0), _godMode(false), _stoppedTime(false)
 {
 }
 
@@ -19,6 +22,9 @@ void PlayerActor::Draw(Camera& camera)
 
 void PlayerActor::Update(double elapsedSecs)
 {
+	UpdateInput();
+	if (_stoppedTime) return;
+
 	Actor::Update(elapsedSecs);
 	_jumpVelocity = Math::Clamp(_jumpVelocity, -_maxJumpVel, _maxJumpVel);
 	if (!_jumped)
@@ -42,7 +48,6 @@ void PlayerActor::Update(double elapsedSecs)
         _digDir = Edge::NONE;
 	}
 
-	UpdateInput();
 	UpdatePosition(elapsedSecs);
 	_aabb.UpdatePosition(*this);
 
@@ -157,6 +162,13 @@ void PlayerActor::UpdateInput()
 {
 	if (_digDir != Edge::NONE) return;
 
+	_stoppedTime = false;
+	if (_mgr->inputManager->ActionOccurred("MIND", Input::Held))
+	{
+		_stoppedTime = true;
+		return;
+	}
+
 	bool triedDigging = _mgr->inputManager->ActionOccurred("DIG", Input::Pressed);
 
 	if (_mgr->inputManager->ActionOccurred("LEFT", Input::Held))
@@ -262,6 +274,32 @@ void PlayerActor::UpdateInput()
 	}
 }
 
+void PlayerActor::UpdateMindControlSelection()
+{
+	vector<shared_ptr<AIActor>> enemies = _gameScreen->GetLevel()->GetEnemies();
+	vector<shared_ptr<AIActor>> inRange;
+	Vector2 centre{ _curKinematic.position.GetX() + _sprites[_currentSpriteSheet]->GetFrameWidth() / 2, _curKinematic.position.GetY() + _sprites[_currentSpriteSheet]->GetFrameHeight() / 2 };
+	for (auto enemy : enemies)
+	{
+		// Check whether the enemy is in range, offsetting their position as necessary 
+		// to make sure that the distance is the same on all sides
+		Vector2 enemyPos = enemy->GetPosition();
+		AABB enemyAABB = enemy->GetAABB();
+		if (enemyPos.GetX() < _curKinematic.position.GetX()) enemyPos.SetX(enemyPos.GetX() + enemyAABB.GetWidth());
+		if (enemyPos.GetY() < _curKinematic.position.GetY()) enemyPos.SetY(enemyPos.GetY() + enemyAABB.GetHeight());
+
+		if (centre.Distance(enemyPos) <= _mindControlRadius) inRange.push_back(enemy);
+	}
+
+	if (inRange.empty()) return;
+
+	if (_mgr->inputManager->ActionOccurred("MIND_TOGGLE", Input::Pressed))
+	{
+		_selected++;
+		_selected %= inRange.size();
+	}
+}
+
 void PlayerActor::Dig()
 {
     std::shared_ptr<Level> level = _gameScreen->GetLevel();
@@ -280,10 +318,10 @@ void PlayerActor::Dig()
                 tile->SetID(Tile::blank);
             }
         }
-        if (!dug && _curKinematic.position.GetX() / level->GetTileWidth() > 0)
+        if (!dug && _collisionInfo.colIntersect[0]->GetIndices().x > 0)
         {
             int nextRow = _collisionInfo.colIntersect[0]->GetIndices().y;
-            int nextCol = _collisionInfo.colIntersect[0]->GetIndices().x - 1 < 0 ? _collisionInfo.colIntersect[0]->GetIndices().x : _collisionInfo.colIntersect[0]->GetIndices().x - 1;
+            int nextCol = _collisionInfo.colIntersect[0]->GetIndices().x - 1;
             float dist = _curKinematic.position.GetX() - (level->GetTileFromLevel(nextCol, nextRow)->GetWorldPosition().GetX() + level->GetTileWidth());
             if (dist < 3)
             {
@@ -308,10 +346,10 @@ void PlayerActor::Dig()
                 tile->SetID(Tile::blank);
             }
         }
-        if (!dug && _curKinematic.position.GetX() / level->GetTileWidth() < level->GetLevelSize().x - 1)
+        if (!dug && _collisionInfo.colIntersect[0]->GetIndices().x < level->GetLevelSize().x - 1)
         {
             int nextRow = _collisionInfo.colIntersect[0]->GetIndices().y;
-            int nextCol = _collisionInfo.colIntersect[0]->GetIndices().x + 1 > level->GetLevelSize().x ? _collisionInfo.colIntersect[0]->GetIndices().x : _collisionInfo.colIntersect[0]->GetIndices().x + 1;
+            int nextCol = _collisionInfo.colIntersect[0]->GetIndices().x + 1;
             float dist = (level->GetTileFromLevel(nextCol, nextRow)->GetWorldPosition().GetX() + level->GetTileWidth()) - _curKinematic.position.GetX();
             if (dist < 3)
             {
@@ -336,9 +374,9 @@ void PlayerActor::Dig()
                 tile->SetID(Tile::blank);
             }
         }
-        if (!dug && _curKinematic.position.GetY() / level->GetTileHeight() > 0)
+        if (!dug && _collisionInfo.rowIntersect[0]->GetIndices().y > 0)
         {
-            int nextRow = _collisionInfo.rowIntersect[0]->GetIndices().y - 1 < 0 ? _collisionInfo.rowIntersect[0]->GetIndices().y : _collisionInfo.rowIntersect[0]->GetIndices().y -1;
+            int nextRow = _collisionInfo.rowIntersect[0]->GetIndices().y - 1;
             int nextCol = _collisionInfo.rowIntersect[0]->GetIndices().x;
             float dist = _curKinematic.position.GetY() - (level->GetTileFromLevel(nextCol, nextRow)->GetWorldPosition().GetY() + level->GetTileHeight());
             if (dist < 3)
@@ -364,9 +402,9 @@ void PlayerActor::Dig()
                 tile->SetID(Tile::blank);
             }
         }
-        if (!dug && _curKinematic.position.GetY() / level->GetTileHeight() < level->GetLevelSize().x - 1)
+        if (!dug && _collisionInfo.rowIntersect[0]->GetIndices().y < level->GetLevelSize().y - 1)
         {
-            int nextRow = _collisionInfo.rowIntersect[0]->GetIndices().y + 1 > level->GetLevelSize().y ? _collisionInfo.rowIntersect[0]->GetIndices().y : _collisionInfo.rowIntersect[0]->GetIndices().y + 1;
+            int nextRow = _collisionInfo.rowIntersect[0]->GetIndices().y + 1;
             int nextCol = _collisionInfo.rowIntersect[0]->GetIndices().x;
             float dist = level->GetTileFromLevel(nextCol, nextRow)->GetWorldPosition().GetY() - (_curKinematic.position.GetY() + _sprites[_currentSpriteSheet]->GetFrameHeight());
             if (dist < 3)
@@ -394,6 +432,11 @@ void PlayerActor::UpdatePosition(double elapsedSecs)
 	_curKinematic.position.SetY(Math::Clamp((float)_curKinematic.position.GetY() + _curKinematic.velocity.GetY() * (float)elapsedSecs, 
                                             0,
                                             level->GetLevelSize().y * level->GetTileHeight() - _sprites[_currentSpriteSheet]->GetFrameHeight()));
+}
+
+bool PlayerActor::StoppedTime() const
+{
+	return _stoppedTime;
 }
 
 bool PlayerActor::CollisionCheck(Actor & otherAI)

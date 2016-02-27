@@ -37,11 +37,15 @@ int GameScreen::Update(double elapsedSecs)
 	SDL_PumpEvents();
 	_mgr->inputManager->UpdateKeyboardState();
 
-	//Update Player
-	_player->Update(elapsedSecs);
-
 	if (_mgr->inputManager->ActionOccurred("QUIT", Input::Pressed)) {
 		exit(0);
+	}
+
+	_player->Update(elapsedSecs);
+	if (_player->StoppedTime())
+	{
+		std::cout << ":SALKDJF:LSDKJF" << std::endl;
+		return SCREEN_CONTINUE;
 	}
 
 	if (_player->IsDead())

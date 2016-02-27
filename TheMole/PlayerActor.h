@@ -39,6 +39,9 @@ public:
 	// Updates position of the agent by adding _speed to it.
 	virtual void UpdatePosition(double elapsedSecs);
 
+	// Gets whether the player stopped time
+	bool StoppedTime() const;
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     ///<summary> Collision check.</summary>
     ///
@@ -104,6 +107,16 @@ private:
     ////////////////////////////////////////////////////////////////////////////////////////////////////
 	void UpdateInput();
 
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	///<summary> Updates controllable AI selection.</summary>
+	///
+	///<remarks> Shane, 2/22/2016.</remarks>
+	///
+	///### <author> Shane.</author>
+	///### <date> 2/6/2016.</date>
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	void UpdateMindControlSelection();
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     ///<summary> Attempts to dig in the current dig direction.</summary>
     /// 
@@ -159,4 +172,10 @@ private:
 
     Edge _digDir;
 	bool _godMode;
+
+	// Mind control variables
+	bool _stoppedTime;
+	float _mindControlRadius;
+	int _selected;
+	std::vector<std::shared_ptr<AIActor>> _controllable;
 };

@@ -97,5 +97,24 @@ void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level>& level)
 
 void AIActor::Draw(Camera& camera)
 {
-	Actor::Draw(camera);
+	if (!_isVisible) return;
+
+	const SDL2pp::Rect& viewport = camera.GetViewport();
+	int offsetX = 4;
+	int offsetY = 0;
+
+	SDL2pp::Renderer& rend = _mgr->GetRenderer();
+
+	std::shared_ptr<SpriteSheet> spriteSheet = _sprites[_currentSpriteSheet];
+	SDL_Texture* rawTexture = spriteSheet->GetTexture().Get();
+	SDL2pp::Point tempPoint = SDL2pp::Point(_curKinematic.position.GetX(), _curKinematic.position.GetY());
+
+	// Draw shadow first, so we need to adjust drawing parameters
+	SDL_SetTextureColorMod(rawTexture, 95, 127, 95);
+	SDL_SetTextureAlphaMod(rawTexture, 127);
+	spriteSheet->Draw(tempPoint + SDL2pp::Point(offsetX - viewport.x, offsetY - viewport.y), _spriteXDir, _spriteYDir);
+
+	SDL_SetTextureColorMod(rawTexture, 190, 255, 190);
+	SDL_SetTextureAlphaMod(rawTexture, 255);
+	spriteSheet->Draw(tempPoint + SDL2pp::Point(-viewport.x, -viewport.y), _spriteXDir, _spriteYDir);
 }
