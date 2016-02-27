@@ -163,36 +163,35 @@ void Level::SetTileHeight(size_t height)
 
 void Level::AddDugTile(std::shared_ptr<Tile> t)
 {
-	_dugDirt.push_back(t);
-	_dugTimers.push_back(0);
+	_dugDirtTiles.insert(std::make_pair(t, 0));
 }
 
-void Level::UpdateDugTile(double deltaTime)
+void Level::UpdateDugTiles(double deltaTime)
 {
-	int tileWidth = GetTileWidth();
+	int tileWidth  = GetTileWidth();
 	int tileHeight = GetTileHeight();
 	std::shared_ptr<PlayerActor> player = std::dynamic_pointer_cast<GameScreen>(GameManager::GetInstance()->GetCurrentScreen())->GetPlayer();
 
-	float leftPlayerBound = player->GetPosition().GetX();
-	float topPlayerBound = player->GetPosition().GetY();
-	float rightPlayerBound = player->GetPosition().GetX() + player->GetTexture()->GetFrameWidth();
+	float leftPlayerBound   = player->GetPosition().GetX();
+	float topPlayerBound    = player->GetPosition().GetY();
+	float rightPlayerBound  = player->GetPosition().GetX() + player->GetTexture()->GetFrameWidth();
 	float bottomPlayerBound = player->GetPosition().GetY() + player->GetTexture()->GetFrameHeight();
 
-	int leftPlayerIdx = ((int)leftPlayerBound / tileWidth);
-	int topPlayerIdx = ((int)topPlayerBound / tileHeight);
-	int rightPlayerIdx = ((int)rightPlayerBound / tileWidth);
+	int leftPlayerIdx   = ((int)leftPlayerBound / tileWidth);
+	int topPlayerIdx    = ((int)topPlayerBound / tileHeight);
+	int rightPlayerIdx  = ((int)rightPlayerBound / tileWidth);
 	int bottomPlayerIdx = ((int)bottomPlayerBound / tileHeight);
 
-	for (size_t i = 0; i < _dugDirt.size(); ++i)
+	for (auto it = _dugDirtTiles.begin(); it != _dugDirtTiles.end(); )
 	{
-		_dugTimers[i] += deltaTime;
+		it->second += deltaTime;
 
-		if (_dugTimers[i] > 10)
+		if (it->second > 7)
 		{
 			bool isOccupied = false;
-			SDL2pp::Point tileIdx = _dugDirt[i]->GetIndices();
+			SDL2pp::Point tileIdx = it->first->GetIndices();
 
-			if ((leftPlayerIdx == tileIdx.x && topPlayerIdx == tileIdx.y) ||
+			if ((leftPlayerIdx  == tileIdx.x && topPlayerIdx   == tileIdx.y) ||
 				(rightPlayerIdx == tileIdx.x && bottomPlayerIdx == tileIdx.y))
 			{
 				isOccupied = true;
@@ -212,7 +211,7 @@ void Level::UpdateDugTile(double deltaTime)
 					int rightEnemyIdx  = ((int)rightEnemyBound / tileWidth);
 					int bottomEnemyIdx = ((int)botomEnemyBound / tileHeight);
 
-					if ((leftEnemyIdx == tileIdx.x && topEnemyIdx == tileIdx.y) ||
+					if ((leftEnemyIdx  == tileIdx.x && topEnemyIdx   == tileIdx.y) ||
 						(rightEnemyIdx == tileIdx.x && bottomEnemyIdx == tileIdx.y))
 					{
 						isOccupied = true;
@@ -221,17 +220,19 @@ void Level::UpdateDugTile(double deltaTime)
 				}
 			}
 
-			if (isOccupied)
+			if (!isOccupied)
 			{
+				std::shared_ptr<Tile> t = it->first;
+				_dugDirtTiles.erase(it++);
+				t->SetID(Tile::dirt);
 				continue;
 			}
-			else
-			{
-				std::shared_ptr<Tile> t = _dugDirt[i];
-				_dugDirt.erase(_dugDirt.begin() + i);
-				_dugTimers.erase(_dugTimers.begin() + i);
-				t->SetID(Tile::dirt);
-			}
 		}
+		++it;
 	}
+}
+
+void Level::Update(double deltaTime)
+{
+	UpdateDugTiles(deltaTime);
 }

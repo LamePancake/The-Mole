@@ -80,7 +80,7 @@ int GameScreen::Update(double elapsedSecs)
 
 	_level->GetBoss()->Update(elapsedSecs);
 
-	_level->UpdateDugTile(elapsedSecs);
+	_level->Update(elapsedSecs);
 
 	return SCREEN_CONTINUE;
 }

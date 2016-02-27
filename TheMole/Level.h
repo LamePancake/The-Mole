@@ -217,14 +217,24 @@ public:
 	*/
 	void SetTileHeight(size_t height);
 
+	/**
+	* Stores a tile that was dug.
+	*
+	* @param	t	The tile that was dug.
+	*/
 	void AddDugTile(std::shared_ptr<Tile> t);
 
-	void UpdateDugTile(double deltaTime);
+	/**
+	* Updates objects for the level
+	*
+	* @param	deltaTime	Time since last frame.
+	*/
+	void Update(double deltaTime);
 
 private:
 	
-	std::vector<std::shared_ptr<Tile>> _dugDirt;
-	std::vector<double> _dugTimers;
+	/** Stores the tiles that have been dug and need to be respawned. */
+	std::map<std::shared_ptr<Tile>, double> _dugDirtTiles;
 
 	/** The enemies in the level. */
 	std::vector<std::shared_ptr<AIActor>> _enemies;
@@ -251,4 +261,11 @@ private:
 
 	/** height of the tile. */
 	size_t _tileHeight;
+
+	/**
+	* Updates the dug tiles to see if they can be respaned.
+	*
+	* @param	deltaTime	Time since last frame.
+	*/
+	void UpdateDugTiles(double deltaTime);
 };
