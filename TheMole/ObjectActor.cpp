@@ -65,6 +65,8 @@ void ObjectActor::FlagUpdate(double elapsedSecs)
 	{
 		_sprites[_currentSpriteSheet]->Start();
 		_sprites[_currentSpriteSheet]->SetRepeating(false);
+
+		screen->GetLevel()->SetSpawnPoint(GetPosition());
 	}
 }
  
