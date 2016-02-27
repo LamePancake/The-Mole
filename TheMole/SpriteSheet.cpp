@@ -35,7 +35,8 @@ void SpriteSheet::Update(double elapsedTime) {
 	}
 }
 
-void SpriteSheet::Draw(const SDL2pp::Point&& position, XAxisDirection xAxisDir, YAxisDirection yAxisDir) {
+void SpriteSheet::Draw(const SDL2pp::Point&& position, XAxisDirection xAxisDir, YAxisDirection yAxisDir)
+{
 	// Determine which axes to flip the sprite on, if any
 	int renderFlags = 0;
 	renderFlags |= (xAxisDir == _defaultXDir ? 0 : SDL_FLIP_HORIZONTAL);
@@ -45,6 +46,18 @@ void SpriteSheet::Draw(const SDL2pp::Point&& position, XAxisDirection xAxisDir, 
 	Rect frameRect((int)(_currentFrame * _spriteSize.x), 0, _spriteSize.x, _spriteSize.x);
 	Rect screenRect(position, _spriteSize);
 	rend.Copy(*_sheet, frameRect, screenRect, 0, NullOpt, renderFlags);
+}
+
+void SpriteSheet::Draw(const SDL2pp::Rect destRect, XAxisDirection xAxisDir, YAxisDirection yAxisDir)
+{
+	// Determine which axes to flip the sprite on, if any
+	int renderFlags = 0;
+	renderFlags |= (xAxisDir == _defaultXDir ? 0 : SDL_FLIP_HORIZONTAL);
+	renderFlags |= (yAxisDir == _defaultYDir ? 0 : SDL_FLIP_VERTICAL);
+
+	Renderer& rend = _mgr->GetRenderer();
+	Rect frameRect((int)(_currentFrame * _spriteSize.x), 0, _spriteSize.x, _spriteSize.x);
+	rend.Copy(*_sheet, frameRect, destRect, 0, NullOpt, renderFlags);
 }
 
 bool SpriteSheet::IsAnimating() const

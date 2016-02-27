@@ -42,11 +42,8 @@ int GameScreen::Update(double elapsedSecs)
 	}
 
 	_player->Update(elapsedSecs);
-	if (_player->StoppedTime())
-	{
-		std::cout << ":SALKDJF:LSDKJF" << std::endl;
-		return SCREEN_CONTINUE;
-	}
+	if (_player->StoppedTime())	return SCREEN_CONTINUE;
+	
 
 	if (_player->IsDead())
 	{

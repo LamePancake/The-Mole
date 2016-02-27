@@ -1,8 +1,38 @@
 #include "AIActor.h"
 #include "GameScreen.h"
+#include <cstring>
 
 AIActor::~AIActor()
 {
+}
+
+void AIActor::SetSelectedForControl(bool selected)
+{
+	_isSelected = selected;
+}
+
+void AIActor::SetIsMindControlCandidate(bool isCandidate)
+{
+	_isCandidate = isCandidate;
+}
+
+void AIActor::SetMindControlProperties(bool controlled, SpriteSheet::XAxisDirection direction)
+{
+	_underControl = controlled;
+	if (controlled)
+	{
+		// Change the x direction and speed appropriately
+		int multiplier = direction == SpriteSheet::XAxisDirection::LEFT ? -1 : 1;
+		_spriteXDir = direction;
+		float xSpeed = std::fabsf(_curKinematic.velocity.GetX());
+		_curKinematic.velocity.SetX(xSpeed * multiplier);
+	}
+}
+
+void AIActor::GetMindControlProperties(bool & controlled, SpriteSheet::XAxisDirection & direction) const
+{
+	controlled = _underControl;
+	direction = _spriteXDir;
 }
 
 void AIActor::Update(double elapsedSecs)
@@ -87,8 +117,13 @@ void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level>& level)
 			default:
                 if (_collisionInfo.colPenetration == 0) continue;
 				_curKinematic.position.SetX(correctedXPos);
-				_curKinematic.velocity.SetX(reverseX);
-				_spriteXDir = reverseDir;
+
+				// If we're being mind-controlled, we want to continue walking this way
+				if (!_underControl) 
+				{
+					_curKinematic.velocity.SetX(reverseX);
+					_spriteXDir = reverseDir;
+				}
 				break;
 			}
 		}
@@ -100,21 +135,61 @@ void AIActor::Draw(Camera& camera)
 	if (!_isVisible) return;
 
 	const SDL2pp::Rect& viewport = camera.GetViewport();
+	SDL2pp::Renderer& rend = _mgr->GetRenderer();
+
+	// Offsets for drawing the shadow
 	int offsetX = 4;
 	int offsetY = 0;
 
-	SDL2pp::Renderer& rend = _mgr->GetRenderer();
-
 	std::shared_ptr<SpriteSheet> spriteSheet = _sprites[_currentSpriteSheet];
 	SDL_Texture* rawTexture = spriteSheet->GetTexture().Get();
-	SDL2pp::Point tempPoint = SDL2pp::Point(_curKinematic.position.GetX(), _curKinematic.position.GetY());
+	SDL2pp::Point curPos = SDL2pp::Point(_curKinematic.position.GetX(), _curKinematic.position.GetY());
+
+	// Values to modify
+	SDL2pp::Rect destRect(curPos.x - viewport.x, curPos.y - viewport.y, _sprites[_currentSpriteSheet]->GetFrameWidth(), _sprites[_currentSpriteSheet]->GetFrameHeight());
+	SDL2pp::Rect shadowRect(destRect);
+	Uint8 shadowColour[3];
+	Uint8 colour[3];
+
+	shadowRect.x -= offsetX;
+	shadowRect.y -= offsetY;
+
+	if (_isCandidate)
+	{
+		std::memcpy(shadowColour, _mindCtrlShadow, sizeof(Uint8) * 3);
+		std::memcpy(colour, _mindCtrlColour, sizeof(Uint8) * 3);
+
+		if (_isSelected)
+		{
+			destRect.x -= (destRect.w * 0.3);
+			destRect.y -= (destRect.h * 0.3);
+			destRect.w *= 1.3;
+			destRect.h *= 1.3;
+
+			shadowRect.x -= (shadowRect.w * 0.3);
+			shadowRect.y -= (shadowRect.h * 0.3);
+			shadowRect.w *= 1.3;
+			shadowRect.h *= 1.3;
+		}
+	}
+	else if (_underControl)
+	{
+		// TODO: Get the pulse colour; for now just copy the colours as-is
+		std::memcpy(shadowColour, _mindCtrlShadow, sizeof(Uint8) * 3);
+		std::memcpy(colour, _mindCtrlColour, sizeof(Uint8) * 3);
+	}
+	else
+	{
+		std::memcpy(shadowColour, _normalShadow, sizeof(Uint8) * 3);
+		std::memcpy(colour, _normalColour, sizeof(Uint8) * 3);
+	}
 
 	// Draw shadow first, so we need to adjust drawing parameters
-	SDL_SetTextureColorMod(rawTexture, 95, 127, 95);
+	SDL_SetTextureColorMod(rawTexture, shadowColour[0], shadowColour[1], shadowColour[2]);
 	SDL_SetTextureAlphaMod(rawTexture, 127);
-	spriteSheet->Draw(tempPoint + SDL2pp::Point(offsetX - viewport.x, offsetY - viewport.y), _spriteXDir, _spriteYDir);
+	spriteSheet->Draw(shadowRect, _spriteXDir, _spriteYDir);
 
-	SDL_SetTextureColorMod(rawTexture, 190, 255, 190);
+	SDL_SetTextureColorMod(rawTexture, colour[0], colour[1], colour[2]);
 	SDL_SetTextureAlphaMod(rawTexture, 255);
-	spriteSheet->Draw(tempPoint + SDL2pp::Point(-viewport.x, -viewport.y), _spriteXDir, _spriteYDir);
+	spriteSheet->Draw(destRect, _spriteXDir, _spriteYDir);
 }

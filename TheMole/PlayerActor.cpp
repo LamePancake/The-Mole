@@ -168,6 +168,10 @@ void PlayerActor::UpdateInput()
 		_stoppedTime = true;
 		return;
 	}
+	else if (_mgr->inputManager->ActionOccurred("MIND"), Input::Released)
+	{
+		// Set everything back to normal
+	}
 
 	bool triedDigging = _mgr->inputManager->ActionOccurred("DIG", Input::Pressed);
 
@@ -274,7 +278,7 @@ void PlayerActor::UpdateInput()
 	}
 }
 
-void PlayerActor::UpdateMindControlSelection()
+void PlayerActor::UpdateMindControlSelection(bool released)
 {
 	vector<shared_ptr<AIActor>> enemies = _gameScreen->GetLevel()->GetEnemies();
 	vector<shared_ptr<AIActor>> inRange;
@@ -293,10 +297,47 @@ void PlayerActor::UpdateMindControlSelection()
 
 	if (inRange.empty()) return;
 
+	if (released)
+	{
+		for (auto enemy : inRange)
+		{
+			enemy->SetIsMindControlCandidate(false);
+		}
+		return;
+	}
+
 	if (_mgr->inputManager->ActionOccurred("MIND_TOGGLE", Input::Pressed))
 	{
 		_selected++;
 		_selected %= inRange.size();
+	}
+	if (_mgr->inputManager->ActionOccurred("LEFT", Input::Pressed))
+	{
+		bool controlled;
+		SpriteSheet::XAxisDirection dir;
+		inRange[_selected]->GetMindControlProperties(controlled, dir);
+		if (controlled && dir == SpriteSheet::XAxisDirection::LEFT)
+		{
+			inRange[_selected]->SetMindControlProperties(false, dir);
+		}
+		else
+		{
+			inRange[_selected]->SetMindControlProperties(true, SpriteSheet::XAxisDirection::LEFT);
+		}
+	}
+	if (_mgr->inputManager->ActionOccurred("RIGHT", Input::Pressed))
+	{
+		bool controlled;
+		SpriteSheet::XAxisDirection dir;
+		inRange[_selected]->GetMindControlProperties(controlled, dir);
+		if (controlled && dir == SpriteSheet::XAxisDirection::RIGHT)
+		{
+			inRange[_selected]->SetMindControlProperties(false, dir);
+		}
+		else
+		{
+			inRange[_selected]->SetMindControlProperties(true, SpriteSheet::XAxisDirection::RIGHT);
+		}
 	}
 }
 
