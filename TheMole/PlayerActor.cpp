@@ -496,4 +496,17 @@ void PlayerActor::Reset(Vector2 pos)
 	_sprites[_currentSpriteSheet]->Stop();
 	_currentSpriteSheet = "idle";
 	_sprites[_currentSpriteSheet]->Start();
+
+	_curKinematic = KinematicState(pos, GetSpeed(), 0.f, 0.f);
+	_prevKinematic = _curKinematic;
+
+	_collisionInfo.colEdge = Edge::NONE;
+	_collisionInfo.colIntersect.clear();
+	_collisionInfo.colPenetration = 0;
+	_collisionInfo.rowEdge = Edge::NONE;
+	_collisionInfo.rowIntersect.clear();
+	_collisionInfo.rowPenetration = 0;
+
+	_digDir = Edge::NONE;
+		
 }
