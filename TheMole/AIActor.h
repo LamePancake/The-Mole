@@ -121,9 +121,13 @@ public:
 
 private:
 	
+	void GetPulseColour(const Uint8* startColour, const Uint8* endColour, Uint8* result);
+
 	// Mind control properties
 	bool _underControl;
-	float _controlTimeLeft;
+	double _controlTimeLeft;	// Time left until mind control ends
+	double _pulseTimeTotal;		// Time that should elapse before the next pulse
+	double _currentPulseTime;	// Time that has elapsed during this pulse
 
 	// Mind control selection properties (when the player is selecting whom to control)
 	bool _isSelected;

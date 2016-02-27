@@ -8,8 +8,10 @@ const static Uint8 NORMAL_COLOUR[3] = { 255, 255, 255 };
 const static Uint8 MIND_CTRL_SHADOW[3] = { 95, 127, 95 };
 const static Uint8 MIND_CTRL_COLOUR[3] = { 190, 255, 190 };
 
-const static float MIND_CONTROL_TIME = 15.f;
-
+const static double MIND_CONTROL_TIME = 15.0;
+const static double PULSE_START_TIME = 0.75;
+const static double PULSE_END_TIME = 0.05;
+const static double PULSE_MULTIPLIER = (((PULSE_START_TIME - (PULSE_START_TIME * PULSE_END_TIME)) / MIND_CONTROL_TIME) - 1) * -1; // Don't ask
 
 AIActor::~AIActor()
 {
@@ -33,6 +35,8 @@ void AIActor::SetIsMindControlCandidate(bool isCandidate)
 		float xSpeed = std::fabsf(_curKinematic.velocity.GetX());
 		_curKinematic.velocity.SetX(xSpeed * multiplier);
 		_controlTimeLeft = MIND_CONTROL_TIME;
+		_currentPulseTime = 0;
+		_pulseTimeTotal = PULSE_START_TIME;
 	}
 }
 
@@ -67,6 +71,15 @@ void AIActor::Update(double elapsedSecs)
 		if (_controlTimeLeft <= 0)
 		{
 			StopMindControl();
+		}
+		else
+		{
+			_currentPulseTime += elapsedSecs;
+			if (_currentPulseTime > _pulseTimeTotal)
+			{
+				_pulseTimeTotal *= PULSE_MULTIPLIER;
+				_currentPulseTime = 0;
+			}
 		}
 	}
 
@@ -161,6 +174,14 @@ void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level>& level)
 	}
 }
 
+void AIActor::GetPulseColour(const Uint8* startColour, const Uint8* endColour, Uint8* result)
+{
+	double percent = _currentPulseTime / _pulseTimeTotal;
+	result[0] = startColour[0] + ((endColour[0] - startColour[0]) * percent);
+	result[1] = startColour[1] + ((endColour[1] - startColour[1]) * percent);
+	result[2] = startColour[2] + ((endColour[2] - startColour[2]) * percent);
+}
+
 void AIActor::Draw(Camera& camera)
 {
 	if (!_isVisible) return;
@@ -208,8 +229,8 @@ void AIActor::Draw(Camera& camera)
 	else if (_underControl)
 	{
 		// TODO: Get the pulse colour; for now just copy the colours as-is
-		std::memcpy(shadowColour, MIND_CTRL_SHADOW, sizeof(Uint8) * 3);
-		std::memcpy(colour, MIND_CTRL_COLOUR, sizeof(Uint8) * 3);
+		GetPulseColour(MIND_CTRL_SHADOW, NORMAL_SHADOW, shadowColour);
+		GetPulseColour(MIND_CTRL_COLOUR, NORMAL_COLOUR, colour);
 	}
 	else
 	{
