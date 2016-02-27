@@ -490,4 +490,10 @@ void PlayerActor::Reset(Vector2 pos)
 	_stoppedTime = false;
 	_atGoal = false;
 	_wasOnGround = true;
+
+	SetSpeed(Vector2(0.0f, 341.3f));
+
+	_sprites[_currentSpriteSheet]->Stop();
+	_currentSpriteSheet = "idle";
+	_sprites[_currentSpriteSheet]->Start();
 }

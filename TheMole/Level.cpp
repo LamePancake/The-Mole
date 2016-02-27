@@ -76,6 +76,19 @@ size_t Level::GetEnemySize() const
 	return _enemies.size();
 }
 
+void Level::AddEnemySpawn(Vector2 e)
+{
+	_enemySpawns.push_back(e);
+}
+
+Vector2 Level::GetEnemySpawn(size_t idx)
+{
+	if (idx > _enemySpawns.size())
+		return Vector2(0, 0);
+
+	return _enemySpawns[idx];
+}
+
 void Level::AddNPC(std::shared_ptr<NPCActor> n)
 {
 	_NPCs.push_back(n);
@@ -239,7 +252,16 @@ void Level::Update(double deltaTime)
 
 void Level::Reset()
 {
-	
+	for (size_t i = 0; i < _enemies.size(); ++i)
+	{
+		_enemies[i]->Reset(_enemySpawns[i]);
+	}
+
+	for (auto it = _dugDirtTiles.begin(); it != _dugDirtTiles.end(); ++it)
+	{
+		it->first->SetID(Tile::dirt);
+	}
+	_dugDirtTiles.clear();
 }
 
 void Level::SetSpawnPoint(Vector2 point)

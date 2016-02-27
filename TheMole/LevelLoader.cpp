@@ -49,6 +49,7 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 
 				std::shared_ptr<AIActor> e = std::make_shared<AIActor>(tile->GetWorldPosition(), gameManager, Vector2(100.0f, 341.3f), enemySprites, "walk");
 				level->AddEnemy(e);
+				level->AddEnemySpawn(tile->GetWorldPosition());
 				tile->SetID(Tile::blank);
 			}
 			break;

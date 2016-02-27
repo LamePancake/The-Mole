@@ -121,6 +121,22 @@ public:
 	size_t GetEnemySize() const;
 
 	/**
+	* Adds an enem spawn point to the enemy spawn array.
+	*
+	* @param	p the position of the spawn point
+	*/
+	void AddEnemySpawn(Vector2 p);
+
+	/**
+	* Gets an enemy spawn point.
+	*
+	* @param	idx	The index into the enemy array.
+	*
+	* @return	The enemy.
+	*/
+	Vector2 GetEnemySpawn(size_t idx);
+
+	/**
 	 * Adds an npc to the npc array.
 	 *
 	 * @param	n	The std::shared_ptr&lt;SimpleAgent&gt; to process.
@@ -246,7 +262,7 @@ private:
 	std::vector<std::shared_ptr<AIActor>> _enemies;
 
 	/** Stores the spawn point of the enemies */
-	std::vector<SDL2pp::Point> _enemiesSpawns;
+	std::vector<Vector2> _enemySpawns;
 
 	/** The npcs in the level. */
 	std::vector<std::shared_ptr<NPCActor>> _NPCs;

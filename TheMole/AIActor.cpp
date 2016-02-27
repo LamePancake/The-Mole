@@ -98,6 +98,10 @@ void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level>& level)
 void AIActor::Reset(Vector2 pos)
 {
 	Actor::Reset(pos);
+	SetSpeed(Vector2(100.0f, 341.3f));
+	_sprites[_currentSpriteSheet]->Stop();
+	_currentSpriteSheet = "walk";
+	_sprites[_currentSpriteSheet]->Start();
 }
 
 void AIActor::Draw(Camera& camera)
