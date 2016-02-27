@@ -113,7 +113,7 @@ private:
 	///<param name="released"> Whether we just released the mind control key.</param>
 	///
 	///### <author> Shane.</author>
-	///### <date> 2/6/2016.</date>
+	///### <date> 2/26/2016.</date>
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	void UpdateMindControlSelection(bool released);
 
@@ -175,7 +175,6 @@ private:
 
 	// Mind control variables
 	bool _stoppedTime;
-	float _mindControlRadius;
+	const float _mindControlRadius = 384.f;
 	int _selected;
-	std::vector<std::shared_ptr<AIActor>> _controllable;
 };

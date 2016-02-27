@@ -7,7 +7,7 @@ using std::shared_ptr;
 PlayerActor::PlayerActor(Vector2 position, GameManager& manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
 	const std::string&& startSprite, SpriteSheet::XAxisDirection startXDir, SpriteSheet::YAxisDirection startYDir)
 	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDir, startYDir), _prevDirection(startXDir), _atGoal(false), _jumpVelocity(0), _maxJumpVel(400),
-	_digDir{ Edge::NONE }, _jumped(false), _jumpDuration(0.75), _jumpTimeElapsed(0), _godMode(false), _stoppedTime(false)
+	_digDir{ Edge::NONE }, _jumped(false), _jumpDuration(0.75), _jumpTimeElapsed(0), _godMode(false), _stoppedTime(false), _selected(0)
 {
 }
 
@@ -166,11 +166,12 @@ void PlayerActor::UpdateInput()
 	if (_mgr->inputManager->ActionOccurred("MIND", Input::Held))
 	{
 		_stoppedTime = true;
+        UpdateMindControlSelection(false);
 		return;
 	}
-	else if (_mgr->inputManager->ActionOccurred("MIND"), Input::Released)
+	else if (_mgr->inputManager->ActionOccurred("MIND", Input::Released))
 	{
-		// Set everything back to normal
+        UpdateMindControlSelection(true);
 	}
 
 	bool triedDigging = _mgr->inputManager->ActionOccurred("DIG", Input::Pressed);
@@ -302,43 +303,40 @@ void PlayerActor::UpdateMindControlSelection(bool released)
 		for (auto enemy : inRange)
 		{
 			enemy->SetIsMindControlCandidate(false);
+            enemy->SetSelectedForControl(false);
 		}
+        _selected = 0;
 		return;
 	}
 
+    for (auto enemy : inRange) enemy->SetIsMindControlCandidate(true);
+    inRange[_selected]->SetSelectedForControl(true);
+
 	if (_mgr->inputManager->ActionOccurred("MIND_TOGGLE", Input::Pressed))
 	{
+        inRange[_selected]->SetSelectedForControl(false);
 		_selected++;
 		_selected %= inRange.size();
+        inRange[_selected]->SetSelectedForControl(true);
 	}
-	if (_mgr->inputManager->ActionOccurred("LEFT", Input::Pressed))
-	{
-		bool controlled;
-		SpriteSheet::XAxisDirection dir;
-		inRange[_selected]->GetMindControlProperties(controlled, dir);
-		if (controlled && dir == SpriteSheet::XAxisDirection::LEFT)
-		{
-			inRange[_selected]->SetMindControlProperties(false, dir);
-		}
-		else
-		{
-			inRange[_selected]->SetMindControlProperties(true, SpriteSheet::XAxisDirection::LEFT);
-		}
-	}
-	if (_mgr->inputManager->ActionOccurred("RIGHT", Input::Pressed))
-	{
-		bool controlled;
-		SpriteSheet::XAxisDirection dir;
-		inRange[_selected]->GetMindControlProperties(controlled, dir);
-		if (controlled && dir == SpriteSheet::XAxisDirection::RIGHT)
-		{
-			inRange[_selected]->SetMindControlProperties(false, dir);
-		}
-		else
-		{
-			inRange[_selected]->SetMindControlProperties(true, SpriteSheet::XAxisDirection::RIGHT);
-		}
-	}
+    if (_mgr->inputManager->ActionOccurred("LEFT", Input::Pressed) ||
+        _mgr->inputManager->ActionOccurred("RIGHT", Input::Pressed))
+    {
+        bool controlled;
+        SpriteSheet::XAxisDirection curDir = _mgr->inputManager->ActionOccurred("LEFT", Input::Pressed)
+                                                ? SpriteSheet::XAxisDirection::LEFT
+                                                : SpriteSheet::XAxisDirection::RIGHT;
+        SpriteSheet::XAxisDirection dir;
+        inRange[_selected]->GetMindControlProperties(controlled, dir);
+        if (controlled && dir == curDir)
+        {
+            inRange[_selected]->SetMindControlProperties(false, dir);
+        }
+        else
+        {
+            inRange[_selected]->SetMindControlProperties(true, curDir);
+        }
+    }
 }
 
 void PlayerActor::Dig()
