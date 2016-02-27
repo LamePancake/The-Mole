@@ -69,6 +69,13 @@
     <ClCompile Include="ObjectActor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BossBehavTree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BossActor.cpp">
+    <ClCompile Include="ProjectileActor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameManager.h">
@@ -126,6 +133,13 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ObjectActor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BossActor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BossBehavTree.h">
+    <ClInclude Include="ProjectileActor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

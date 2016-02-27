@@ -78,6 +78,10 @@ int GameScreen::Update(double elapsedSecs)
 		_level->GetNPC(i)->Update(elapsedSecs);
 	}
 
+	_level->GetBoss()->Update(elapsedSecs);
+
+	_level->UpdateDugTile(elapsedSecs);
+
 	return SCREEN_CONTINUE;
 }
 
@@ -109,6 +113,11 @@ void GameScreen::Draw()
 	for (size_t i = 0; i < _level->GetNPCSize(); ++i)
 	{
 		_level->GetNPC(i)->Draw(*_camera);
+	}
+
+	for (size_t i = 0; i < _level->GetProjectileActorSize(); ++i)
+	{
+		_level->GetProjectile(i)->Draw(*_camera);
 	}
 
 	// Render Player

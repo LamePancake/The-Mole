@@ -72,7 +72,7 @@
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)Lib\SDL2pp\RelWithDebInfo;$(SolutionDir)Lib\SDL2</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)Lib\SDL2pp\Debug;$(SolutionDir)Lib\SDL2</LibraryPath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)Lib\SDL2pp\Debug;$(SolutionDir)Lib\SDL2;</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)Lib\SDL2pp\Debug;$(SolutionDir)Lib\SDL2;</LibraryPath>
@@ -133,6 +133,8 @@
   <ItemGroup>
     <ClCompile Include="AABB.cpp" />
     <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="BossActor.cpp" />
+    <ClCompile Include="BossBehavTree.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameScreen.cpp" />
@@ -146,6 +148,7 @@
     <ClCompile Include="ObjectActor.cpp" />
     <ClCompile Include="PlayerActor.cpp" />
     <ClCompile Include="AIActor.cpp" />
+    <ClCompile Include="ProjectileActor.cpp" />
     <ClCompile Include="SpriteSheet.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="Vector2.cpp" />
@@ -153,12 +156,15 @@
   <ItemGroup>
     <ClInclude Include="AABB.h" />
     <ClInclude Include="Actor.h" />
+    <ClInclude Include="BossActor.h" />
+    <ClInclude Include="BossBehavTree.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="GameScreen.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="NPCActor.h" />
     <ClInclude Include="ObjectActor.h" />
     <ClInclude Include="PlayerActor.h" />
+    <ClInclude Include="ProjectileActor.h" />
     <ClInclude Include="SpriteSheet.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="Vector2.h" />
