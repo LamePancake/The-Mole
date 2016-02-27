@@ -28,6 +28,9 @@ int GameScreen::Load()
 	_camera = new Camera(playerPos, viewportSize, levelSize);
 
 	_background = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), _backgroundPath);
+	_winScreen = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), _winScreenPath);
+	_loseScreen = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), _loseScreenPath);
+	_pancake = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), ".\\Assets\\Textures\\Pancake.png");
 
 	return SCREEN_LOAD_SUCCESS;
 }
@@ -41,17 +44,24 @@ int GameScreen::Update(double elapsedSecs)
 		exit(0);
 	}
 
+	if (_player->IsDead())
+	{
+		if (_mgr->inputManager->ActionOccurred("CONFIRM", Input::Pressed))
+		{
+			_level->Reset();
+			_player->Reset(_level->GetSpawnPoint());
+		}
+		else
+		{
+			return SCREEN_CONTINUE;
+		}
+	}
+
 	_player->Update(elapsedSecs);
 	if (_player->StoppedTime())
 	{
 		std::cout << ":SALKDJF:LSDKJF" << std::endl;
 		return SCREEN_CONTINUE;
-	}
-
-	if (_player->IsDead())
-	{
-		_level->Reset();
-		_player->Reset(_level->GetSpawnPoint());
 	}
 
 	if (_player->AtGoal())
@@ -122,6 +132,13 @@ void GameScreen::Draw()
 
 	// Render Player
 	_player->Draw(*_camera);
+
+	if (_player->IsDead())
+	{
+		SDL2pp::Point dim = GameManager::GetInstance()->GetWindow().GetSize();
+		rend.Copy(*_loseScreen, SDL2pp::NullOpt, SDL2pp::Rect((dim.x / 2) - (dim.x * 0.6 / 2), (dim.y / 2) - (dim.y * 0.6 / 2), dim.x * 0.6, dim.y * 0.6));
+		rend.Copy(*_pancake, SDL2pp::NullOpt, SDL2pp::Rect((dim.x / 2) - (_pancake->GetWidth() / 2), (dim.y / 2) - (_pancake->GetHeight() / 2), _pancake->GetWidth(), _pancake->GetHeight()));
+	}
 
 	rend.Present();
 }

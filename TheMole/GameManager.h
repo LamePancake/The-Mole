@@ -87,6 +87,7 @@ private:
 		inputManager->AddKeyToMap("MIND", Input::InputAction(SDL_SCANCODE_K));
 		inputManager->AddKeyToMap("MIND_TOGGLE", Input::InputAction(SDL_SCANCODE_LSHIFT));
 		inputManager->AddKeyToMap("GODMODE", Input::InputAction(SDL_SCANCODE_G));
+		inputManager->AddKeyToMap("CONFIRM", Input::InputAction(SDL_SCANCODE_RETURN));
 	}
 
 	/**

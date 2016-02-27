@@ -56,12 +56,7 @@ void PlayerActor::Update(double elapsedSecs)
 	{
 		if (CollisionCheck(*screen->GetLevel()->GetEnemy(i)))
 		{
-			_health -= 100;
-			std::cout << "You got hit!" << std::endl;
-		}
-		if (_health == 0)
-		{
-			std::cout << "You lose." << std::endl;
+			_health = 0;
 		}
 	}
     DetectTileCollisions(_collisionInfo, _gameScreen->GetLevel());
@@ -454,7 +449,7 @@ bool PlayerActor::CollisionCheck(Actor & otherAI)
 
 bool PlayerActor::IsDead()
 {
-	return _health == 0 ? true : false;
+	return _health <= 0 ? true : false;
 }
 
 bool PlayerActor::AtGoal()

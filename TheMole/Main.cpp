@@ -32,8 +32,8 @@ int main(int argc, char** argv) {
 
 		unordered_map<string, shared_ptr<Screen>> screens;
 		shared_ptr<Screen> menu(new MenuScreen);
-		shared_ptr<Screen> den(new GameScreen(".\\Assets\\Levels\\den_level.txt", ".\\Assets\\Textures\\den_bg.png", "testlevel"));
-		shared_ptr<Screen> test(new GameScreen(".\\Assets\\Levels\\test_level.txt", ".\\Assets\\Textures\\den_bg.png", "menu"));
+		shared_ptr<Screen> den(new GameScreen(".\\Assets\\Levels\\den_level.txt", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\GUI\\Level_Complete\\level_cleared_keyboard.png", ".\\Assets\\GUI\\Level_Complete\\level_failed_keyboard.png", "testlevel"));
+		shared_ptr<Screen> test(new GameScreen(".\\Assets\\Levels\\test_level.txt", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\GUI\\Level_Complete\\level_cleared_keyboard.png", ".\\Assets\\GUI\\Level_Complete\\level_failed_keyboard.png", "menu"));
 		screens.insert({ "menu", menu });
 		screens.insert({ "denlevel", den });
 		screens.insert({ "testlevel", test });
