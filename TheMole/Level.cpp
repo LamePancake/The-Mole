@@ -6,7 +6,7 @@
 #include "ObjectActor.h"
 #include "ProjectileActor.h"
 
-int Level::AddTileToLevel(std::shared_ptr<Tile> tile, int row)
+int Level::AddTileToLevel(std::shared_ptr<Tile> tile, size_t row)
 {
 	if (row >= _level.size())
 	{
@@ -202,15 +202,15 @@ void Level::UpdateDugTile(double deltaTime)
 			{
 				for (std::shared_ptr<AIActor> e : _enemies)
 				{
-					float leftEnemyBound = e->GetPosition().GetX();
-					float topEnemyBound = e->GetPosition().GetY();
+					float leftEnemyBound  = e->GetPosition().GetX();
+					float topEnemyBound   = e->GetPosition().GetY();
 					float rightEnemyBound = e->GetPosition().GetX() + e->GetTexture()->GetFrameWidth();
 					float botomEnemyBound = e->GetPosition().GetY() + e->GetTexture()->GetFrameHeight();
 
-					int leftEnemyIdx = leftEnemyBound / tileWidth;
-					int topEnemyIdx = topEnemyBound / tileHeight;
-					int rightEnemyIdx = rightEnemyBound / tileWidth;
-					int bottomEnemyIdx = botomEnemyBound / tileHeight;
+					int leftEnemyIdx   = ((int)leftEnemyBound / tileWidth);
+					int topEnemyIdx    = ((int)topEnemyBound / tileHeight);
+					int rightEnemyIdx  = ((int)rightEnemyBound / tileWidth);
+					int bottomEnemyIdx = ((int)botomEnemyBound / tileHeight);
 
 					if ((leftEnemyIdx == tileIdx.x && topEnemyIdx == tileIdx.y) ||
 						(rightEnemyIdx == tileIdx.x && bottomEnemyIdx == tileIdx.y))

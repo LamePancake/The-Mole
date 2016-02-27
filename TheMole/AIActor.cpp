@@ -107,7 +107,7 @@ void AIActor::Draw(Camera& camera)
 
 	std::shared_ptr<SpriteSheet> spriteSheet = _sprites[_currentSpriteSheet];
 	SDL_Texture* rawTexture = spriteSheet->GetTexture().Get();
-	SDL2pp::Point tempPoint = SDL2pp::Point(_curKinematic.position.GetX(), _curKinematic.position.GetY());
+	SDL2pp::Point tempPoint = SDL2pp::Point((int)_curKinematic.position.GetX(), (int)_curKinematic.position.GetY());
 
 	// Draw shadow first, so we need to adjust drawing parameters
 	SDL_SetTextureColorMod(rawTexture, 95, 127, 95);

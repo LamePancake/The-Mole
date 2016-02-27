@@ -29,7 +29,7 @@ public:
 	 *
 	 * @return	An 0 if row is out of bounds, 1 otherwise.
 	 */
-	int AddTileToLevel(std::shared_ptr<Tile> tile, int row);
+	int AddTileToLevel(std::shared_ptr<Tile> tile, size_t row);
 
 	/**
 	* Gets level  array size.

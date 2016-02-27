@@ -29,7 +29,7 @@ void PlayerActor::Update(double elapsedSecs)
 	_jumpVelocity = Math::Clamp(_jumpVelocity, -_maxJumpVel, _maxJumpVel);
 	if (!_jumped)
 	{
-		_jumpVelocity += -9.8 * 64 * elapsedSecs * -1.0f;//-9.8 * 64 * elapsedSecs * -1.0f;
+		_jumpVelocity += -9.8 * 64 * elapsedSecs * -1.0;
 	}
 	if (_jumpVelocity <= _maxJumpVel)
 	{
@@ -52,7 +52,7 @@ void PlayerActor::Update(double elapsedSecs)
 	_aabb.UpdatePosition(*this);
 
 	const std::shared_ptr<GameScreen> screen = std::dynamic_pointer_cast<GameScreen>(_mgr->GetCurrentScreen());
-	for (int i = 0; i < screen->GetLevel()->GetEnemySize(); ++i)
+	for (size_t i = 0; i < screen->GetLevel()->GetEnemySize(); ++i)
 	{
 		if (CollisionCheck(*screen->GetLevel()->GetEnemy(i)))
 		{
