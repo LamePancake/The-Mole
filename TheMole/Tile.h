@@ -19,7 +19,7 @@ public:
 		blank       = ' ',
 		stone       = 'S',
 		dirt        = 'D',
-		spike       = 'P',
+		spike       = 'K',
 		metal       = 'M',
 		enemy       = 'E',
 		goal        = 'G',
