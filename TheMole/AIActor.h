@@ -54,26 +54,43 @@ public:
 	void SetIsMindControlCandidate(bool isCandidate);
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	///<summary> Sets whether this AI is under mind control.</summary>
-	///
-	///<param name="controlled"> Whether the AI is under mind control.</param>
-	///<param name="direction"> If the AI is under control, the direction it should move. Ignored if controlled is false.</param>
+	///<summary> Makes this AI come out of mind control.</summary>
 	///
 	///### <author> Shane.</author>
 	///### <date> 2/26/2016.</date>
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	void SetMindControlProperties(bool controlled, SpriteSheet::XAxisDirection direction);
+	void StopMindControl();
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	///<summary> Gets whether this AI is under mind control and in which direction if so.</summary>
+	///<summary> Sets the direction that this AI should move while under mind control (and causes
+	///          the AI to fall under mind control).</summary>
 	///
-	///<param name="controlled"> [out] Whether the AI is under mind control.</param>
-	///<param name="direction">  [out] If the AI is under control, the direction it should move.</param>
+	///<param name="direction"> The direction it should move.</param>
 	///
 	///### <author> Shane.</author>
 	///### <date> 2/26/2016.</date>
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	void GetMindControlProperties(bool& controlled, SpriteSheet::XAxisDirection& direction) const;
+	void SetMindControlDirection(SpriteSheet::XAxisDirection direction);
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	///<summary> Queries whether this AI is under mind control.</summary>
+	///
+	///<returns> Whether this AI is under mind control.</returns>
+	///
+	///### <author> Shane.</author>
+	///### <date> 2/26/2016.</date>
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	bool IsUnderMindControl() const;
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	///<summary> Queries the direction in which this AI will move while under mind control.</summary>
+	///
+	///<returns> The direction in which this AI will move while under mind control.</returns>
+	///
+	///### <author> Shane.</author>
+	///### <date> 2/26/2016.</date>
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	SpriteSheet::XAxisDirection GetMindControlDirection() const;
 
 	// All the state changing stuff happens in here.
 	virtual void Update(double elapsedSecs) override;
@@ -113,11 +130,11 @@ private:
 	// Mind control properties
 	bool _underControl;
 	float _controlTimeLeft;
-	SpriteSheet::XAxisDirection _controlDir;
 
 	// Mind control selection properties (when the player is selecting whom to control)
 	bool _isSelected;
 	bool _isCandidate;
+	SpriteSheet::XAxisDirection _controlDir;
 };
 
 #endif

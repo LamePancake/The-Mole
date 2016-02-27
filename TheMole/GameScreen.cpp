@@ -75,7 +75,8 @@ int GameScreen::Update(double elapsedSecs)
 		_level->GetNPC(i)->Update(elapsedSecs);
 	}
 
-	_level->GetBoss()->Update(elapsedSecs);
+	std::shared_ptr<BossActor> boss = _level->GetBoss();
+	if(boss) boss->Update(elapsedSecs);
 
 	_level->UpdateDugTile(elapsedSecs);
 

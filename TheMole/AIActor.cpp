@@ -14,25 +14,37 @@ void AIActor::SetSelectedForControl(bool selected)
 void AIActor::SetIsMindControlCandidate(bool isCandidate)
 {
 	_isCandidate = isCandidate;
-}
 
-void AIActor::SetMindControlProperties(bool controlled, SpriteSheet::XAxisDirection direction)
-{
-	_underControl = controlled;
-	if (controlled)
+	// We're finishing up mind control selection and we're under control, so determine velocity
+	if(!_isCandidate && _underControl)
 	{
 		// Change the x direction and speed appropriately
-		int multiplier = direction == SpriteSheet::XAxisDirection::LEFT ? -1 : 1;
-		_spriteXDir = direction;
+		_spriteXDir = _controlDir;
+		int multiplier = _spriteXDir == SpriteSheet::XAxisDirection::LEFT ? -1 : 1;
 		float xSpeed = std::fabsf(_curKinematic.velocity.GetX());
 		_curKinematic.velocity.SetX(xSpeed * multiplier);
 	}
 }
 
-void AIActor::GetMindControlProperties(bool & controlled, SpriteSheet::XAxisDirection & direction) const
+void AIActor::StopMindControl()
 {
-	controlled = _underControl;
-	direction = _spriteXDir;
+	_underControl = false;
+}
+
+void AIActor::SetMindControlDirection(SpriteSheet::XAxisDirection direction)
+{
+	_controlDir = direction;
+	_underControl = true;
+}
+
+bool AIActor::IsUnderMindControl() const
+{
+	return _underControl;
+}
+
+SpriteSheet::XAxisDirection AIActor::GetMindControlDirection() const
+{
+	return _controlDir;
 }
 
 void AIActor::Update(double elapsedSecs)
@@ -150,6 +162,7 @@ void AIActor::Draw(Camera& camera)
 	SDL2pp::Rect shadowRect(destRect);
 	Uint8 shadowColour[3];
 	Uint8 colour[3];
+	SpriteSheet::XAxisDirection xDir = _spriteXDir;
 
 	shadowRect.x -= offsetX;
 	shadowRect.y -= offsetY;
@@ -171,6 +184,7 @@ void AIActor::Draw(Camera& camera)
 			shadowRect.w *= 1.3;
 			shadowRect.h *= 1.3;
 		}
+		xDir = _underControl ? _controlDir : _spriteXDir;
 	}
 	else if (_underControl)
 	{
@@ -187,9 +201,9 @@ void AIActor::Draw(Camera& camera)
 	// Draw shadow first, so we need to adjust drawing parameters
 	SDL_SetTextureColorMod(rawTexture, shadowColour[0], shadowColour[1], shadowColour[2]);
 	SDL_SetTextureAlphaMod(rawTexture, 127);
-	spriteSheet->Draw(shadowRect, _spriteXDir, _spriteYDir);
+	spriteSheet->Draw(shadowRect, xDir, _spriteYDir);
 
 	SDL_SetTextureColorMod(rawTexture, colour[0], colour[1], colour[2]);
 	SDL_SetTextureAlphaMod(rawTexture, 255);
-	spriteSheet->Draw(destRect, _spriteXDir, _spriteYDir);
+	spriteSheet->Draw(destRect, xDir, _spriteYDir);
 }

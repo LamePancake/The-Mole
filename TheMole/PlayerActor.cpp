@@ -163,13 +163,13 @@ void PlayerActor::UpdateInput()
 	if (_digDir != Edge::NONE) return;
 
 	_stoppedTime = false;
-	if (_mgr->inputManager->ActionOccurred("MIND", Input::Held))
+	if (_mgr->inputManager->ActionOccurred("MIND_CONTROL", Input::Held))
 	{
 		_stoppedTime = true;
         UpdateMindControlSelection(false);
 		return;
 	}
-	else if (_mgr->inputManager->ActionOccurred("MIND", Input::Released))
+	else if (_mgr->inputManager->ActionOccurred("MIND_CONTROL", Input::Released))
 	{
         UpdateMindControlSelection(true);
 	}
@@ -281,13 +281,14 @@ void PlayerActor::UpdateInput()
 
 void PlayerActor::UpdateMindControlSelection(bool released)
 {
-	vector<shared_ptr<AIActor>> enemies = _gameScreen->GetLevel()->GetEnemies();
+	shared_ptr<Level> level = _gameScreen->GetLevel();
 	vector<shared_ptr<AIActor>> inRange;
 	Vector2 centre{ _curKinematic.position.GetX() + _sprites[_currentSpriteSheet]->GetFrameWidth() / 2, _curKinematic.position.GetY() + _sprites[_currentSpriteSheet]->GetFrameHeight() / 2 };
-	for (auto enemy : enemies)
+	for (std::size_t i = 0; i < level->GetEnemySize(); i++)
 	{
 		// Check whether the enemy is in range, offsetting their position as necessary 
 		// to make sure that the distance is the same on all sides
+		shared_ptr<AIActor> enemy = dynamic_pointer_cast<AIActor>(level->GetEnemy(i));
 		Vector2 enemyPos = enemy->GetPosition();
 		AABB enemyAABB = enemy->GetAABB();
 		if (enemyPos.GetX() < _curKinematic.position.GetX()) enemyPos.SetX(enemyPos.GetX() + enemyAABB.GetWidth());
@@ -312,30 +313,30 @@ void PlayerActor::UpdateMindControlSelection(bool released)
     for (auto enemy : inRange) enemy->SetIsMindControlCandidate(true);
     inRange[_selected]->SetSelectedForControl(true);
 
-	if (_mgr->inputManager->ActionOccurred("MIND_TOGGLE", Input::Pressed))
+	// Cycle through the controllable enemies
+	if (_mgr->inputManager->ActionOccurred("MIND_CONTROL_SELECT", Input::Pressed))
 	{
         inRange[_selected]->SetSelectedForControl(false);
 		_selected++;
 		_selected %= inRange.size();
         inRange[_selected]->SetSelectedForControl(true);
 	}
-    if (_mgr->inputManager->ActionOccurred("LEFT", Input::Pressed) ||
+
+	// Toggle whether the enemy is under mind control
+	if (_mgr->inputManager->ActionOccurred("MIND_CONTROL_STOP", Input::Pressed))
+	{
+		inRange[_selected]->StopMindControl();
+	}
+	// Give the selected enemy a new direction in which to travel (and automatically enable mind control)
+    else if (_mgr->inputManager->ActionOccurred("LEFT", Input::Pressed) ||
         _mgr->inputManager->ActionOccurred("RIGHT", Input::Pressed))
     {
-        bool controlled;
-        SpriteSheet::XAxisDirection curDir = _mgr->inputManager->ActionOccurred("LEFT", Input::Pressed)
+        SpriteSheet::XAxisDirection dir = _mgr->inputManager->ActionOccurred("LEFT", Input::Pressed)
                                                 ? SpriteSheet::XAxisDirection::LEFT
                                                 : SpriteSheet::XAxisDirection::RIGHT;
-        SpriteSheet::XAxisDirection dir;
-        inRange[_selected]->GetMindControlProperties(controlled, dir);
-        if (controlled && dir == curDir)
-        {
-            inRange[_selected]->SetMindControlProperties(false, dir);
-        }
-        else
-        {
-            inRange[_selected]->SetMindControlProperties(true, curDir);
-        }
+
+		bool controlled = inRange[_selected]->IsUnderMindControl();
+		inRange[_selected]->SetMindControlDirection(dir);
     }
 }
 
