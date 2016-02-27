@@ -2,6 +2,15 @@
 #include "GameScreen.h"
 #include <cstring>
 
+const static Uint8 NORMAL_SHADOW[3] = { 127, 127, 127 };
+const static Uint8 NORMAL_COLOUR[3] = { 255, 255, 255 };
+
+const static Uint8 MIND_CTRL_SHADOW[3] = { 95, 127, 95 };
+const static Uint8 MIND_CTRL_COLOUR[3] = { 190, 255, 190 };
+
+const static float MIND_CONTROL_TIME = 15.f;
+
+
 AIActor::~AIActor()
 {
 }
@@ -23,6 +32,7 @@ void AIActor::SetIsMindControlCandidate(bool isCandidate)
 		int multiplier = _spriteXDir == SpriteSheet::XAxisDirection::LEFT ? -1 : 1;
 		float xSpeed = std::fabsf(_curKinematic.velocity.GetX());
 		_curKinematic.velocity.SetX(xSpeed * multiplier);
+		_controlTimeLeft = MIND_CONTROL_TIME;
 	}
 }
 
@@ -50,6 +60,15 @@ SpriteSheet::XAxisDirection AIActor::GetMindControlDirection() const
 void AIActor::Update(double elapsedSecs)
 {
 	Actor::Update(elapsedSecs);
+
+	if (_underControl)
+	{
+		_controlTimeLeft -= elapsedSecs;
+		if (_controlTimeLeft <= 0)
+		{
+			StopMindControl();
+		}
+	}
 
 	// While the AI is alive, do stuff.
 	const Uint8* keys = SDL_GetKeyboardState(nullptr);
@@ -169,8 +188,8 @@ void AIActor::Draw(Camera& camera)
 
 	if (_isCandidate)
 	{
-		std::memcpy(shadowColour, _mindCtrlShadow, sizeof(Uint8) * 3);
-		std::memcpy(colour, _mindCtrlColour, sizeof(Uint8) * 3);
+		std::memcpy(shadowColour, MIND_CTRL_SHADOW, sizeof(Uint8) * 3);
+		std::memcpy(colour, MIND_CTRL_COLOUR, sizeof(Uint8) * 3);
 
 		if (_isSelected)
 		{
@@ -189,13 +208,13 @@ void AIActor::Draw(Camera& camera)
 	else if (_underControl)
 	{
 		// TODO: Get the pulse colour; for now just copy the colours as-is
-		std::memcpy(shadowColour, _mindCtrlShadow, sizeof(Uint8) * 3);
-		std::memcpy(colour, _mindCtrlColour, sizeof(Uint8) * 3);
+		std::memcpy(shadowColour, MIND_CTRL_SHADOW, sizeof(Uint8) * 3);
+		std::memcpy(colour, MIND_CTRL_COLOUR, sizeof(Uint8) * 3);
 	}
 	else
 	{
-		std::memcpy(shadowColour, _normalShadow, sizeof(Uint8) * 3);
-		std::memcpy(colour, _normalColour, sizeof(Uint8) * 3);
+		std::memcpy(shadowColour, NORMAL_SHADOW, sizeof(Uint8) * 3);
+		std::memcpy(colour, NORMAL_COLOUR, sizeof(Uint8) * 3);
 	}
 
 	// Draw shadow first, so we need to adjust drawing parameters

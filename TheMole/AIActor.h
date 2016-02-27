@@ -121,12 +121,6 @@ public:
 
 private:
 	
-	const Uint8 _normalShadow[3] = { 127, 127, 127 };
-	const Uint8 _normalColour[3] = { 255, 255, 255 };
-
-	const Uint8 _mindCtrlShadow[3] = { 95, 127, 95 };
-	const Uint8 _mindCtrlColour[3] = { 190, 255, 190 };
-
 	// Mind control properties
 	bool _underControl;
 	float _controlTimeLeft;
