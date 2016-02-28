@@ -65,6 +65,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SoundEffectBank.cpp" />
+    <ClCompile Include="LevelSelectScreen.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AABB.h">
@@ -136,6 +137,7 @@
     <ClInclude Include="SoundEffectBank.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="LevelSelectScreen.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">
