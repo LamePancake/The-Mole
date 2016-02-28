@@ -74,6 +74,20 @@ public:
 	 */
 	void Draw(const SDL2pp::Point&& position, XAxisDirection xAxisDir, YAxisDirection yAxisDir);
 
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	///<summary> Draws the sprite with the given destination rectangle.</summary>
+	///
+	///<remarks> Shane, 2/22/2016.</remarks>
+	///
+	///<param name="destRect"> The destination rectangle into which the sprite sheet's current frame will be drawn.</param>
+	///<param name="xAxisDir"> The The direction that the sprite should face in the x axis (XAxisDirection::RIGHT or XAxisDirection::LEFT).</param>
+	///<param name="yAxisDir"> The direction that the sprite should face in the y axis (YAxisDirection::UP or YAxisDirection::DOWN).</param>
+	///
+	///### <author> Shane.</author>
+	///### <date> 2/26/2016.</date>
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	void Draw(SDL2pp::Rect destRect, XAxisDirection xAxisDir, YAxisDirection yAxisDir);
+
 	/**
 	 * @brief	Query if this object is animating.
 	 *

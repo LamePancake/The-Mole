@@ -84,8 +84,9 @@ private:
 		inputManager->AddKeyToMap("DIG", Input::InputAction(SDL_SCANCODE_J));
 		inputManager->AddKeyToMap("VIKING", Input::InputAction(SDL_SCANCODE_U));
 		inputManager->AddKeyToMap("CHICKEN", Input::InputAction(SDL_SCANCODE_I));
-		inputManager->AddKeyToMap("MIND", Input::InputAction(SDL_SCANCODE_K));
-		inputManager->AddKeyToMap("MIND_TOGGLE", Input::InputAction(SDL_SCANCODE_LSHIFT));
+		inputManager->AddKeyToMap("MIND_CONTROL", Input::InputAction(SDL_SCANCODE_K));
+		inputManager->AddKeyToMap("MIND_CONTROL_STOP", Input::InputAction(SDL_SCANCODE_C));
+		inputManager->AddKeyToMap("MIND_CONTROL_SELECT", Input::InputAction(SDL_SCANCODE_LSHIFT));
 		inputManager->AddKeyToMap("GODMODE", Input::InputAction(SDL_SCANCODE_G));
 		inputManager->AddKeyToMap("CONFIRM", Input::InputAction(SDL_SCANCODE_RETURN));
 	}

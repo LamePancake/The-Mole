@@ -29,6 +29,7 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 	std::shared_ptr<SDL2pp::Texture> flagSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\Flag_raise.png");
 	std::shared_ptr<SDL2pp::Texture> pancakeSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\Pancake.png");
 	std::shared_ptr<SDL2pp::Texture> projectileSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\red_dot.png");
+	std::shared_ptr<SDL2pp::Texture> mindControlIndicator = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\Controlled_indicator.png");
 
 	while (std::getline(inFile, line))
 	{
@@ -47,7 +48,7 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 				std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> enemySprites;
 				enemySprites["walk"] = std::make_shared<SpriteSheet>(baddieWalkSheet, 8, 1.f);
 
-				std::shared_ptr<AIActor> e = std::make_shared<AIActor>(tile->GetWorldPosition(), gameManager, Vector2(100.0f, 341.3f), enemySprites, "walk");
+				std::shared_ptr<AIActor> e = std::make_shared<AIActor>(tile->GetWorldPosition(), gameManager, Vector2(100.0f, 341.3f), enemySprites, "walk", mindControlIndicator);
 				level->AddEnemy(e);
 				level->AddEnemySpawn(tile->GetWorldPosition());
 				tile->SetID(Tile::blank);
@@ -81,6 +82,7 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 			{
 				std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
 				sprites["raise"] = std::make_shared<SpriteSheet>(flagSheet, 6, 1.0, false);
+				sprites["raise"]->Pause();
 
 				std::shared_ptr<ObjectActor> flag = std::make_shared<ObjectActor>(tile->GetWorldPosition(), gameManager, Vector2(0, 0), ObjectActor::flag, sprites, "raise");
 				level->AddActorObject(flag);
@@ -109,27 +111,17 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 					tile->SetID(Tile::blank);
 				}
 				break;
-			{
-				std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
-				double infinity = std::numeric_limits<double>::infinity();
-				sprites["whateverPancakesDo"] = std::make_shared<SpriteSheet>(pancakeSheet, 1, infinity);
-
-				std::shared_ptr<ObjectActor> collectible = std::make_shared<ObjectActor>(tile->GetWorldPosition(), gameManager, Vector2(0, 0), ObjectActor::pancake, sprites, "whateverPancakesDo");
-				level->AddActorObject(collectible);
-				tile->SetID(Tile::blank);
-			}
-			break;
 			case Tile::projectile:
-			{
-				std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
-				double infinity = std::numeric_limits<double>::infinity();
-				sprites["shoot"] = std::make_shared<SpriteSheet>(projectileSheet, 1, infinity);
+				{
+					std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
+					double infinity = std::numeric_limits<double>::infinity();
+					sprites["shoot"] = std::make_shared<SpriteSheet>(projectileSheet, 1, infinity);
 
-				std::shared_ptr<ProjectileActor> projectile = std::make_shared<ProjectileActor>(tile->GetWorldPosition(), gameManager, Vector2(0, 0), sprites, "shoot", SpriteSheet::XAxisDirection::LEFT);
-				level->AddProjectileObject(projectile);
-				tile->SetID(Tile::blank);
-			}
-			break;
+					std::shared_ptr<ProjectileActor> projectile = std::make_shared<ProjectileActor>(tile->GetWorldPosition(), gameManager, Vector2(0, 0), sprites, "shoot", SpriteSheet::XAxisDirection::LEFT);
+					level->AddProjectileObject(projectile);
+					tile->SetID(Tile::blank);
+				}
+				break;
 			///Implement this later
 			//case Tile::turret:
 			//{

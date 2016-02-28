@@ -105,14 +105,6 @@ public:
 	 */
 	std::shared_ptr<Actor> GetEnemy(size_t idx);
 
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	///<summary> Gets all enemies from the level.</summary>
-	///
-	///### <author> Shane.</author>
-	///### <date> 2/26/2016.</date>
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	const std::vector<std::shared_ptr<AIActor>>& GetEnemies() const;
-
 	/**
 	 * Gets enemy array size.
 	 *

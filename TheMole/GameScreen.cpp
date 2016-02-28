@@ -12,6 +12,11 @@ const std::shared_ptr<PlayerActor> GameScreen::GetPlayer() const
 	return _player;
 }
 
+SoundEffectBank & GameScreen::GetSoundBank()
+{
+	return _soundBank;
+}
+
 int GameScreen::Load()
 {
 	_mgr = GameManager::GetInstance();
@@ -44,6 +49,8 @@ int GameScreen::Update(double elapsedSecs)
 		exit(0);
 	}
 
+	_player->Update(elapsedSecs);
+
 	if (_player->IsDead())
 	{
 		if (_mgr->inputManager->ActionOccurred("CONFIRM", Input::Pressed))
@@ -53,6 +60,8 @@ int GameScreen::Update(double elapsedSecs)
 		}
 		return SCREEN_CONTINUE;
 	}
+
+	if (_player->StoppedTime())	return SCREEN_CONTINUE;
 
 	if (_player->AtGoal())
 	{
@@ -89,7 +98,8 @@ int GameScreen::Update(double elapsedSecs)
 		_level->GetNPC(i)->Update(elapsedSecs);
 	}
 
-	_level->GetBoss()->Update(elapsedSecs);
+	std::shared_ptr<BossActor> boss = _level->GetBoss();
+	if(boss) boss->Update(elapsedSecs);
 
 	_level->Update(elapsedSecs);
 

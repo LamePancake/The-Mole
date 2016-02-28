@@ -1,7 +1,7 @@
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSS                                                                                      SSSSS
-SSSSS       B                                            C                                 SSSSS
+SSSSS     B                                              C                                 SSSSS
 SSSSS                                                SSSSSSSSS  SSSSSS                     SSSSS
 SSSSS     P                                                                                SSSSS
 SSSSS   SSSS                  SSS            SSSSSS                                        SSSSS

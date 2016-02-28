@@ -114,19 +114,19 @@ private:
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	///<summary> Updates controllable AI selection.</summary>
 	///
-	///<remarks> Shane, 2/22/2016.</remarks>
+	///<param name="released"> Whether we just released the mind control key.</param>
 	///
 	///### <author> Shane.</author>
-	///### <date> 2/6/2016.</date>
+	///### <date> 2/26/2016.</date>
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	void UpdateMindControlSelection();
+	void UpdateMindControlSelection(bool released);
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    ///<summary> Attempts to dig in the current dig direction.</summary>
+    ///<summary> Digs applicable tiles (if any) in the current dig direction.</summary>
     /// 
     ///<remarks> Shane, 2/22/2016.</remarks>
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-    void Dig();
+    void DigDiggableTiles();
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     ///<summary> Updates all collisions (with tiles and enemies).</summary>
@@ -179,7 +179,6 @@ private:
 
 	// Mind control variables
 	bool _stoppedTime;
-	float _mindControlRadius;
+	const float _mindControlRadius = 384.f;
 	int _selected;
-	std::vector<std::shared_ptr<AIActor>> _controllable;
 };
