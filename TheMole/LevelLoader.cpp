@@ -27,6 +27,7 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 	std::shared_ptr<SDL2pp::Texture> flagSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\Flag_raise.png");
 	std::shared_ptr<SDL2pp::Texture> pancakeSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\Pancake.png");
 	std::shared_ptr<SDL2pp::Texture> projectileSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\red_dot.png");
+	std::shared_ptr<SDL2pp::Texture> mindControlIndicator = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\Controlled_indicator.png");
 
 	while (std::getline(inFile, line))
 	{
@@ -45,7 +46,7 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 				std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> enemySprites;
 				enemySprites["walk"] = std::make_shared<SpriteSheet>(baddieWalkSheet, 8, 1.f);
 
-				std::shared_ptr<AIActor> e = std::make_shared<AIActor>(tile->GetWorldPosition(), gameManager, Vector2(100.0f, 341.3f), enemySprites, "walk");
+				std::shared_ptr<AIActor> e = std::make_shared<AIActor>(tile->GetWorldPosition(), gameManager, Vector2(100.0f, 341.3f), enemySprites, "walk", mindControlIndicator);
 				level->AddEnemy(e);
 				tile->SetID(Tile::blank);
 			}

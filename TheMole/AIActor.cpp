@@ -246,4 +246,14 @@ void AIActor::Draw(Camera& camera)
 	SDL_SetTextureColorMod(rawTexture, colour[0], colour[1], colour[2]);
 	SDL_SetTextureAlphaMod(rawTexture, 255);
 	spriteSheet->Draw(destRect, xDir, _spriteYDir);
+
+	if (_underControl)
+	{
+		SDL2pp::Rect controlRect;
+		controlRect.y = destRect.y - (_ctrlIndicator->GetHeight() - destRect.h);
+		controlRect.x = _curKinematic.position.GetX() - viewport.x;
+		controlRect.w = _ctrlIndicator->GetWidth();
+		controlRect.h = _ctrlIndicator->GetHeight();
+		_mgr->GetRenderer().Copy(*_ctrlIndicator, SDL2pp::NullOpt, controlRect);
+	}
 }
