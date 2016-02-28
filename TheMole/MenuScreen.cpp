@@ -40,11 +40,11 @@ int MenuScreen::Update(double elapsedSecs) {
 	}
 
 	// We selected a menu item; do the appropriate thing
-	if (keys[SDL_SCANCODE_RETURN]) {
+	if (keys[SDL_SCANCODE_RETURN] && !_prevKeyState[SDL_SCANCODE_RETURN]) {
 		switch (_curMenuItem) {
 		case 0:
             _mgr->GetMixer().HaltMusic();
-			_mgr->SetNextScreen("denlevel");
+			_mgr->SetNextScreen("levelSelect");
 			return SCREEN_FINISH;
 		case 1:
 			_mgr->SetNextScreen("settings");
