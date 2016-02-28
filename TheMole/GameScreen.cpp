@@ -49,8 +49,6 @@ int GameScreen::Update(double elapsedSecs)
 		exit(0);
 	}
 
-	_player->Update(elapsedSecs);
-
 	if (_player->IsDead())
 	{
 		if (_mgr->inputManager->ActionOccurred("CONFIRM", Input::Pressed))
@@ -61,8 +59,6 @@ int GameScreen::Update(double elapsedSecs)
 		return SCREEN_CONTINUE;
 	}
 
-	if (_player->StoppedTime())	return SCREEN_CONTINUE;
-
 	if (_player->AtGoal())
 	{
 		if (_mgr->inputManager->ActionOccurred("CONFIRM", Input::Pressed))
@@ -72,6 +68,10 @@ int GameScreen::Update(double elapsedSecs)
 		}
 		return SCREEN_CONTINUE;
 	}
+
+	_player->Update(elapsedSecs);
+
+	if (_player->StoppedTime())	return SCREEN_CONTINUE;
 
 	_player->Update(elapsedSecs);
 	if (_player->StoppedTime())
