@@ -65,7 +65,7 @@ void PlayerActor::Update(double elapsedSecs)
 		}
 	}
     DetectTileCollisions(_collisionInfo, _gameScreen->GetLevel());
-    Dig();
+	DigDiggableTiles();
 	UpdateCollisions(elapsedSecs);
     _prevKinematic = _curKinematic;
     _collisionInfo.colIntersect.clear();
@@ -340,142 +340,85 @@ void PlayerActor::UpdateMindControlSelection(bool released)
     }
 }
 
-void PlayerActor::Dig()
+void PlayerActor::DigDiggableTiles()
 {
+	if (_digDir == Edge::NONE) return;
+
     std::shared_ptr<Level> level = _gameScreen->GetLevel();
     bool dug = false;
 
-    // We check the tile we're intersecting and the tile directly next to it (provided it's close enough)
-    switch (_digDir)
+	vector<shared_ptr<Tile>>& tiles = _digDir == Edge::LEFT || _digDir == Edge::RIGHT ? _collisionInfo.colIntersect : _collisionInfo.rowIntersect;
+	bool hasNeighbour = false;
+	SDL2pp::Point neighbourIndices;
+	float dist;
+
+	switch (_digDir)
+	{
+	case Edge::LEFT:
+	{
+		hasNeighbour = tiles[0]->GetIndices().x > 0;
+		neighbourIndices.x = tiles[0]->GetIndices().x - 1;
+		neighbourIndices.y = tiles[0]->GetIndices().y;
+		if (hasNeighbour)
+		{
+			dist = _curKinematic.position.GetX() - (level->GetTileFromLevel(neighbourIndices.x, neighbourIndices.y)->GetWorldPosition().GetX() + level->GetTileWidth());
+		}
+	}
+	case Edge::RIGHT:
+	{
+		hasNeighbour = tiles[0]->GetIndices().x < level->GetLevelSize().x - 1;
+		neighbourIndices.x = tiles[0]->GetIndices().x + 1;
+		neighbourIndices.y = tiles[0]->GetIndices().y;
+		if (hasNeighbour)
+		{
+			dist = (level->GetTileFromLevel(neighbourIndices.x, neighbourIndices.y)->GetWorldPosition().GetX() + level->GetTileWidth()) - _curKinematic.position.GetX();
+		}
+	}
+	case Edge::TOP:
+	{
+		hasNeighbour = tiles[0]->GetIndices().y > 0;
+		neighbourIndices.x = tiles[0]->GetIndices().x;
+		neighbourIndices.y = tiles[0]->GetIndices().y - 1;
+		if (hasNeighbour)
+		{
+			dist = _curKinematic.position.GetY() - (level->GetTileFromLevel(neighbourIndices.x, neighbourIndices.y)->GetWorldPosition().GetY() + level->GetTileHeight());
+		}
+	}
+	case Edge::BOTTOM:
+	{
+		hasNeighbour = tiles[0]->GetIndices().y < level->GetLevelSize().y - 1;
+		neighbourIndices.x = tiles[0]->GetIndices().x;
+		neighbourIndices.y = tiles[0]->GetIndices().y + 1;
+		if (hasNeighbour)
+		{
+			dist = level->GetTileFromLevel(neighbourIndices.x, neighbourIndices.y)->GetWorldPosition().GetY() - (_curKinematic.position.GetY() + _sprites[_currentSpriteSheet]->GetFrameHeight());
+		}
+	}
+	}
+
+	// Actually dig applicable tiles
+    for (auto tile : tiles)
     {
-    case Edge::LEFT:
-    {
-        for (auto tile : _collisionInfo.colIntersect)
+        if (tile->GetID() == Tile::dirt)
         {
-            if (tile->GetID() == Tile::dirt)
-            {
-                dug = true;
-				_gameScreen->GetSoundBank().PlaySound("dig");
-				level->AddDugTile(tile);
-                tile->SetID(Tile::blank);
-            }
-        }
-        if (!dug && _collisionInfo.colIntersect[0]->GetIndices().x > 0)
-        {
-            int nextRow = _collisionInfo.colIntersect[0]->GetIndices().y;
-            int nextCol = _collisionInfo.colIntersect[0]->GetIndices().x - 1;
-            float dist = _curKinematic.position.GetX() - (level->GetTileFromLevel(nextCol, nextRow)->GetWorldPosition().GetX() + level->GetTileWidth());
-            if (dist < 3)
-            {
-                for (auto tile : _collisionInfo.colIntersect)
-                {
-					std::shared_ptr<Tile> neighbour = level->GetTileFromLevel(nextCol, tile->GetIndices().y);
-					if (tile->GetID() == Tile::dirt)
-					{
-						_gameScreen->GetSoundBank().PlaySound("dig");
-						level->AddDugTile(tile);
-						tile->SetID(Tile::blank);
-					}
-                }
-            }
+            dug = true;
+			_gameScreen->GetSoundBank().PlaySound("dig");
+			level->AddDugTile(tile);
+            tile->SetID(Tile::blank);
         }
     }
-    case Edge::RIGHT:
+    if (!dug && hasNeighbour && dist < 3)
     {
-        for (auto tile : _collisionInfo.colIntersect)
+        for (auto tile : tiles)
         {
-            if (tile->GetID() == Tile::dirt)
-            {
-                dug = true;
+			std::shared_ptr<Tile> neighbour = level->GetTileFromLevel(neighbourIndices.x, neighbourIndices.y);
+			if (tile->GetID() == Tile::dirt)
+			{
 				_gameScreen->GetSoundBank().PlaySound("dig");
 				level->AddDugTile(tile);
-                tile->SetID(Tile::blank);
-            }
+				tile->SetID(Tile::blank);
+			}
         }
-        if (!dug && _collisionInfo.colIntersect[0]->GetIndices().x < level->GetLevelSize().x - 1)
-        {
-            int nextRow = _collisionInfo.colIntersect[0]->GetIndices().y;
-            int nextCol = _collisionInfo.colIntersect[0]->GetIndices().x + 1;
-            float dist = (level->GetTileFromLevel(nextCol, nextRow)->GetWorldPosition().GetX() + level->GetTileWidth()) - _curKinematic.position.GetX();
-            if (dist < 3)
-            {
-                for (auto tile : _collisionInfo.colIntersect)
-                {
-					std::shared_ptr<Tile> neighbour = level->GetTileFromLevel(nextCol, tile->GetIndices().y);
-					if (tile->GetID() == Tile::dirt)
-					{
-						_gameScreen->GetSoundBank().PlaySound("dig");
-						level->AddDugTile(tile);
-						tile->SetID(Tile::blank);
-					}
-                }
-            }
-        }
-    }
-    case Edge::TOP:
-    {
-        for (auto tile : _collisionInfo.rowIntersect)
-        {
-            if (tile->GetID() == Tile::dirt)
-            {
-                dug = true;
-				_gameScreen->GetSoundBank().PlaySound("dig");
-				level->AddDugTile(tile);
-                tile->SetID(Tile::blank);
-            }
-        }
-        if (!dug && _collisionInfo.rowIntersect[0]->GetIndices().y > 0)
-        {
-            int nextRow = _collisionInfo.rowIntersect[0]->GetIndices().y - 1;
-            int nextCol = _collisionInfo.rowIntersect[0]->GetIndices().x;
-            float dist = _curKinematic.position.GetY() - (level->GetTileFromLevel(nextCol, nextRow)->GetWorldPosition().GetY() + level->GetTileHeight());
-            if (dist < 3)
-            {
-                for (auto tile : _collisionInfo.rowIntersect)
-                {
-					std::shared_ptr<Tile> neighbour = level->GetTileFromLevel(tile->GetIndices().x, nextRow);
-					if (tile->GetID() == Tile::dirt)
-					{
-						_gameScreen->GetSoundBank().PlaySound("dig");
-						level->AddDugTile(tile);
-						tile->SetID(Tile::blank);
-					}
-                }
-            }
-        }
-    }
-    case Edge::BOTTOM:
-    {
-        for (auto tile : _collisionInfo.rowIntersect)
-        {
-            if (tile->GetID() == Tile::dirt)
-            {
-                dug = true;
-				_gameScreen->GetSoundBank().PlaySound("dig");
-				level->AddDugTile(tile);
-                tile->SetID(Tile::blank);
-            }
-        }
-        if (!dug && _collisionInfo.rowIntersect[0]->GetIndices().y < level->GetLevelSize().y - 1)
-        {
-            int nextRow = _collisionInfo.rowIntersect[0]->GetIndices().y + 1;
-            int nextCol = _collisionInfo.rowIntersect[0]->GetIndices().x;
-            float dist = level->GetTileFromLevel(nextCol, nextRow)->GetWorldPosition().GetY() - (_curKinematic.position.GetY() + _sprites[_currentSpriteSheet]->GetFrameHeight());
-            if (dist < 3)
-            {
-                for (auto tile : _collisionInfo.rowIntersect)
-                {
-					std::shared_ptr<Tile> neighbour = level->GetTileFromLevel(tile->GetIndices().x, nextRow);
-					if (tile->GetID() == Tile::dirt)
-					{
-						_gameScreen->GetSoundBank().PlaySound("dig");
-						level->AddDugTile(tile);
-						tile->SetID(Tile::blank);
-					}
-                }
-            }
-        }
-    }
     }
 }
 
