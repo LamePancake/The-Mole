@@ -54,7 +54,6 @@ int MenuScreen::Update(double elapsedSecs) {
 			// So for now we're going to do it the dirty way
 			exit(0);
 		}
-		
 	}
 
 	// Save the previous key state (temporary until InputManager actions are implemented)

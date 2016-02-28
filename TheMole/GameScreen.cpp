@@ -33,9 +33,18 @@ int GameScreen::Load()
 	_camera = new Camera(playerPos, viewportSize, levelSize);
 
 	_background = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), _backgroundPath);
-	_winScreen = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), _winScreenPath);
+	_winScreen  = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), _winScreenPath);
 	_loseScreen = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), _loseScreenPath);
-	_pancake = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), ".\\Assets\\Textures\\Pancake.png");
+	_pancake    = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), ".\\Assets\\Textures\\Pancake.png");
+
+	_return      = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\GUI\\Pause_Menu\\pause_return.png");
+	_mainMenu    = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\GUI\\Pause_Menu\\pause_main.png");
+	_levelSelect = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\GUI\\Pause_Menu\\pause_levelselect.png");
+
+	_curMenuItem  = 0;
+	_menuItems[0] = _levelSelect;
+	_menuItems[1] = _mainMenu;
+	_menuItems[2] = _return;
 
 	return SCREEN_LOAD_SUCCESS;
 }
@@ -45,9 +54,9 @@ int GameScreen::Update(double elapsedSecs)
 	SDL_PumpEvents();
 	_mgr->inputManager->UpdateKeyboardState();
 
-	if (_mgr->inputManager->ActionOccurred("QUIT", Input::Pressed)) {
-		exit(0);
-	}
+	// Check if the player pauses the game and handle the pause
+	if (_mgr->inputManager->ActionOccurred("QUIT", Input::Pressed))  _paused = true;
+	if (_paused) return OnPause();
 
 	// Check if the player is dead
 	if (_player->IsDead())
@@ -139,38 +148,19 @@ void GameScreen::Draw()
 	// Render Player
 	_player->Draw(*_camera);
 
-	if (_player->IsDead())
+	// Draw the win or lose screen
+	if (_player->IsDead() || _player->AtGoal())
 	{
 		SDL2pp::Point dim = GameManager::GetInstance()->GetWindow().GetSize();
-		rend.Copy(*_loseScreen, SDL2pp::NullOpt, SDL2pp::Rect((dim.x / 2) - (dim.x * 0.6 / 2), (dim.y / 2) - (dim.y * 0.6 / 2), dim.x * 0.6, dim.y * 0.6));
-		int counter = 0;
-		for (int i = 0; i < _level->GetActorObjectSize(); i++)
-		{
-			if (!_level->GetActorObject(i)->IsVisible())
-				counter++;
-		}
-
-		if (counter > 0)
-		{
-			rend.Copy(*_pancake, SDL2pp::NullOpt, SDL2pp::Rect((dim.x / 2) - (_pancake->GetWidth() / 2), dim.y * 0.55 - (_pancake->GetHeight() / 2), _pancake->GetWidth(), _pancake->GetHeight()));
-		}
+		rend.Copy(_player->IsDead() ? *_loseScreen : *_winScreen, SDL2pp::NullOpt, SDL2pp::Rect((dim.x / 2) - (dim.x * 0.6 / 2), (dim.y / 2) - (dim.y * 0.6 / 2), dim.x * 0.6, dim.y * 0.6));
+		//Draw pancakes later
 	}
 
-	if (_player->AtGoal())
+	// Draw the pause menu
+	if (_paused)
 	{
 		SDL2pp::Point dim = GameManager::GetInstance()->GetWindow().GetSize();
-		rend.Copy(*_winScreen, SDL2pp::NullOpt, SDL2pp::Rect((dim.x / 2) - (dim.x * 0.6 / 2), (dim.y / 2) - (dim.y * 0.6 / 2), dim.x * 0.6, dim.y * 0.6));
-		int counter = 0;
-		for (int i = 0; i < _level->GetActorObjectSize(); i++)
-		{
-			if (!_level->GetActorObject(i)->IsVisible())
-				counter++;
-		}
-
-		if (counter > 0)
-		{
-			rend.Copy(*_pancake, SDL2pp::NullOpt, SDL2pp::Rect((dim.x / 2) - (_pancake->GetWidth() / 2), dim.y * 0.55 - (_pancake->GetHeight() / 2), _pancake->GetWidth(), _pancake->GetHeight()));
-		}
+		rend.Copy(*_menuItems[_curMenuItem], SDL2pp::NullOpt, SDL2pp::Rect((dim.x / 2) - (dim.x * 0.6 / 2), (dim.y / 2) - (dim.y * 0.6 / 2), dim.x * 0.6, dim.y * 0.6));
 	}
 
 	rend.Present();
@@ -178,7 +168,41 @@ void GameScreen::Draw()
 
 void GameScreen::Unload()
 {
+	delete _mainMenu;
+	delete _levelSelect;
+	delete _return;
 	free(_prevKeyState);
 	delete _camera;
 }
 
+int GameScreen::OnPause()
+{
+	if (_mgr->inputManager->ActionOccurred("ARROWDOWN", Input::Pressed) || _mgr->inputManager->ActionOccurred("DOWN", Input::Pressed))
+	{
+		_curMenuItem++;
+		if (_curMenuItem == NUM_MENU_ITEMS) _curMenuItem = 0;
+	}
+	else if (_mgr->inputManager->ActionOccurred("ARROWUP", Input::Pressed) || _mgr->inputManager->ActionOccurred("UP", Input::Pressed))
+	{
+		_curMenuItem--;
+		if (_curMenuItem < 0) _curMenuItem = NUM_MENU_ITEMS - 1;
+	}
+	else if (_mgr->inputManager->ActionOccurred("CONFIRM", Input::Pressed))
+	{
+		switch (_curMenuItem)
+		{
+		case 0:
+			_mgr->SetNextScreen("levelSelect");
+			_paused = false;
+			return SCREEN_FINISH;
+		case 1:
+			_mgr->SetNextScreen("menu");
+			_paused = false;
+			return SCREEN_FINISH;
+		case 2:
+			_paused = false;
+		}
+	}
+
+	return SCREEN_CONTINUE;
+}

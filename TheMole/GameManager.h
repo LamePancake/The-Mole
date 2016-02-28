@@ -89,6 +89,10 @@ private:
 		inputManager->AddKeyToMap("MIND_CONTROL_SELECT", Input::InputAction(SDL_SCANCODE_LSHIFT));
 		inputManager->AddKeyToMap("GODMODE", Input::InputAction(SDL_SCANCODE_G));
 		inputManager->AddKeyToMap("CONFIRM", Input::InputAction(SDL_SCANCODE_RETURN));
+		inputManager->AddKeyToMap("ARROWUP", Input::InputAction(SDL_SCANCODE_UP));
+		inputManager->AddKeyToMap("ARROWDOWN", Input::InputAction(SDL_SCANCODE_DOWN));
+		inputManager->AddKeyToMap("ARROWLEFT", Input::InputAction(SDL_SCANCODE_LEFT));
+		inputManager->AddKeyToMap("ARROWRIGHT", Input::InputAction(SDL_SCANCODE_RIGHT));
 	}
 
 	/**

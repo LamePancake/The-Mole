@@ -12,6 +12,8 @@
 #include "Actor.h"
 #include "SoundEffectBank.h"
 
+#define NUM_MENU_ITEMS 3
+
 class GameScreen :
 	public Screen
 {
@@ -26,7 +28,7 @@ public:
 	///<param name="nextLevel">      String indicating the next screen/level to load when this one is finished.</param>
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	GameScreen(std::string levelPath, std::string backgroundPath, std::string winScreenPath, std::string loseScreenPath, std::string nextLevel, SoundEffectBank & effectBank)
-		: _levelPath(levelPath), _backgroundPath(backgroundPath), _winScreenPath(winScreenPath), _loseScreenPath(loseScreenPath), _nextLevel(nextLevel), _soundBank(effectBank) {}
+		: _levelPath(levelPath), _backgroundPath(backgroundPath), _winScreenPath(winScreenPath), _loseScreenPath(loseScreenPath), _nextLevel(nextLevel), _soundBank(effectBank), _paused(false) {}
 
 	virtual int Load();
 	virtual int Update(double elapasedSecs) override;
@@ -59,6 +61,7 @@ protected:
 	std::string _loseScreenPath;
 	std::string _nextLevel;
 
+	bool _paused;
 	Camera* _camera;
 	GameManager* _mgr;
 	Uint8* _prevKeyState;
@@ -70,7 +73,16 @@ protected:
 	std::shared_ptr<SDL2pp::Texture> _background;
 	std::shared_ptr<SDL2pp::Texture> _winScreen;
 	std::shared_ptr<SDL2pp::Texture> _loseScreen;
+	std::shared_ptr<SDL2pp::Texture> _pauseScreen;
 	std::shared_ptr<SDL2pp::Texture> _pancake;
+
+	int _curMenuItem;
+	SDL2pp::Texture* _menuItems[NUM_MENU_ITEMS];
+	SDL2pp::Texture* _return;
+	SDL2pp::Texture* _mainMenu;
+	SDL2pp::Texture* _levelSelect;
+
+	int OnPause();
 };
 
 #endif
