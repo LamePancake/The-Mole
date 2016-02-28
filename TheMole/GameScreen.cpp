@@ -49,6 +49,7 @@ int GameScreen::Update(double elapsedSecs)
 		exit(0);
 	}
 
+	// Check if the player is dead
 	if (_player->IsDead())
 	{
 		if (_mgr->inputManager->ActionOccurred("CONFIRM", Input::Pressed))
@@ -59,6 +60,7 @@ int GameScreen::Update(double elapsedSecs)
 		return SCREEN_CONTINUE;
 	}
 
+	// Check if the player got to the goal
 	if (_player->AtGoal())
 	{
 		if (_mgr->inputManager->ActionOccurred("CONFIRM", Input::Pressed))
@@ -69,16 +71,9 @@ int GameScreen::Update(double elapsedSecs)
 		return SCREEN_CONTINUE;
 	}
 
+	// Update player
 	_player->Update(elapsedSecs);
-
 	if (_player->StoppedTime())	return SCREEN_CONTINUE;
-
-	_player->Update(elapsedSecs);
-	if (_player->StoppedTime())
-	{
-		std::cout << ":SALKDJF:LSDKJF" << std::endl;
-		return SCREEN_CONTINUE;
-	}
 
 	// Update Enemies
 	for (size_t i = 0; i < _level->GetEnemySize(); ++i)
