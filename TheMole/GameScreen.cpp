@@ -12,6 +12,11 @@ const std::shared_ptr<PlayerActor> GameScreen::GetPlayer() const
 	return _player;
 }
 
+SoundEffectBank & GameScreen::GetSoundBank()
+{
+	return _soundBank;
+}
+
 int GameScreen::Load()
 {
 	_mgr = GameManager::GetInstance();

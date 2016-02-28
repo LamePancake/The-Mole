@@ -25,6 +25,10 @@ int main(int argc, char** argv) {
 		SDLMixer sdlMixer(MIX_INIT_OGG | MIX_INIT_MP3);
         Mixer mixer(44100, MIX_DEFAULT_FORMAT, 2, 2048);
 
+		unordered_map<string, string> soundEffects;
+		soundEffects["dig"] = ".\\Assets\\Audio\\digging.ogg";
+		SoundEffectBank bank(soundEffects);
+
 		// Straightforward wrappers around corresponding SDL2 objects
 		// These take full care of proper object destruction and error checking
 		Window window("The Mole", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1280, 720, SDL_WINDOW_RESIZABLE);//SDL_WINDOW_FULLSCREEN);
@@ -32,8 +36,8 @@ int main(int argc, char** argv) {
 
 		unordered_map<string, shared_ptr<Screen>> screens;
 		shared_ptr<Screen> menu(new MenuScreen);
-		shared_ptr<Screen> den(new GameScreen(".\\Assets\\Levels\\den_level.txt", ".\\Assets\\Textures\\den_bg.png", "testlevel"));
-		shared_ptr<Screen> test(new GameScreen(".\\Assets\\Levels\\test_level.txt", ".\\Assets\\Textures\\den_bg.png", "menu"));
+		shared_ptr<Screen> den(new GameScreen(".\\Assets\\Levels\\den_level.txt", ".\\Assets\\Textures\\den_bg.png", "testlevel", bank));
+		shared_ptr<Screen> test(new GameScreen(".\\Assets\\Levels\\test_level.txt", ".\\Assets\\Textures\\den_bg.png", "menu", bank));
 		screens.insert({ "menu", menu });
 		screens.insert({ "denlevel", den });
 		screens.insert({ "testlevel", test });

@@ -64,9 +64,7 @@
     <ClCompile Include="Tile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ShimmerActor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ClCompile Include="SoundEffectBank.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AABB.h">
@@ -135,7 +133,7 @@
     <ClInclude Include="Vector2.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ShimmerActor.h">
+    <ClInclude Include="SoundEffectBank.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
