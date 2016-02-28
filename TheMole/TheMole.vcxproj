@@ -151,6 +151,7 @@
     <ClCompile Include="PlayerActor.cpp" />
     <ClCompile Include="AIActor.cpp" />
     <ClCompile Include="ProjectileActor.cpp" />
+    <ClCompile Include="ShimmerActor.cpp" />
     <ClCompile Include="SpriteSheet.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="Vector2.cpp" />
@@ -167,6 +168,7 @@
     <ClInclude Include="ObjectActor.h" />
     <ClInclude Include="PlayerActor.h" />
     <ClInclude Include="ProjectileActor.h" />
+    <ClInclude Include="ShimmerActor.h" />
     <ClInclude Include="SpriteSheet.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="Vector2.h" />

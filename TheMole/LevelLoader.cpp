@@ -77,6 +77,7 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 			{
 				std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
 				sprites["raise"] = std::make_shared<SpriteSheet>(flagSheet, 6, 1.0, false);
+				sprites["raise"]->Pause();
 
 				std::shared_ptr<ObjectActor> flag = std::make_shared<ObjectActor>(tile->GetWorldPosition(), gameManager, Vector2(0, 0), ObjectActor::flag, sprites, "raise");
 				level->AddActorObject(flag);
@@ -104,27 +105,17 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 					tile->SetID(Tile::blank);
 				}
 				break;
-			{
-				std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
-				double infinity = std::numeric_limits<double>::infinity();
-				sprites["whateverPancakesDo"] = std::make_shared<SpriteSheet>(pancakeSheet, 1, infinity);
-
-				std::shared_ptr<ObjectActor> collectible = std::make_shared<ObjectActor>(tile->GetWorldPosition(), gameManager, Vector2(0, 0), ObjectActor::pancake, sprites, "whateverPancakesDo");
-				level->AddActorObject(collectible);
-				tile->SetID(Tile::blank);
-			}
-			break;
 			case Tile::projectile:
-			{
-				std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
-				double infinity = std::numeric_limits<double>::infinity();
-				sprites["shoot"] = std::make_shared<SpriteSheet>(projectileSheet, 1, infinity);
+				{
+					std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
+					double infinity = std::numeric_limits<double>::infinity();
+					sprites["shoot"] = std::make_shared<SpriteSheet>(projectileSheet, 1, infinity);
 
-				std::shared_ptr<ProjectileActor> projectile = std::make_shared<ProjectileActor>(tile->GetWorldPosition(), gameManager, Vector2(0, 0), sprites, "shoot", SpriteSheet::XAxisDirection::LEFT);
-				level->AddProjectileObject(projectile);
-				tile->SetID(Tile::blank);
-			}
-			break;
+					std::shared_ptr<ProjectileActor> projectile = std::make_shared<ProjectileActor>(tile->GetWorldPosition(), gameManager, Vector2(0, 0), sprites, "shoot", SpriteSheet::XAxisDirection::LEFT);
+					level->AddProjectileObject(projectile);
+					tile->SetID(Tile::blank);
+				}
+				break;
 			///Implement this later
 			//case Tile::turret:
 			//{

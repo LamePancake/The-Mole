@@ -6,7 +6,8 @@ ObjectActor::ObjectActor(Vector2 position, GameManager & manager, Vector2 spd, i
 	SpriteSheet::XAxisDirection startXDirection, SpriteSheet::YAxisDirection startYDirection)
 	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection), _id(id)
 {
-	_sprites[_currentSpriteSheet]->Pause();
+	if (id == flag)
+		_sprites[_currentSpriteSheet]->Pause();
 }
 
 ObjectActor::~ObjectActor()
@@ -55,8 +56,7 @@ void ObjectActor::SetID(int id)
 
 void ObjectActor::FlagUpdate(double elapsedSecs)
 {
-	const std::shared_ptr<GameScreen> screen = std::dynamic_pointer_cast<GameScreen>(_mgr->GetCurrentScreen());
-	if (CollisionCheck(*(screen->GetPlayer())))
+	if (CollisionCheck(*(_gameScreen->GetPlayer())))
 	{
 		_sprites[_currentSpriteSheet]->Start();
 		_sprites[_currentSpriteSheet]->SetRepeating(false);
@@ -65,8 +65,7 @@ void ObjectActor::FlagUpdate(double elapsedSecs)
  
 void ObjectActor::PancakeUpdate(double elapsedSecs)
 {
-	const std::shared_ptr<GameScreen> screen = std::dynamic_pointer_cast<GameScreen>(_mgr->GetCurrentScreen());
-	if (CollisionCheck(*(screen->GetPlayer())))
+	if (CollisionCheck(*(_gameScreen->GetPlayer())))
 	{
 		_sprites[_currentSpriteSheet]->Stop();
 		SetVisibility(false);
