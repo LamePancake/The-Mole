@@ -202,6 +202,7 @@ void Level::UpdateDugTiles(double deltaTime)
 			if ((leftPlayerIdx  == tileIdx.x && topPlayerIdx   == tileIdx.y) ||
 				(rightPlayerIdx == tileIdx.x && bottomPlayerIdx == tileIdx.y))
 			{
+				it->second = 0;
 				isOccupied = true;
 			}
 
@@ -222,6 +223,7 @@ void Level::UpdateDugTiles(double deltaTime)
 					if ((leftEnemyIdx  == tileIdx.x && topEnemyIdx   == tileIdx.y) ||
 						(rightEnemyIdx == tileIdx.x && bottomEnemyIdx == tileIdx.y))
 					{
+						it->second = 0;
 						isOccupied = true;
 						break;
 					}
