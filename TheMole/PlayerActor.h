@@ -169,6 +169,7 @@ private:
 	float _jumpVelocity;
 	float _maxJumpVel;
 	bool _jumped;
+	bool _gliding;
 	double _jumpDuration;
 	double _jumpTimeElapsed;
 	bool _wasOnGround; // Tracks whether the player was on the ground in the previous frame

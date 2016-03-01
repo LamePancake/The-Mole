@@ -31,7 +31,7 @@ std::shared_ptr<Tile> Level::GetTileFromLevel(size_t x, size_t y)
 }
 
 void Level::GetTileRange(int startRow, int endRow, int startCol, int endCol, std::vector<std::shared_ptr<Tile>>& out) {
-    for (int row = startRow; row < endRow; ++row) {
+	    for (int row = startRow; row < endRow; ++row) {
 		for (int col = startCol; col < endCol; ++col) {
 			out.push_back(_level[row][col]);
 		}

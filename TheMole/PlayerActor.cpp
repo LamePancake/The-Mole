@@ -27,6 +27,10 @@ void PlayerActor::Update(double elapsedSecs)
 
 	Actor::Update(elapsedSecs);
 	_jumpVelocity = Math::Clamp(_jumpVelocity, -_maxJumpVel, _maxJumpVel);
+	if (_gliding)
+	{
+		_jumpVelocity += -5.9 * 64 * elapsedSecs;
+	}
 	if (!_jumped)
 	{
 		_jumpVelocity += -9.8 * 64 * elapsedSecs * -1.0;
@@ -271,6 +275,15 @@ void PlayerActor::UpdateInput()
 	{
 		//COMMENT OUT THIS LINE TO DISABLE JUMP
 		SetSpeed(Vector2(_curKinematic.velocity.GetX(), GetJumpVelocity()));
+	}
+
+	if (_mgr->inputManager->ActionOccurred("CHICKEN", Input::Down))
+	{
+		_gliding = true;
+	}
+	else
+	{
+		_gliding = false;
 	}
 }
 
