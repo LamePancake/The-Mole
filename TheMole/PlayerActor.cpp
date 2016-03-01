@@ -506,6 +506,6 @@ void PlayerActor::Reset(Vector2 pos)
 	_collisionInfo.rowIntersect.clear();
 	_collisionInfo.rowPenetration = 0;
 
+	_jumpVelocity = 0.0f;
 	_digDir = Edge::NONE;
-		
 }
