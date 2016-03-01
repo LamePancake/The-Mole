@@ -69,12 +69,12 @@ public:
 	{
 		if (_btHeat < 100)
 		{
-			cout << "not overheated" << endl;
+			//cout << "not overheated" << endl;
 			return true;
 		}
 		else
 		{
-			cout << "too heated" << endl;
+			//cout << "too heated" << endl;
 			return false;
 		}
 	}
@@ -90,7 +90,7 @@ public:
 	{
 		if (_btHealth > 0)
 		{
-			cout << "alive" << endl;
+			//cout << "alive" << endl;
 			return true;
 		}
 		else
@@ -110,7 +110,7 @@ public:
 	{
 		if (_btHealth <= 0)
 		{
-			cout << "dead" << endl;
+			//cout << "dead" << endl;
 			return true;
 		}
 		else
@@ -130,12 +130,12 @@ public:
 	{
 		if (_btHeat >= 100)
 		{
-			cout << "overheated" << endl;
+			//cout << "overheated" << endl;
 			return true;
 		}
 		else
 		{
-			cout << "not quite heated" << endl;
+			//cout << "not quite heated" << endl;
 			return false;
 		}
 	}
@@ -144,19 +144,20 @@ public:
 class PrePunchTask : public Node
 {
 private:
-	float _btDist;
+	float &_btDist;
+	float _triggerRange;
 public:
-	PrePunchTask(float dist) : _btDist(dist) {}
+	PrePunchTask(float &dist, float _range) : _btDist(dist), _triggerRange(_range) {}
 	virtual bool run() override
 	{
-		if (_btDist < 10)
+		if (_btDist < _triggerRange)
 		{
-			cout << "close enough" << endl;
+			//cout << "close enough" << endl;
 			return true;
 		}
 		else
 		{
-			cout << "far" << endl;
+			//cout << "not close enough to punch" << endl;
 			return false;
 		}
 	}
@@ -170,7 +171,7 @@ public:
 	PunchTask() {}
 	virtual bool run() override
 	{
-		cout << "close" << endl;
+		cout << "punch" << endl;
 		return true;
 	}
 };
@@ -178,19 +179,20 @@ public:
 class PreRollTask : public Node
 {
 private:
-	float _btDist;
+	float &_btDist;
+	float _triggerRange;
 public:
-	PreRollTask(float dist) : _btDist(dist) {}
+	PreRollTask(float &dist, float _range) : _btDist(dist), _triggerRange(_range) {}
 	virtual bool run() override
 	{
-		if (_btDist > 10)
+		if (_btDist > _triggerRange)
 		{
-			cout << "far enough" << endl;
+			//cout << "far enough, pre roll" << endl;
 			return true;
 		}
 		else
 		{
-			cout << "close" << endl;
+			//cout << "not far enough to roll" << endl;
 			return false;
 		}
 	}
@@ -267,11 +269,12 @@ public:
 	BossBehavTree();
 
 	void ExecuteTree();
-	void UpdateVariables(Vector2 pPos, Vector2 bPos, int health, int heat);
+	void UpdateVariables(Vector2* pPos, Vector2* bPos, int health, int heat);
 private:
 	float _pDist;
 	int _health;
 	int _heat;
+	float _meleeRange;
 	CheckIfOverheatedTask* _tChkOverheat;
 	CheckHeatTask* _tChkHeat;
 	CheckAliveTask* _tChkAlive;

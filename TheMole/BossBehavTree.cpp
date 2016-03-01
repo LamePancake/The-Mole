@@ -6,6 +6,7 @@ BossBehavTree::BossBehavTree()
 {
 	_heat = 0;
 	_health = 100;
+	_meleeRange = 200;
 	//Initialize Sequences and Selectors
 	_root = new Selector;
 	_selAlive = new Selector;
@@ -19,9 +20,9 @@ BossBehavTree::BossBehavTree()
 	_tChkHeat = new CheckHeatTask(_heat);
 	_tChkAlive = new CheckAliveTask(_health);
 	_tChkDead = new CheckDeadTask(_health);
-	_tPrePunch = new PrePunchTask(_pDist);
+	_tPrePunch = new PrePunchTask(_pDist, _meleeRange);
 	_tPunch = new PunchTask();
-	_tPreRoll = new PreRollTask(_pDist);
+	_tPreRoll = new PreRollTask(_pDist, _meleeRange);
 	_tRoll = new RollTask();
 	_tShortHop = new ShortHopTask();
 	_tShockWave = new ShockWaveTask();
@@ -69,9 +70,9 @@ void BossBehavTree::ExecuteTree()
 	cout << "Done Tree Execute" << endl;
 }
 
-void BossBehavTree::UpdateVariables(Vector2 pPos, Vector2 bPos, int health, int heat)
+void BossBehavTree::UpdateVariables(Vector2* pPos, Vector2* bPos, int health, int heat)
 {
-	_pDist = pPos.Distance(bPos);
+	_pDist = pPos->Distance(*bPos);
 	_health = health;
 	_heat = heat;
 }
