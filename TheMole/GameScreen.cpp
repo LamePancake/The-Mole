@@ -90,6 +90,12 @@ int GameScreen::Update(double elapsedSecs)
 		_level->GetEnemy(i)->Update(elapsedSecs);
 	}
 
+	// Update Turrets
+	for (size_t i = 0; i < _level->GetTurretActorSize(); ++i)
+	{
+		_level->GetTurret(i)->Update(elapsedSecs);
+	}
+
 	// Update projectile
 	for (size_t i = 0; i < _level->GetProjectileActorSize(); ++i)
 	{
@@ -144,6 +150,12 @@ void GameScreen::Draw()
 	for (size_t i = 0; i < _level->GetNPCSize(); ++i)
 	{
 		_level->GetNPC(i)->Draw(*_camera);
+	}
+
+	// Render Turrets
+	for (size_t i = 0; i < _level->GetTurretActorSize(); ++i)
+	{
+		_level->GetTurret(i)->Draw(*_camera);
 	}
 
 	for (size_t i = 0; i < _level->GetProjectileActorSize(); ++i)

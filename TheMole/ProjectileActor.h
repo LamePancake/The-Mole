@@ -1,7 +1,6 @@
 #pragma once
 #include "Actor.h"
 
-
 class ProjectileActor :
 	public Actor
 {
@@ -20,7 +19,8 @@ public:
 	* @param	startYDirection	The direction in the y axis which the actor will face at the start.
 	*/
 	ProjectileActor(Vector2 position, GameManager & manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites, const std::string&& startSprite,
-		SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP);
+		SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT
+		, SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP);
 
 	~ProjectileActor();
 

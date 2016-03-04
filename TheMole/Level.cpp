@@ -143,6 +143,21 @@ std::shared_ptr<ProjectileActor> Level::GetProjectile(size_t idx)
 	return _projectiles[idx];
 }
 
+void Level::AddTurretObject(std::shared_ptr<TurretActor> prj)
+{
+	_turrets.push_back(prj);
+}
+
+size_t Level::GetTurretActorSize() const
+{
+	return _turrets.size();
+}
+
+std::shared_ptr<TurretActor> Level::GetTurret(size_t idx)
+{
+	return _turrets[idx];
+}
+
 
 size_t Level::GetActorObjectSize() const
 {

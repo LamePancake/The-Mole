@@ -10,6 +10,7 @@ class NPCActor;
 class ObjectActor;
 class BossActor;
 class ProjectileActor;
+class TurretActor;
 
 #include "Tile.h"
 
@@ -190,6 +191,13 @@ public:
 
 	std::shared_ptr<ProjectileActor> GetProjectile(size_t idx);
 
+	///Should write something here
+	void AddTurretObject(std::shared_ptr<TurretActor> prj);
+
+	size_t GetTurretActorSize() const;
+
+	std::shared_ptr<TurretActor> GetTurret(size_t idx);
+
 	/**
 	* Gets object array size.
 	*
@@ -266,6 +274,9 @@ private:
 
 	/** Stores projectiles currently spawned */
 	std::vector<std::shared_ptr<ProjectileActor>> _projectiles;
+
+	/** Stores turrets currently spawned */
+	std::vector<std::shared_ptr<TurretActor>> _turrets;
 
 	std::map<char, std::vector<SDL2pp::Point>> _tilePositions;
 
