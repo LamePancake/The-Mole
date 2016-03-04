@@ -65,6 +65,6 @@ void ProjectileActor::ProjectileUpdate(double elapseSecs)
 		_sprites[_currentSpriteSheet]->Stop();
 		SetVisibility(false);
 		///Need to remove this projectile from list in level
-		_gameScreen->GetLevel()->getpr
+		//_gameScreen->GetLevel()->getpr
 	}
 }
