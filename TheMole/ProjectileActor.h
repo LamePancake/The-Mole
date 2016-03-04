@@ -52,7 +52,6 @@ public:
 
 
 private:
-
 	void ProjectileUpdate(double elapseSecs);
 };
 
