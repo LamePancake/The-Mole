@@ -117,7 +117,13 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 					double infinity = std::numeric_limits<double>::infinity();
 					sprites["shoot"] = std::make_shared<SpriteSheet>(projectileSheet, 1, infinity);
 
-					std::shared_ptr<ProjectileActor> projectile = std::make_shared<ProjectileActor>(tile->GetWorldPosition(), gameManager, Vector2(0, 0), sprites, "shoot", SpriteSheet::XAxisDirection::LEFT);
+					std::shared_ptr<ProjectileActor> projectile = std::make_shared<ProjectileActor>(
+						tile->GetWorldPosition() ///Vec2 position
+						, gameManager ///Gamemanager
+						, Vector2(100.0f, 0.0f) ///Vec2 spd
+						, sprites ///sprites
+						, "shoot" ///startsprite
+						, SpriteSheet::XAxisDirection::LEFT); ///direction
 					level->AddProjectileObject(projectile);
 					tile->SetID(Tile::blank);
 				}

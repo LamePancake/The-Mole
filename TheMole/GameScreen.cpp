@@ -90,6 +90,12 @@ int GameScreen::Update(double elapsedSecs)
 		_level->GetEnemy(i)->Update(elapsedSecs);
 	}
 
+	// Update projectile
+	for (size_t i = 0; i < _level->GetProjectileActorSize(); ++i)
+	{
+		_level->GetProjectile(i)->Update(elapsedSecs);
+	}
+
 	// Update objects
 	for (size_t i = 0; i < _level->GetActorObjectSize(); ++i)
 	{
