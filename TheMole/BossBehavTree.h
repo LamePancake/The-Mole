@@ -2,7 +2,12 @@
 #include <list>
 #include <iostream>
 #include "Vector2.h"
+
 using namespace std;
+
+//Vector2 _targetPos;
+//Vector2 _playerPos;
+//Vector2 _bossPos;
 
 class Node
 {
@@ -15,48 +20,20 @@ class CompositeNode : public Node
 private:
 	list<Node*> children;
 public:
-	const list<Node*>& getChildren() const
-	{
-		return children;
-	}
-	void addChild(Node* child)
-	{
-		children.emplace_back(child);
-	}
+	const list<Node*>& getChildren() const;
+	void addChild(Node* child);
 };
 
 class Selector : public CompositeNode
 {
 public:
-	virtual bool run() override
-	{
-		for (Node* child : getChildren())
-		{
-			if (child->run())
-			{
-				return true;
-			}
-			
-		}
-		return false;
-	}
+	virtual bool run() override;
 };
 
 class Sequence : public CompositeNode
 {
 public:
-	virtual bool run() override
-	{
-		for (Node* child : getChildren())
-		{
-			if (!child->run())
-			{
-				return false;
-			}
-			
-		}
-		return true;
-	}
+	virtual bool run() override;
 };
 
 class CheckHeatTask : public Node
@@ -65,19 +42,7 @@ private:
 	int _btHeat;
 public:
 	CheckHeatTask(int heat) : _btHeat(heat) {}
-	virtual bool run() override
-	{
-		if (_btHeat < 100)
-		{
-			//cout << "not overheated" << endl;
-			return true;
-		}
-		else
-		{
-			//cout << "too heated" << endl;
-			return false;
-		}
-	}
+	virtual bool run() override;
 };
 
 class CheckAliveTask : public Node
@@ -86,18 +51,7 @@ private:
 	int _btHealth;
 public:
 	CheckAliveTask(int health) : _btHealth(health) {}
-	virtual bool run() override
-	{
-		if (_btHealth > 0)
-		{
-			//cout << "alive" << endl;
-			return true;
-		}
-		else
-		{			
-			return false;
-		}
-	}
+	virtual bool run() override;
 };
 
 class CheckDeadTask : public Node
@@ -106,18 +60,7 @@ private:
 	int _btHealth;
 public:
 	CheckDeadTask(int health) : _btHealth(health) {}
-	virtual bool run() override
-	{
-		if (_btHealth <= 0)
-		{
-			//cout << "dead" << endl;
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
+	virtual bool run() override;
 };
 
 class CheckIfOverheatedTask : public Node
@@ -126,19 +69,7 @@ private:
 	int _btHeat;
 public:
 	CheckIfOverheatedTask(int heat) : _btHeat(heat) {}
-	virtual bool run() override
-	{
-		if (_btHeat >= 100)
-		{
-			//cout << "overheated" << endl;
-			return true;
-		}
-		else
-		{
-			//cout << "not quite heated" << endl;
-			return false;
-		}
-	}
+	virtual bool run() override;
 };
 
 class PrePunchTask : public Node
@@ -148,19 +79,7 @@ private:
 	float _triggerRange;
 public:
 	PrePunchTask(float &dist, float _range) : _btDist(dist), _triggerRange(_range) {}
-	virtual bool run() override
-	{
-		if (_btDist < _triggerRange)
-		{
-			//cout << "close enough" << endl;
-			return true;
-		}
-		else
-		{
-			//cout << "not close enough to punch" << endl;
-			return false;
-		}
-	}
+	virtual bool run() override;
 };
 
 class PunchTask : public Node
@@ -169,11 +88,7 @@ private:
 
 public:
 	PunchTask() {}
-	virtual bool run() override
-	{
-		cout << "punch" << endl;
-		return true;
-	}
+	virtual bool run() override;
 };
 
 class PreRollTask : public Node
@@ -183,19 +98,7 @@ private:
 	float _triggerRange;
 public:
 	PreRollTask(float &dist, float _range) : _btDist(dist), _triggerRange(_range) {}
-	virtual bool run() override
-	{
-		if (_btDist > _triggerRange)
-		{
-			//cout << "far enough, pre roll" << endl;
-			return true;
-		}
-		else
-		{
-			//cout << "not far enough to roll" << endl;
-			return false;
-		}
-	}
+	virtual bool run() override;
 };
 
 class RollTask : public Node
@@ -204,11 +107,7 @@ private:
 
 public:
 	RollTask() {}
-	virtual bool run() override
-	{
-		cout << "roll" << endl;
-		return true;
-	}
+	virtual bool run() override;
 };
 
 class ShortHopTask : public Node
@@ -217,11 +116,7 @@ private:
 
 public:
 	ShortHopTask() {}
-	virtual bool run() override
-	{
-		cout << "hop" << endl;
-		return true;
-	}
+	virtual bool run() override;
 };
 
 class ShockWaveTask : public Node
@@ -230,11 +125,7 @@ private:
 
 public:
 	ShockWaveTask() {}
-	virtual bool run() override
-	{
-		cout << "wave" << endl;
-		return true;
-	}
+	virtual bool run() override;
 };
 
 class IdleTask : public Node
@@ -243,11 +134,7 @@ private:
 
 public:
 	IdleTask() {}
-	virtual bool run() override
-	{
-		cout << "cooldown" << endl;
-		return true;
-	}
+	virtual bool run() override;
 };
 
 class EjectTask : public Node
@@ -256,11 +143,7 @@ private:
 
 public:
 	EjectTask() {}
-	virtual bool run() override
-	{
-		cout << "eject" << endl;
-		return true;
-	}
+	virtual bool run() override;
 };
 
 class BossBehavTree
@@ -270,11 +153,13 @@ public:
 
 	void ExecuteTree();
 	void UpdateVariables(Vector2* pPos, Vector2* bPos, int health, int heat);
+	//Vector2 GetTarget();
 private:
 	float _pDist;
 	int _health;
 	int _heat;
 	float _meleeRange;
+
 	CheckIfOverheatedTask* _tChkOverheat;
 	CheckHeatTask* _tChkHeat;
 	CheckAliveTask* _tChkAlive;

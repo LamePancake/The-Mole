@@ -1,6 +1,8 @@
 #include "BossActor.h"
 #include "GameScreen.h"
 #include <iostream>
+#include "BossBehavTree.h"
+
 BossActor::BossActor(Vector2 position, GameManager & manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites, const std::string&& startSprite,
 	SpriteSheet::XAxisDirection startXDirection, SpriteSheet::YAxisDirection startYDirection)
 	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection), _heat(0) {}
@@ -22,9 +24,9 @@ void BossActor::Draw(Camera & camera)
 void BossActor::Update(double elapsedSecs)
 {
 	Actor::Update(elapsedSecs);
-	Vector2 playerPos = _gameScreen->GetPlayer()->GetPosition();
-	Vector2 bossPos = GetPosition();
-	_bossTree.UpdateVariables(&playerPos, &bossPos, _health, _heat);
+	_playerPos = _gameScreen->GetPlayer()->GetPosition();
+	_bossPos = GetPosition();
+	_bossTree.UpdateVariables(&_playerPos, &_bossPos, _health, _heat);
 	_bossTree.ExecuteTree();
 }
 

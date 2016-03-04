@@ -3,6 +3,7 @@
 #include "BossBehavTree.h"
 
 using namespace std;
+
 class BossActor : public Actor
 {
 public:
@@ -30,5 +31,7 @@ public:
 private:
 	BossBehavTree _bossTree;
 	int _heat;
+	Vector2 _playerPos;
+	Vector2 _bossPos;
 };
  
