@@ -74,6 +74,8 @@ private:
 
 	int _id;
 
+	bool _collided;
+
 	void FlagUpdate(double elapsedSecs);
 
 	void PancakeUpdate(double elapsedSecs);

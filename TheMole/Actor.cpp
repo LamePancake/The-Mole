@@ -133,7 +133,7 @@ void Actor::Draw(Camera& camera)
 void Actor::Reset(Vector2 pos)
 {
 	SetPosition(pos);
-	SetHealth(100);
+	_health = 100;
 	SetActorXDirection(SpriteSheet::XAxisDirection::RIGHT);
 	SetActorYDirection(SpriteSheet::YAxisDirection::UP);
 }

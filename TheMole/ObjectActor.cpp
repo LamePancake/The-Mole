@@ -4,7 +4,7 @@
 
 ObjectActor::ObjectActor(Vector2 position, GameManager & manager, Vector2 spd, int id, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites, const std::string&& startSprite,
 	SpriteSheet::XAxisDirection startXDirection, SpriteSheet::YAxisDirection startYDirection)
-	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection), _id(id)
+	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection), _id(id), _collided(false)
 {
 	if (id == flag)
 		_sprites[_currentSpriteSheet]->Pause();
@@ -61,12 +61,13 @@ void ObjectActor::SetID(int id)
 
 void ObjectActor::FlagUpdate(double elapsedSecs)
 {
-	if (CollisionCheck(*(_gameScreen->GetPlayer())))
+	if (!_collided && CollisionCheck(*(_gameScreen->GetPlayer())))
 	{
 		_sprites[_currentSpriteSheet]->Start();
 		_sprites[_currentSpriteSheet]->SetRepeating(false);
 
 		_gameScreen->GetLevel()->SetSpawnPoint(GetPosition());
+		_collided = true;
 	}
 }
  
