@@ -46,6 +46,10 @@ int main(int argc, char** argv) {
 		shared_ptr<Screen> boss(new GameScreen(".\\Assets\\Levels\\boss_level.txt", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\GUI\\Level_Complete\\level_cleared_keyboard.png", ".\\Assets\\GUI\\Level_Complete\\level_failed_keyboard.png", "levelSelect", bank));
 		shared_ptr<Screen> test(new GameScreen(".\\Assets\\Levels\\test_level.txt", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\GUI\\Level_Complete\\level_cleared_keyboard.png", ".\\Assets\\GUI\\Level_Complete\\level_failed_keyboard.png", "menu", bank));
 		shared_ptr<Screen> denIntro(new CutsceneScreen(".\\Assets\\GUI\\dialog_box.png", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\Textures\\den_bg.png", 1, 0, ".\\Assets\\Textures\\Borin_dialog.png", 4, 0.8, ".\\Assets\\Textures\\Toad_dialog.png", 6, 0.50, bank, "denlevel", ".\\Assets\\Dialog\\den_dialog.txt", "Borin", "Toad"));
+		shared_ptr<Screen> vikingIntro(new CutsceneScreen(".\\Assets\\GUI\\dialog_box.png", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\Textures\\den_bg.png", 1, 0, ".\\Assets\\Textures\\Borin_dialog.png", 4, 0.8, ".\\Assets\\Textures\\Toad_dialog.png", 6, 0.50, bank, "vikinglevel", ".\\Assets\\Dialog\\viking_dialog.txt", "Borin", "Viking"));
+		shared_ptr<Screen> grassIntro(new CutsceneScreen(".\\Assets\\GUI\\dialog_box.png", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\Textures\\den_bg.png", 1, 0, ".\\Assets\\Textures\\Borin_dialog.png", 4, 0.8, ".\\Assets\\Textures\\Toad_dialog.png", 6, 0.50, bank, "grasslevel", ".\\Assets\\Dialog\\grassland_dialog.txt", "Borin", "Viking"));
+		shared_ptr<Screen> starscapeIntro(new CutsceneScreen(".\\Assets\\GUI\\dialog_box.png", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\Textures\\den_bg.png", 1, 0, ".\\Assets\\Textures\\Borin_dialog.png", 4, 0.8, ".\\Assets\\Textures\\Toad_dialog.png", 6, 0.50, bank, "starscapelevel", ".\\Assets\\Dialog\\starscape_dialog.txt", "Borin", "Viking"));
+		shared_ptr<Screen> bossIntro(new CutsceneScreen(".\\Assets\\GUI\\dialog_box.png", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\Textures\\den_bg.png", 1, 0, ".\\Assets\\Textures\\Borin_dialog.png", 4, 0.8, ".\\Assets\\Textures\\Toad_dialog.png", 6, 0.50, bank, "bosslevel", ".\\Assets\\Dialog\\final_battle_dialog.txt", "Borin", "Gray"));
 
 		screens.insert({ "menu", menu });
 		screens.insert({ "levelSelect", levelSelect });
@@ -56,6 +60,10 @@ int main(int argc, char** argv) {
 		screens.insert({ "bosslevel", boss });
 		screens.insert({ "testlevel", test });
 		screens.insert({ "denIntro", denIntro });
+		screens.insert({ "vikingIntro", vikingIntro });
+		screens.insert({ "grassIntro", grassIntro });
+		screens.insert({ "starscapeIntro", starscapeIntro });
+		screens.insert({ "bossIntro", bossIntro });
 
 		GameManager::_instance = new GameManager(std::move(sdl), std::move(image), std::move(mixer), std::move(sdl_ttf), std::move(window), std::move(renderer), screens);
 		
