@@ -107,9 +107,9 @@ public:
 class RollTask : public Node
 {
 private:
-	Vector2 targetPos;
+	Vector2* targetPos;
 public:
-	RollTask(Vector2 *tPos) : targetPos(*tPos) {}
+	RollTask(Vector2 *tPos) : targetPos(tPos) {}
 	virtual bool run() override;
 };
 
@@ -155,7 +155,7 @@ public:
 	BossBehavTree();
 
 	void ExecuteTree();
-	void UpdateVariables(Vector2* pPos, Vector2* bPos, int health, int heat);
+	void UpdateVariables(Vector2* pPos, Vector2* bPos, int health, int heat, double elapsedSecs);
 	Vector2 GetTarget();
 private:
 	float _pDist;
