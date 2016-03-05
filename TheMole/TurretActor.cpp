@@ -17,6 +17,7 @@ TurretActor::TurretActor(
 		, startXDirection, startYDirection)
 {
 	_sprites[_currentSpriteSheet];
+	_timeInterval = 0;
 }
 
 TurretActor::~TurretActor()
@@ -47,14 +48,18 @@ bool TurretActor::CollisionCheck(Actor & otherAI)
 
 void TurretActor::TurretUpdate(double elapseSecs)
 {
-		//_gameScreen->SpawnProjectileActors(std::make_shared<ProjectileActor>(
-		//	_curKinematic.position ///Vec2 position
-		//	, *_mgr ///Gamemanager
-		//	, Vector2(100.0f, 0.0f) ///Vec2 spd
-		//	, _sprites ///sprites
-		//	, "turret" ///startsprite
-		//	, SpriteSheet::XAxisDirection::LEFT) ///direction
-		//	);
+	_timeInterval += elapseSecs;
+	if (_timeInterval > 5) {
+		_gameScreen->SpawnProjectileActors(std::make_shared<ProjectileActor>(
+			_curKinematic.position //- Vector2(0, -50) ///Vec2 position
+			, *_mgr ///Gamemanager
+			, Vector2(-200.0f, 0.0f) ///Vec2 spd
+			, _sprites ///sprites
+			, "turret" ///startsprite
+			, SpriteSheet::XAxisDirection::LEFT) ///direction
+			);
+		_timeInterval = elapseSecs;
+	}
 }
 
 #endif
