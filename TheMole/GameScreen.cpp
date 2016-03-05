@@ -168,6 +168,10 @@ void GameScreen::Draw()
 	// Render Player
 	_player->Draw(*_camera);
 
+	std::shared_ptr<BossActor> boss = _level->GetBoss();
+	if (boss) boss->Draw(*_camera);
+
+
 	// Draw the win or lose screen
 	if (_player->IsDead() || _player->AtGoal())
 	{

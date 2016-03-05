@@ -145,7 +145,7 @@ bool PreRollTask::run()
 bool RollTask::run() 
 {
 	cout << "roll" << endl;
-	targetPos = _gameScreen->GetPlayer()->GetPosition();
+	*targetPos = _gameScreen->GetPlayer()->GetPosition();
 	//cout << "bPos: " << targetPos->GetX() << endl;
 	//cout << "pPos: " << _gameScreen->GetPlayer()->GetPosition().GetX() << endl;
 	return true;
@@ -252,7 +252,7 @@ void BossBehavTree::ExecuteTree()
 	//cout << "Done Tree Execute" << endl;
 }
 
-void BossBehavTree::UpdateVariables(Vector2* pPos, Vector2* bPos, int health, int heat)
+void BossBehavTree::UpdateVariables(Vector2* pPos, Vector2* bPos, int health, int heat, double elapsedSecs)
 {
 	_pDist = pPos->Distance(*bPos);
 	_health = health;
