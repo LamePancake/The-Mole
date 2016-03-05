@@ -45,7 +45,7 @@ int main(int argc, char** argv) {
 		shared_ptr<Screen> starscape(new GameScreen(".\\Assets\\Levels\\starscape_level.txt", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\GUI\\Level_Complete\\level_cleared_keyboard.png", ".\\Assets\\GUI\\Level_Complete\\level_failed_keyboard.png", "levelSelect", bank));
 		shared_ptr<Screen> boss(new GameScreen(".\\Assets\\Levels\\boss_level.txt", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\GUI\\Level_Complete\\level_cleared_keyboard.png", ".\\Assets\\GUI\\Level_Complete\\level_failed_keyboard.png", "levelSelect", bank));
 		shared_ptr<Screen> test(new GameScreen(".\\Assets\\Levels\\test_level.txt", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\GUI\\Level_Complete\\level_cleared_keyboard.png", ".\\Assets\\GUI\\Level_Complete\\level_failed_keyboard.png", "menu", bank));
-		shared_ptr<Screen> denIntro(new CutsceneScreen(".\\Assets\\GUI\\dialog_box.png", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\Textures\\den_bg.png", 1, 0, ".\\Assets\\Textures\\Borin_dialog.png", 4, 0.8, ".\\Assets\\Textures\\Borin_dialog.png", 4, 0.8, bank, "denlevel", ".\\Assets\\Cutscenes\\DenIntro.txt"));
+		shared_ptr<Screen> denIntro(new CutsceneScreen(".\\Assets\\GUI\\dialog_box.png", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\Textures\\den_bg.png", 1, 0, ".\\Assets\\Textures\\Borin_dialog.png", 4, 0.8, ".\\Assets\\Textures\\Borin_dialog.png", 4, 0.8, bank, "denlevel", ".\\Assets\\Dialog\\den_dialog.txt"));
 
 		screens.insert({ "menu", menu });
 		screens.insert({ "levelSelect", levelSelect });
@@ -66,6 +66,7 @@ int main(int argc, char** argv) {
 		// Exception stores SDL_GetError() result and name of function which failed
 		std::cerr << "Error in: " << e.GetSDLFunction() << std::endl;
 		std::cerr << "  Reason: " << e.GetSDLError() << std::endl;
+		cin.get();
 	}
 	catch (std::exception& e) {
 		// This also works (e.g. "SDL_Init failed: No available video device")
