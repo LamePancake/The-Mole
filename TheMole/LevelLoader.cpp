@@ -134,6 +134,7 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 				std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
 				double infinity = std::numeric_limits<double>::infinity();
 				sprites["turret"] = std::make_shared<SpriteSheet>(turretSheet, 1, infinity);
+				sprites["shoot"] = std::make_shared<SpriteSheet>(projectileSheet, 1, infinity);
 
 				std::shared_ptr<TurretActor> turret = std::make_shared<TurretActor>(
 					tile->GetWorldPosition()
@@ -141,7 +142,8 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 					, Vector2(0, 0)
 					, sprites
 					, "turret"
-					, SpriteSheet::XAxisDirection::LEFT);
+					, SpriteSheet::XAxisDirection::LEFT
+					, SpriteSheet::YAxisDirection::UP);
 				level->AddTurretObject(turret);
 				tile->SetID(Tile::blank);
 			}

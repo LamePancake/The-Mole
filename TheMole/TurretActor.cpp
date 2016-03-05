@@ -55,7 +55,7 @@ void TurretActor::TurretUpdate(double elapseSecs)
 			, *_mgr ///Gamemanager
 			, Vector2(-200.0f, 0.0f) ///Vec2 spd
 			, _sprites ///sprites
-			, "turret" ///startsprite
+			, "shoot" ///startsprite
 			, SpriteSheet::XAxisDirection::LEFT) ///direction
 			);
 		_timeInterval = elapseSecs;
