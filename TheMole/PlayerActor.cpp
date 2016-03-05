@@ -7,7 +7,7 @@ using std::shared_ptr;
 PlayerActor::PlayerActor(Vector2 position, GameManager& manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
 	const std::string&& startSprite, SpriteSheet::XAxisDirection startXDir, SpriteSheet::YAxisDirection startYDir)
 	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDir, startYDir), _prevDirection(startXDir), _atGoal(false), _jumpVelocity(0), _maxJumpVel(400),
-	_digDir{ Edge::NONE }, _jumped(false), _jumpDuration(0.75), _jumpTimeElapsed(0), _godMode(false), _stoppedTime(false), _selected(0)
+	_digDir{ Edge::NONE }, _jumped(false), _jumpDuration(0.75), _jumpTimeElapsed(0), _godMode(false), _stoppedTime(false), _selected(0), _jumpBoost(600), _jumpBoosted(false)
 {
 }
 
@@ -27,17 +27,22 @@ void PlayerActor::Update(double elapsedSecs)
 
 	Actor::Update(elapsedSecs);
 	_jumpVelocity = Math::Clamp(_jumpVelocity, -_maxJumpVel, _maxJumpVel);
-	if (_gliding)
+	if (_gliding && _jumpVelocity > 0)
 	{
 		_jumpVelocity += -5.9 * 64 * elapsedSecs;
 	}
 	if (!_jumped)
 	{
 		_jumpVelocity += -9.8 * 64 * elapsedSecs * -1.0;
+		cout << _jumpVelocity << endl;
 	}
 	if (_jumpVelocity <= _maxJumpVel)
 	{
 		StopJumping();
+	}
+	if (_wasOnGround)
+	{
+		_jumpBoosted = false;
 	}
 
 
@@ -285,6 +290,11 @@ void PlayerActor::UpdateInput()
 		SetSpeed(Vector2(_curKinematic.velocity.GetX(), GetJumpVelocity()));
 	}
 
+	if (_mgr->inputManager->ActionOccurred("CHICKEN", Input::Pressed) && !_jumpBoosted)
+	{
+		_jumpVelocity -= _jumpBoost;
+		_jumpBoosted = true;
+	}
 	if (_mgr->inputManager->ActionOccurred("CHICKEN", Input::Down))
 	{
 		_gliding = true;
