@@ -300,4 +300,5 @@ private:
 	* @param	deltaTime	Time since last frame.
 	*/
 	void UpdateDugTiles(double deltaTime);
+	void UpdateProjectileList(double deltaTime);
 };

@@ -35,6 +35,11 @@ void Vector2::SetY(float y)
 	_y = y;
 }
 
+Vector2 Vector2::operator-(Vector2 other)
+{
+	return Vector2(_x - other.GetX(), _y - other.GetY());
+}
+
 float Vector2::Distance(Vector2 other)
 {
 	float x = _x - other._x;

@@ -44,6 +44,8 @@ public:
 	*/
 	void SetY(float y);
 
+	Vector2 operator-(Vector2 other);
+
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	///<summary> Gets the absolute distance to another vector.</summary>
 	/// 

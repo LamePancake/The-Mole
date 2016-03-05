@@ -257,9 +257,18 @@ void Level::UpdateDugTiles(double deltaTime)
 	}
 }
 
+void Level::UpdateProjectileList(double deltaTime) {
+	for (size_t i = 0; i < _projectiles.size(); ++i)
+	{
+		if (!_projectiles[i]->IsVisible())
+			_projectiles.erase(_projectiles.begin() + i);
+	}
+}
+
 void Level::Update(double deltaTime)
 {
 	UpdateDugTiles(deltaTime);
+	UpdateProjectileList(deltaTime);
 }
 
 void Level::Reset()
