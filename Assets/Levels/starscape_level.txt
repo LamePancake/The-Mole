@@ -1,12 +1,12 @@
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSS                                                                                      SSSSS
-SSSSS     B                                              C                                 SSSSS
+SSSSS                                                    C                                 SSSSS
 SSSSS                                                SSSSSSSSS  SSSSSS                     SSSSS
-SSSSS     P         E                                                                      SSSSS
+SSSSS               E                                                                      SSSSS
 SSSSS   SSSS        E         SSS            SSSSSS                                        SSSSS
-SSSSS P       P     E  S  S         S  S                     SSS  SSS  SSS  SSS            SSSSS
-SSSSSTO P     ESS   E SS  SS       SS  SS           S  E  S                 SSSSSS         SSSSS
+SSSSS               E  S  S         S  S                     SSS  SSS  SSS  SSS            SSSSS
+SSSSSTO       ESS   E SS  SS       SS  SS           S  E  S                 SSSSSS         SSSSS
 SSSSSSSSDSSDSSSSSSSSSSSSSSSSSSSSSSSSS  SSSSS        SSSSSSS                 SSSSSSSSSDDDSSSSSSSS
 SSSSSSSSDDDDSSSSSSSSSSSSSSSSSSSSSSSSSKKSSSSSKKKKKKKKSSSSSSSKKKKKKKKKKKKKKKKKSSSSSSSSSDDDSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSDDDSSSSSSSS

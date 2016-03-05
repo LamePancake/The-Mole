@@ -56,16 +56,16 @@ int LevelSelectScreen::Update(double elapsedSecs)
 			_mgr->SetNextScreen("denIntro");
 			return SCREEN_FINISH;
 		case 1:
-			_mgr->SetNextScreen("vikinglevel");
+			_mgr->SetNextScreen("vikingIntro");
 			return SCREEN_FINISH;
 		case 2:
-			_mgr->SetNextScreen("grasslevel");
+			_mgr->SetNextScreen("grassIntro");
 			return SCREEN_FINISH;
 		case 3:
-			_mgr->SetNextScreen("starscapelevel");
+			_mgr->SetNextScreen("starscapeIntro");
 			return SCREEN_FINISH;
 		case 4:
-			_mgr->SetNextScreen("bosslevel");
+			_mgr->SetNextScreen("bossIntro");
 			return SCREEN_FINISH;
 		case 5:
 			_mgr->SetNextScreen("menu");

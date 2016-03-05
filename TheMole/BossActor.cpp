@@ -17,15 +17,16 @@ void BossActor::UpdatePosition(double elapsedSecs)
 	Vector2 target = _bossTree.GetTarget();
 	if (_curKinematic.position.Distance(_bossTree.GetTarget()) > 10)
 	{
-		if (_curKinematic.position.GetX() < _bossTree.GetTarget().GetX())
+		if (_curKinematic.position.GetX() > _bossTree.GetTarget().GetX())
 		{
-			_curKinematic.position.SetX(_curKinematic.position.GetX() - (_curKinematic.velocity.GetX() * elapsedSecs));
+			_curKinematic.position.SetX((float)_curKinematic.position.GetX() - ((float)_curKinematic.velocity.GetX() * (float)elapsedSecs));
 		}
 		else
 		{
-			_curKinematic.position.SetX(_curKinematic.position.GetX() + (_curKinematic.velocity.GetX() * elapsedSecs));
+			_curKinematic.position.SetX((float)_curKinematic.position.GetX() + ((float)_curKinematic.velocity.GetX() * (float)elapsedSecs));
 		}
-		cout << "boss target Pos: " << _bossTree.GetTarget().GetX() << endl;
+		//cout << "boss target Pos: " << _bossTree.GetTarget().GetX() << endl;
+		cout << "boss Pos: " << _curKinematic.position.GetX() << endl;
 	}
 }
 
@@ -39,7 +40,7 @@ void BossActor::Update(double elapsedSecs)
 	Actor::Update(elapsedSecs);
 	_playerPos = _gameScreen->GetPlayer()->GetPosition();
 	_bossPos = GetPosition();
-	_bossTree.UpdateVariables(&_playerPos, &_bossPos, _health, _heat);
+	_bossTree.UpdateVariables(&_playerPos, &_bossPos, _health, _heat, elapsedSecs);
 	_bossTree.ExecuteTree();
 
 	UpdatePosition(elapsedSecs);
