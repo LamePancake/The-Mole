@@ -53,7 +53,7 @@ int LevelSelectScreen::Update(double elapsedSecs)
 		switch (_curMenuItem) 
 		{
 		case 0:
-			_mgr->SetNextScreen("denlevel");
+			_mgr->SetNextScreen("denIntro");
 			return SCREEN_FINISH;
 		case 1:
 			_mgr->SetNextScreen("vikinglevel");

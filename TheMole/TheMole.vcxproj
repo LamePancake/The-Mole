@@ -138,6 +138,7 @@
     <ClCompile Include="BossActor.cpp" />
     <ClCompile Include="BossBehavTree.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CutsceneScreen.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameScreen.cpp" />
     <ClCompile Include="Input.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="BossActor.h" />
     <ClInclude Include="BossBehavTree.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CutsceneScreen.h" />
     <ClInclude Include="GameScreen.h" />
     <ClInclude Include="LevelSelectScreen.h" />
     <ClInclude Include="Math.h" />
