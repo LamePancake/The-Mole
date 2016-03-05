@@ -156,6 +156,7 @@
     <ClCompile Include="SoundEffectBank.cpp" />
     <ClCompile Include="SpriteSheet.cpp" />
     <ClCompile Include="Tile.cpp" />
+    <ClCompile Include="TurretActor.cpp" />
     <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -175,6 +176,7 @@
     <ClInclude Include="SoundEffectBank.h" />
     <ClInclude Include="SpriteSheet.h" />
     <ClInclude Include="Tile.h" />
+    <ClInclude Include="TurretActor.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelLoader.h" />

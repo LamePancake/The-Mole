@@ -1,5 +1,187 @@
 #include "BossBehavTree.h"
+#include "GameScreen.h"
 
+Node::Node() : _gameScreen(std::dynamic_pointer_cast<GameScreen>(GameManager::GetInstance()->GetCurrentScreen()))
+{
+}
+
+const list<Node*>& CompositeNode::getChildren() const
+{
+	return children;
+}
+void CompositeNode::addChild(Node* child)
+{
+	children.emplace_back(child);
+}
+
+
+
+bool Selector::run() 
+{
+	for (Node* child : getChildren())
+	{
+		if (child->run())
+		{
+			return true;
+		}
+
+	}
+	return false;
+}
+
+
+bool Sequence::run() 
+{
+	for (Node* child : getChildren())
+	{
+		if (!child->run())
+		{
+			return false;
+		}
+
+	}
+	return true;
+}
+
+bool CheckHeatTask::run() 
+{
+	if (_btHeat < 100)
+	{
+		//cout << "not overheated" << endl;
+		return true;
+	}
+	else
+	{
+		//cout << "too heated" << endl;
+		return false;
+	}
+}
+
+bool CheckAliveTask::run() 
+{
+	if (_btHealth > 0)
+	{
+		//cout << "alive" << endl;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
+bool CheckDeadTask::run() 
+{
+	if (_btHealth <= 0)
+	{
+		//cout << "dead" << endl;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+
+
+bool CheckIfOverheatedTask::run() 
+{
+	if (_btHeat >= 100)
+	{
+		//cout << "overheated" << endl;
+		return true;
+	}
+	else
+	{
+		//cout << "not quite heated" << endl;
+		return false;
+	}
+}
+
+
+
+bool PrePunchTask::run() 
+{
+	if (_btDist < _triggerRange)
+	{
+		//cout << "close enough" << endl;
+		return true;
+	}
+	else
+	{
+		//cout << "not close enough to punch" << endl;
+		return false;
+	}
+}
+
+
+
+bool PunchTask::run() 
+{
+	cout << "punch" << endl;
+	return true;
+}
+
+
+
+bool PreRollTask::run() 
+{
+	if (_btDist > _triggerRange)
+	{
+		//cout << "far enough, pre roll" << endl;
+		return true;
+	}
+	else
+	{
+		//cout << "not far enough to roll" << endl;
+		return false;
+	}
+}
+
+
+
+bool RollTask::run() 
+{
+	cout << "roll" << endl;
+	targetPos = _gameScreen->GetPlayer()->GetPosition();
+	//cout << "bPos: " << targetPos->GetX() << endl;
+	//cout << "pPos: " << _gameScreen->GetPlayer()->GetPosition().GetX() << endl;
+	return true;
+}
+
+
+
+bool ShortHopTask::run() 
+{
+	//cout << "hop" << endl;
+	return true;
+}
+
+
+
+bool ShockWaveTask::run() 
+{
+	//cout << "wave" << endl;
+	return true;
+}
+
+
+
+bool IdleTask::run() 
+{
+	cout << "cooldown" << endl;
+	//_targetPos = _bossPos;
+	return true;
+}
+
+
+bool EjectTask::run() 
+{
+	cout << "eject" << endl;
+	return true;
+}
 
 
 BossBehavTree::BossBehavTree()
@@ -23,7 +205,7 @@ BossBehavTree::BossBehavTree()
 	_tPrePunch = new PrePunchTask(_pDist, _meleeRange);
 	_tPunch = new PunchTask();
 	_tPreRoll = new PreRollTask(_pDist, _meleeRange);
-	_tRoll = new RollTask();
+	_tRoll = new RollTask(&_targetPos);
 	_tShortHop = new ShortHopTask();
 	_tShockWave = new ShockWaveTask();
 	_tIdle = new IdleTask();
@@ -67,7 +249,7 @@ void BossBehavTree::ExecuteTree()
 	{
 		cout << "---------------------" << endl;
 	}
-	cout << "Done Tree Execute" << endl;
+	//cout << "Done Tree Execute" << endl;
 }
 
 void BossBehavTree::UpdateVariables(Vector2* pPos, Vector2* bPos, int health, int heat)
@@ -75,5 +257,12 @@ void BossBehavTree::UpdateVariables(Vector2* pPos, Vector2* bPos, int health, in
 	_pDist = pPos->Distance(*bPos);
 	_health = health;
 	_heat = heat;
+	_playerPos = *pPos;
+	_bossPos = *bPos;
+}
+
+Vector2 BossBehavTree::GetTarget()
+{
+	return _targetPos;
 }
 

@@ -26,8 +26,14 @@ public:
 	* @param	startXDirection	The actor's default facing direction along the x axis.
 	* @param	startYDirection	The actor's default facing direction along the y axis.
 	*/
-	AIActor(Vector2 position, GameManager & manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites, const std::string&& startSprite, std::shared_ptr<SDL2pp::Texture> mindControlIndicator,
-		SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP)
+	AIActor(Vector2 position
+		, GameManager & manager
+		, Vector2 spd
+		, std::unordered_map<std::string
+		, std::shared_ptr<SpriteSheet>>& sprites
+		, const std::string&& startSprite
+		, std::shared_ptr<SDL2pp::Texture> mindControlIndicator
+		,SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP)
 		: Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection),
 		_underControl{ false }, _controlTimeLeft{ 0.0f }, _isSelected{ false }, _isCandidate{ false }, _ctrlIndicator{ mindControlIndicator } {}
 

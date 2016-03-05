@@ -63,6 +63,14 @@ void PlayerActor::Update(double elapsedSecs)
 			_health = 0;
 		}
 	}
+	for (size_t i = 0; i < screen->GetLevel()->GetProjectileActorSize(); ++i)
+	{
+		if (CollisionCheck(*screen->GetLevel()->GetProjectile(i)))
+		{
+			_health = 0;
+		}
+	}
+
     DetectTileCollisions(_collisionInfo, _gameScreen->GetLevel());
 	DigDiggableTiles();
 	UpdateCollisions(elapsedSecs);
