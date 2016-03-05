@@ -2,6 +2,10 @@
 #include "Screen.h"
 #include "SoundEffectBank.h"
 #include "SpriteSheet.h"
+#include <vector>
+#include <fstream>
+#include <iostream>
+#include <sstream>
 
 class GameManager;
 
@@ -13,13 +17,14 @@ class CutsceneScreen : public Screen
 
 public:
 
-	CutsceneScreen(std::string dialogPath, std::string backgroundPath, std::string openingSprite, double openingNumFrames, double openingDuration,
-		std::string protagSprite, double protagNumFrames, double protagDuration, std::string npcSpritePath, double npcNumFrames, double npcDuration, SoundEffectBank & effectBank, std::string nextScreen, std::string dialogFile)
-		: _dialogPath(dialogPath), _backgroundPath(backgroundPath), 
+	CutsceneScreen(std::string dialogBoxPath, std::string backgroundPath, std::string openingSprite, double openingNumFrames, double openingDuration,
+		std::string protagSprite, double protagNumFrames, double protagDuration, std::string npcSpritePath, double npcNumFrames, double npcDuration, SoundEffectBank & effectBank, std::string nextScreen, std::string dialogFilePath)
+		: _dialogBoxPath(dialogBoxPath), _backgroundPath(backgroundPath), 
 		  _openingSpriteSheetPath(openingSprite), _openingNumFrames(openingNumFrames), _openingDuration(openingDuration),
 		  _protagSpritePath(protagSprite), _protagNumFrames(protagNumFrames), _protagDuration(protagDuration),
 		  _npcSpritePath(npcSpritePath), _npcNumFrames(npcNumFrames), _npcDuration(npcDuration), 
-		  _nextScreen(nextScreen), _soundBank(effectBank), _dialogFile(dialogFile), _skipTimer(0), _currentlySpeaking(0) {}
+		  _nextScreen(nextScreen), _soundBank(effectBank), _dialogFilePath(dialogFilePath), _skipTimer(0),
+		  _currentlySpeaking(0), _currentProtagDialog(" "), _currentNPCDialog(" "), _dialogIndex(0) {}
 	
 	virtual int Load() override;
 	virtual int Update(double elasepdSecs) override;
@@ -31,12 +36,12 @@ private:
 	SoundEffectBank & _soundBank;
 
 	std::string _backgroundPath;
-	std::string _dialogPath;
+	std::string _dialogBoxPath;
 	std::string _openingSpriteSheetPath;
 	std::string _protagSpritePath;
 	std::string _npcSpritePath;
 	std::string _nextScreen;
-	std::string _dialogFile;
+	std::string _dialogFilePath;
 
 	double _openingNumFrames;
 	double _openingDuration;
@@ -57,6 +62,8 @@ private:
 	std::shared_ptr<SpriteSheet> _NPC;
 	std::shared_ptr<SpriteSheet> _openingAnimation;
 
+	std::vector<std::string> _dialog;
+
 	Uint8* _prevKeyState;
 
 	double _skipTimer;
@@ -64,5 +71,11 @@ private:
 	SDL2pp::Font* _font;
 
 	int _currentlySpeaking;
+	std::string _currentProtagDialog;
+	std::string _currentNPCDialog;
+	int _dialogIndex;
+
+	std::vector<std::string> OpenDialog(std::string dialogFilePath);
+	void UpdateDialog();
 };
 
