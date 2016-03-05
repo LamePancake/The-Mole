@@ -3,7 +3,7 @@
 
 using namespace SDL2pp;
 
-#define SKIP_TIME 1.5
+#define SKIP_TIME 1.1
 const static Uint8 NOTTALKING_COLOUR[3] = { 127, 127, 127 };
 const static Uint8 TALKING_COLOUR[3] = { 255, 255, 255 };
 
