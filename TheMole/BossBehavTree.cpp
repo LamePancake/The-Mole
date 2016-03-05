@@ -145,7 +145,9 @@ bool PreRollTask::run()
 bool RollTask::run() 
 {
 	cout << "roll" << endl;
-	
+	targetPos = _gameScreen->GetPlayer()->GetPosition();
+	//cout << "bPos: " << targetPos->GetX() << endl;
+	//cout << "pPos: " << _gameScreen->GetPlayer()->GetPosition().GetX() << endl;
 	return true;
 }
 
@@ -153,7 +155,7 @@ bool RollTask::run()
 
 bool ShortHopTask::run() 
 {
-	cout << "hop" << endl;
+	//cout << "hop" << endl;
 	return true;
 }
 
@@ -161,7 +163,7 @@ bool ShortHopTask::run()
 
 bool ShockWaveTask::run() 
 {
-	cout << "wave" << endl;
+	//cout << "wave" << endl;
 	return true;
 }
 
@@ -203,7 +205,7 @@ BossBehavTree::BossBehavTree()
 	_tPrePunch = new PrePunchTask(_pDist, _meleeRange);
 	_tPunch = new PunchTask();
 	_tPreRoll = new PreRollTask(_pDist, _meleeRange);
-	_tRoll = new RollTask();
+	_tRoll = new RollTask(&_targetPos);
 	_tShortHop = new ShortHopTask();
 	_tShockWave = new ShockWaveTask();
 	_tIdle = new IdleTask();
@@ -247,7 +249,7 @@ void BossBehavTree::ExecuteTree()
 	{
 		cout << "---------------------" << endl;
 	}
-	cout << "Done Tree Execute" << endl;
+	//cout << "Done Tree Execute" << endl;
 }
 
 void BossBehavTree::UpdateVariables(Vector2* pPos, Vector2* bPos, int health, int heat)

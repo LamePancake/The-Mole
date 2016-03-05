@@ -107,9 +107,9 @@ public:
 class RollTask : public Node
 {
 private:
-
+	Vector2 targetPos;
 public:
-	RollTask() {}
+	RollTask(Vector2 *tPos) : targetPos(*tPos) {}
 	virtual bool run() override;
 };
 

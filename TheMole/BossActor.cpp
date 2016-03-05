@@ -14,6 +14,19 @@ BossActor::~BossActor()
 void BossActor::UpdatePosition(double elapsedSecs)
 {
 	Actor::UpdatePosition(elapsedSecs);
+	Vector2 target = _bossTree.GetTarget();
+	if (_curKinematic.position.Distance(_bossTree.GetTarget()) > 10)
+	{
+		if (_curKinematic.position.GetX() < _bossTree.GetTarget().GetX())
+		{
+			_curKinematic.position.SetX(_curKinematic.position.GetX() - (_curKinematic.velocity.GetX() * elapsedSecs));
+		}
+		else
+		{
+			_curKinematic.position.SetX(_curKinematic.position.GetX() + (_curKinematic.velocity.GetX() * elapsedSecs));
+		}
+		cout << "boss target Pos: " << _bossTree.GetTarget().GetX() << endl;
+	}
 }
 
 void BossActor::Draw(Camera & camera)
@@ -28,6 +41,8 @@ void BossActor::Update(double elapsedSecs)
 	_bossPos = GetPosition();
 	_bossTree.UpdateVariables(&_playerPos, &_bossPos, _health, _heat);
 	_bossTree.ExecuteTree();
+
+	UpdatePosition(elapsedSecs);
 }
 
 void BossActor::Reset(Vector2 pos)
