@@ -34,7 +34,6 @@ void PlayerActor::Update(double elapsedSecs)
 	if (!_jumped)
 	{
 		_jumpVelocity += -9.8 * 64 * elapsedSecs * -1.0;
-		cout << _jumpVelocity << endl;
 	}
 	if (_jumpVelocity <= _maxJumpVel)
 	{
