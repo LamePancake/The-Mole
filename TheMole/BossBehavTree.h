@@ -1,18 +1,21 @@
 #pragma once
 #include <list>
 #include <iostream>
+#include <memory>
 #include "Vector2.h"
 
 using namespace std;
+class GameScreen;
 
-//Vector2 _targetPos;
-//Vector2 _playerPos;
-//Vector2 _bossPos;
 
 class Node
 {
 public:
+	Node();
 	virtual bool run() = 0;
+	std::shared_ptr<GameScreen> _gameScreen;
+private:
+
 };
 
 class CompositeNode : public Node
@@ -153,12 +156,16 @@ public:
 
 	void ExecuteTree();
 	void UpdateVariables(Vector2* pPos, Vector2* bPos, int health, int heat);
-	//Vector2 GetTarget();
+	Vector2 GetTarget();
 private:
 	float _pDist;
 	int _health;
 	int _heat;
 	float _meleeRange;
+
+	Vector2 _targetPos;
+	Vector2 _playerPos;
+	Vector2 _bossPos;
 
 	CheckIfOverheatedTask* _tChkOverheat;
 	CheckHeatTask* _tChkHeat;

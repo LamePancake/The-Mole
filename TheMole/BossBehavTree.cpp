@@ -1,5 +1,9 @@
 #include "BossBehavTree.h"
+#include "GameScreen.h"
 
+Node::Node() : _gameScreen(std::dynamic_pointer_cast<GameScreen>(GameManager::GetInstance()->GetCurrentScreen()))
+{
+}
 
 const list<Node*>& CompositeNode::getChildren() const
 {
@@ -141,7 +145,7 @@ bool PreRollTask::run()
 bool RollTask::run() 
 {
 	cout << "roll" << endl;
-
+	
 	return true;
 }
 
@@ -251,12 +255,12 @@ void BossBehavTree::UpdateVariables(Vector2* pPos, Vector2* bPos, int health, in
 	_pDist = pPos->Distance(*bPos);
 	_health = health;
 	_heat = heat;
-	//_playerPos = *pPos;
-	//_bossPos = *bPos;
+	_playerPos = *pPos;
+	_bossPos = *bPos;
 }
 
-//Vector2 BossBehavTree::GetTarget()
-//{
-//	return _targetPos;
-//}
+Vector2 BossBehavTree::GetTarget()
+{
+	return _targetPos;
+}
 
