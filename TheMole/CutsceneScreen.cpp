@@ -3,6 +3,7 @@
 
 using namespace SDL2pp;
 
+#define SKIP_TIME 1.5
 const static Uint8 NOTTALKING_COLOUR[3] = { 127, 127, 127 };
 const static Uint8 TALKING_COLOUR[3] = { 255, 255, 255 };
 
@@ -17,7 +18,7 @@ int CutsceneScreen::Load()
 	_NPC              = std::make_shared<SpriteSheet>(std::move(_npcSpritePath), _npcNumFrames, _npcDuration);
 	_openingAnimation = std::make_shared<SpriteSheet>(std::move(_openingSpriteSheetPath), _openingNumFrames, _openingDuration);
 	
-	_font = new SDL2pp::Font(".\\Assets\\GUI\\BEBAS.ttf", 60); // SDL_ttf font
+	_font = new SDL2pp::Font(".\\Assets\\GUI\\BEBAS.ttf", 20); // SDL_ttf font
 
 	_prevKeyState = (Uint8*)std::malloc(sizeof(Uint8) * SDL_NUM_SCANCODES);
 	std::memcpy(_prevKeyState, SDL_GetKeyboardState(nullptr), sizeof(Uint8) * SDL_NUM_SCANCODES);
@@ -43,8 +44,9 @@ int CutsceneScreen::Update(double elapsedSecs)
 	{
   		_skipTimer += elapsedSecs;
 		
-		if (_skipTimer >= 1.5)
+		if (_skipTimer >= SKIP_TIME)
 		{
+			_skipTimer = 0;
 			_mgr->SetNextScreen(_nextScreen);
 			return SCREEN_FINISH;
 		}
@@ -108,6 +110,11 @@ void CutsceneScreen::Draw()
 	
 	//SDL2pp::Texture npcName(rend, _font->RenderText_Solid("Viking", SDL_Color{ 255, 255, 255, 255 }));
 	//rend.Copy(npcName, NullOpt, Rect(dim.GetX() - dim.GetX() * 0.7f, dim.GetY() * 0.25f, dim.GetX() * 0.7f, dim.GetY() * 0.2f));
+
+	// Draw skip prompt
+	SDL2pp::Texture holdToSkip(rend, _font->RenderText_Solid("Press SPACE to Skip", SDL_Color{ 255, 255, 255, 255 }));
+	rend.Copy(holdToSkip, NullOpt, Rect(dim.GetX() * 0.97f - holdToSkip.GetWidth(), dim.GetY()  * 0.97f - holdToSkip.GetHeight(), holdToSkip.GetWidth(), holdToSkip.GetHeight()));
+	rend.FillRect(Rect(dim.GetX() * 0.97f - holdToSkip.GetWidth(), dim.GetY()  * 0.97f, holdToSkip.GetWidth() * _skipTimer / SKIP_TIME, holdToSkip.GetHeight() * 0.3f));
 
 	rend.Present();
 }
