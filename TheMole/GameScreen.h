@@ -35,6 +35,11 @@ public:
 	virtual void Draw() override;
 	virtual void Unload() override;
 
+	///Spawn new actors
+	void SpawnActors(std::shared_ptr<Actor> actor);
+
+	void SpawnProjectileActors(std::shared_ptr<ProjectileActor> projectile);
+
 	/**
 	 * @brief	Gets the level associated with this GameScreen.
 	 *

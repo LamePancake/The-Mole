@@ -224,3 +224,12 @@ int GameScreen::OnPause()
 
 	return SCREEN_CONTINUE;
 }
+
+void GameScreen::SpawnActors(std::shared_ptr<Actor> actor)
+{
+}
+
+void GameScreen::SpawnProjectileActors(std::shared_ptr<ProjectileActor> projectile)
+{
+	_level->AddProjectileObject(projectile);
+}

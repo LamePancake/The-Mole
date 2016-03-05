@@ -1,5 +1,4 @@
 #include "ProjectileActor.h"
-#include "PlayerActor.h"
 #include "GameScreen.h"
 
 ProjectileActor::ProjectileActor(Vector2 position

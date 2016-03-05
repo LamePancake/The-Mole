@@ -1,14 +1,20 @@
-#include "TurretActor.h"
+#ifndef TURRETACTOR_HEADER
+#define TURRETACTOR_HEADER
 
-TurretActor::TurretActor(Vector2 position
+#include "TurretActor.h"
+#include "GameScreen.h"
+#include <memory>
+
+TurretActor::TurretActor(
+	Vector2 position
 	, GameManager & manager
 	, Vector2 spd
-	, std::unordered_map<std::string
-	, std::shared_ptr<SpriteSheet>>& sprites
+	, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites
 	, const std::string && startSprite
 	, SpriteSheet::XAxisDirection startXDirection
-	, SpriteSheet::YAxisDirection startYDirection)
-	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection)
+	, SpriteSheet::YAxisDirection startYDirection
+	): Actor(position, manager, spd, sprites, std::move(startSprite)
+		, startXDirection, startYDirection)
 {
 	_sprites[_currentSpriteSheet];
 }
@@ -41,4 +47,14 @@ bool TurretActor::CollisionCheck(Actor & otherAI)
 
 void TurretActor::TurretUpdate(double elapseSecs)
 {
+		//_gameScreen->SpawnProjectileActors(std::make_shared<ProjectileActor>(
+		//	_curKinematic.position ///Vec2 position
+		//	, *_mgr ///Gamemanager
+		//	, Vector2(100.0f, 0.0f) ///Vec2 spd
+		//	, _sprites ///sprites
+		//	, "turret" ///startsprite
+		//	, SpriteSheet::XAxisDirection::LEFT) ///direction
+		//	);
 }
+
+#endif
