@@ -21,7 +21,7 @@ int CutsceneScreen::Load()
 	_nextDialogNPC    = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\dialog_enter.png", 2, 1.2f);
 
 	_promptFont = new SDL2pp::Font(".\\Assets\\GUI\\BEBAS.ttf", 20); // SDL_ttf font
-	_dialogFont = new SDL2pp::Font(".\\Assets\\GUI\\BEBAS.ttf", 45);
+	_dialogFont = new SDL2pp::Font(".\\Assets\\GUI\\Exo-Regular.otf", 45);
 	_headerFont = new SDL2pp::Font(".\\Assets\\GUI\\BEBAS.ttf", 25);
 
 	_dialog = OpenDialog(_dialogFilePath);
@@ -215,12 +215,12 @@ void CutsceneScreen::UpdateDialog()
 
 	if (firstWord == "Borin:")
 	{
-		_currentProtagDialog = _dialog[_dialogIndex];
+		_currentProtagDialog = _dialog[_dialogIndex].substr(1).append(_dialog[_dialogIndex].substr(0, 1));
 		_currentlySpeaking = PROTAG;
 	}
 	else
 	{
-		_currentNPCDialog = _dialog[_dialogIndex];
+		_currentNPCDialog = _dialog[_dialogIndex].substr(1).append(_dialog[_dialogIndex].substr(0, 1));
 		_currentlySpeaking = NPC;
 	}
 }
