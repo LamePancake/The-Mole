@@ -63,6 +63,8 @@ private:
 	std::shared_ptr<SpriteSheet> _protagonist;
 	std::shared_ptr<SpriteSheet> _NPC;
 	std::shared_ptr<SpriteSheet> _openingAnimation;
+	std::shared_ptr<SpriteSheet> _nextDialogProtag;
+	std::shared_ptr<SpriteSheet> _nextDialogNPC;
 
 	std::vector<std::string> _dialog;
 

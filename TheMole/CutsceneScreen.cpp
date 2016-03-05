@@ -17,7 +17,9 @@ int CutsceneScreen::Load()
 	_protagonist      = std::make_shared<SpriteSheet>(std::move(_protagSpritePath), _protagNumFrames, _protagDuration);
 	_NPC              = std::make_shared<SpriteSheet>(std::move(_npcSpritePath), _npcNumFrames, _npcDuration);
 	_openingAnimation = std::make_shared<SpriteSheet>(std::move(_openingSpriteSheetPath), _openingNumFrames, _openingDuration);
-	
+	_nextDialogProtag = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\dialog_enter.png", 2, 1.2f);
+	_nextDialogNPC    = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\dialog_enter.png", 2, 1.2f);
+
 	_promptFont = new SDL2pp::Font(".\\Assets\\GUI\\BEBAS.ttf", 20); // SDL_ttf font
 	_dialogFont = new SDL2pp::Font(".\\Assets\\GUI\\BEBAS.ttf", 45);
 	_headerFont = new SDL2pp::Font(".\\Assets\\GUI\\BEBAS.ttf", 25);
@@ -35,11 +37,16 @@ int CutsceneScreen::Update(double elapsedSecs)
 	SDL_PumpEvents();
 
 	if (_currentlySpeaking == PROTAG)
+	{
 		_protagonist->Update(elapsedSecs);
-
-	if(_currentlySpeaking == NPC)
+		_nextDialogProtag->Update(elapsedSecs);
+	}
+	else
+	{
 		_NPC->Update(elapsedSecs);
-
+		_nextDialogNPC->Update(elapsedSecs);
+	}
+		
 	_openingAnimation->Update(elapsedSecs);
 
 	// Change the currently selected menu item
@@ -110,17 +117,22 @@ void CutsceneScreen::Draw()
 	SDL_Texture* protagDialogRawTexture = protagDialog.Get();
 	SDL_Texture* npcDialogRawTexture    = npcDialog.Get();
 
+	SDL_Texture* npcNextRawTexture      = _nextDialogNPC->GetTexture().Get();
+	SDL_Texture* protagNextRawTexture   = _nextDialogProtag->GetTexture().Get();
+
 	if (_currentlySpeaking == PROTAG)
 	{
 		SDL_SetTextureColorMod(protagRawTexture, TALKING_COLOUR[0], TALKING_COLOUR[1], TALKING_COLOUR[2]);
 		SDL_SetTextureColorMod(protagDialogBoxRawTexture, TALKING_COLOUR[0], TALKING_COLOUR[1], TALKING_COLOUR[2]);
 		SDL_SetTextureColorMod(protagDialogRawTexture, TALKING_COLOUR[0], TALKING_COLOUR[1], TALKING_COLOUR[2]);
 		SDL_SetTextureColorMod(protagHeaderRawTexture, TALKING_COLOUR[0], TALKING_COLOUR[1], TALKING_COLOUR[2]);
+		SDL_SetTextureColorMod(protagNextRawTexture, TALKING_COLOUR[0], TALKING_COLOUR[1], TALKING_COLOUR[2]);
 
 		SDL_SetTextureColorMod(npcRawTexture, NOTTALKING_COLOUR[0], NOTTALKING_COLOUR[1], NOTTALKING_COLOUR[2]);
 		SDL_SetTextureColorMod(npcDialogBoxRawTexture, NOTTALKING_COLOUR[0], NOTTALKING_COLOUR[1], NOTTALKING_COLOUR[2]);
 		SDL_SetTextureColorMod(npcHeaderRawTexture, NOTTALKING_COLOUR[0], NOTTALKING_COLOUR[1], NOTTALKING_COLOUR[2]);
 		SDL_SetTextureColorMod(npcDialogRawTexture, NOTTALKING_COLOUR[0], NOTTALKING_COLOUR[1], NOTTALKING_COLOUR[2]);
+		SDL_SetTextureColorMod(npcNextRawTexture, NOTTALKING_COLOUR[0], NOTTALKING_COLOUR[1], NOTTALKING_COLOUR[2]);
 	}
 	else
 	{
@@ -128,11 +140,13 @@ void CutsceneScreen::Draw()
 		SDL_SetTextureColorMod(npcDialogBoxRawTexture, TALKING_COLOUR[0], TALKING_COLOUR[1], TALKING_COLOUR[2]);
 		SDL_SetTextureColorMod(npcHeaderRawTexture, TALKING_COLOUR[0], TALKING_COLOUR[1], TALKING_COLOUR[2]);
 		SDL_SetTextureColorMod(npcDialogRawTexture, TALKING_COLOUR[0], TALKING_COLOUR[1], TALKING_COLOUR[2]);
+		SDL_SetTextureColorMod(npcNextRawTexture, TALKING_COLOUR[0], TALKING_COLOUR[1], TALKING_COLOUR[2]);
 
 		SDL_SetTextureColorMod(protagRawTexture, NOTTALKING_COLOUR[0], NOTTALKING_COLOUR[1], NOTTALKING_COLOUR[2]);
 		SDL_SetTextureColorMod(protagDialogBoxRawTexture, NOTTALKING_COLOUR[0], NOTTALKING_COLOUR[1], NOTTALKING_COLOUR[2]);
 		SDL_SetTextureColorMod(protagDialogRawTexture, NOTTALKING_COLOUR[0], NOTTALKING_COLOUR[1], NOTTALKING_COLOUR[2]);
 		SDL_SetTextureColorMod(protagHeaderRawTexture, NOTTALKING_COLOUR[0], NOTTALKING_COLOUR[1], NOTTALKING_COLOUR[2]);
+		SDL_SetTextureColorMod(protagNextRawTexture, NOTTALKING_COLOUR[0], NOTTALKING_COLOUR[1], NOTTALKING_COLOUR[2]);
 	}
 		
 	// Render the protagonist dialog, sprite, and header
@@ -142,12 +156,16 @@ void CutsceneScreen::Draw()
 	rend.Copy(protagHeader, NullOpt, Rect(dim.GetX() * 0.05f, dim.GetY() * 0.78f, protagHeader.GetWidth(), protagHeader.GetHeight()));
 	rend.Copy(protagDialog, NullOpt, Rect(dim.GetX() * 0.05f, dim.GetY() * 0.78f + protagHeader.GetHeight(), protagDialog.GetWidth(), protagDialog.GetHeight()));
 
+	_nextDialogProtag->Draw(Rect(dim.GetX() * 0.05f + protagDialog.GetWidth(), dim.GetY() * 0.78f + protagHeader.GetHeight() + protagDialog.GetHeight() * 0.6f, protagDialog.GetHeight() * 0.4f, protagDialog.GetHeight() * 0.4f), SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection::UP);
+
 	// Render the NPC dialog, sprite, and header
 	_NPC->Draw(Rect(dim.GetX() - _NPC->GetFrameWidth(), dim.GetY() * 0.25f - _NPC->GetFrameHeight(), _NPC->GetFrameWidth(), _NPC->GetFrameHeight()), SpriteSheet::XAxisDirection::LEFT, SpriteSheet::YAxisDirection::UP);
 	rend.Copy(*_npcDialogBox, SDL2pp::NullOpt, Rect(dim.GetX() - dim.GetX() * 0.7f, dim.GetY() * 0.25f, dim.GetX() * 0.7f, dim.GetY() * 0.2f));
 	
-	rend.Copy(npcHeader, NullOpt, Rect(dim.GetX() - dim.GetX() * 0.65f, dim.GetY() * 0.28f, npcHeader.GetWidth(), npcHeader.GetHeight()));
-	rend.Copy(npcDialog, NullOpt, Rect(dim.GetX() - dim.GetX() * 0.65f, dim.GetY() * 0.28f + npcHeader.GetHeight(), npcDialog.GetWidth(), npcDialog.GetHeight()));
+	rend.Copy(npcHeader, NullOpt, Rect(dim.GetX() * 0.35f, dim.GetY() * 0.28f, npcHeader.GetWidth(), npcHeader.GetHeight()));
+	rend.Copy(npcDialog, NullOpt, Rect(dim.GetX() * 0.35f, dim.GetY() * 0.28f + npcHeader.GetHeight(), npcDialog.GetWidth(), npcDialog.GetHeight()));
+
+	_nextDialogNPC->Draw(Rect(dim.GetX() * 0.35f + npcDialog.GetWidth(), dim.GetY() * 0.28f + npcHeader.GetHeight() + npcDialog.GetHeight() * 0.6f, npcDialog.GetHeight() * 0.4f, npcDialog.GetHeight() * 0.4f), SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection::UP);
 
 	// Draw skip prompt
 	SDL2pp::Texture holdToSkip(rend, _promptFont->RenderText_Solid("Hold SPACE to Skip", SDL_Color{ 255, 255, 255, 255 }));
