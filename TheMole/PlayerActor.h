@@ -168,8 +168,10 @@ private:
 	bool _atGoal;
 	float _jumpVelocity;
 	float _maxJumpVel;
+	float _jumpBoost;
 	bool _jumped;
 	bool _gliding;
+	bool _jumpBoosted;
 	double _jumpDuration;
 	double _jumpTimeElapsed;
 	bool _wasOnGround; // Tracks whether the player was on the ground in the previous frame
