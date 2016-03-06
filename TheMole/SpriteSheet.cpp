@@ -153,6 +153,16 @@ void SpriteSheet::SetRepeating(bool repeating)
 	_isRepeating = repeating;
 }
 
+bool SpriteSheet::IsReversed() const
+{
+	return _isReversed;
+}
+
+void SpriteSheet::SetReversed(bool reversed)
+{
+	_isReversed = reversed;
+}
+
 void SpriteSheet::SetXAxisDirection(XAxisDirection direction)
 {
 	_currentXDir = direction;

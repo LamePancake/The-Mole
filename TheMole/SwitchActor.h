@@ -1,41 +1,37 @@
-#ifndef DOOR_ACTOR_H
-#define DOOR_ACTOR_H
+#ifndef SWITCH_ACTOR_H
+#define SWITCH_ACTOR_H
 
-#include <memory>
 #include "Actor.h"
-#include "SwitchActor.h"
 
-class DoorActor : public Actor
+class SwitchActor : public Actor
 {
 public:
-	DoorActor(Vector2 position,
+	SwitchActor(Vector2 position,
 		GameManager & manager,
 		Vector2 spd,
 		std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
 		const std::string&& startSprite,
 		SpriteSheet::XAxisDirection startXDirection,
 		SpriteSheet::YAxisDirection startYDirection,
-		const std::shared_ptr<SwitchActor> doorSwitch)
+		Edge edge,
+		bool isWeightPad)
 		: Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection),
-		_isOpen(false),
-		_isClosing(false),
-		_isOpening(false),
-		_switch(doorSwitch)
+		_isOn(false),
+		_isWeightPad(isWeightPad)
 	{
 		_sprites[_currentSpriteSheet]->Pause();
 	}
 
 	virtual void Update(double deltaTime) override;
 
-	bool IsOpening() const;
-	bool IsClosing() const;
-	bool IsOpen() const;
+	bool IsOn() const;
+
+	Edge GetEdge() const;
 
 private:
-	bool _isOpening;
-	bool _isClosing;
-	bool _isOpen;
-	std::shared_ptr<SwitchActor> _switch;
+	Edge _edge;
+	bool _isOn;
+	bool _isWeightPad;
 };
 
 #endif

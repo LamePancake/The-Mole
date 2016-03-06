@@ -11,7 +11,7 @@ const static Uint8 MIND_CTRL_COLOUR[3] = { 190, 255, 190 };
 const static double MIND_CONTROL_TIME = 15.0;
 const static double PULSE_START_TIME = 0.75;
 const static double PULSE_END_TIME = 0.05;
-const static double PULSE_MULTIPLIER = (((PULSE_START_TIME - (PULSE_START_TIME * PULSE_END_TIME)) / MIND_CONTROL_TIME) - 1) * -1; // Don't ask
+const static double PULSE_MULTIPLIER = ((PULSE_END_TIME - PULSE_START_TIME) / MIND_CONTROL_TIME) + 1; // Don't ask
 
 AIActor::~AIActor()
 {
