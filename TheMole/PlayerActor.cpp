@@ -105,7 +105,8 @@ void PlayerActor::UpdateCollisions(double elapsedSecs)
 void PlayerActor::StopJumping()
 {
 	_jumped = false;
-	//_speed.SetY(-_maxJumpVel);
+	//SetJumpVelocity(0);
+	//_jumpVelocity = -_jumpVelocity;
 	_jumpTimeElapsed = 0;
 }
 
@@ -262,17 +263,19 @@ void PlayerActor::UpdateInput(double elapsedSecs)
 			SetSpeed(Vector2(_curKinematic.velocity.GetX(), Math::Clamp(_curKinematic.velocity.GetY() + 50.0f, 50.0f, 300.0f)));
 		}
 	}
-	else if (_mgr->inputManager->ActionOccurred("JUMP", Input::Pressed))
+
+	if (_mgr->inputManager->ActionOccurred("JUMP", Input::Pressed))
 	{
         if(_wasOnGround)
         {
-		    // jump 8 tiles tall of 1 metre each, at 64 pixels per metre, multiplied by -1 because positive moves down in our world
+		    // jump 7.5 tiles tall of 1 metre each, at 64 pixels per metre, multiplied by -1 because positive moves down in our world
 	    	_jumped = true;
 		    SetJumpVelocity(7.5f * 1.0f * 64.0f * -1.0f);
 		    //SetMaximumJumpVelocity(3.0f * 1.0f * 64.0f * -1.0f);
 		}
 	}
-	else if(_mgr->inputManager->ActionOccurred("GODMODE", Input::Pressed))
+
+	if(_mgr->inputManager->ActionOccurred("GODMODE", Input::Pressed))
 	{
 		_godMode = !_godMode;
 		_health = 40000000;
