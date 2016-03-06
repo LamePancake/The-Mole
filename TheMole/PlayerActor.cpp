@@ -329,12 +329,12 @@ void PlayerActor::UpdateInput(double elapsedSecs)
 		_shieldActive = true;
 		_shieldReleased = false;
 	}
-	if (_mgr->inputManager->ActionOccurred("SHIELD", Input::Held))
-	{
-		///Drain shield
-		//_shieldActive = true;
-		//_shieldReleased = false;
-	}
+	//if (_mgr->inputManager->ActionOccurred("SHIELD", Input::Held))
+	//{
+	//	///Drain shield
+	//	_shieldActive = true;
+	//	//_shieldReleased = false;
+	//}
 	if (_mgr->inputManager->ActionOccurred("SHIELD", Input::Released))
 	{
 		///Deactivate Shield
@@ -355,7 +355,7 @@ void PlayerActor::UpdateShieldStatus(double deltaTime)
 				_shieldActive = false;
 				_shieldReleased = false;
 			}
-			if(!_shieldHit)
+			if (!_shieldHit) 
 				_shieldStr--;
 			_shieldTimer = 0;
 		}
@@ -375,6 +375,7 @@ void PlayerActor::UpdateShieldStatus(double deltaTime)
 			_shieldTimer = 0;
 		}
 	}
+	_shieldHit = false;
 }
 
 void PlayerActor::ShieldHit()
@@ -384,23 +385,24 @@ void PlayerActor::ShieldHit()
 
 void PlayerActor::ProjectileHit(ProjectileActor *prj)
 {
-	//if (_lastPrj != prj)
-	//{
+	if (_lastPrj != prj)
+	{
 		if (_shieldActive)
 		{
 			_shieldStr--;
 			_shieldHit = true;
+			_shieldTimer = 0;
 			if (_shieldStr <= 0)
-			{
 				SetHealth(0);
-			}
+			if (_shieldReleased)
+				_shieldActive = false;
 		}
 		else
 		{
 			SetHealth(0);
 		}
 		_lastPrj = prj;
-	//}
+	}
 }
 
 void PlayerActor::UpdateMindControlSelection(bool released)
