@@ -38,7 +38,6 @@ void PlayerActor::Draw(Camera& camera)
 			, dim.GetY()  * 0.2f
 			, 20.0f
 			, 20.0f));
-	rend.Present();
 }
 
 void PlayerActor::Update(double elapsedSecs)
