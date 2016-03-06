@@ -66,6 +66,7 @@ int GameScreen::Update(double elapsedSecs)
 			_level->Reset();
 			_player->Reset(_level->GetSpawnPoint());
 		}
+
 		return SCREEN_CONTINUE;
 	}
 

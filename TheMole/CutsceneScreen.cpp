@@ -3,7 +3,7 @@
 
 using namespace SDL2pp;
 
-#define SKIP_TIME 1.5
+#define SKIP_TIME 1.1
 const static Uint8 NOTTALKING_COLOUR[3] = { 127, 127, 127 };
 const static Uint8 TALKING_COLOUR[3] = { 255, 255, 255 };
 
@@ -17,11 +17,11 @@ int CutsceneScreen::Load()
 	_protagonist      = std::make_shared<SpriteSheet>(std::move(_protagSpritePath), _protagNumFrames, _protagDuration);
 	_NPC              = std::make_shared<SpriteSheet>(std::move(_npcSpritePath), _npcNumFrames, _npcDuration);
 	_openingAnimation = std::make_shared<SpriteSheet>(std::move(_openingSpriteSheetPath), _openingNumFrames, _openingDuration);
-	_nextDialogProtag = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\dialog_enter.png", 2, 1.2f);
-	_nextDialogNPC    = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\dialog_enter.png", 2, 1.2f);
+	_nextDialogProtag = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\dialog_enter.png", 4, 0.5f);
+	_nextDialogNPC    = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\dialog_enter.png", 4, 0.5f);
 
 	_promptFont = new SDL2pp::Font(".\\Assets\\GUI\\BEBAS.ttf", 20); // SDL_ttf font
-	_dialogFont = new SDL2pp::Font(".\\Assets\\GUI\\BEBAS.ttf", 45);
+	_dialogFont = new SDL2pp::Font(".\\Assets\\GUI\\Exo-Regular.otf", 45);
 	_headerFont = new SDL2pp::Font(".\\Assets\\GUI\\BEBAS.ttf", 25);
 
 	_dialog = OpenDialog(_dialogFilePath);
@@ -172,7 +172,9 @@ void CutsceneScreen::Draw()
 	rend.Copy(npcHeader, NullOpt, Rect(dim.GetX() * 0.35f, dim.GetY() * 0.28f, npcHeader.GetWidth(), npcHeader.GetHeight()));
 	rend.Copy(npcDialog, NullOpt, Rect(dim.GetX() * 0.35f, dim.GetY() * 0.28f + npcHeader.GetHeight(), npcDialog.GetWidth(), npcDialog.GetHeight()));
 
-	//_nextDialogNPC->Draw(Rect(dim.GetX() * 0.35f + npcDialog.GetWidth(), dim.GetY() * 0.28f + npcHeader.GetHeight() + npcDialog.GetHeight() * 0.6f, npcDialog.GetHeight() * 0.4f, npcDialog.GetHeight() * 0.4f), SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection::UP);
+	SDL2pp::Point nextDialogNPCPos(dim.GetX() * 0.35f + npcDialog.GetWidth(), dim.GetY() * 0.28f + npcHeader.GetHeight() + npcDialog.GetHeight() * 0.6f);
+	_nextDialogNPC->SetScale(0.4);
+	_nextDialogNPC->Draw(nextDialogNPCPos);
 
 	// Draw skip prompt
 	SDL2pp::Texture holdToSkip(rend, _promptFont->RenderText_Solid("Hold SPACE to Skip", SDL_Color{ 255, 255, 255, 255 }));
@@ -222,12 +224,12 @@ void CutsceneScreen::UpdateDialog()
 
 	if (firstWord == "Borin:")
 	{
-		_currentProtagDialog = _dialog[_dialogIndex];
+		_currentProtagDialog = _dialog[_dialogIndex].substr(1).append(_dialog[_dialogIndex].substr(0, 1));
 		_currentlySpeaking = PROTAG;
 	}
 	else
 	{
-		_currentNPCDialog = _dialog[_dialogIndex];
+		_currentNPCDialog = _dialog[_dialogIndex].substr(1).append(_dialog[_dialogIndex].substr(0, 1));
 		_currentlySpeaking = NPC;
 	}
 }

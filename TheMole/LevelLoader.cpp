@@ -107,7 +107,7 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 					std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
 					sprites["idle"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Toad_idle.png", 6, 0.50, true, SpriteSheet::XAxisDirection::LEFT);
 
-					std::shared_ptr<BossActor> boss = std::make_shared<BossActor>(tile->GetWorldPosition(), gameManager, Vector2(400, 0), sprites, "idle", SpriteSheet::XAxisDirection::LEFT);
+					std::shared_ptr<BossActor> boss = std::make_shared<BossActor>(tile->GetWorldPosition(), gameManager, Vector2(200, 0), sprites, "idle", SpriteSheet::XAxisDirection::LEFT);
 					level->AddBoss(boss);
 					tile->SetID(Tile::blank);
 				}
@@ -134,6 +134,7 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 				std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
 				double infinity = std::numeric_limits<double>::infinity();
 				sprites["turret"] = std::make_shared<SpriteSheet>(turretSheet, 1, infinity);
+				sprites["shoot"] = std::make_shared<SpriteSheet>(projectileSheet, 1, infinity);
 
 				std::shared_ptr<TurretActor> turret = std::make_shared<TurretActor>(
 					tile->GetWorldPosition()
@@ -141,7 +142,8 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 					, Vector2(0, 0)
 					, sprites
 					, "turret"
-					, SpriteSheet::XAxisDirection::LEFT);
+					, SpriteSheet::XAxisDirection::LEFT
+					, SpriteSheet::YAxisDirection::UP);
 				level->AddTurretObject(turret);
 				tile->SetID(Tile::blank);
 			}

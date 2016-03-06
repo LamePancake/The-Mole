@@ -82,7 +82,7 @@ private:
 		inputManager->AddKeyToMap("JUMP", Input::InputAction(SDL_SCANCODE_SPACE));
 		inputManager->AddKeyToMap("QUIT", Input::InputAction(SDL_SCANCODE_ESCAPE));
 		inputManager->AddKeyToMap("DIG", Input::InputAction(SDL_SCANCODE_J));
-		inputManager->AddKeyToMap("VIKING", Input::InputAction(SDL_SCANCODE_U));
+		inputManager->AddKeyToMap("SHIELD", Input::InputAction(SDL_SCANCODE_U));
 		inputManager->AddKeyToMap("CHICKEN", Input::InputAction(SDL_SCANCODE_I));
 		inputManager->AddKeyToMap("MIND_CONTROL", Input::InputAction(SDL_SCANCODE_K));
 		inputManager->AddKeyToMap("MIND_CONTROL_STOP", Input::InputAction(SDL_SCANCODE_C));

@@ -96,6 +96,9 @@ public:
     ////////////////////////////////////////////////////////////////////////////////////////////////////
 	float GetMaximumJumpVelocity();
 
+	///Used for projectiles
+	void ProjectileHit(ProjectileActor *prj);
+
 	// Resets the player
 	virtual void Reset(Vector2 pos);
 
@@ -109,7 +112,12 @@ private:
     ///### <author> Shane.</author>
     ///### <date> 2/6/2016.</date>
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-	void UpdateInput();
+	void UpdateInput(double elapsedSecs);
+
+	void UpdateShieldStatus(double deltaTime);
+
+	///Decrements shield
+	void ShieldHit();
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	///<summary> Updates controllable AI selection.</summary>
@@ -176,6 +184,14 @@ private:
 	double _jumpTimeElapsed;
 	bool _wasOnGround; // Tracks whether the player was on the ground in the previous frame
 	SpriteSheet::XAxisDirection _prevDirection;
+
+	///Shield stuff
+	bool _shieldActive;
+	bool _shieldReleased;
+	bool _shieldHit;
+	int _shieldStr;
+	double _shieldTimer;
+	ProjectileActor *_lastPrj;
 
     Edge _digDir;
 	bool _godMode;

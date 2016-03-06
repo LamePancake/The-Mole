@@ -26,7 +26,7 @@ void BossActor::UpdatePosition(double elapsedSecs)
 			_curKinematic.position.SetX((float)_curKinematic.position.GetX() + ((float)_curKinematic.velocity.GetX() * (float)elapsedSecs));
 		}
 		//cout << "boss target Pos: " << _bossTree.GetTarget().GetX() << endl;
-		cout << "boss Pos: " << _curKinematic.position.GetX() << endl;
+		//cout << "boss Pos: " << _curKinematic.position.GetX() << endl;
 	}
 }
 
@@ -44,9 +44,25 @@ void BossActor::Update(double elapsedSecs)
 	_bossTree.ExecuteTree();
 
 	UpdatePosition(elapsedSecs);
+
+	if (_idleDur <= 0)
+	{
+		ResetDurations();
+	}
 }
 
 void BossActor::Reset(Vector2 pos)
 {
 	Actor::Reset(pos);
+}
+
+void BossActor::ResetDurations()
+{
+	_idleDur      = 2;
+	_preRollDur   = 2;
+	_rollDur      = 5;
+	_prePunchDur  = 2;
+	_punchDur     = 1;
+	_hopDur       = 1;
+	_shockWaveDur = 5;
 }

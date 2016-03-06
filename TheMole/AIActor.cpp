@@ -135,7 +135,7 @@ void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level>& level)
 			case Tile::blank:
 				break;
 			case Tile::spike:
-				_health = 0;
+				SetHealth(0);
 			default:
 				_curKinematic.position.SetY(correctedYPos);
 				break;
@@ -158,7 +158,7 @@ void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level>& level)
 			case Tile::blank:
 				break;
 			case Tile::spike:
-				_health = 0;
+				SetHealth(0);
 			default:
                 if (_collisionInfo.colPenetration == 0) continue;
 				_curKinematic.position.SetX(correctedXPos);
