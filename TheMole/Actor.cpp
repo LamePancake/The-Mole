@@ -6,7 +6,7 @@ Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::unordere
 	:_curKinematic{ position, spd }, _prevKinematic{ position, spd }, _collisionInfo(),
     _mgr(&manager), _gameScreen(std::dynamic_pointer_cast<GameScreen>(manager.GetCurrentScreen())), _isVisible(true)
 {
-	_health = 100;
+	SetHealth(100);
 	
 	// Copy the list of sprites
 	_sprites = sprites;
@@ -133,9 +133,10 @@ void Actor::Draw(Camera& camera)
 void Actor::Reset(Vector2 pos)
 {
 	SetPosition(pos);
-	_health = 100;
+	SetHealth(100);
 	SetActorXDirection(SpriteSheet::XAxisDirection::RIGHT);
 	SetActorYDirection(SpriteSheet::YAxisDirection::UP);
+	_aabb.UpdatePosition(*this);
 }
 
 void Actor::DetectTileCollisions(TileCollisionInfo& colInfo, std::shared_ptr<Level>& level)
