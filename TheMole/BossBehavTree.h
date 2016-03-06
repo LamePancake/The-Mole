@@ -12,7 +12,7 @@ class Node
 {
 public:
 	Node();
-	virtual bool run() = 0;
+	virtual bool run(double elapsedSecs) = 0;
 	std::shared_ptr<GameScreen> _gameScreen;
 private:
 
@@ -30,13 +30,13 @@ public:
 class Selector : public CompositeNode
 {
 public:
-	virtual bool run() override;
+	virtual bool run(double elapsedSecs) override;
 };
 
 class Sequence : public CompositeNode
 {
 public:
-	virtual bool run() override;
+	virtual bool run(double elapsedSecs) override;
 };
 
 class CheckHeatTask : public Node
@@ -45,7 +45,7 @@ private:
 	int _btHeat;
 public:
 	CheckHeatTask(int heat) : _btHeat(heat) {}
-	virtual bool run() override;
+	virtual bool run(double elapsedSecs) override;
 };
 
 class CheckAliveTask : public Node
@@ -54,7 +54,7 @@ private:
 	int _btHealth;
 public:
 	CheckAliveTask(int health) : _btHealth(health) {}
-	virtual bool run() override;
+	virtual bool run(double elapsedSecs) override;
 };
 
 class CheckDeadTask : public Node
@@ -63,7 +63,7 @@ private:
 	int _btHealth;
 public:
 	CheckDeadTask(int health) : _btHealth(health) {}
-	virtual bool run() override;
+	virtual bool run(double elapsedSecs) override;
 };
 
 class CheckIfOverheatedTask : public Node
@@ -72,7 +72,7 @@ private:
 	int _btHeat;
 public:
 	CheckIfOverheatedTask(int heat) : _btHeat(heat) {}
-	virtual bool run() override;
+	virtual bool run(double elapsedSecs) override;
 };
 
 class PrePunchTask : public Node
@@ -82,7 +82,7 @@ private:
 	float _triggerRange;
 public:
 	PrePunchTask(float &dist, float _range) : _btDist(dist), _triggerRange(_range) {}
-	virtual bool run() override;
+	virtual bool run(double elapsedSecs) override;
 };
 
 class PunchTask : public Node
@@ -91,7 +91,7 @@ private:
 
 public:
 	PunchTask() {}
-	virtual bool run() override;
+	virtual bool run(double elapsedSecs) override;
 };
 
 class PreRollTask : public Node
@@ -101,16 +101,16 @@ private:
 	float _triggerRange;
 public:
 	PreRollTask(float &dist, float _range) : _btDist(dist), _triggerRange(_range) {}
-	virtual bool run() override;
+	virtual bool run(double elapsedSecs) override;
 };
 
 class RollTask : public Node
 {
 private:
-	Vector2* targetPos;
+	Vector2* _targetPos;
 public:
-	RollTask(Vector2 *tPos) : targetPos(tPos) {}
-	virtual bool run() override;
+	RollTask(Vector2 *tPos) : _targetPos(tPos) {}
+	virtual bool run(double elapsedSecs) override;	
 };
 
 class ShortHopTask : public Node
@@ -119,7 +119,7 @@ private:
 
 public:
 	ShortHopTask() {}
-	virtual bool run() override;
+	virtual bool run(double elapsedSecs) override;
 };
 
 class ShockWaveTask : public Node
@@ -128,16 +128,16 @@ private:
 
 public:
 	ShockWaveTask() {}
-	virtual bool run() override;
+	virtual bool run(double elapsedSecs) override;
 };
 
 class IdleTask : public Node
 {
 private:
-
+	Vector2* _targetPos;
 public:
-	IdleTask() {}
-	virtual bool run() override;
+	IdleTask(Vector2 *tPos) : _targetPos(tPos) {}
+	virtual bool run(double elapsedSecs) override;
 };
 
 class EjectTask : public Node
@@ -146,7 +146,7 @@ private:
 
 public:
 	EjectTask() {}
-	virtual bool run() override;
+	virtual bool run(double elapsedSecs) override;
 };
 
 class BossBehavTree
@@ -158,6 +158,9 @@ public:
 	void UpdateVariables(Vector2* pPos, Vector2* bPos, int health, int heat, double elapsedSecs);
 	Vector2 GetTarget();
 private:
+	double _elapsedSecs;
+	double _idleDur;
+	double _rollDur;
 	float _pDist;
 	int _health;
 	int _heat;

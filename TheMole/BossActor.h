@@ -28,6 +28,16 @@ public:
 	// Resets the actor
 	virtual void Reset(Vector2 pos);
 
+	void ResetDurations();
+
+	double _idleDur;
+	double _preRollDur;
+	double _rollDur;
+	double _prePunchDur;
+	double _punchDur;
+	double _hopDur;
+	double _shockWaveDur;
+
 private:
 	BossBehavTree _bossTree;
 	int _heat;
