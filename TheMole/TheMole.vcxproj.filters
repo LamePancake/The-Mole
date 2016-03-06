@@ -73,6 +73,13 @@
     <ClCompile Include="SoundEffectBank.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CutsceneScreen.cpp" />
+    <ClCompile Include="DoorActor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SwitchActor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AABB.h">
@@ -148,6 +155,13 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LevelSelectScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CutsceneScreen.h" />
+    <ClInclude Include="SwitchActor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DoorActor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
