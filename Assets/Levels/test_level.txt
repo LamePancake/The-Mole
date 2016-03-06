@@ -11,5 +11,12 @@ S                                                                               
 S                                                                               S
 S                                                                               S
 S                                                                               S
-S   SO                                                                          S
+S  ASO          W   A                                                           S
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+
+Switches 1
+B
+
+Doors 2
+L 0
+T 0

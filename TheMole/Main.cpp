@@ -58,9 +58,7 @@ int main(int argc, char** argv) {
 		screens.insert({ "denIntro", denIntro });
 
 		GameManager::_instance = new GameManager(std::move(sdl), std::move(image), std::move(mixer), std::move(sdl_ttf), std::move(window), std::move(renderer), screens);
-		
-		GameManager *mgr = GameManager::GetInstance();
-		mgr->Loop(startScreen);
+		GameManager::_instance->Loop(startScreen);
 	}
 	catch (SDL2pp::Exception& e) {
 		// Exception stores SDL_GetError() result and name of function which failed

@@ -117,17 +117,18 @@ void Actor::Draw(Camera& camera)
 	SDL2pp::Renderer& rend = _mgr->GetRenderer();
 
 	std::shared_ptr<SpriteSheet> spriteSheet = _sprites[_currentSpriteSheet];
-	SDL_Texture* rawTexture = spriteSheet->GetTexture().Get();
     SDL2pp::Point tempPoint = SDL2pp::Point((int)_curKinematic.position.GetX(), (int)_curKinematic.position.GetY());
 
 	// Draw shadow first, so we need to adjust drawing parameters
-	SDL_SetTextureColorMod(rawTexture, 127, 127, 127);
-	SDL_SetTextureAlphaMod(rawTexture, 127);
-	spriteSheet->Draw(tempPoint + SDL2pp::Point(offsetX - viewport.x, offsetY - viewport.y), _spriteXDir, _spriteYDir);
+	SDL_Color shadowColour = { 127, 127, 127, 127 };
+	SDL_Color normalColour = { 255, 255, 255, 255 };
+	spriteSheet->SetColourMod(shadowColour);
+	spriteSheet->SetXAxisDirection(_spriteXDir);
+	spriteSheet->Draw(tempPoint + SDL2pp::Point(offsetX - viewport.x, offsetY - viewport.y));
 
-	SDL_SetTextureColorMod(rawTexture, 255, 255, 255);
-	SDL_SetTextureAlphaMod(rawTexture, 255);
-	spriteSheet->Draw(tempPoint + SDL2pp::Point(-viewport.x, -viewport.y), _spriteXDir, _spriteYDir);
+	spriteSheet->SetColourMod(normalColour);
+	spriteSheet->SetYAxisDirection(_spriteYDir);
+	spriteSheet->Draw(tempPoint + SDL2pp::Point(-viewport.x, -viewport.y));
 }
 
 void Actor::Reset(Vector2 pos)

@@ -1,6 +1,15 @@
 #ifndef SPRITE_SHEET_H
 #define SPRITE_SHEET_H
 
+// Constructs a colour from RGBA components
+#define RGBA(R, G, B, A) ((R) << 24) + ((G) << 16) + ((B) << 8) + (A)
+
+// Separates colour components from a colour created using the above macro
+#define RED(COLOUR)	     (COLOUR) >> 24
+#define GREEN(COLOUR)    ((COLOUR) >> 16) & 0x000000FF
+#define BLUE(COLOUR)     ((COLOUR) >> 8) & 0x000000FF
+#define ALPHA(COLOUR)    (COLOUR) & 0x000000FF
+
 #include <SDL2pp\SDL2pp.hh>
 #include <string>
 #include <cstdio>
@@ -63,30 +72,24 @@ public:
 	void Update(double elapsedSecs);
 
 	/**
-	 * @brief	Draws the given position.
+	 * @brief	Draws the sprite at the given position.
 	 *
 	 * @author	Shane
 	 * @date	2/3/2016
 	 *
 	 * @param position	The position (upper-left corner) to draw the sprite.
-	 * @param xAxisDir	The direction that the sprite should face in the x axis (XAxisDirection::RIGHT or XAxisDirection::LEFT).
-	 * @param yAxisDir	The direction that the sprite should face in the y axis (YAxisDirection::UP or YAxisDirection::DOWN).
 	 */
-	void Draw(const SDL2pp::Point&& position, XAxisDirection xAxisDir, YAxisDirection yAxisDir);
+	void Draw(const SDL2pp::Point&& position);
 
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	///<summary> Draws the sprite with the given destination rectangle.</summary>
-	///
-	///<remarks> Shane, 2/22/2016.</remarks>
-	///
-	///<param name="destRect"> The destination rectangle into which the sprite sheet's current frame will be drawn.</param>
-	///<param name="xAxisDir"> The The direction that the sprite should face in the x axis (XAxisDirection::RIGHT or XAxisDirection::LEFT).</param>
-	///<param name="yAxisDir"> The direction that the sprite should face in the y axis (YAxisDirection::UP or YAxisDirection::DOWN).</param>
-	///
-	///### <author> Shane.</author>
-	///### <date> 2/26/2016.</date>
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	void Draw(SDL2pp::Rect destRect, XAxisDirection xAxisDir, YAxisDirection yAxisDir);
+	/**
+	 * @brief	Draws at the given position.
+	 *
+	 * @author	Shane
+	 * @date	2/3/2016
+	 *
+	 * @param position	The position (upper-left corner) to draw the sprite.
+	 */
+	void Draw(const SDL2pp::Point& position);
 
 	/**
 	 * @brief	Query if this object is animating.
@@ -97,6 +100,20 @@ public:
 	 * @return	true if animating, false if not.
 	 */
 	bool IsAnimating() const;
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	///<summary> Query whether the sprite sheet is finished its animation.</summary>
+	///
+	///<remarks>If the sprite sheet is reversed, it's finished when it's at the first frame; otherwise,
+	///         it's finished when it's at the last frame. Note that sprites set to repeating will never
+	///         finish.</remarks>
+	///
+	///<returns> Whether the sprite sheet is finished its animation. false if IsRepeating().</returns>
+	///
+	///#<author>Shane</author>
+	///#<date>3/5/2016</date>
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	bool IsFinished() const;
 
 	/**
 	 * @brief	Starts or resumes the sprite sheet's animation. If the sheet is already animating, this does nothing.
@@ -171,18 +188,118 @@ public:
 	 */
 	void SetRepeating(bool repeating);
 
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	///<summary> Sets the current x axis direction for this sprite sheet.</summary>
+	///
+	///<param name="direction"> The new x axis direction.</param>
+	///
+	///<remarks> Shane, 3/5/2016.</remarks>
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	void SetXAxisDirection(XAxisDirection direction);
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	///<summary> Gets the x axis direction that the sprite is facing.</summary>
+	///
+	///<returns> The x axis direction that the sprite is facing</returns>
+	///
+	///<remarks> Shane, 3/5/2016.</remarks>
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	XAxisDirection GetXAxisDirection() const;
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	///<summary> Sets the current y axis direction for this sprite sheet.</summary>
+	///
+	///<param name="direction"> The new y axis direction.</param>
+	///
+	///<remarks> Shane, 3/5/2016.</remarks>
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	void SetYAxisDirection(YAxisDirection direction);
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	///<summary> Gets the y axis direction that the sprite is facing.</summary>
+	///
+	///<returns> The y axis direction that the sprite is facing</returns>
+	///
+	///<remarks> Shane, 3/5/2016.</remarks>
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	YAxisDirection GetYAxisDirection() const;
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	///<summary> Sets the sprite's rotation about the given centre point.</summary>
+	///
+	///<param name="angle"> The amount by which to rotate the sprite about the centre, in degrees.</param>
+	///
+	///<remarks> Shane, 3/5/2016.</remarks>
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	void SetRotation(double angle);
+	
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	///<summary> Gets the angle of rotation that will be applied to the sprite.</summary>
+	///
+	///<returns> The angle of rotation that will be applied to the sprite in degrees.</returns>
+	///
+	///<remarks> Shane, 3/5/2016.</remarks>
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	double GetRotation() const;
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	///<summary> Sets the colour and alpha mod to apply to the sprite.</summary>
+	///
+	///<param name="colourMod"> The colour mod to apply.</param>
+	/// 
+	///<remarks> Shane, 3/5/2016.</remarks>
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	void SetColourMod(SDL_Color colourMod);
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	///<summary> Gets the colour and alpha mod to apply to the sprite.</summary>
+	///
+	///<returns> The colour and alpha mod to apply to the sprite.</returns>
+	///
+	///<remarks> Shane, 3/5/2016.</remarks>
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	SDL_Color GetColourMod() const;
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	///<summary> Scales the sprite by the specified amount about its centre.</summary>
+	///
+	///<param name="scale"> The scale to apply.</param>
+	///
+	///<remarks> Shane, 3/5/2016.</remarks>
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	void SetScale(double scale);
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	///<summary> Gets the scale to apply to the sprite.</summary>
+	///
+	///<returns> The scale to apply to the sprite.</returns>
+	///
+	///<remarks> Shane, 3/5/2016.</remarks>
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	double GetScale() const;
+
 private:
 	std::shared_ptr<SDL2pp::Texture> _sheet;
 	SDL2pp::Point _spriteSize;
+
 	bool _isRunning;
+	bool _isRepeating;
+	bool _isReversed;
 	int _currentFrame;
 	int _numFrames;
 	double _frameTime;
 	double _currentFrameElapsed;
+
 	GameManager* _mgr;
+	
 	XAxisDirection _defaultXDir;
 	YAxisDirection _defaultYDir;
-	bool _isRepeating;
+	XAxisDirection _currentXDir;
+	YAxisDirection _currentYDir;
+
+	double _scale;
+	double _rotation;
+	SDL_Color _colourMod;
 };
 
 #endif
