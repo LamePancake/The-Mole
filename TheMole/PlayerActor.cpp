@@ -66,7 +66,7 @@ void PlayerActor::Update(double elapsedSecs)
 	{
 		if (CollisionCheck(*screen->GetLevel()->GetEnemy(i)))
 		{
-			_health = 0;
+			SetHealth(0);
 		}
 	}
 
@@ -150,7 +150,7 @@ void PlayerActor::DefaultTileCollisionHandler(std::vector<std::shared_ptr<Tile>>
 				_atGoal = true;
 				break;
 			case Tile::spike:
-				_health = 0;
+				SetHealth(0);
 				break;
 			default:
 				if (isXDirection) _curKinematic.position.SetX(correctedPos);
