@@ -9,6 +9,8 @@ PlayerActor::PlayerActor(Vector2 position, GameManager& manager, Vector2 spd, st
 	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDir, startYDir), _prevDirection(startXDir), _atGoal(false), _jumpVelocity(0), _maxJumpVel(400),
 	_digDir{ Edge::NONE }, _jumped(false), _jumpDuration(0.75), _jumpTimeElapsed(0), _godMode(false), _stoppedTime(false), _selected(0), _jumpBoost(600), _jumpBoosted(false)
 {
+	_shieldActive = false;///Start shield in inactive state
+	_shieldReleased = false;
 }
 
 PlayerActor::~PlayerActor()
@@ -22,7 +24,7 @@ void PlayerActor::Draw(Camera& camera)
 
 void PlayerActor::Update(double elapsedSecs)
 {
-	UpdateInput();
+	UpdateInput(elapsedSecs);
 	if (_stoppedTime) return;
 
 	Actor::Update(elapsedSecs);
@@ -67,13 +69,6 @@ void PlayerActor::Update(double elapsedSecs)
 			_health = 0;
 		}
 	}
-	for (size_t i = 0; i < screen->GetLevel()->GetProjectileActorSize(); ++i)
-	{
-		if (CollisionCheck(*screen->GetLevel()->GetProjectile(i)))
-		{
-			_health = 0;
-		}
-	}
 
     DetectTileCollisions(_collisionInfo, _gameScreen->GetLevel());
 	DigDiggableTiles();
@@ -110,7 +105,8 @@ void PlayerActor::UpdateCollisions(double elapsedSecs)
 void PlayerActor::StopJumping()
 {
 	_jumped = false;
-	//_speed.SetY(-_maxJumpVel);
+	//SetJumpVelocity(0);
+	//_jumpVelocity = -_jumpVelocity;
 	_jumpTimeElapsed = 0;
 }
 
@@ -169,7 +165,7 @@ void PlayerActor::DefaultTileCollisionHandler(std::vector<std::shared_ptr<Tile>>
 	}
 }
 
-void PlayerActor::UpdateInput()
+void PlayerActor::UpdateInput(double elapsedSecs)
 {
 	if (_digDir != Edge::NONE) return;
 
@@ -267,17 +263,19 @@ void PlayerActor::UpdateInput()
 			SetSpeed(Vector2(_curKinematic.velocity.GetX(), Math::Clamp(_curKinematic.velocity.GetY() + 50.0f, 50.0f, 300.0f)));
 		}
 	}
-	else if (_mgr->inputManager->ActionOccurred("JUMP", Input::Pressed))
+
+	if (_mgr->inputManager->ActionOccurred("JUMP", Input::Pressed))
 	{
         if(_wasOnGround)
         {
-		    // jump 8 tiles tall of 1 metre each, at 64 pixels per metre, multiplied by -1 because positive moves down in our world
+		    // jump 7.5 tiles tall of 1 metre each, at 64 pixels per metre, multiplied by -1 because positive moves down in our world
 	    	_jumped = true;
 		    SetJumpVelocity(7.5f * 1.0f * 64.0f * -1.0f);
 		    //SetMaximumJumpVelocity(3.0f * 1.0f * 64.0f * -1.0f);
 		}
 	}
-	else if(_mgr->inputManager->ActionOccurred("GODMODE", Input::Pressed))
+
+	if(_mgr->inputManager->ActionOccurred("GODMODE", Input::Pressed))
 	{
 		_godMode = !_godMode;
 		_health = 40000000;
@@ -301,6 +299,84 @@ void PlayerActor::UpdateInput()
 	else
 	{
 		_gliding = false;
+	}
+
+	if (_mgr->inputManager->ActionOccurred("SHIELD", Input::Pressed))
+	{
+		///Activate shield
+		_shieldActive = true;
+		_shieldReleased = false;
+	}
+	if (_mgr->inputManager->ActionOccurred("SHIELD", Input::Held))
+	{
+		///Drain shield
+		UpdateShieldStatus(elapsedSecs);
+	}
+	if (_mgr->inputManager->ActionOccurred("SHIELD", Input::Released))
+	{
+		///Deactivate Shield
+		_shieldReleased = true;
+	}
+}
+
+void PlayerActor::UpdateShieldStatus(double deltaTime)
+{
+	if (_shieldActive)
+	{
+		_shieldTimer += deltaTime;
+
+		if (_shieldTimer > 2)
+		{
+			if (_shieldReleased)
+			{
+				_shieldActive = false;
+				_shieldReleased = false;
+			}
+			_shieldStr--;
+			_shieldTimer = 0;
+		}
+
+		if (_shieldStr <= 0)
+		{
+			_shieldActive = false;
+			_shieldTimer = 0;
+		}
+	}
+	else if(_shieldStr <= 4)
+	{
+		_shieldTimer += deltaTime;
+		if (_shieldTimer > 1)
+		{
+			_shieldStr++;
+			_shieldTimer = 0;
+		}
+	}
+}
+
+void PlayerActor::ShieldHit()
+{
+	_shieldStr--;
+}
+
+void PlayerActor::ProjectileHit(ProjectileActor *prj)
+{
+	if (_lastPrj != prj)
+	{
+		_lastPrj = prj;
+		return;
+	}
+
+	if (_shieldActive)
+	{
+		_shieldStr--;
+		if (_shieldStr <= 0)
+		{
+			SetHealth(0);
+		}
+	}
+	else
+	{
+		SetHealth(0);
 	}
 }
 
