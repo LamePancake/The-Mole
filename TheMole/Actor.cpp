@@ -232,17 +232,29 @@ void Actor::DetectTileCollisions(TileCollisionInfo& colInfo, std::shared_ptr<Lev
             }
         }
 
+		// Every tile that the actor intersects - except for the for the corner tile - is blank
         if (corner->GetID() != Tile::blank && colNonCornerBlanks == colInfo.colIntersect.size() && rowNonCornerBlanks == colInfo.rowIntersect.size())
         {
+			bool corrected = false;
+
             // Only correct in a direction if we weren't already there
             if (curCol != prevCol)
             {
                 colInfo.colPenetration = actualColPenetration;
+				corrected = true;
             }
             if (curRow != prevRow)
             {
                 colInfo.rowPenetration = actualRowPenetration;
+				corrected = true;
             }
+
+			// Due to rounding, we were actually in this column AND row in the last frame
+			// We need to correct in at least one direction, so we'll choose column (probably more realistic due to gravity)
+			if (!corrected)
+			{
+				colInfo.colPenetration = actualColPenetration;
+			}
         }
     }
     else if (xVel != 0)
