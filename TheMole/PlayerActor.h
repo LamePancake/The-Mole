@@ -188,6 +188,7 @@ private:
 	///Shield stuff
 	bool _shieldActive;
 	bool _shieldReleased;
+	bool _shieldHit;
 	int _shieldStr;
 	double _shieldTimer;
 	ProjectileActor *_lastPrj;

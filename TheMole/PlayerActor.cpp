@@ -11,6 +11,9 @@ PlayerActor::PlayerActor(Vector2 position, GameManager& manager, Vector2 spd, st
 {
 	_shieldActive = false;///Start shield in inactive state
 	_shieldReleased = false;
+	_shieldStr = 4;
+	_shieldTimer = 0;
+	_lastPrj = nullptr;
 }
 
 PlayerActor::~PlayerActor()
@@ -20,6 +23,22 @@ PlayerActor::~PlayerActor()
 void PlayerActor::Draw(Camera& camera)
 {
 	Actor::Draw(camera);
+	SDL2pp::Renderer& rend = _mgr->GetRenderer();
+	SDL2pp::Point dim = GameManager::GetInstance()->GetWindow().GetSize();
+
+	for (size_t i = 0; i < _shieldStr; i++) {
+		rend.FillRect(SDL2pp::Rect(dim.GetX() * (0.90f + (i * 0.02f))
+			, dim.GetY()  * 0.97f
+			, 10.0f
+			, 10.0f));
+	}
+
+	if(_shieldActive)
+		rend.FillRect(SDL2pp::Rect(dim.GetX() * (0.2f)
+			, dim.GetY()  * 0.2f
+			, 20.0f
+			, 20.0f));
+	rend.Present();
 }
 
 void PlayerActor::Update(double elapsedSecs)
@@ -28,6 +47,9 @@ void PlayerActor::Update(double elapsedSecs)
 	if (_stoppedTime) return;
 
 	Actor::Update(elapsedSecs);
+
+	UpdateShieldStatus(elapsedSecs);
+
 	_jumpVelocity = Math::Clamp(_jumpVelocity, -_maxJumpVel, _maxJumpVel);
 	if (_gliding && _jumpVelocity > 0)
 	{
@@ -307,7 +329,8 @@ void PlayerActor::UpdateInput(double elapsedSecs)
 	if (_mgr->inputManager->ActionOccurred("SHIELD", Input::Held))
 	{
 		///Drain shield
-		UpdateShieldStatus(elapsedSecs);
+		//_shieldActive = true;
+		//_shieldReleased = false;
 	}
 	if (_mgr->inputManager->ActionOccurred("SHIELD", Input::Released))
 	{
@@ -322,14 +345,15 @@ void PlayerActor::UpdateShieldStatus(double deltaTime)
 	{
 		_shieldTimer += deltaTime;
 
-		if (_shieldTimer > 2)
+		if (_shieldTimer > 1)
 		{
 			if (_shieldReleased)
 			{
 				_shieldActive = false;
 				_shieldReleased = false;
 			}
-			_shieldStr--;
+			if(!_shieldHit)
+				_shieldStr--;
 			_shieldTimer = 0;
 		}
 
@@ -339,10 +363,10 @@ void PlayerActor::UpdateShieldStatus(double deltaTime)
 			_shieldTimer = 0;
 		}
 	}
-	else if(_shieldStr <= 4)
+	else if(_shieldStr < 4)
 	{
 		_shieldTimer += deltaTime;
-		if (_shieldTimer > 1)
+		if (_shieldTimer > 3)
 		{
 			_shieldStr++;
 			_shieldTimer = 0;
@@ -357,24 +381,23 @@ void PlayerActor::ShieldHit()
 
 void PlayerActor::ProjectileHit(ProjectileActor *prj)
 {
-	if (_lastPrj != prj)
-	{
-		_lastPrj = prj;
-		return;
-	}
-
-	if (_shieldActive)
-	{
-		_shieldStr--;
-		if (_shieldStr <= 0)
+	//if (_lastPrj != prj)
+	//{
+		if (_shieldActive)
+		{
+			_shieldStr--;
+			_shieldHit = true;
+			if (_shieldStr <= 0)
+			{
+				SetHealth(0);
+			}
+		}
+		else
 		{
 			SetHealth(0);
 		}
-	}
-	else
-	{
-		SetHealth(0);
-	}
+		_lastPrj = prj;
+	//}
 }
 
 void PlayerActor::UpdateMindControlSelection(bool released)
