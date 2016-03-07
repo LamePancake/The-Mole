@@ -1,9 +1,9 @@
-#include "SwitchActor.h"
+#include "ToggleActor.h"
 #include "GameScreen.h"
 
 using std::shared_ptr;
 
-void SwitchActor::Update(double deltaTime)
+void ToggleActor::Update(double deltaTime)
 {
     Actor::Update(deltaTime);
 
@@ -45,12 +45,12 @@ void SwitchActor::Update(double deltaTime)
     }
 }
 
-bool SwitchActor::IsOn() const
+bool ToggleActor::IsOn() const
 {
 	return _isOn;
 }
 
-Actor::Edge SwitchActor::GetEdge() const
+Actor::Edge ToggleActor::GetEdge() const
 {
 	return _edge;
 }

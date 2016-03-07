@@ -17,7 +17,7 @@ void DoorActor::Update(double deltaTime)
 	 */
 	if(switchOn)
 	{
-		if (!_isOpening)
+		if (!_isOpening && !_isOpen)
 		{
 			_isOpening = true;
 			_isClosing = false;
@@ -33,7 +33,7 @@ void DoorActor::Update(double deltaTime)
 	}
 	else
 	{
-		if (!_isClosing)
+		if (_isOpening || _isOpen)
 		{
 			_isOpen = false;
 			_isOpening = false;
