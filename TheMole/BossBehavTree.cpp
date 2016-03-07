@@ -120,8 +120,19 @@ bool PrePunchTask::run(double elapsedSecs)
 
 bool PunchTask::run(double elapsedSecs)
 {
-	//cout << "punch" << endl;
-	return true;
+	if (_gameScreen->GetLevel()->GetBoss()->_rollDur > 0)
+	{
+		cout << "punch" << endl;
+		*_targetPos = _gameScreen->GetPlayer()->GetPosition();
+		//cout << "bPos: " << targetPos->GetX() << endl;
+		//cout << "pPos: " << _gameScreen->GetPlayer()->GetPosition().GetX() << endl;
+		_gameScreen->GetLevel()->GetBoss()->_rollDur -= elapsedSecs;
+		return false;
+	}
+	else
+	{
+		return true;
+	}
 }
 
 
@@ -130,12 +141,12 @@ bool PreRollTask::run(double elapsedSecs)
 {
 	if (_btDist > _triggerRange)
 	{
-		cout << "far enough, pre roll" << endl;
+		//cout << "far enough, pre roll" << endl;
 		return true;
 	}
 	else
 	{
-		cout << "not far enough to roll" << endl;
+		//cout << "not far enough to roll" << endl;
 		return false;
 	}
 }
@@ -207,7 +218,7 @@ BossBehavTree::BossBehavTree()
 {
 	_heat = 0;
 	_health = 100;
-	_meleeRange = 200;
+	_meleeRange = 10;
 	_idleDur = 3;
 	_rollDur = 3;
 	//Initialize Sequences and Selectors
@@ -224,7 +235,7 @@ BossBehavTree::BossBehavTree()
 	_tChkAlive = new CheckAliveTask(_health);
 	_tChkDead = new CheckDeadTask(_health);
 	_tPrePunch = new PrePunchTask(_pDist, _meleeRange);
-	_tPunch = new PunchTask();
+	_tPunch = new PunchTask(&_targetPos);
 	_tPreRoll = new PreRollTask(_pDist, _meleeRange);
 	_tRoll = new RollTask(&_targetPos);
 	_tShortHop = new ShortHopTask();
@@ -281,7 +292,7 @@ void BossBehavTree::UpdateVariables(Vector2* pPos, Vector2* bPos, int health, in
 	_heat = heat;
 	_playerPos = *pPos;
 	_bossPos = *bPos;
-	_elapsedSecs = elapsedSecs;
+  	_elapsedSecs = elapsedSecs;
 }
 
 Vector2 BossBehavTree::GetTarget()
