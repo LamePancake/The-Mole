@@ -13,8 +13,8 @@ AABB::~AABB()
 AABB::AABB(double width, double height, Actor & actor)
 {
 	// This sets _x and _y as the top left corner of the box
-	_x = actor.GetPosition().GetX() - (width / 2);
-	_y = actor.GetPosition().GetY() - (height / 2);
+	_x = actor.GetPosition().GetX();
+	_y = actor.GetPosition().GetY();
 
 	_width = width;
 	_height = height;
@@ -39,8 +39,8 @@ bool AABB::CheckCollision(AABB otherBox)
 
 void AABB::UpdatePosition(Actor & actor)
 {
-	_x = actor.GetPosition().GetX() - (_width / 2);
-	_y = actor.GetPosition().GetY() - (_height / 2);
+	_x = actor.GetPosition().GetX();
+	_y = actor.GetPosition().GetY();
 }
 
 float AABB::GetX()

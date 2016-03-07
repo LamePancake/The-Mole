@@ -26,6 +26,7 @@ public:
 	}
 
 	virtual void Update(double deltaTime) override;
+	virtual void Reset(Vector2 pos) override;
 
 	virtual Type GetType() const override { return Type::door; }
 

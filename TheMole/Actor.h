@@ -288,6 +288,12 @@ protected:
 	/** @brief	The direction that the sprite is facing along the y axis. */
 	SpriteSheet::YAxisDirection _spriteYDir;
 
+	/** @brief	The direction that the sprite is facing along the x axis. */
+	SpriteSheet::XAxisDirection _startXDir;
+
+	/** @brief	The direction that the sprite is facing along the y axis. */
+	SpriteSheet::YAxisDirection _startYDir;
+
 	/** @brief	true if this object is visible. */
 	bool _isVisible;
 

@@ -49,6 +49,16 @@ void DoorActor::Update(double deltaTime)
 	}
 }
 
+void DoorActor::Reset(Vector2 pos)
+{
+	Actor::Reset(pos);
+	_isClosing = false;
+	_isOpening = false;
+	_isOpen = false;
+	_sprites[_currentSpriteSheet]->SetReversed(false);
+	_sprites[_currentSpriteSheet]->Reset();
+}
+
 bool DoorActor::IsOpening() const
 {
 	return _isOpening;

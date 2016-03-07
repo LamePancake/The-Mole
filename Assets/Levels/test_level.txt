@@ -1,6 +1,4 @@
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
-S             SES                                                               S
-S             SAS                                                               S
 S                                                                               S
 S                                                                               S
 S                                                                               S
@@ -8,10 +6,12 @@ S                                                                               
 S                                                                               S
 S                                                                               S
 S                                                                               S
+S               SES                                                             S
+S               SAS                                                             S
 S                                                                               S
 S           W                                                                   S
 S                   SSSSSSSSSSASSS                                              S
-S   SO         W    A  E WS      S                                              S
+S   S          W O  A  E WS      S                                              S
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 
 Toggles

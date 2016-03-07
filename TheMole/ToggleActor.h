@@ -25,6 +25,8 @@ public:
 
 	virtual void Update(double deltaTime) override;
 
+	virtual void Reset(Vector2 pos) override;
+
 	bool IsOn() const;
 
 	Edge GetEdge() const;
