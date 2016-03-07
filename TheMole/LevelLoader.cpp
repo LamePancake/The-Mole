@@ -115,7 +115,11 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 			case Tile::boss:
 				{
 					std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
-					sprites["idle"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Toad_idle.png", 6, 0.50, true, SpriteSheet::XAxisDirection::LEFT);
+					sprites.reserve(4);
+					sprites["idle"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Watch_idle_small.png", 1, 0.50, true, SpriteSheet::XAxisDirection::LEFT);
+					sprites["roll"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Watch_roll_small.png", 1, 0.50, true, SpriteSheet::XAxisDirection::LEFT);
+					sprites["prepunch"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Watch_prepunch_small.png", 1, 0.50, true, SpriteSheet::XAxisDirection::LEFT);
+					sprites["punch"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Watch_punch_small.png", 1, 0.50, true, SpriteSheet::XAxisDirection::LEFT);
 
 					std::shared_ptr<BossActor> boss = std::make_shared<BossActor>(tile->GetWorldPosition(), gameManager, Vector2(200, 0), sprites, "idle", SpriteSheet::XAxisDirection::LEFT);
 					level->AddActor(boss);

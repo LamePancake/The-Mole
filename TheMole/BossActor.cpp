@@ -66,3 +66,12 @@ void BossActor::ResetDurations()
 	_hopDur       = 2;
 	_shockWaveDur = 5;
 }
+
+void BossActor::SetSprite(string name)
+{
+	_sprites[_currentSpriteSheet]->Stop();
+	_currentSpriteSheet = name;
+	SetActorYDirection(SpriteSheet::YAxisDirection::UP);
+	_sprites[_currentSpriteSheet]->Start();
+}
+
