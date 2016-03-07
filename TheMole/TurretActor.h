@@ -40,9 +40,15 @@ public:
 	*/
 	bool CollisionCheck(Actor & otherAI);
 
+	void SetPattern(Vector2 prjDir);
+
+	void SetPattern(std::vector<Vector2> prjDirSet);
 private:
 	void TurretUpdate(double elapseSecs);
 	/** Stores projectiles currently spawned */
 	std::vector<std::shared_ptr<ProjectileActor>> _projectiles;
-	double _timeInterval;
+	///Calculates the time between shots
+	double _timeInterval; //Don't touch
+	///This store the direction(s) of the projectile(s) fired by this turret
+	std::vector<Vector2> _pattern;
 };
