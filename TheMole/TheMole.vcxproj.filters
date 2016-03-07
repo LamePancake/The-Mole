@@ -85,6 +85,7 @@
     <ClCompile Include="SwitchActor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Quadtree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AABB.h">

@@ -27,14 +27,13 @@ int CutsceneScreen::Load()
 	_dialog = OpenDialog(_dialogFilePath);
 	UpdateDialog();
 
-	_prevKeyState = (Uint8*)std::malloc(sizeof(Uint8) * SDL_NUM_SCANCODES);
-	std::memcpy(_prevKeyState, SDL_GetKeyboardState(nullptr), sizeof(Uint8) * SDL_NUM_SCANCODES);
 	return SCREEN_LOAD_SUCCESS;
 }
 
 int CutsceneScreen::Update(double elapsedSecs)
 {
 	SDL_PumpEvents();
+	_mgr->inputManager->UpdateKeyboardState();
 
 	if (_currentlySpeaking == PROTAG)
 	{
@@ -49,10 +48,7 @@ int CutsceneScreen::Update(double elapsedSecs)
 		
 	_openingAnimation->Update(elapsedSecs);
 
-	// Change the currently selected menu item
-	const Uint8* keys = SDL_GetKeyboardState(nullptr);
-
-	if (keys[SDL_SCANCODE_SPACE] && _prevKeyState[SDL_SCANCODE_SPACE])
+	if (_mgr->inputManager->ActionOccurred("SKIP", Input::Held))
 	{
   		_skipTimer += elapsedSecs;
 		
@@ -69,7 +65,7 @@ int CutsceneScreen::Update(double elapsedSecs)
 	}
 
 	// We selected a menu item; do the appropriate thing
-	if (keys[SDL_SCANCODE_RETURN] && !_prevKeyState[SDL_SCANCODE_RETURN])
+	if (_mgr->inputManager->ActionOccurred("CONFIRM", Input::Pressed))
 	{
 		_dialogIndex++;
 
@@ -79,14 +75,13 @@ int CutsceneScreen::Update(double elapsedSecs)
 			_currentNPCDialog = " ";
 			_currentProtagDialog = " ";
 			_mgr->SetNextScreen(_nextScreen);
+			_mgr->inputManager->ClearKeyboardState();
 			return SCREEN_FINISH;
 		}
 
 		UpdateDialog();
 	}
 
-	// Save the previous key state (temporary until InputManager actions are implemented)
-	std::memcpy(_prevKeyState, keys, sizeof(Uint8) * SDL_NUM_SCANCODES);
 	return SCREEN_CONTINUE;
 }
 
@@ -177,7 +172,7 @@ void CutsceneScreen::Draw()
 	_nextDialogNPC->Draw(nextDialogNPCPos);
 
 	// Draw skip prompt
-	SDL2pp::Texture holdToSkip(rend, _promptFont->RenderText_Solid("Hold SPACE to Skip", SDL_Color{ 255, 255, 255, 255 }));
+	SDL2pp::Texture holdToSkip(rend, _promptFont->RenderText_Solid("Hold TAB to Skip", SDL_Color{ 255, 255, 255, 255 }));
 	rend.Copy(holdToSkip, NullOpt, Rect(dim.GetX() * 0.97f - holdToSkip.GetWidth(), dim.GetY()  * 0.97f - holdToSkip.GetHeight(), holdToSkip.GetWidth(), holdToSkip.GetHeight()));
 	rend.FillRect(Rect(dim.GetX() * 0.97f - holdToSkip.GetWidth(), dim.GetY()  * 0.97f, holdToSkip.GetWidth() * _skipTimer / SKIP_TIME, holdToSkip.GetHeight() * 0.3f));
 
@@ -194,7 +189,6 @@ void CutsceneScreen::Unload()
 	delete _promptFont;
 	delete _headerFont;
 	delete _dialogFont;
-	free(_prevKeyState);
 }
 
 std::vector<std::string> CutsceneScreen::OpenDialog(std::string dialogFilePath)

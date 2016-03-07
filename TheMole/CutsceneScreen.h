@@ -68,8 +68,6 @@ private:
 
 	std::vector<std::string> _dialog;
 
-	Uint8* _prevKeyState;
-
 	double _skipTimer;
 
 	SDL2pp::Font* _headerFont;

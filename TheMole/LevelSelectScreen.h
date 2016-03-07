@@ -25,7 +25,5 @@ private:
 	SDL2pp::Texture* _starscapeLevel;
 	SDL2pp::Texture* _bossLevel;
 	SDL2pp::Texture* _back;
-
-	Uint8* _prevKeyState;
 };
 

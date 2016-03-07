@@ -20,6 +20,14 @@ void Input::UpdateKeyboardState() {
 	memcpy(_curKeyboardState, SDL_GetKeyboardState(NULL), sizeof(Uint8) * SDL_NUM_SCANCODES);
 }
 
+void Input::ClearKeyboardState()
+{
+	free(_prevKeyboardState);
+	free(_curKeyboardState);
+	_prevKeyboardState = (Uint8*)std::calloc(sizeof(Uint8) * SDL_NUM_SCANCODES, 1);
+	_curKeyboardState = (Uint8*)std::calloc(sizeof(Uint8) * SDL_NUM_SCANCODES, 1);
+}
+
 bool Input::ActionOccurred(string actionName, ActionType actionType) {
 	switch (actionType) {
 	case Pressed:

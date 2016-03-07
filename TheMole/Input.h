@@ -47,6 +47,10 @@ public:
 
 	/// This should be called every frame
 	void UpdateKeyboardState();
+
+	// Clears the states, used for screen transistions
+	void ClearKeyboardState();
+
 	/// 
 	bool ActionOccurred(std::string actionName, ActionType actionType);
 

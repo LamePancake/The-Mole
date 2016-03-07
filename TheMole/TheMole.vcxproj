@@ -154,6 +154,7 @@
     <ClCompile Include="PlayerActor.cpp" />
     <ClCompile Include="AIActor.cpp" />
     <ClCompile Include="ProjectileActor.cpp" />
+    <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="SoundEffectBank.cpp" />
     <ClCompile Include="SpriteSheet.cpp" />
     <ClCompile Include="SwitchActor.cpp" />

@@ -93,6 +93,7 @@ private:
 		inputManager->AddKeyToMap("ARROWDOWN", Input::InputAction(SDL_SCANCODE_DOWN));
 		inputManager->AddKeyToMap("ARROWLEFT", Input::InputAction(SDL_SCANCODE_LEFT));
 		inputManager->AddKeyToMap("ARROWRIGHT", Input::InputAction(SDL_SCANCODE_RIGHT));
+		inputManager->AddKeyToMap("SKIP", Input::InputAction(SDL_SCANCODE_TAB));
 	}
 
 	/**

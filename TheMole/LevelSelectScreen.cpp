@@ -24,32 +24,32 @@ int LevelSelectScreen::Load()
 	_levelItems[4] = _bossLevel;
 	_levelItems[5] = _back;
 
-	_prevKeyState = (Uint8*)std::malloc(sizeof(Uint8) * SDL_NUM_SCANCODES);
-	std::memcpy(_prevKeyState, SDL_GetKeyboardState(nullptr), sizeof(Uint8) * SDL_NUM_SCANCODES);
 	return SCREEN_LOAD_SUCCESS;
 }
 
 int LevelSelectScreen::Update(double elapsedSecs) 
 {
 	SDL_PumpEvents();
+	_mgr->inputManager->UpdateKeyboardState();
 
 	// Change the currently selected menu item
 	const Uint8* keys = SDL_GetKeyboardState(nullptr);
 
-	if (keys[SDL_SCANCODE_DOWN] && !_prevKeyState[SDL_SCANCODE_DOWN]) 
+	if (_mgr->inputManager->ActionOccurred("ARROWDOWN", Input::Pressed))
 	{
 		_curMenuItem++;
 		if (_curMenuItem == NUM_LEVELS) _curMenuItem = 0;
 	}
-	else if (keys[SDL_SCANCODE_UP] && !_prevKeyState[SDL_SCANCODE_UP]) 
+	else if (_mgr->inputManager->ActionOccurred("ARROWUP", Input::Pressed))
 	{
 		_curMenuItem--;
 		if (_curMenuItem < 0) _curMenuItem = NUM_LEVELS - 1;
 	}
 
 	// We selected a menu item; do the appropriate thing
-	if (keys[SDL_SCANCODE_RETURN] && !_prevKeyState[SDL_SCANCODE_RETURN])
+	if (_mgr->inputManager->ActionOccurred("CONFIRM", Input::Pressed))
 	{
+		_mgr->inputManager->ClearKeyboardState();
 		switch (_curMenuItem) 
 		{
 		case 0:
@@ -73,8 +73,6 @@ int LevelSelectScreen::Update(double elapsedSecs)
 		}
 	}
 
-	// Save the previous key state (temporary until InputManager actions are implemented)
-	std::memcpy(_prevKeyState, keys, sizeof(Uint8) * SDL_NUM_SCANCODES);
 	return SCREEN_CONTINUE;
 }
 
@@ -97,6 +95,5 @@ void LevelSelectScreen::Unload()
 	delete _starscapeLevel;
 	delete _bossLevel;
 	delete _back;
-	free(_prevKeyState);
 }
 

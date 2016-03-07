@@ -27,7 +27,7 @@ int GameScreen::Load()
 
 	// Inialize the quadtree
 	_levelQuadtree = std::make_shared<Quadtree>();
-	_levelQuadtree->Initialize(2, levelSize.GetX(), levelSize.GetY());
+	_levelQuadtree->Initialize(4, levelSize.GetX(), levelSize.GetY());
 
 	for (int height = 0; height < levelSize.y; ++height)
 	{
