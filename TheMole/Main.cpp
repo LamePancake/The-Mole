@@ -39,7 +39,7 @@ int main(int argc, char** argv) {
 		unordered_map<string, shared_ptr<Screen>> screens;
 		shared_ptr<Screen> menu(new MenuScreen);
 		shared_ptr<Screen> levelSelect(new LevelSelectScreen);
-		shared_ptr<Screen> den(new GameScreen(".\\Assets\\Levels\\den_level.txt", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\GUI\\Level_Complete\\level_cleared_keyboard.png", ".\\Assets\\GUI\\Level_Complete\\level_failed_keyboard.png", "levelSelect", bank));
+		shared_ptr<Screen> den(new GameScreen(".\\Assets\\Levels\\test_level.txt", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\GUI\\Level_Complete\\level_cleared_keyboard.png", ".\\Assets\\GUI\\Level_Complete\\level_failed_keyboard.png", "levelSelect", bank));
 		shared_ptr<Screen> viking(new GameScreen(".\\Assets\\Levels\\viking_level.txt", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\GUI\\Level_Complete\\level_cleared_keyboard.png", ".\\Assets\\GUI\\Level_Complete\\level_failed_keyboard.png", "levelSelect", bank));
 		shared_ptr<Screen> grass(new GameScreen(".\\Assets\\Levels\\grass_level.txt", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\GUI\\Level_Complete\\level_cleared_keyboard.png", ".\\Assets\\GUI\\Level_Complete\\level_failed_keyboard.png", "levelSelect", bank));
 		shared_ptr<Screen> starscape(new GameScreen(".\\Assets\\Levels\\starscape_level.txt", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\GUI\\Level_Complete\\level_cleared_keyboard.png", ".\\Assets\\GUI\\Level_Complete\\level_failed_keyboard.png", "levelSelect", bank));

@@ -1,15 +1,6 @@
 #ifndef SPRITE_SHEET_H
 #define SPRITE_SHEET_H
 
-// Constructs a colour from RGBA components
-#define RGBA(R, G, B, A) ((R) << 24) + ((G) << 16) + ((B) << 8) + (A)
-
-// Separates colour components from a colour created using the above macro
-#define RED(COLOUR)	     (COLOUR) >> 24
-#define GREEN(COLOUR)    ((COLOUR) >> 16) & 0x000000FF
-#define BLUE(COLOUR)     ((COLOUR) >> 8) & 0x000000FF
-#define ALPHA(COLOUR)    (COLOUR) & 0x000000FF
-
 #include <SDL2pp\SDL2pp.hh>
 #include <string>
 #include <cstdio>
