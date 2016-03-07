@@ -177,6 +177,7 @@
     <ClInclude Include="ObjectActor.h" />
     <ClInclude Include="PlayerActor.h" />
     <ClInclude Include="ProjectileActor.h" />
+    <ClInclude Include="Quadtree.h" />
     <ClInclude Include="SoundEffectBank.h" />
     <ClInclude Include="SpriteSheet.h" />
     <ClInclude Include="SwitchActor.h" />

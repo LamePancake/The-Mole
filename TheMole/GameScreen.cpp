@@ -23,11 +23,29 @@ int GameScreen::Load()
 
 	// Load level one in order to render
     _level = _levelLoader.LoadLevel(_levelPath, _player);
-	_levelRenderer.Load(*_mgr);
+	SDL2pp::Point levelSize = _level->GetLevelSize();
+
+	// Inialize the quadtree
+	_levelQuadtree = std::make_shared<Quadtree>();
+	_levelQuadtree->Initialize(2, levelSize.GetX(), levelSize.GetY());
+
+	for (int height = 0; height < levelSize.y; ++height)
+	{
+		for (int width = 0; width < levelSize.x; ++width)
+		{
+			std::shared_ptr<Tile> tempTile = _level->GetTileFromLevel(width, height);
+			char id = tempTile->GetID();
+
+			if (id == Tile::blank || id == Tile::enemy)
+				continue;
+			_levelQuadtree->Insert(tempTile, width, height);
+		}
+	}
+
+   	_levelRenderer.Load(*_mgr);
 
 	SDL2pp::Point playerPos((int)(_player->GetPosition().GetX()), (int)(_player->GetPosition().GetY()));
 	SDL2pp::Point viewportSize = _mgr->GetWindow().GetSize();
-	SDL2pp::Point levelSize = _level->GetLevelSize();
 	levelSize.x *= _level->GetTileWidth();
 	levelSize.y *= _level->GetTileHeight();
 	_camera = new Camera(playerPos, viewportSize, levelSize);
@@ -108,7 +126,8 @@ void GameScreen::Draw()
 	_camera->CentreView(_player->GetPosition());
 
 	// Render Level
-	_levelRenderer.RenderLevel(_level, *_camera);
+	//_levelRenderer.RenderLevel(_level, *_camera);
+	_levelRenderer.RenderLevel(_levelQuadtree, *_camera, _level->GetTileWidth(), _level->GetTileHeight());
 
 	// Draw all actors
 	for (auto actor : _level->GetActors())

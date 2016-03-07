@@ -5,6 +5,7 @@
 #include <map>
 #include <memory>
 #include "Camera.h"
+#include "Quadtree.h"
 
 
 /** Renders a given level */
@@ -32,6 +33,8 @@ public:
 	 * @param	level   	The level to be rendered.
 	 */
 	void RenderLevel(std::shared_ptr<Level> level, Camera& camera);
+	void RenderLevel(std::shared_ptr<Quadtree> level, Camera& camera, int tileWidth, int tileHeight);
+
 
 private:
 

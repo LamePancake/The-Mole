@@ -11,6 +11,7 @@
 #include "SpriteSheet.h"
 #include "Actor.h"
 #include "SoundEffectBank.h"
+#include "Quadtree.h"
 
 #define NUM_MENU_ITEMS 3
 
@@ -69,6 +70,7 @@ protected:
 	LevelRenderer _levelRenderer;
 	SoundEffectBank & _soundBank;
 	std::shared_ptr<Level> _level;
+	std::shared_ptr<Quadtree> _levelQuadtree;
 	std::shared_ptr<PlayerActor> _player;
 	std::shared_ptr<SDL2pp::Texture> _background;
 	std::shared_ptr<SDL2pp::Texture> _winScreen;
