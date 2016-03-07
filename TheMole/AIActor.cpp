@@ -11,7 +11,7 @@ const static Uint8 MIND_CTRL_COLOUR[3] = { 190, 255, 190 };
 const static double MIND_CONTROL_TIME = 15.0;
 const static double PULSE_START_TIME = 0.75;
 const static double PULSE_END_TIME = 0.05;
-const static double PULSE_MULTIPLIER = (((PULSE_START_TIME - (PULSE_START_TIME * PULSE_END_TIME)) / MIND_CONTROL_TIME) - 1) * -1; // Don't ask
+const static double PULSE_MULTIPLIER = ((PULSE_END_TIME - PULSE_START_TIME) / MIND_CONTROL_TIME) + 1; // Don't ask
 
 AIActor::~AIActor()
 {
@@ -37,6 +37,7 @@ void AIActor::SetIsMindControlCandidate(bool isCandidate)
 		_controlTimeLeft = MIND_CONTROL_TIME;
 		_currentPulseTime = 0;
 		_pulseTimeTotal = PULSE_START_TIME;
+		_sprites[_currentSpriteSheet]->SetScale(1.0);
 	}
 }
 
@@ -181,6 +182,7 @@ void AIActor::Reset(Vector2 pos)
 	_sprites[_currentSpriteSheet]->Stop();
 	_currentSpriteSheet = "walk";
 	_sprites[_currentSpriteSheet]->Start();
+	_sprites[_currentSpriteSheet]->SetScale(1.0);
 
 	_underControl = false;
 
@@ -220,33 +222,22 @@ void AIActor::Draw(Camera& camera)
 	SDL2pp::Point curPos = SDL2pp::Point((int)_curKinematic.position.GetX(), (int)_curKinematic.position.GetY());
 
 	// Values to modify
-	SDL2pp::Rect destRect(curPos.x - viewport.x, curPos.y - viewport.y, _sprites[_currentSpriteSheet]->GetFrameWidth(), _sprites[_currentSpriteSheet]->GetFrameHeight());
-	SDL2pp::Rect shadowRect(destRect);
+	SDL2pp::Point dest(curPos.x - viewport.x, curPos.y - viewport.y);
+	SDL2pp::Point shadow(dest);
 	Uint8 shadowColour[3];
 	Uint8 colour[3];
 	SpriteSheet::XAxisDirection xDir = _spriteXDir;
 
-	shadowRect.x -= offsetX;
-	shadowRect.y -= offsetY;
+	shadow.x -= offsetX;
+	shadow.y -= offsetY;
 
 	if (_isCandidate)
 	{
 		std::memcpy(shadowColour, MIND_CTRL_SHADOW, sizeof(Uint8) * 3);
 		std::memcpy(colour, MIND_CTRL_COLOUR, sizeof(Uint8) * 3);
-
-		if (_isSelected)
-		{
-			destRect.x -= (destRect.w * 0.3);
-			destRect.y -= (destRect.h * 0.3);
-			destRect.w *= 1.3;
-			destRect.h *= 1.3;
-
-			shadowRect.x -= (shadowRect.w * 0.3);
-			shadowRect.y -= (shadowRect.h * 0.3);
-			shadowRect.w *= 1.3;
-			shadowRect.h *= 1.3;
-		}
 		xDir = _underControl ? _controlDir : _spriteXDir;
+
+		spriteSheet->SetScale(_isSelected ? 1.3 : 1.0);
 	}
 	else if (_underControl)
 	{
@@ -261,18 +252,19 @@ void AIActor::Draw(Camera& camera)
 	}
 
 	// Draw shadow first, so we need to adjust drawing parameters
-	SDL_SetTextureColorMod(rawTexture, shadowColour[0], shadowColour[1], shadowColour[2]);
-	SDL_SetTextureAlphaMod(rawTexture, 127);
-	spriteSheet->Draw(shadowRect, xDir, _spriteYDir);
+	spriteSheet->SetColourMod({shadowColour[0], shadowColour[1], shadowColour[2], 127});
+	spriteSheet->SetXAxisDirection(xDir);
+	spriteSheet->Draw(shadow);
 
-	SDL_SetTextureColorMod(rawTexture, colour[0], colour[1], colour[2]);
-	SDL_SetTextureAlphaMod(rawTexture, 255);
-	spriteSheet->Draw(destRect, xDir, _spriteYDir);
+	spriteSheet->SetColourMod({ colour[0], colour[1], colour[2], 255 });
+	spriteSheet->SetXAxisDirection(xDir);
+	spriteSheet->Draw(dest);
 
+	// Draw the indicator
 	if (_underControl)
 	{
 		SDL2pp::Rect controlRect;
-		controlRect.y = destRect.y - (_ctrlIndicator->GetHeight() - destRect.h);
+		controlRect.y = dest.y - (_ctrlIndicator->GetHeight() - spriteSheet->GetFrameHeight());
 		controlRect.x = _curKinematic.position.GetX() - viewport.x;
 		controlRect.w = _ctrlIndicator->GetWidth();
 		controlRect.h = _ctrlIndicator->GetHeight();

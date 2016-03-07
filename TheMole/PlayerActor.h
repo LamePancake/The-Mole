@@ -17,8 +17,6 @@ public:
     ///<param name="startXDirection"> The actor's default facing direction along the x axis.</param>
     ///<param name="startYDirection"> The actor's default facing direction along the y axis.</param>
     ///
-    ///### <author> Shane.</author>
-    ///### <date> 2/8/2016.</date>
     ////////////////////////////////////////////////////////////////////////////////////////////////////
 	PlayerActor(Vector2 position, GameManager & manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites, const std::string&& startSprite,
 		SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP);
@@ -97,10 +95,12 @@ public:
 	float GetMaximumJumpVelocity();
 
 	///Used for projectiles
-	void ProjectileHit(ProjectileActor *prj);
+	void ProjectileHit(Actor *prj);
 
 	// Resets the player
 	virtual void Reset(Vector2 pos);
+
+	virtual Type GetType() const override { return Type::player; }
 
 private:
 
@@ -191,7 +191,7 @@ private:
 	bool _shieldHit;
 	int _shieldStr;
 	double _shieldTimer;
-	ProjectileActor *_lastPrj;
+	Actor *_lastPrj;
 
     Edge _digDir;
 	bool _godMode;

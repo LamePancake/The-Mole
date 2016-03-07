@@ -88,9 +88,9 @@ public:
 class PunchTask : public Node
 {
 private:
-
+	Vector2* _targetPos;
 public:
-	PunchTask() {}
+	PunchTask(Vector2 *tPos) : _targetPos(tPos) {}
 	virtual bool run(double elapsedSecs) override;
 };
 

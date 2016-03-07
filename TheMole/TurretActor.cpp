@@ -59,6 +59,7 @@ void TurretActor::SetPattern(std::vector<Vector2> prjDirSet)
 void TurretActor::TurretUpdate(double elapseSecs)
 {
 	_timeInterval += elapseSecs;
+<<<<<<< HEAD
 	if (_timeInterval > 5)
 	{
 		if (_pattern.size() == 0)
@@ -86,6 +87,17 @@ void TurretActor::TurretUpdate(double elapseSecs)
 					);
 			}
 		}
+=======
+	if (_timeInterval > 5) {
+		_gameScreen->GetLevel()->AddActor(std::make_shared<ProjectileActor>(
+			_curKinematic.position //- Vector2(0, -50) ///Vec2 position
+			, *_mgr ///Gamemanager
+			, Vector2(-200.0f, 0.0f) ///Vec2 spd
+			, _sprites ///sprites
+			, "shoot" ///startsprite
+			, SpriteSheet::XAxisDirection::LEFT) ///direction
+			);
+>>>>>>> e52b25476e4c4688c8b01731029a591f84be807b
 		_timeInterval = elapseSecs;
 	}
 }

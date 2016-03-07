@@ -60,9 +60,9 @@ void BossActor::ResetDurations()
 {
 	_idleDur      = 2;
 	_preRollDur   = 2;
-	_rollDur      = 5;
+	_rollDur      = 10;
 	_prePunchDur  = 2;
 	_punchDur     = 1;
-	_hopDur       = 1;
+	_hopDur       = 2;
 	_shockWaveDur = 5;
 }

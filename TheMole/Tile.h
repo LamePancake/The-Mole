@@ -31,6 +31,8 @@ public:
 		boss        = 'B',
 		projectile  = 'P',
 		turret		= '!',
+		weightpad   = 'W',
+		door        = 'A'
 	};
 
 	/** Default constuctor. Initilizes everying to default values. */

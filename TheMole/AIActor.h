@@ -35,7 +35,9 @@ public:
 		, std::shared_ptr<SDL2pp::Texture> mindControlIndicator
 		,SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP)
 		: Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection),
-		_underControl{ false }, _controlTimeLeft{ 0.0f }, _isSelected{ false }, _isCandidate{ false }, _ctrlIndicator{ mindControlIndicator } {}
+		_underControl{ false }, _controlTimeLeft{ 0.0f }, _isSelected{ false }, _isCandidate{ false }, _ctrlIndicator{ mindControlIndicator } 
+	{
+	}
 
 	/** Destructor. */
 	~AIActor();
@@ -104,6 +106,8 @@ public:
 
 	// Updates position of the agent by adding _speed to it.
 	virtual void UpdatePosition(double elapsedSecs);
+
+	virtual Type GetType() const override { return Type::enemy; }
 
 	/**
 	 * Draws.

@@ -3,8 +3,13 @@
 
 Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
 			const std::string&& startSprite, SpriteSheet::XAxisDirection startXDirection, SpriteSheet::YAxisDirection startYDirection)
-	:_curKinematic{ position, spd }, _prevKinematic{ position, spd }, _collisionInfo(),
-    _mgr(&manager), _gameScreen(std::dynamic_pointer_cast<GameScreen>(manager.GetCurrentScreen())), _isVisible(true)
+	:_curKinematic{ position, spd },
+	_prevKinematic{ position, spd },
+	_collisionInfo(),
+    _mgr(&manager),
+	_gameScreen(std::dynamic_pointer_cast<GameScreen>(manager.GetCurrentScreen())),
+	_isVisible(true),
+	_isDestroyed(false)
 {
 	SetHealth(100);
 	
@@ -15,6 +20,8 @@ Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::unordere
 	_aabb = AABB(_sprites[startSprite]->GetFrameWidth(), _sprites[startSprite]->GetFrameHeight(), *this);
 	_spriteXDir = startXDirection;
 	_spriteYDir = startYDirection;
+	_sprites[_currentSpriteSheet]->SetXAxisDirection(_spriteXDir);
+	_sprites[_currentSpriteSheet]->SetYAxisDirection(_spriteYDir);
 	_sprites[_currentSpriteSheet]->Start();
 }
 
@@ -97,8 +104,21 @@ bool Actor::IsVisible() const
 	return _isVisible;
 }
 
+bool Actor::IsDestroyed() const
+{
+	return _isDestroyed;
+}
+
+void Actor::Destroy()
+{
+	_isVisible = false;
+	_isDestroyed = true;
+}
+
 void Actor::Update(double elapsedSecs)
 {
+	if (_isDestroyed) return;
+
 	_sprites[_currentSpriteSheet]->Update(elapsedSecs);
 }
 
@@ -108,7 +128,7 @@ void Actor::UpdatePosition(double elapsedSecs)
 
 void Actor::Draw(Camera& camera)
 {
-	if (!_isVisible) return;
+	if (_isDestroyed || !_isVisible) return;
 
 	const SDL2pp::Rect& viewport = camera.GetViewport();
 	int offsetX = 4;
@@ -117,17 +137,18 @@ void Actor::Draw(Camera& camera)
 	SDL2pp::Renderer& rend = _mgr->GetRenderer();
 
 	std::shared_ptr<SpriteSheet> spriteSheet = _sprites[_currentSpriteSheet];
-	SDL_Texture* rawTexture = spriteSheet->GetTexture().Get();
     SDL2pp::Point tempPoint = SDL2pp::Point((int)_curKinematic.position.GetX(), (int)_curKinematic.position.GetY());
 
 	// Draw shadow first, so we need to adjust drawing parameters
-	SDL_SetTextureColorMod(rawTexture, 127, 127, 127);
-	SDL_SetTextureAlphaMod(rawTexture, 127);
-	spriteSheet->Draw(tempPoint + SDL2pp::Point(offsetX - viewport.x, offsetY - viewport.y), _spriteXDir, _spriteYDir);
+	SDL_Color shadowColour = { 127, 127, 127, 127 };
+	SDL_Color normalColour = { 255, 255, 255, 255 };
+	spriteSheet->SetColourMod(shadowColour);
+	spriteSheet->SetXAxisDirection(_spriteXDir);
+	spriteSheet->Draw(tempPoint + SDL2pp::Point(offsetX - viewport.x, offsetY - viewport.y));
 
-	SDL_SetTextureColorMod(rawTexture, 255, 255, 255);
-	SDL_SetTextureAlphaMod(rawTexture, 255);
-	spriteSheet->Draw(tempPoint + SDL2pp::Point(-viewport.x, -viewport.y), _spriteXDir, _spriteYDir);
+	spriteSheet->SetColourMod(normalColour);
+	spriteSheet->SetYAxisDirection(_spriteYDir);
+	spriteSheet->Draw(tempPoint + SDL2pp::Point(-viewport.x, -viewport.y));
 }
 
 void Actor::Reset(Vector2 pos)
