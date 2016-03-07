@@ -84,9 +84,36 @@ void PlayerActor::Update(double elapsedSecs)
 
 	for (auto actor : _gameScreen->GetLevel()->GetActors())
 	{
-		if (actor->GetType() == Type::enemy && CollisionCheck(*actor))
+		if (CollisionCheck(*actor))
 		{
-			SetHealth(0);
+			Type type = actor->GetType();
+			switch (type)
+			{
+			case Type::enemy:
+				if (CollisionCheck(*actor))
+				{
+					SetHealth(0);
+				}
+				break;
+			case Type::door:
+				shared_ptr<DoorActor> door = dynamic_pointer_cast<DoorActor>(actor);
+				if (!door->IsOpen())
+				{
+					Edge edge = door->GetEdge();
+					bool affectsY = edge == Edge::BOTTOM || edge == Edge::TOP;
+					Vector2 overlap = _aabb.GetOverlap(actor->GetAABB(), true);
+					// Push our hero out of the door
+					if (affectsY)
+					{
+						_curKinematic.position.SetY(_curKinematic.position.GetY() + overlap.GetY());
+					}
+					else
+					{
+						_curKinematic.position.SetX(_curKinematic.position.GetX() + overlap.GetX());
+					}
+				}
+				break;
+			}
 		}
 	}
 

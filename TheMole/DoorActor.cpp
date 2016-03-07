@@ -73,3 +73,8 @@ bool DoorActor::IsOpen() const
 {
 	return _isOpen;
 }
+
+Actor::Edge DoorActor::GetEdge() const
+{
+	return _edge;
+}

@@ -62,3 +62,35 @@ float AABB::GetHeight()
 {
 	return _height;
 }
+
+Vector2 AABB::GetOverlap(AABB other, bool makeIntegral) const
+{
+	Vector2 overlap;
+	const AABB *left = _x < other._x ? this : &other;
+	const AABB *right = left == this ? &other : this;
+	overlap.SetX(left->_x + left->_width - right->_x);
+	if (left == this) overlap.SetX(overlap.GetX() * -1);
+	
+	const AABB *top = _y < other._y ? this : &other;
+	const AABB *bottom = top == this ? &other : this;
+	overlap.SetY(top->_y + top->_height - bottom->_y);
+	if (top == this) overlap.SetY(overlap.GetY() * -1);
+
+	if (makeIntegral)
+	{
+		float x = overlap.GetX();
+		float y = overlap.GetY();
+		x = x < 0 ? ::floorf(x) : ::ceilf(x);
+		y = y < 0 ? ::floorf(y) : ::ceilf(y);
+		overlap.SetX(x);
+		overlap.SetY(y);
+	}
+
+	return overlap;
+}
+
+void AABB::Contains(AABB other, bool & xAxis, bool & yAxis) const
+{
+	xAxis = _x < other._x && (other._x + other._width < _x + _width);
+	yAxis = _x < other._y && (other._y + other._height < _y + _height);
+}

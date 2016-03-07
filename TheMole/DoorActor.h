@@ -15,11 +15,13 @@ public:
 		const std::string&& startSprite,
 		SpriteSheet::XAxisDirection startXDirection,
 		SpriteSheet::YAxisDirection startYDirection,
+		Edge edge,
 		const std::shared_ptr<ToggleActor> doorSwitch)
 		: Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection),
 		_isOpen(false),
 		_isClosing(false),
 		_isOpening(false),
+		_edge(edge),
 		_switch(doorSwitch)
 	{
 		_sprites[_currentSpriteSheet]->Pause();
@@ -33,11 +35,13 @@ public:
 	bool IsOpening() const;
 	bool IsClosing() const;
 	bool IsOpen() const;
+	Edge GetEdge() const;
 
 private:
 	bool _isOpening;
 	bool _isClosing;
 	bool _isOpen;
+	Edge _edge;
 	std::shared_ptr<ToggleActor> _switch;
 };
 

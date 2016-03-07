@@ -328,6 +328,7 @@ void LevelLoader::LoadTogglesAndDoors(ifstream & file, vector<SDL2pp::Point> & t
                                                    "open",
                                                    xDir,
                                                    yDir,
+	                                               edge,
                                                    toggles[toggleIdx]));
         level->AddActor(doorActor);
         tokens.clear();

@@ -1,5 +1,7 @@
 #include "AIActor.h"
 #include "GameScreen.h"
+#include "DoorActor.h"
+#include <cmath>
 #include <cstring>
 
 const static Uint8 NORMAL_SHADOW[3] = { 127, 127, 127 };
@@ -12,6 +14,8 @@ const static double MIND_CONTROL_TIME = 15.0;
 const static double PULSE_START_TIME = 0.75;
 const static double PULSE_END_TIME = 0.05;
 const static double PULSE_MULTIPLIER = ((PULSE_END_TIME - PULSE_START_TIME) / MIND_CONTROL_TIME) + 1; // Don't ask
+
+using std::shared_ptr;
 
 AIActor::~AIActor()
 {
@@ -95,6 +99,40 @@ void AIActor::Update(double elapsedSecs)
 	{
 		_aabb.UpdatePosition(*this);
 		UpdatePosition(elapsedSecs);
+
+		for (auto actor : _gameScreen->GetLevel()->GetActors())
+		{
+			if (_aabb.CheckCollision(actor->GetAABB()))
+			{
+				Type type = actor->GetType();
+				switch (type)
+				{
+				case Type::door:
+					shared_ptr<DoorActor> door = dynamic_pointer_cast<DoorActor>(actor);
+					if (!door->IsOpen())
+					{
+						Edge edge = door->GetEdge();
+						bool affectsY = edge == Edge::BOTTOM || edge == Edge::TOP;
+						Vector2 overlap = _aabb.GetOverlap(actor->GetAABB(), true);
+						// Push our hero out of the door
+						if (affectsY)
+						{
+							_curKinematic.position.SetY(_curKinematic.position.GetY() + overlap.GetY());
+						}
+						else
+						{
+							float reverseX = _curKinematic.velocity.GetX() * -1;
+							SpriteSheet::XAxisDirection reverseDir = _spriteXDir == SpriteSheet::XAxisDirection::LEFT ? SpriteSheet::XAxisDirection::RIGHT : SpriteSheet::XAxisDirection::LEFT;
+							_curKinematic.velocity.SetX(reverseX);
+							_spriteXDir = reverseDir;
+							_curKinematic.position.SetX(_curKinematic.position.GetX() + overlap.GetX());
+						}
+					}
+					break;
+				}
+			}
+		}
+
 		ScanNeighbouringTiles(_gameScreen->GetLevel());
 	}
     _prevKinematic = _curKinematic;
