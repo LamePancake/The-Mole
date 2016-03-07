@@ -55,7 +55,11 @@ int CutsceneScreen::Update(double elapsedSecs)
 		if (_skipTimer >= SKIP_TIME)
 		{
 			_skipTimer = 0;
+			_dialogIndex = 0;
+			_currentNPCDialog = " ";
+			_currentProtagDialog = " ";
 			_mgr->SetNextScreen(_nextScreen);
+			_mgr->inputManager->ClearKeyboardState();
 			return SCREEN_FINISH;
 		}
 	}
