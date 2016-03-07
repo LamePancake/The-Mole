@@ -23,7 +23,7 @@ class LevelLoader
 public:
 
 	/** Default Constructor. */
-	LevelLoader() {}
+	LevelLoader() {};
 
 	/**
 	 * Loads in the level and returns an array of tiles.

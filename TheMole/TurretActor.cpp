@@ -63,7 +63,7 @@ void TurretActor::TurretUpdate(double elapseSecs)
 	{
 		if (_pattern.size() == 0)
 		{
-			_gameScreen->SpawnProjectileActors(std::make_shared<ProjectileActor>(
+			_gameScreen->GetLevel()->AddActor(std::make_shared<ProjectileActor>(
 				_curKinematic.position //- Vector2(0, -50) ///Vec2 position
 				, *_mgr ///Gamemanager
 				, Vector2(-200.0f, 0.0f) ///Vec2 spd
@@ -76,7 +76,7 @@ void TurretActor::TurretUpdate(double elapseSecs)
 		{
 			for (size_t i = 0; i < _pattern.size(); i++)
 			{
-				_gameScreen->SpawnProjectileActors(std::make_shared<ProjectileActor>(
+				_gameScreen->GetLevel()->AddActor(std::make_shared<ProjectileActor>(
 					_curKinematic.position //- Vector2(0, -50) ///Vec2 position
 					, *_mgr ///Gamemanager
 					, _pattern[i] ///Vec2 spd
@@ -86,16 +86,17 @@ void TurretActor::TurretUpdate(double elapseSecs)
 					);
 			}
 		}
-	if (_timeInterval > 5) {
-		_gameScreen->GetLevel()->AddActor(std::make_shared<ProjectileActor>(
-			_curKinematic.position //- Vector2(0, -50) ///Vec2 position
-			, *_mgr ///Gamemanager
-			, Vector2(-200.0f, 0.0f) ///Vec2 spd
-			, _sprites ///sprites
-			, "shoot" ///startsprite
-			, SpriteSheet::XAxisDirection::LEFT) ///direction
-			);
-		_timeInterval = elapseSecs;
+		if (_timeInterval > 5) {
+			_gameScreen->GetLevel()->AddActor(std::make_shared<ProjectileActor>(
+				_curKinematic.position //- Vector2(0, -50) ///Vec2 position
+				, *_mgr ///Gamemanager
+				, Vector2(-200.0f, 0.0f) ///Vec2 spd
+				, _sprites ///sprites
+				, "shoot" ///startsprite
+				, SpriteSheet::XAxisDirection::LEFT) ///direction
+				);
+			_timeInterval = elapseSecs;
+		}
 	}
 }
 

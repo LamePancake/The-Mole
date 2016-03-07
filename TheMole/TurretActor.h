@@ -1,6 +1,8 @@
 #pragma once
 #include "Actor.h"
 
+class ProjectileActor;
+
 class TurretActor :
 	public Actor
 {
@@ -11,7 +13,7 @@ public:
 		, Vector2 spd
 		, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites
 		, const std::string&& startSprite
-		,SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT
+		, SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT
 		, SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP);
 
 	~TurretActor();
@@ -53,9 +55,4 @@ private:
 	std::vector<Vector2> _pattern;
 	virtual Type GetType() const override { return Type::turret; }
 
-private:
-	void TurretUpdate(double elapseSecs);
-	/** Stores projectiles currently spawned */
-	//std::vector<std::shared_ptr<ProjectileActor>> _projectiles;
-	double _timeInterval;
 };
