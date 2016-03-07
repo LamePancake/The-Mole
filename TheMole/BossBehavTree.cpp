@@ -107,6 +107,7 @@ bool PrePunchTask::run(double elapsedSecs)
 	if (_btDist < _triggerRange)
 	{
 		//cout << "close enough" << endl;
+		_gameScreen->GetLevel()->GetBoss()->SetSprite("prepunch");
 		return true;
 	}
 	else
@@ -127,6 +128,7 @@ bool PunchTask::run(double elapsedSecs)
 		//cout << "bPos: " << targetPos->GetX() << endl;
 		//cout << "pPos: " << _gameScreen->GetPlayer()->GetPosition().GetX() << endl;
 		_gameScreen->GetLevel()->GetBoss()->_rollDur -= elapsedSecs;
+		_gameScreen->GetLevel()->GetBoss()->SetSprite("punch");
 		return false;
 	}
 	else
@@ -162,6 +164,7 @@ bool RollTask::run(double elapsedSecs)
 		//cout << "bPos: " << targetPos->GetX() << endl;
 		//cout << "pPos: " << _gameScreen->GetPlayer()->GetPosition().GetX() << endl;
 		_gameScreen->GetLevel()->GetBoss()->_rollDur -= elapsedSecs;
+		_gameScreen->GetLevel()->GetBoss()->SetSprite("roll");
 		return false;
 	}
 	else
@@ -198,6 +201,7 @@ bool IdleTask::run(double elapsedSecs)
 		cout << "cooldown" << endl;
 		//_targetPos = _bossPos;
 		_gameScreen->GetLevel()->GetBoss()->_idleDur -= elapsedSecs;
+		_gameScreen->GetLevel()->GetBoss()->SetSprite("idle");
 		return false;
 	}
 	else

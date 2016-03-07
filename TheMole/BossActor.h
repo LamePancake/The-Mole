@@ -32,6 +32,8 @@ public:
 
 	void ResetDurations();
 
+	void SetSprite(string name);
+
 	double _idleDur;
 	double _preRollDur;
 	double _rollDur;

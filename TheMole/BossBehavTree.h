@@ -6,7 +6,7 @@
 
 using namespace std;
 class GameScreen;
-
+class BossActor;
 
 class Node
 {
