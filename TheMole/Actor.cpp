@@ -249,10 +249,14 @@ void Actor::DetectTileCollisions(TileCollisionInfo& colInfo, std::shared_ptr<Lev
             }
 
 			// Due to rounding, we were actually in this column AND row in the last frame
-			// We need to correct in at least one direction, so we'll choose column (probably more realistic due to gravity)
 			if (!corrected)
 			{
-				colInfo.colPenetration = actualColPenetration;
+				// Correct in the direction with least penetration
+				// We could be completely penetrating a tile in one direction, so the other direction is the one we probably want to correct in
+				if (actualColPenetration < actualRowPenetration)
+					colInfo.colPenetration = actualColPenetration;
+				else
+					colInfo.rowPenetration = actualRowPenetration;
 			}
         }
     }
