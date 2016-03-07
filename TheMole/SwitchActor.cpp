@@ -5,15 +5,15 @@ using std::shared_ptr;
 
 void SwitchActor::Update(double deltaTime)
 {
+    Actor::Update(deltaTime);
 
-	_sprites[_currentSpriteSheet]->Update(deltaTime);
-	
-	// No need to check for collisions if we're a weight pad and already on
+	// No need to check for collisions if we're not a weight pad and already on
 	if (_isOn && !_isWeightPad) return;
 
 	shared_ptr<Level> level = _gameScreen->GetLevel();
+    bool wasOn = _isOn;
 
-	for (auto actor : level->GetActors())
+    for (auto actor : level->GetActors())
 	{
 		Actor::Type type = actor->GetType();
 		switch (type)
@@ -24,12 +24,25 @@ void SwitchActor::Update(double deltaTime)
 			if (actor->GetAABB().CheckCollision(this->_aabb))
 			{
 				_isOn = true;
-				return;
+				goto checkstate; // Heh
 			}
 		default:
 			break;
 		}
 	}
+    
+	checkstate:
+    // Some hacks to depress/elevate the switch (there are only two frames, and there's no delay between them)
+    if (wasOn && !_isOn)
+    {
+        _sprites[_currentSpriteSheet]->SetReversed(true);
+        _sprites[_currentSpriteSheet]->Start();
+    }
+    else if (!wasOn && _isOn)
+    {
+        _sprites[_currentSpriteSheet]->SetReversed(false);
+        _sprites[_currentSpriteSheet]->Start();
+    }
 }
 
 bool SwitchActor::IsOn() const

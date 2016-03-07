@@ -168,10 +168,10 @@
     <ClInclude Include="Util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DoorActor.h">
+    <ClInclude Include="SwitchActor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SwitchActor.h">
+    <ClInclude Include="DoorActor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
