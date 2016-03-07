@@ -28,6 +28,8 @@ public:
 
 	Edge GetEdge() const;
 
+	virtual Type GetType() const override { return Type::weightpad; }
+
 private:
 	Edge _edge;
 	bool _isOn;

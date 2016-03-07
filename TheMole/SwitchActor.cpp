@@ -12,30 +12,24 @@ void SwitchActor::Update(double deltaTime)
 	if (_isOn && !_isWeightPad) return;
 
 	shared_ptr<Level> level = _gameScreen->GetLevel();
-	size_t numEnemies = level->GetEnemySize();
-	size_t numProjectiles = level->GetProjectileActorSize();
 
-	for (size_t i = 0; i < numEnemies; i++)
+	for (auto actor : level->GetActors())
 	{
-		shared_ptr<Actor> ai = level->GetEnemy(i);
-		if (ai->GetAABB().CheckCollision(this->_aabb))
+		Actor::Type type = actor->GetType();
+		switch (type)
 		{
-			_isOn = true;
-			return;
+		case player:
+		case enemy:
+		case projectile:
+			if (actor->GetAABB().CheckCollision(this->_aabb))
+			{
+				_isOn = true;
+				return;
+			}
+		default:
+			break;
 		}
 	}
-
-	for (size_t i = 0; i < numProjectiles; i++)
-	{
-		shared_ptr<Actor> proj = level->GetProjectile(i);
-		if (proj->GetAABB().CheckCollision(this->_aabb))
-		{
-			_isOn = true;
-			return;
-		}
-	}
-
-	_isOn = _gameScreen->GetPlayer()->GetAABB().CheckCollision(_aabb);
 }
 
 bool SwitchActor::IsOn() const

@@ -107,6 +107,8 @@ public:
 	// Updates position of the agent by adding _speed to it.
 	virtual void UpdatePosition(double elapsedSecs);
 
+	virtual Type GetType() const override { return Type::enemy; }
+
 	/**
 	 * Draws.
 	 *

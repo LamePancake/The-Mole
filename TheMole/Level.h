@@ -3,16 +3,10 @@
 #include <memory>
 #include <map>
 #include <algorithm>
-
-class Actor;
-class AIActor;
-class NPCActor;
-class ObjectActor;
-class BossActor;
-class ProjectileActor;
-class TurretActor;
-
+#include "Actor.h"
 #include "Tile.h"
+
+class BossActor;
 
 /** Stores data for a level. It may be overkill, so chief refactorer may refactor if he wants to. */
 class Level
@@ -91,29 +85,6 @@ public:
 	SDL2pp::Point GetPosition(char key, size_t idx);
 
 	/**
-	 * Adds an enemy to the enemy array.
-	 *
-	 * @param	e	The std::shared_ptr&lt;SimpleAgent&gt; to process.
-	 */
-	void AddEnemy(std::shared_ptr<AIActor> e);
-
-	/**
-	 * Gets an enemy.
-	 *
-	 * @param	idx	The index into the enemy array.
-	 *
-	 * @return	The enemy.
-	 */
-	std::shared_ptr<Actor> GetEnemy(size_t idx);
-
-	/**
-	 * Gets enemy array size.
-	 *
-	 * @return	The enemy size.
-	 */
-	size_t GetEnemySize() const;
-
-	/**
 	* Adds an enem spawn point to the enemy spawn array.
 	*
 	* @param	p the position of the spawn point
@@ -130,36 +101,6 @@ public:
 	Vector2 GetEnemySpawn(size_t idx);
 
 	/**
-	 * Adds an npc to the npc array.
-	 *
-	 * @param	n	The std::shared_ptr&lt;SimpleAgent&gt; to process.
-	 */
-	void AddNPC(std::shared_ptr<NPCActor> n);
-
-	/**
-	 * Gets an NPC.
-	 *
-	 * @param	idx	The index into the npc array.
-	 *
-	 * @return	The npc.
-	 */
-	std::shared_ptr<Actor> GetNPC(size_t idx);
-
-	/**
-	 * Gets npc array size.
-	 *
-	 * @return	The npc size.
-	 */
-	size_t GetNPCSize() const;
-
-	/**
-	* Adds an boss to the boss array.
-	*
-	* @param	n	The std::shared_ptr&lt;BossActor&gt; to process.
-	*/
-	void Level::AddBoss(std::shared_ptr<BossActor> n);
-
-	/**
 	* Gets an boss.
 	*
 	* @param	idx	The index into the boss array.
@@ -168,42 +109,57 @@ public:
 	*/
 	std::shared_ptr<BossActor> Level::GetBoss();
 
-	/**
-	 * Adds an actor object to the object array.
-	 *
-	 * @param	o	The std::shared_ptr&lt;SimpleAgent&gt; to process.
-	 */
-	void AddActorObject(std::shared_ptr<ObjectActor> o);
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	///<summary> Adds an actor to the level.</summary>
+	///
+	///<param name="actor"> The actor to add.</param>
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	void AddActor(std::shared_ptr<Actor> actor);
 
-	/**
-	* Gets an Actor Object.
-	*
-	* @param	idx	The index into the object array.
-	*
-	* @return	The object.
-	*/
-	std::shared_ptr<Actor> GetActorObject(size_t idx);
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	///<summary> Gets the list of all actors.</summary>
+	///
+	///<returns> The list of actors in the level.</returns>
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	std::vector<std::shared_ptr<Actor>> & GetActors();
 
-	///Should write something here
-	void AddProjectileObject(std::shared_ptr<ProjectileActor> prj);
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	///<summary> Gets the list of actors of the specified type.</summary>
+	///
+	///<remarks> Note that this involves a linear search of the list of actors on each invocation; don't
+	///          use it unless necessary.</remarks>
+	///
+	///<param name="T"> The type of actor to be retrieved. The shared_ptr's will be cast to contain
+	///                 this type of actor.</param>
+	///<param name="type"> The enum value corresponding to the type of actor to retrieve.</param>
+	///
+	///<returns> The list of actors of the given type.</returns>
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	template<typename T>
+	std::vector<std::shared_ptr<T>> GetActorsOfType(Actor::Type type);
 
-	size_t GetProjectileActorSize() const;
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	///<summary> Gets the list of actors of the specified type.</summary>
+	///
+	///<remarks> Note that this involves a linear search of the list of actors on each invocation; don't
+	///          use it unless necessary.</remarks>
+	///
+	///<param name="T"> The type of actor to be retrieved. The shared_ptr's will be cast to contain
+	///                 this type of actor.</param>
+	///<param name="type"> The enum value corresponding to the type of actor to retrieve.</param>
+	///<param name="list"> A list into which the actors will be pushed.</param>
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	template<typename T>
+	void GetActorsOfType(Actor::Type type, std::vector<std::shared_ptr<T>> &list);
 
-	std::shared_ptr<ProjectileActor> GetProjectile(size_t idx);
-
-	///Should write something here
-	void AddTurretObject(std::shared_ptr<TurretActor> prj);
-
-	size_t GetTurretActorSize() const;
-
-	std::shared_ptr<TurretActor> GetTurret(size_t idx);
-
-	/**
-	* Gets object array size.
-	*
-	* @return	The object size.
-	*/
-	size_t GetActorObjectSize() const;
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	///<summary> Gets the number of actors of the given type in the level.</summary>
+    ///
+	///<param name="type"> The enum value corresponding to the type of actor.</param>
+	///
+	///<returns> The number of actors of the specified type in the level.</returns>
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	size_t GetNumberOfActors(Actor::Type type);
 
 	/**
 	 * Gets tile width.
@@ -260,23 +216,17 @@ private:
 	/** Stores the tiles that have been dug and need to be respawned. */
 	std::map<std::shared_ptr<Tile>, double> _dugDirtTiles;
 
-	/** The enemies in the level. */
-	std::vector<std::shared_ptr<AIActor>> _enemies;
-
 	/** Stores the spawn point of the enemies */
 	std::vector<Vector2> _enemySpawns;
 
-	/** The npcs in the level. */
-	std::vector<std::shared_ptr<NPCActor>> _NPCs;
+	/** Stores the list of every actor in the level. */
+	std::vector<std::shared_ptr<Actor>> _actors;
 
-	/** Other actors in the level, like checkpoints */
-	std::vector<std::shared_ptr<ObjectActor>> _objects;
+	/** Stores a list of actors to add at the end of the current update. */
+	std::vector<std::shared_ptr<Actor>> _actorsToAdd;
 
-	/** Stores projectiles currently spawned */
-	std::vector<std::shared_ptr<ProjectileActor>> _projectiles;
-
-	/** Stores turrets currently spawned */
-	std::vector<std::shared_ptr<TurretActor>> _turrets;
+	/** Stores the number of each different type of actor. */
+	std::unordered_map<Actor::Type, size_t> _actorCounts;
 
 	std::map<char, std::vector<SDL2pp::Point>> _tilePositions;
 
@@ -300,5 +250,26 @@ private:
 	* @param	deltaTime	Time since last frame.
 	*/
 	void UpdateDugTiles(double deltaTime);
-	void UpdateProjectileList(double deltaTime);
 };
+
+template<typename T>
+inline std::vector<std::shared_ptr<T>> Level::GetActorsOfType(Actor::Type type)
+{
+	std::vector<std::shared_ptr<T>> actors;
+	actors.reserve(GetNumberOfActors(type));
+	GetActorsOfType(type, actors);
+	return actors;
+}
+
+template<typename T>
+inline void Level::GetActorsOfType(Actor::Type type, std::vector<std::shared_ptr<T>>& list)
+{
+	for (auto actor : _actors)
+	{
+		if (actor->GetType() == type)
+		{
+			std::shared_ptr<T> typedActor = dynamic_pointer_cast<T>(actor);
+			list.push_back(typedActor);
+		}
+	}
+}

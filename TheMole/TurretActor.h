@@ -40,9 +40,11 @@ public:
 	*/
 	bool CollisionCheck(Actor & otherAI);
 
+	virtual Type GetType() const override { return Type::turret; }
+
 private:
 	void TurretUpdate(double elapseSecs);
 	/** Stores projectiles currently spawned */
-	std::vector<std::shared_ptr<ProjectileActor>> _projectiles;
+	//std::vector<std::shared_ptr<ProjectileActor>> _projectiles;
 	double _timeInterval;
 };

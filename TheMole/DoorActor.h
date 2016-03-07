@@ -27,6 +27,8 @@ public:
 
 	virtual void Update(double deltaTime) override;
 
+	virtual Type GetType() const override { return Type::door; }
+
 	bool IsOpening() const;
 	bool IsClosing() const;
 	bool IsOpen() const;

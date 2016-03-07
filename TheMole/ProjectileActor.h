@@ -39,6 +39,8 @@ public:
 	// Resets the actor
 	virtual void Reset(Vector2 pos);
 
+	virtual Type GetType() const override { return Type::projectile; }
+
 	void UpdatePosition(double elapsedSecs);
 
 	/**

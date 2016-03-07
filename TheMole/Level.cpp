@@ -5,6 +5,7 @@
 #include "NPCActor.h"
 #include "ObjectActor.h"
 #include "ProjectileActor.h"
+#include "BossActor.h"
 
 int Level::AddTileToLevel(std::shared_ptr<Tile> tile, size_t row)
 {
@@ -53,24 +54,6 @@ SDL2pp::Point Level::GetPosition(char key, size_t idx)
 	return _tilePositions[key][idx];
 }
 
-void Level::AddEnemy(std::shared_ptr<AIActor> e)
-{
-	_enemies.push_back(e);
-}
-
-std::shared_ptr<Actor> Level::GetEnemy(size_t idx)
-{
-	if (idx > _enemies.size())
-		return nullptr;
-
-	return _enemies[idx];
-}
-
-size_t Level::GetEnemySize() const
-{
-	return _enemies.size();
-}
-
 void Level::AddEnemySpawn(Vector2 e)
 {
 	_enemySpawns.push_back(e);
@@ -84,84 +67,33 @@ Vector2 Level::GetEnemySpawn(size_t idx)
 	return _enemySpawns[idx];
 }
 
-void Level::AddNPC(std::shared_ptr<NPCActor> n)
-{
-	_NPCs.push_back(n);
-}
-
-std::shared_ptr<Actor> Level::GetNPC(size_t idx)
-{
-	if (idx > _NPCs.size())
-		return nullptr;
-
-	return _NPCs[idx];
-}
-
-void Level::AddBoss(std::shared_ptr<BossActor> n)
-{
-	_boss = n;
-}
-
 std::shared_ptr<BossActor> Level::GetBoss()
 {
 	return _boss;
 }
 
-size_t Level::GetNPCSize() const
+void Level::AddActor(std::shared_ptr<Actor> actor)
 {
-	return _NPCs.size();
+	// Hack, but if we don't do this then a huge chunk of Tim's code will have unwanted dependencies
+	// Solve later if possible
+	if (actor->GetType() == Actor::Type::boss)
+	{
+		_boss = dynamic_pointer_cast<BossActor>(actor);
+	}
+
+	_actorCounts[actor->GetType()]++;
+
+	_actorsToAdd.push_back(actor);
 }
 
-void Level::AddActorObject(std::shared_ptr<ObjectActor> o)
+std::vector<std::shared_ptr<Actor>>& Level::GetActors()
 {
-	_objects.push_back(o);
+	return _actors;
 }
 
-std::shared_ptr<Actor> Level::GetActorObject(size_t idx)
+size_t Level::GetNumberOfActors(Actor::Type type)
 {
-	if (idx > _objects.size())
-		return nullptr;
-
-	return _objects[idx];
-}
-
-void Level::AddProjectileObject(std::shared_ptr<ProjectileActor> prj)
-{
-	_projectiles.push_back(prj);
-}
-
-size_t Level::GetProjectileActorSize() const
-{
-	return _projectiles.size();
-}
-
-std::shared_ptr<ProjectileActor> Level::GetProjectile(size_t idx)
-{
-	if (idx > _projectiles.size())
-		return nullptr;
-
-	return _projectiles[idx];
-}
-
-void Level::AddTurretObject(std::shared_ptr<TurretActor> prj)
-{
-	_turrets.push_back(prj);
-}
-
-size_t Level::GetTurretActorSize() const
-{
-	return _turrets.size();
-}
-
-std::shared_ptr<TurretActor> Level::GetTurret(size_t idx)
-{
-	return _turrets[idx];
-}
-
-
-size_t Level::GetActorObjectSize() const
-{
-	return _objects.size();
+	return _actorCounts[type];
 }
 
 size_t Level::GetTileWidth() const
@@ -223,8 +155,11 @@ void Level::UpdateDugTiles(double deltaTime)
 
 			if (!isOccupied)
 			{
-				for (std::shared_ptr<AIActor> e : _enemies)
+				for (auto actor : _actors)
 				{
+					if (actor->GetType() != Actor::Type::enemy) continue;
+					shared_ptr<AIActor> e = dynamic_pointer_cast<AIActor>(actor);
+
 					float leftEnemyBound  = e->GetPosition().GetX();
 					float topEnemyBound   = e->GetPosition().GetY();
 					float rightEnemyBound = e->GetPosition().GetX() + e->GetTexture()->GetFrameWidth();
@@ -257,25 +192,39 @@ void Level::UpdateDugTiles(double deltaTime)
 	}
 }
 
-void Level::UpdateProjectileList(double deltaTime) {
-	for (size_t i = 0; i < _projectiles.size(); ++i)
-	{
-		if (!_projectiles[i]->IsVisible())
-			_projectiles.erase(_projectiles.begin() + i);
-	}
-}
-
 void Level::Update(double deltaTime)
 {
 	UpdateDugTiles(deltaTime);
-	UpdateProjectileList(deltaTime);
+
+	// Add any actors added during the update
+	_actors.insert(_actors.end(), _actorsToAdd.begin(), _actorsToAdd.end());
+	_actorsToAdd.clear();
+
+	if (_actors.empty()) return;
+
+	// Clean up all destroyed actors
+	auto destroyedFinder = [](shared_ptr<Actor> a) {return a->IsDestroyed(); };
+	_actors.erase(std::remove_if(_actors.begin(), _actors.end(), destroyedFinder), _actors.end());
 }
 
 void Level::Reset()
 {
-	for (size_t i = 0; i < _enemies.size(); ++i)
+	size_t enemyNum = 0;
+	for (auto actor : _actors)
 	{
-		_enemies[i]->Reset(_enemySpawns[i]);
+		Actor::Type type = actor->GetType();
+		switch (type)
+		{
+		case Actor::Type::player:
+			actor->Reset(GetSpawnPoint());
+			break;
+		case Actor::Type::enemy:
+			actor->Reset(_enemySpawns[enemyNum++]);
+			break;
+		default:
+			actor->Reset(actor->GetPosition());
+			break;
+		}
 	}
 
 	for (auto it = _dugDirtTiles.begin(); it != _dugDirtTiles.end(); ++it)

@@ -139,6 +139,7 @@
     <ClCompile Include="BossBehavTree.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CutsceneScreen.cpp" />
+    <ClCompile Include="DoorActor.cpp" />
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameScreen.cpp" />
     <ClCompile Include="Input.cpp" />
@@ -155,8 +156,10 @@
     <ClCompile Include="ProjectileActor.cpp" />
     <ClCompile Include="SoundEffectBank.cpp" />
     <ClCompile Include="SpriteSheet.cpp" />
+    <ClCompile Include="SwitchActor.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="TurretActor.cpp" />
+    <ClCompile Include="Util.cpp" />
     <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -166,6 +169,7 @@
     <ClInclude Include="BossBehavTree.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CutsceneScreen.h" />
+    <ClInclude Include="DoorActor.h" />
     <ClInclude Include="GameScreen.h" />
     <ClInclude Include="LevelSelectScreen.h" />
     <ClInclude Include="Math.h" />
@@ -175,8 +179,10 @@
     <ClInclude Include="ProjectileActor.h" />
     <ClInclude Include="SoundEffectBank.h" />
     <ClInclude Include="SpriteSheet.h" />
+    <ClInclude Include="SwitchActor.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="TurretActor.h" />
+    <ClInclude Include="Util.h" />
     <ClInclude Include="Vector2.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="LevelLoader.h" />

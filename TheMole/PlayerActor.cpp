@@ -82,10 +82,9 @@ void PlayerActor::Update(double elapsedSecs)
 	UpdatePosition(elapsedSecs);
 	_aabb.UpdatePosition(*this);
 
-	const std::shared_ptr<GameScreen> screen = std::dynamic_pointer_cast<GameScreen>(_mgr->GetCurrentScreen());
-	for (size_t i = 0; i < screen->GetLevel()->GetEnemySize(); ++i)
+	for (auto actor : _gameScreen->GetLevel()->GetActors())
 	{
-		if (CollisionCheck(*screen->GetLevel()->GetEnemy(i)))
+		if (actor->GetType() == Type::enemy && CollisionCheck(*actor))
 		{
 			SetHealth(0);
 		}
@@ -382,7 +381,7 @@ void PlayerActor::ShieldHit()
 	_shieldStr--;
 }
 
-void PlayerActor::ProjectileHit(ProjectileActor *prj)
+void PlayerActor::ProjectileHit(Actor *prj)
 {
 	if (_lastPrj != prj)
 	{
@@ -409,11 +408,12 @@ void PlayerActor::UpdateMindControlSelection(bool released)
 	shared_ptr<Level> level = _gameScreen->GetLevel();
 	vector<shared_ptr<AIActor>> inRange;
 	Vector2 centre{ _curKinematic.position.GetX() + _sprites[_currentSpriteSheet]->GetFrameWidth() / 2, _curKinematic.position.GetY() + _sprites[_currentSpriteSheet]->GetFrameHeight() / 2 };
-	for (std::size_t i = 0; i < level->GetEnemySize(); i++)
+	for (auto actor : level->GetActors())
 	{
+		if (actor->GetType() != Type::enemy) continue;
 		// Check whether the enemy is in range, offsetting their position as necessary 
 		// to make sure that the distance is the same on all sides
-		shared_ptr<AIActor> enemy = dynamic_pointer_cast<AIActor>(level->GetEnemy(i));
+		shared_ptr<AIActor> enemy = dynamic_pointer_cast<AIActor>(actor);
 		Vector2 enemyPos = enemy->GetPosition();
 		AABB enemyAABB = enemy->GetAABB();
 		if (enemyPos.GetX() < _curKinematic.position.GetX()) enemyPos.SetX(enemyPos.GetX() + enemyAABB.GetWidth());

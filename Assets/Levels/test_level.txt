@@ -1,4 +1,6 @@
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+S             SES                                                               S
+S             SAS                                                               S
 S                                                                               S
 S                                                                               S
 S                                                                               S
@@ -7,16 +9,17 @@ S                                                                               
 S                                                                               S
 S                                                                               S
 S                                                                               S
-S                                                                               S
-S                                                                               S
-S                                                                               S
-S                                                                               S
-S  ASO          W   A                                                           S
+S   W                                                                           S
+S                   SSSSSSSSSSASSS                                              S
+S   SO         W    A  E WS      S                                              S
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 
-Switches 1
-B
+Pads
+Top one-shot
+Bottom one-shot
+Right active
 
-Doors 2
-L 0
-T 0
+Doors
+Bottom switch 1
+Top switch 0
+Left switch 2

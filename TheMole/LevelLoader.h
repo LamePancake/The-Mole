@@ -36,5 +36,28 @@ public:
 	std::shared_ptr<Level> LoadLevel(std::string levelPath, std::shared_ptr<PlayerActor> & player);
 
 private:
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	///<summary> Loads actors whose tile doesn't fully describe them.</summary>
+	///
+	///<remarks> This method loads switches, doors, etc. which have additional data not easily conveyed
+	///          by a single letter (e.g. which switches open which doors).</remarks>
+	///
+	///<param name="file">      The map file input stream.</param>
+	///<param name="lastLine">  The most recently read line from the file.</param>
+	///<param name="positions"> A map of tile letters to the tiles' respective positions.</param>
+	///<param name="level">     The level into which to load the actors.</param>
+    ///
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	void LoadActorSpecifics(std::ifstream& file, std::string& lastLine, std::unordered_map<char, std::vector<SDL2pp::Point>>& positions, std::shared_ptr<Level> level);
 
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	///<summary> Creates weight pads and doors described in the level's metadata and adds them to the level.</summary>
+	///
+	///<param name="file">    The map file input stream.</param>
+	///<param name="padPos">  The list of tiles containing weight pads.</param>
+	///<param name="doorPos"> The list of tiles containing doors.</param>
+	///<param name="level">   The level into which to load the actors.</param>
+	///
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	void LoadPadsAndDoors(std::ifstream& file, std::vector<SDL2pp::Point> & padPos, std::vector<SDL2pp::Point> & doorPos, std::shared_ptr<Level> level);
 };

@@ -25,6 +25,17 @@ void ProjectileActor::Update(double elapsedSecs)
 {
 	Actor::Update(elapsedSecs);
 	_aabb.UpdatePosition(*this);
+
+	_collisionInfo.colIntersect.clear();
+	_collisionInfo.rowIntersect.clear();
+	
+	DetectTileCollisions(_collisionInfo, _gameScreen->GetLevel());
+	if (_collisionInfo.colPenetration != 0 || _collisionInfo.rowPenetration != 0) {
+		_sprites[_currentSpriteSheet]->Stop();
+		SetVisibility(false);
+		_isDestroyed = true;
+	}
+
 	UpdatePosition(elapsedSecs);
 	ProjectileUpdate(elapsedSecs);
 }
@@ -46,13 +57,6 @@ void ProjectileActor::UpdatePosition(double elapsedSecs) {
 
 bool ProjectileActor::CollisionCheck(Actor & otherAI)
 {
-	_collisionInfo.colIntersect.clear();
-	_collisionInfo.rowIntersect.clear();
-	DetectTileCollisions(_collisionInfo, _gameScreen->GetLevel());
-	if (_collisionInfo.colPenetration > 5) {
-		_sprites[_currentSpriteSheet]->Stop();
-		SetVisibility(false);
-	}
 	return _aabb.CheckCollision(otherAI.GetAABB());
 }
 
@@ -65,5 +69,6 @@ void ProjectileActor::ProjectileUpdate(double elapseSecs)
 		(screen->GetPlayer()->ProjectileHit(this));
 		_sprites[_currentSpriteSheet]->Stop();
 		SetVisibility(false);
+		_isDestroyed = true;
 	}
 }

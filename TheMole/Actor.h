@@ -8,12 +8,13 @@
 #include "Vector2.h"
 #include "AABB.h"
 #include "GameManager.h"
-#include "Level.h"
 #include "Camera.h"
 #include "SpriteSheet.h"
+#include "Tile.h"
 
 
 class GameScreen;
+class Level;
 
 class Actor
 {
@@ -35,6 +36,26 @@ public:
 
 		float rotation;
 		float angular;
+	};
+
+	enum Edge {
+		TOP,
+		BOTTOM,
+		RIGHT,
+		LEFT,
+		NONE
+	};
+
+	enum Type {
+		npc,
+		player,
+		boss,
+		door,
+		object,
+		projectile,
+		turret,
+		weightpad,
+		enemy
 	};
 
 	/**
@@ -164,11 +185,27 @@ public:
 	 */
 	bool IsVisible() const;
 
+   /**
+	* @brief	Query if this object is destroyed.
+	*
+ 	* @return	true if destroyed, false if not.
+	*/
+	bool IsDestroyed() const;
+
+	/**
+	 * @brief	Query if this object is destroyed.
+	 *
+ 	 * @return	true if destroyed, false if not.
+	 */
+	void Destroy();
+
 	// All the state changing stuff happens in here. 
 	virtual void Update(double elapsedSecs);
 
 	// Updates position of the agent by adding _speed to it.
 	virtual void UpdatePosition(double elapsedSecs);
+
+	virtual Type GetType() const = 0;
 
 	/**
 	 * Draws.
@@ -188,14 +225,6 @@ public:
 	virtual void Reset(Vector2 pos);
 
 protected:
-
-	typedef enum {
-		TOP,
-		BOTTOM,
-		RIGHT,
-		LEFT,
-		NONE
-	} Edge;
 
 	// TEMPORARY struct to hold actor bounds while I figure out something more elegant (it's probably going to stay forever though)
 	struct Bounds {
@@ -261,6 +290,8 @@ protected:
 
 	/** @brief	true if this object is visible. */
 	bool _isVisible;
+
+	bool _isDestroyed;
 
 	/**
 	 * @brief	Determines the tiles with which this actor is colliding.

@@ -22,7 +22,7 @@ int GameScreen::Load()
 	_mgr = GameManager::GetInstance();
 
 	// Load level one in order to render
-	_level = _levelLoader.LoadLevel(_levelPath, _player);
+    _level = _levelLoader.LoadLevel(_levelPath, _player);
 	_levelRenderer.Load(*_mgr);
 
 	SDL2pp::Point playerPos((int)(_player->GetPosition().GetX()), (int)(_player->GetPosition().GetY()));
@@ -64,7 +64,6 @@ int GameScreen::Update(double elapsedSecs)
 		if (_mgr->inputManager->ActionOccurred("CONFIRM", Input::Pressed))
 		{
 			_level->Reset();
-			_player->Reset(_level->GetSpawnPoint());
 		}
 
 		return SCREEN_CONTINUE;
@@ -85,40 +84,12 @@ int GameScreen::Update(double elapsedSecs)
 	_player->Update(elapsedSecs);
 	if (_player->StoppedTime())	return SCREEN_CONTINUE;
 
-	// Update Enemies
-	for (size_t i = 0; i < _level->GetEnemySize(); ++i)
+	for (auto actor : _level->GetActors())
 	{
-		_level->GetEnemy(i)->Update(elapsedSecs);
+		// A bit hacky, to be sure
+		if (actor->GetType() == Actor::Type::player) continue;
+		actor->Update(elapsedSecs);
 	}
-
-	// Update projectile
-	for (size_t i = 0; i < _level->GetProjectileActorSize(); ++i)
-	{
-		_level->GetProjectile(i)->Update(elapsedSecs);
-	}
-
-	// Update Turrets
-	for (size_t i = 0; i < _level->GetTurretActorSize(); ++i)
-	{
-		_level->GetTurret(i)->Update(elapsedSecs);
-	}
-
-
-
-	// Update objects
-	for (size_t i = 0; i < _level->GetActorObjectSize(); ++i)
-	{
-		_level->GetActorObject(i)->Update(elapsedSecs);
-	}
-
-	// Update NPCs
-	for (size_t i = 0; i < _level->GetNPCSize(); ++i)
-	{
-		_level->GetNPC(i)->Update(elapsedSecs);
-	}
-
-	std::shared_ptr<BossActor> boss = _level->GetBoss();
-	if(boss) boss->Update(elapsedSecs);
 
 	_level->Update(elapsedSecs);
 
@@ -137,41 +108,11 @@ void GameScreen::Draw()
 	// Render Level
 	_levelRenderer.RenderLevel(_level, *_camera);
 
-	// Render enemies
-	for (size_t i = 0; i < _level->GetEnemySize(); ++i)
+	// Draw all actors
+	for (auto actor : _level->GetActors())
 	{
-		_level->GetEnemy(i)->Draw(*_camera);
+		actor->Draw(*_camera);
 	}
-
-	// Render objects
-	for (size_t i = 0; i < _level->GetActorObjectSize(); ++i)
-	{
-		_level->GetActorObject(i)->Draw(*_camera);
-	}
-
-	// Render NPCs
-	for (size_t i = 0; i < _level->GetNPCSize(); ++i)
-	{
-		_level->GetNPC(i)->Draw(*_camera);
-	}
-
-	// Render Turrets
-	for (size_t i = 0; i < _level->GetTurretActorSize(); ++i)
-	{
-		_level->GetTurret(i)->Draw(*_camera);
-	}
-
-	for (size_t i = 0; i < _level->GetProjectileActorSize(); ++i)
-	{
-		_level->GetProjectile(i)->Draw(*_camera);
-	}
-
-	// Render Player
-	_player->Draw(*_camera);
-
-	std::shared_ptr<BossActor> boss = _level->GetBoss();
-	if (boss) boss->Draw(*_camera);
-
 
 	// Draw the win or lose screen
 	if (_player->IsDead() || _player->AtGoal())
@@ -230,13 +171,4 @@ int GameScreen::OnPause()
 	}
 
 	return SCREEN_CONTINUE;
-}
-
-void GameScreen::SpawnActors(std::shared_ptr<Actor> actor)
-{
-}
-
-void GameScreen::SpawnProjectileActors(std::shared_ptr<ProjectileActor> projectile)
-{
-	_level->AddProjectileObject(projectile);
 }
