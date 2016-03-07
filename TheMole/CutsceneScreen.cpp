@@ -155,25 +155,25 @@ void CutsceneScreen::Draw()
 	SDL2pp::Point protagPos(0, dim.GetY() * 0.75f - _protagonist->GetFrameHeight());
 	_protagonist->Draw(protagPos);
 	rend.Copy(*_protagDialogBox, SDL2pp::NullOpt, Rect(0, dim.GetY() * 0.75f, dim.GetX() * 0.7f, dim.GetY() * 0.2f));
-	
+
 	rend.Copy(protagHeader, NullOpt, Rect(dim.GetX() * 0.05f, dim.GetY() * 0.78f, protagHeader.GetWidth(), protagHeader.GetHeight()));
 	rend.Copy(protagDialog, NullOpt, Rect(dim.GetX() * 0.05f, dim.GetY() * 0.78f + protagHeader.GetHeight(), protagDialog.GetWidth(), protagDialog.GetHeight()));
 
-	SDL2pp::Point nextDialogProtagPos(dim.GetX() * 0.05f + protagDialog.GetWidth(), dim.GetY() * 0.78f + protagHeader.GetHeight() + protagDialog.GetHeight() * 0.6f);
-	_nextDialogProtag->SetScale(0.4);
+	SDL2pp::Point nextDialogProtagPos(dim.GetX() * 0.605f, dim.GetY() * 0.835f);
+	_nextDialogProtag->SetScale(0.35f);
 	_nextDialogProtag->Draw(nextDialogProtagPos);
 
 	// Render the NPC dialog, sprite, and header
 	SDL2pp::Point NPCPos(dim.GetX() - _NPC->GetFrameWidth(), dim.GetY() * 0.25f - _NPC->GetFrameHeight());
 	_NPC->SetXAxisDirection(SpriteSheet::XAxisDirection::LEFT);
 	_NPC->Draw(NPCPos);
-	rend.Copy(*_npcDialogBox, SDL2pp::NullOpt, Rect(dim.GetX() - dim.GetX() * 0.7f, dim.GetY() * 0.25f, dim.GetX() * 0.7f, dim.GetY() * 0.2f));
-	
+	rend.Copy(*_npcDialogBox, SDL2pp::NullOpt, Rect(dim.GetX() * 0.3f, dim.GetY() * 0.25f, dim.GetX() * 0.7f, dim.GetY() * 0.2f));
+
 	rend.Copy(npcHeader, NullOpt, Rect(dim.GetX() * 0.35f, dim.GetY() * 0.28f, npcHeader.GetWidth(), npcHeader.GetHeight()));
 	rend.Copy(npcDialog, NullOpt, Rect(dim.GetX() * 0.35f, dim.GetY() * 0.28f + npcHeader.GetHeight(), npcDialog.GetWidth(), npcDialog.GetHeight()));
 
-	SDL2pp::Point nextDialogNPCPos(dim.GetX() * 0.35f + npcDialog.GetWidth(), dim.GetY() * 0.28f + npcHeader.GetHeight() + npcDialog.GetHeight() * 0.6f);
-	_nextDialogNPC->SetScale(0.4);
+	SDL2pp::Point nextDialogNPCPos(dim.GetX() * 0.905f, dim.GetY() * 0.335f);
+	_nextDialogNPC->SetScale(0.35f);
 	_nextDialogNPC->Draw(nextDialogNPCPos);
 
 	// Draw skip prompt
