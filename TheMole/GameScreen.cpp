@@ -64,24 +64,13 @@ int GameScreen::Load()
 	_menuItems[1] = _mainMenu;
 	_menuItems[2] = _return;
 
-	_inputDelay     = true;
-	_inputDelayTime = 0;
-
 	return SCREEN_LOAD_SUCCESS;
 }
 
 int GameScreen::Update(double elapsedSecs)
 {
 	SDL_PumpEvents();
-
-	if (_inputDelay)
-	{
-		if (_inputDelayTime > INPUT_DELAY)
-			_inputDelay = false;
-		_inputDelayTime += elapsedSecs;
-	}
-	else
-		_mgr->inputManager->UpdateKeyboardState();
+	_mgr->inputManager->UpdateKeyboardState();
 
 	// Check if the player pauses the game and handle the pause
 	if (_mgr->inputManager->ActionOccurred("QUIT", Input::Pressed)
@@ -170,7 +159,6 @@ void GameScreen::Unload()
 	delete _mainMenu;
 	delete _levelSelect;
 	delete _return;
-	free(_prevKeyState);
 	delete _camera;
 }
 
@@ -210,7 +198,4 @@ int GameScreen::OnPause()
 
 void GameScreen::Reset()
 {
-	_mgr->inputManager->ClearKeyboardState();
-	_inputDelay = true;
-	_inputDelayTime = 0;
 }

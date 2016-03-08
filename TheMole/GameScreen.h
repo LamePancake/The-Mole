@@ -65,7 +65,6 @@ protected:
 	bool _paused;
 	Camera* _camera;
 	GameManager* _mgr;
-	Uint8* _prevKeyState;
 	LevelLoader _levelLoader;
 	LevelRenderer _levelRenderer;
 	SoundEffectBank & _soundBank;

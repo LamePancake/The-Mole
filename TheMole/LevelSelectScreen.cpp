@@ -24,24 +24,13 @@ int LevelSelectScreen::Load()
 	_levelItems[4] = _bossLevel;
 	_levelItems[5] = _back;
 
-	_inputDelay     = true;
-	_inputDelayTime = 0;
-
 	return SCREEN_LOAD_SUCCESS;
 }
 
 int LevelSelectScreen::Update(double elapsedSecs) 
 {
 	SDL_PumpEvents();
-
-	if (_inputDelay)
-	{
-		if (_inputDelayTime > INPUT_DELAY)
-			_inputDelay = false;
-		_inputDelayTime += elapsedSecs;
-	}
-	else
-		_mgr->inputManager->UpdateKeyboardState();
+	_mgr->inputManager->UpdateKeyboardState();
 
 	if (_mgr->inputManager->ActionOccurred("ARROWDOWN", Input::Pressed))
 	{
@@ -112,8 +101,5 @@ void LevelSelectScreen::Unload()
 
 void LevelSelectScreen::Reset()
 {
-	_mgr->inputManager->ClearKeyboardState();
-	_inputDelay     = true;
-	_inputDelayTime = 0;
 }
 

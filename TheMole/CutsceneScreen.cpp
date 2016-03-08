@@ -27,24 +27,13 @@ int CutsceneScreen::Load()
 	_dialog = OpenDialog(_dialogFilePath);
 	UpdateDialog();
 
-	_inputDelay = true;
-	_inputDelayTime = 0;
-
 	return SCREEN_LOAD_SUCCESS;
 }
 
 int CutsceneScreen::Update(double elapsedSecs)
 {
 	SDL_PumpEvents();
-
-	if (_inputDelay)
-	{
-		if (_inputDelayTime > INPUT_DELAY)
-			_inputDelay = false;
-		_inputDelayTime += elapsedSecs;
-	}
-	else
-		_mgr->inputManager->UpdateKeyboardState();
+	_mgr->inputManager->UpdateKeyboardState();
 
 	if (_currentlySpeaking == PROTAG)
 	{
@@ -239,9 +228,6 @@ void CutsceneScreen::UpdateDialog()
 
 void CutsceneScreen::Reset()
 {
-	_mgr->inputManager->ClearKeyboardState();
-	_inputDelay = true;
-	_inputDelayTime = 0;
 	_dialogIndex = 0;
 	_skipTimer = 0;
 	_currentNPCDialog = " ";

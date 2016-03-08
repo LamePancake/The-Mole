@@ -20,27 +20,25 @@ int MenuScreen::Load() {
 	_menuItems[1] = _settings;
 	_menuItems[2] = _quit;
 
-	_prevKeyState = (Uint8*)std::malloc(sizeof(Uint8) * SDL_NUM_SCANCODES);
-	std::memcpy(_prevKeyState, SDL_GetKeyboardState(nullptr), sizeof(Uint8) * SDL_NUM_SCANCODES);
 	return SCREEN_LOAD_SUCCESS;
 }
 
 int MenuScreen::Update(double elapsedSecs) {
 	SDL_PumpEvents();
+	_mgr->inputManager->UpdateKeyboardState();
 
 	// Change the currently selected menu item
-	const Uint8* keys = SDL_GetKeyboardState(nullptr);
-	if (keys[SDL_SCANCODE_RIGHT] && !_prevKeyState[SDL_SCANCODE_RIGHT]) {
+	if (_mgr->inputManager->ActionOccurred("ARROWRIGHT", Input::Pressed)) { //keys[SDL_SCANCODE_RIGHT] && !_prevKeyState[SDL_SCANCODE_RIGHT]
 		_curMenuItem++;
 		if (_curMenuItem == NUM_MENU_ITEMS) _curMenuItem = 0;
 	}
-	else if (keys[SDL_SCANCODE_LEFT] && !_prevKeyState[SDL_SCANCODE_LEFT]) {
+	else if (_mgr->inputManager->ActionOccurred("ARROWLEFT", Input::Pressed)) {
 		_curMenuItem--;
 		if (_curMenuItem < 0) _curMenuItem = NUM_MENU_ITEMS - 1;
 	}
 
 	// We selected a menu item; do the appropriate thing
-	if (keys[SDL_SCANCODE_RETURN] && !_prevKeyState[SDL_SCANCODE_RETURN]) {
+	if (_mgr->inputManager->ActionOccurred("CONFIRM", Input::Pressed)) {
 		switch (_curMenuItem) {
 		case 0:
             _mgr->GetMixer().HaltMusic();
@@ -56,8 +54,6 @@ int MenuScreen::Update(double elapsedSecs) {
 		}
 	}
 
-	// Save the previous key state (temporary until InputManager actions are implemented)
-	std::memcpy(_prevKeyState, keys, sizeof(Uint8) * SDL_NUM_SCANCODES);
 	return SCREEN_CONTINUE;
 }
 
@@ -76,12 +72,8 @@ void MenuScreen::Unload() {
 	delete _quit;
 	delete _settings;
     delete _menuTheme;
-	free(_prevKeyState);
 }
 
 void MenuScreen::Reset()
 {
-	_mgr->inputManager->ClearKeyboardState();
-	_inputDelay = true;
-	_inputDelayTime = 0;
 }
