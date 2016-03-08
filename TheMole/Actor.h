@@ -193,9 +193,7 @@ public:
 	bool IsDestroyed() const;
 
 	/**
-	 * @brief	Query if this object is destroyed.
-	 *
- 	 * @return	true if destroyed, false if not.
+	 * @brief	Destroy this object.
 	 */
 	void Destroy();
 

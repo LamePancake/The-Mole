@@ -32,8 +32,7 @@ void ProjectileActor::Update(double elapsedSecs)
 	DetectTileCollisions(_collisionInfo, _gameScreen->GetLevel());
 	if (_collisionInfo.colPenetration != 0 || _collisionInfo.rowPenetration != 0) {
 		_sprites[_currentSpriteSheet]->Stop();
-		SetVisibility(false);
-		_isDestroyed = true;
+        Destroy();
 	}
 
 	UpdatePosition(elapsedSecs);
@@ -60,15 +59,13 @@ bool ProjectileActor::CollisionCheck(Actor & otherAI)
 	return _aabb.CheckCollision(otherAI.GetAABB());
 }
 
-
 void ProjectileActor::ProjectileUpdate(double elapseSecs)
 {
 	const std::shared_ptr<GameScreen> screen = std::dynamic_pointer_cast<GameScreen>(_mgr->GetCurrentScreen());
 	if (CollisionCheck(*(screen->GetPlayer())))
 	{
-		(screen->GetPlayer()->ProjectileHit(this));
+		screen->GetPlayer()->ProjectileHit(this);
 		_sprites[_currentSpriteSheet]->Stop();
-		SetVisibility(false);
-		_isDestroyed = true;
+        Destroy();
 	}
 }
