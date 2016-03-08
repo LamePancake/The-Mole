@@ -297,25 +297,25 @@ void LevelLoader::LoadTogglesAndDoors(ifstream & file, vector<SDL2pp::Point> & t
         {
             edge = Actor::Edge::TOP;
             yDir = SpriteSheet::YAxisDirection::DOWN;
-            sheet = std::make_shared<SpriteSheet>(doorHoriz, 9, 1.0, false);
+            sheet = std::make_shared<SpriteSheet>(doorHoriz, 9, 0.5, false);
         }
         else if (tokens[0] == "bottom")
         {
             edge = Actor::Edge::BOTTOM;
-            sheet = std::make_shared<SpriteSheet>(doorHoriz, 9, 1.0, false);
+            sheet = std::make_shared<SpriteSheet>(doorHoriz, 9, 0.5, false);
             startPos.SetY(startPos.GetY() + level->GetTileHeight() - sheet->GetFrameHeight());
         }
         else if (tokens[0] == "right")
         {
             edge = Actor::Edge::RIGHT;
-            sheet = std::make_shared<SpriteSheet>(door, 9, 1.0, false);
+            sheet = std::make_shared<SpriteSheet>(door, 9, 0.5, false);
             xDir = SpriteSheet::XAxisDirection::LEFT;
             startPos.SetX(startPos.GetX() + level->GetTileWidth() - sheet->GetFrameWidth());
         }
         else if (tokens[0] == "left")
         {
             edge = Actor::Edge::LEFT;
-            sheet = std::make_shared<SpriteSheet>(door, 9, 1.0, false);
+            sheet = std::make_shared<SpriteSheet>(door, 9, 0.5, false);
         }
 
         std::istringstream iss(tokens[2]);

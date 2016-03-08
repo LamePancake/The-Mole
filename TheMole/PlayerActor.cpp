@@ -459,7 +459,8 @@ void PlayerActor::UpdateMindControlSelection(bool released)
 	Vector2 centre{ _curKinematic.position.GetX() + _sprites[_currentSpriteSheet]->GetFrameWidth() / 2, _curKinematic.position.GetY() + _sprites[_currentSpriteSheet]->GetFrameHeight() / 2 };
 	for (auto actor : level->GetActors())
 	{
-		if (actor->GetType() != Type::enemy) continue;
+		Type type = actor->GetType();
+		if (type != Type::enemy && type != Type::bombenemy) continue;
 		// Check whether the enemy is in range, offsetting their position as necessary 
 		// to make sure that the distance is the same on all sides
 		shared_ptr<AIActor> enemy = dynamic_pointer_cast<AIActor>(actor);

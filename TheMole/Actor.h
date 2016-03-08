@@ -55,7 +55,8 @@ public:
 		projectile,
 		turret,
 		toggle,
-		enemy
+		enemy,
+		bombenemy
 	};
 
 	/**

@@ -29,6 +29,7 @@ int main(int argc, char** argv) {
 
 		unordered_map<string, string> soundEffects;
 		soundEffects["dig"] = ".\\Assets\\Audio\\digging.ogg";
+		soundEffects["explode"] = ".\\Assets\\Audio\\explosion.ogg";
 		SoundEffectBank bank(soundEffects);
 
 		// Straightforward wrappers around corresponding SDL2 objects

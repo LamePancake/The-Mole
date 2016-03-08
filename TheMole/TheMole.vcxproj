@@ -166,6 +166,7 @@
   <ItemGroup>
     <ClInclude Include="AABB.h" />
     <ClInclude Include="Actor.h" />
+    <ClInclude Include="BombAIActor.h" />
     <ClInclude Include="BossActor.h" />
     <ClInclude Include="BossBehavTree.h" />
     <ClInclude Include="Camera.h" />

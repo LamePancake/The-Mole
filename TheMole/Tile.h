@@ -22,6 +22,7 @@ public:
 		spike       = 'K',
 		metal       = 'M',
 		enemy       = 'E',
+		bombenemy   = 'X',
 		goal        = 'G',
 		collectible = 'C',
 		tunnel      = 'T',
