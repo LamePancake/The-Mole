@@ -222,8 +222,11 @@ void LevelLoader::LoadTogglesAndDoors(ifstream & file, vector<SDL2pp::Point> & t
 
 	shared_ptr<SDL2pp::Texture> door = std::make_shared<SDL2pp::Texture>(rend, ".\\Assets\\Textures\\Door.png");
 	shared_ptr<SDL2pp::Texture> doorHoriz = std::make_shared<SDL2pp::Texture>(rend, ".\\Assets\\Textures\\Door_horiz.png");
-	shared_ptr<SDL2pp::Texture> weightPad = std::make_shared<SDL2pp::Texture>(rend, ".\\Assets\\Textures\\Toggle.png");
-	shared_ptr<SDL2pp::Texture> weightPadVertical = std::make_shared<SDL2pp::Texture>(rend, ".\\Assets\\Textures\\Toggle_vertical.png");
+	shared_ptr<SDL2pp::Texture> activeToggle = std::make_shared<SDL2pp::Texture>(rend, ".\\Assets\\Textures\\Active_toggle.png");
+	shared_ptr<SDL2pp::Texture> activeToggleVertical = std::make_shared<SDL2pp::Texture>(rend, ".\\Assets\\Textures\\Active_toggle_vertical.png");
+	shared_ptr<SDL2pp::Texture> oneShotToggle = std::make_shared<SDL2pp::Texture>(rend, ".\\Assets\\Textures\\Oneshot_toggle.png");
+	shared_ptr<SDL2pp::Texture> oneShotToggleVertical = std::make_shared<SDL2pp::Texture>(rend, ".\\Assets\\Textures\\Oneshot_toggle_vertical.png");
+
 
     vector<shared_ptr<ToggleActor>> toggles;
 
@@ -239,36 +242,37 @@ void LevelLoader::LoadTogglesAndDoors(ifstream & file, vector<SDL2pp::Point> & t
         SpriteSheet::XAxisDirection xDir = SpriteSheet::XAxisDirection::RIGHT;
         SpriteSheet::YAxisDirection yDir = SpriteSheet::YAxisDirection::UP;
         Vector2 startPos(togglePos[i].x * level->GetTileWidth(), togglePos[i].y * level->GetTileHeight());
+		bool isActive = tokens[1] == "active";
+
 		if (tokens[0] == "top")
 		{
 			edge = Actor::Edge::TOP;
             yDir = SpriteSheet::YAxisDirection::DOWN;
-			sheet = std::make_shared<SpriteSheet>(weightPad, 2, 0, false);
+			sheet = std::make_shared<SpriteSheet>(isActive ? activeToggle : oneShotToggle, 2, 0, false);
 		}
 		else if (tokens[0] == "bottom")
 		{
 			edge = Actor::Edge::BOTTOM;
-			sheet = std::make_shared<SpriteSheet>(weightPad, 2, 0, false);
+			sheet = std::make_shared<SpriteSheet>(isActive ? activeToggle : oneShotToggle, 2, 0, false);
             startPos.SetY(startPos.GetY() + level->GetTileHeight() - sheet->GetFrameHeight());
 		}
 		else if (tokens[0] == "right")
 		{
 			edge = Actor::Edge::RIGHT;
-			sheet = std::make_shared<SpriteSheet>(weightPadVertical, 2, 0, false);
+			sheet = std::make_shared<SpriteSheet>(isActive ? activeToggleVertical : oneShotToggleVertical, 2, 0, false);
             xDir = SpriteSheet::XAxisDirection::LEFT;
             startPos.SetX(startPos.GetX() + level->GetTileWidth() - sheet->GetFrameWidth());
 		}
 		else if (tokens[0] == "left")
 		{
 			edge = Actor::Edge::LEFT;
-			sheet = std::make_shared<SpriteSheet>(weightPadVertical, 2, 0, false);
+			sheet = std::make_shared<SpriteSheet>(isActive ? activeToggleVertical : oneShotToggleVertical, 2, 0, false);
 		}
 
 		unordered_map<string, shared_ptr<SpriteSheet>> sprites;
 		sprites["toggle"] = sheet;
 
-		bool isWeighted = tokens[1] == "active";
-        shared_ptr<ToggleActor> toggle(new ToggleActor(startPos, *GameManager::GetInstance(), Vector2(0, 0), sprites, "toggle", xDir, yDir, edge, isWeighted));
+        shared_ptr<ToggleActor> toggle(new ToggleActor(startPos, *GameManager::GetInstance(), Vector2(0, 0), sprites, "toggle", xDir, yDir, edge, isActive));
         level->AddActor(toggle);
         toggles.push_back(toggle);
         tokens.clear();
