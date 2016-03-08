@@ -125,9 +125,9 @@ public:
 class ShockWaveTask : public Node
 {
 private:
-
+	Vector2* _targetPos;
 public:
-	ShockWaveTask() {}
+	ShockWaveTask(Vector2 *tPos) : _targetPos(tPos) {}
 	virtual bool run(double elapsedSecs) override;
 };
 

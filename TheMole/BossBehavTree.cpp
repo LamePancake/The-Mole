@@ -187,8 +187,35 @@ bool ShortHopTask::run(double elapsedSecs)
 
 bool ShockWaveTask::run(double elapsedSecs)
 {
-	cout << "wave" << endl;
-	return true;
+	if (_gameScreen->GetLevel()->GetBoss()->_shockWaveDur > 0)
+	{
+		GameManager& gameManager = *GameManager::GetInstance();
+
+		std::shared_ptr<SDL2pp::Texture> projectileSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\red_dot.png");
+		std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
+		double infinity = std::numeric_limits<double>::infinity();
+		sprites["shoot"] = std::make_shared<SpriteSheet>(projectileSheet, 1, infinity);
+		std::shared_ptr<ProjectileActor> projectile = std::make_shared<ProjectileActor>(
+			_gameScreen->GetLevel()->GetBoss()->GetPosition() ///Vec2 position
+			, gameManager ///Gamemanager
+			, Vector2(100.0f, 0.0f) ///Vec2 spd
+			, sprites ///sprites
+			, "shoot" ///startsprite
+			, SpriteSheet::XAxisDirection::LEFT); ///direction
+
+		cout << "wave" << endl;
+		*_targetPos = _gameScreen->GetLevel()->GetBoss()->GetPosition();
+		//cout << "bPos: " << targetPos->GetX() << endl;
+		//cout << "pPos: " << _gameScreen->GetPlayer()->GetPosition().GetX() << endl;
+		_gameScreen->GetLevel()->GetBoss()->_shockWaveDur -= elapsedSecs;
+		//_gameScreen->GetLevel()->GetBoss()->SetSprite("roll");
+		_gameScreen->GetLevel()->AddActor(projectile);
+		return false;
+	}
+	else
+	{
+		return true;
+	}
 }
 
 
@@ -243,7 +270,7 @@ BossBehavTree::BossBehavTree()
 	_tPreRoll = new PreRollTask(_pDist, _meleeRange);
 	_tRoll = new RollTask(&_targetPos);
 	_tShortHop = new ShortHopTask();
-	_tShockWave = new ShockWaveTask();
+	_tShockWave = new ShockWaveTask(&_targetPos);
 	_tIdle = new IdleTask(&_targetPos);
 	_tEject = new EjectTask();
 
