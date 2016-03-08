@@ -85,6 +85,9 @@ protected:
 	SDL2pp::Texture* _levelSelect;
 
 	int OnPause();
+
+protected:
+	virtual void Reset() override;
 };
 
 #endif

@@ -27,13 +27,24 @@ int CutsceneScreen::Load()
 	_dialog = OpenDialog(_dialogFilePath);
 	UpdateDialog();
 
+	_inputDelay = true;
+	_inputDelayTime = 0;
+
 	return SCREEN_LOAD_SUCCESS;
 }
 
 int CutsceneScreen::Update(double elapsedSecs)
 {
 	SDL_PumpEvents();
-	_mgr->inputManager->UpdateKeyboardState();
+
+	if (_inputDelay)
+	{
+		if (_inputDelayTime > INPUT_DELAY)
+			_inputDelay = false;
+		_inputDelayTime += elapsedSecs;
+	}
+	else
+		_mgr->inputManager->UpdateKeyboardState();
 
 	if (_currentlySpeaking == PROTAG)
 	{
@@ -54,12 +65,9 @@ int CutsceneScreen::Update(double elapsedSecs)
 		
 		if (_skipTimer >= SKIP_TIME)
 		{
-			_skipTimer = 0;
-			_dialogIndex = 0;
-			_currentNPCDialog = " ";
+			Reset();
 			_currentProtagDialog = " ";
 			_mgr->SetNextScreen(_nextScreen);
-			_mgr->inputManager->ClearKeyboardState();
 			return SCREEN_FINISH;
 		}
 	}
@@ -75,11 +83,8 @@ int CutsceneScreen::Update(double elapsedSecs)
 
 		if (_dialogIndex >= _dialog.size())
 		{
-			_dialogIndex = 0;
-			_currentNPCDialog = " ";
-			_currentProtagDialog = " ";
+			Reset();
 			_mgr->SetNextScreen(_nextScreen);
-			_mgr->inputManager->ClearKeyboardState();
 			return SCREEN_FINISH;
 		}
 
@@ -230,4 +235,15 @@ void CutsceneScreen::UpdateDialog()
 		_currentNPCDialog = _dialog[_dialogIndex].substr(1).append(_dialog[_dialogIndex].substr(0, 1));
 		_currentlySpeaking = NPC;
 	}
+}
+
+void CutsceneScreen::Reset()
+{
+	_mgr->inputManager->ClearKeyboardState();
+	_inputDelay = true;
+	_inputDelayTime = 0;
+	_dialogIndex = 0;
+	_skipTimer = 0;
+	_currentNPCDialog = " ";
+	_currentProtagDialog = " ";
 }

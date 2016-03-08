@@ -4,6 +4,8 @@
 #include <string>
 #include <SDL2pp\SDL2pp.hh>
 
+#define INPUT_DELAY 0.8
+
 // Forward declaration since GameManager.h includes Screen.h
 class GameManager;
 
@@ -56,6 +58,12 @@ public:
 		SCREEN_LOAD_SUCCESS,
 		SCREEN_LOAD_FAILTURE
 	};
+
+protected:
+	double _inputDelayTime;
+	bool  _inputDelay;
+
+	virtual void Reset() = 0;
 };
 
 #endif

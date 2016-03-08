@@ -24,16 +24,24 @@ int LevelSelectScreen::Load()
 	_levelItems[4] = _bossLevel;
 	_levelItems[5] = _back;
 
+	_inputDelay     = true;
+	_inputDelayTime = 0;
+
 	return SCREEN_LOAD_SUCCESS;
 }
 
 int LevelSelectScreen::Update(double elapsedSecs) 
 {
 	SDL_PumpEvents();
-	_mgr->inputManager->UpdateKeyboardState();
 
-	// Change the currently selected menu item
-	const Uint8* keys = SDL_GetKeyboardState(nullptr);
+	if (_inputDelay)
+	{
+		if (_inputDelayTime > INPUT_DELAY)
+			_inputDelay = false;
+		_inputDelayTime += elapsedSecs;
+	}
+	else
+		_mgr->inputManager->UpdateKeyboardState();
 
 	if (_mgr->inputManager->ActionOccurred("ARROWDOWN", Input::Pressed))
 	{
@@ -49,25 +57,30 @@ int LevelSelectScreen::Update(double elapsedSecs)
 	// We selected a menu item; do the appropriate thing
 	if (_mgr->inputManager->ActionOccurred("CONFIRM", Input::Pressed))
 	{
-		_mgr->inputManager->ClearKeyboardState();
 		switch (_curMenuItem) 
 		{
 		case 0:
+			Reset();
 			_mgr->SetNextScreen("denIntro");
 			return SCREEN_FINISH;
 		case 1:
+			Reset();
 			_mgr->SetNextScreen("vikingIntro");
 			return SCREEN_FINISH;
 		case 2:
+			Reset();
 			_mgr->SetNextScreen("grassIntro");
 			return SCREEN_FINISH;
 		case 3:
+			Reset();
 			_mgr->SetNextScreen("starscapeIntro");
 			return SCREEN_FINISH;
 		case 4:
+			Reset();
 			_mgr->SetNextScreen("bossIntro");
 			return SCREEN_FINISH;
 		case 5:
+			Reset();
 			_mgr->SetNextScreen("menu");
 			return SCREEN_FINISH;
 		}
@@ -95,5 +108,12 @@ void LevelSelectScreen::Unload()
 	delete _starscapeLevel;
 	delete _bossLevel;
 	delete _back;
+}
+
+void LevelSelectScreen::Reset()
+{
+	_mgr->inputManager->ClearKeyboardState();
+	_inputDelay     = true;
+	_inputDelayTime = 0;
 }
 

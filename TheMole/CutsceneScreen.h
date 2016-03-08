@@ -84,5 +84,8 @@ private:
 
 	std::vector<std::string> OpenDialog(std::string dialogFilePath);
 	void UpdateDialog();
+
+protected:
+	virtual void Reset() override;
 };
 

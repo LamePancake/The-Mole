@@ -22,4 +22,7 @@ private:
 	SDL2pp::Texture* _quit;
     SDL2pp::Music* _menuTheme;
 	Uint8* _prevKeyState;
+
+protected:
+	virtual void Reset() override;
 };

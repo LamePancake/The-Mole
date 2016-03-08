@@ -78,3 +78,10 @@ void MenuScreen::Unload() {
     delete _menuTheme;
 	free(_prevKeyState);
 }
+
+void MenuScreen::Reset()
+{
+	_mgr->inputManager->ClearKeyboardState();
+	_inputDelay = true;
+	_inputDelayTime = 0;
+}
