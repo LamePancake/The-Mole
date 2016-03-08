@@ -205,9 +205,29 @@ void PlayerActor::DefaultTileCollisionHandler(std::vector<std::shared_ptr<Tile>>
 				if (isXDirection) _curKinematic.position.SetX(correctedPos);
 				else
 				{
+					_wasOnGround = true;
 					_curKinematic.position.SetY(correctedPos); 
 					if (_jumped) StopJumping();
 				}
+				break;
+			}
+		}
+	}
+
+	// If we're checking the bottom edge and a very close tile below the ones we're checking is solid, then we were on the ground
+	shared_ptr<Level> level = _gameScreen->GetLevel();
+	if (!_wasOnGround && 
+		edge == Edge::BOTTOM && 
+		correctedPos == _curKinematic.position.GetY() && 
+		level->HasNeighbourTile(tiles[0], Edge::BOTTOM))
+	{
+		for (auto & tile : tiles)
+		{
+			shared_ptr<Tile> neighbour = level->GetNeighbourTile(tile, Edge::BOTTOM);
+			float bottomBound = _curKinematic.position.GetY() + _sprites[_currentSpriteSheet]->GetFrameHeight();
+			if (neighbour->GetID() != Tile::blank && (neighbour->GetWorldPosition().GetY() - bottomBound < 3))
+			{
+				_wasOnGround = true;
 				break;
 			}
 		}

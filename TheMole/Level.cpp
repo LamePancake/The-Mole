@@ -39,6 +39,38 @@ void Level::GetTileRange(int startRow, int endRow, int startCol, int endCol, std
 	}
 }
 
+std::shared_ptr<Tile> Level::GetNeighbourTile(std::shared_ptr<Tile> tile, Actor::Edge edge)
+{
+	SDL2pp::Point indices = tile->GetIndices();
+	switch (edge)
+	{
+	case Actor::Edge::BOTTOM:
+		return GetTileFromLevel(indices.x, indices.y + 1);
+	case Actor::Edge::TOP:
+		return GetTileFromLevel(indices.x, indices.y - 1);
+	case Actor::Edge::RIGHT:
+		return GetTileFromLevel(indices.x + 1, indices.y);
+	case Actor::Edge::LEFT:
+		return GetTileFromLevel(indices.x - 1, indices.y);
+	}
+}
+
+bool Level::HasNeighbourTile(std::shared_ptr<Tile> tile, Actor::Edge edge) const
+{
+	SDL2pp::Point indices = tile->GetIndices();
+	switch (edge)
+	{
+	case Actor::Edge::BOTTOM:
+		return indices.y < _level.size() - 1;
+	case Actor::Edge::TOP:
+		return indices.y > 0;
+	case Actor::Edge::RIGHT:
+		return indices.x < _level[0].size() - 1;
+	case Actor::Edge::LEFT:
+		return indices.x > 0;
+	}
+}
+
 void Level::AddPositions(char key, SDL2pp::Point position)
 {
 	_tilePositions[key].push_back(position);
