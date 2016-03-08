@@ -82,10 +82,12 @@
     <ClCompile Include="DoorActor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SwitchActor.cpp">
+    <ClCompile Include="ToggleActor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Quadtree.cpp" />
+    <ClCompile Include="Quadtree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AABB.h">
@@ -169,13 +171,15 @@
     <ClInclude Include="Util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SwitchActor.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="DoorActor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Quadtree.h" />
+    <ClInclude Include="ToggleActor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Quadtree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">

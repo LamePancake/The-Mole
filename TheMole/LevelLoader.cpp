@@ -39,6 +39,8 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 	std::shared_ptr<SDL2pp::Texture> mindControlIndicator = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\Controlled_indicator.png");
   	std::shared_ptr<SDL2pp::Texture> turretSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\Turret.png");
 
+    std::unordered_map<char, std::vector<SDL2pp::Point>> positions;
+
 	// Read the actual map data, stopping when we get to switch descriptions etc.
 	do
 	{
@@ -162,6 +164,15 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 				tile->SetID(Tile::blank);
 			}
 			break;
+
+            case Tile::door:
+                positions[Tile::door].push_back(SDL2pp::Point(levelWidth, levelHeight));
+                tile->SetID(Tile::blank);
+                break;
+            case Tile::toggle:
+                positions[Tile::toggle].push_back(SDL2pp::Point(levelWidth, levelHeight));
+                tile->SetID(Tile::blank);
+                break;
 			}
 
 			level->AddTileToLevel(tile, levelHeight);
@@ -176,6 +187,12 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 
 	level->SetTileWidth(tileWidth);
 	level->SetTileHeight(tileHeight);
+    
+    // We stopped because we read a line != to level->GetLevelSize().x; must be more data to load
+    if (inFile.good())
+    {
+        LoadActorSpecifics(inFile, line, positions, level);
+    }
 
 	inFile.close();
 
@@ -189,13 +206,13 @@ void LevelLoader::LoadActorSpecifics(ifstream & file, string & lastLine, unorder
 	// Loop until we get to the first actual line
 	while (line.empty() && std::getline(file, line));
 	std::transform(line.begin(), line.end(), line.begin(), ::tolower); // make line lowercase
-	if (line == "pads")
+	if (line == "toggles")
 	{
-		LoadPadsAndDoors(file, positions[Tile::weightpad], positions[Tile::door], level);
+		LoadTogglesAndDoors(file, positions[Tile::toggle], positions[Tile::door], level);
 	}
 }
 
-void LevelLoader::LoadPadsAndDoors(ifstream & file, vector<SDL2pp::Point> & padPos, vector<SDL2pp::Point> & doorPos, shared_ptr<Level> level)
+void LevelLoader::LoadTogglesAndDoors(ifstream & file, vector<SDL2pp::Point> & togglePos, vector<SDL2pp::Point> & doorPos, shared_ptr<Level> level)
 {
 	string line;
 	vector<string> tokens;
@@ -205,11 +222,16 @@ void LevelLoader::LoadPadsAndDoors(ifstream & file, vector<SDL2pp::Point> & padP
 
 	shared_ptr<SDL2pp::Texture> door = std::make_shared<SDL2pp::Texture>(rend, ".\\Assets\\Textures\\Door.png");
 	shared_ptr<SDL2pp::Texture> doorHoriz = std::make_shared<SDL2pp::Texture>(rend, ".\\Assets\\Textures\\Door_horiz.png");
-	shared_ptr<SDL2pp::Texture> weightPad = std::make_shared<SDL2pp::Texture>(rend, ".\\Assets\\Textures\\Weight_pad.png");
-	shared_ptr<SDL2pp::Texture> weightPadVertical = std::make_shared<SDL2pp::Texture>(rend, ".\\Assets\\Textures\\Weight_pad_vertical.png");
+	shared_ptr<SDL2pp::Texture> activeToggle = std::make_shared<SDL2pp::Texture>(rend, ".\\Assets\\Textures\\Active_toggle.png");
+	shared_ptr<SDL2pp::Texture> activeToggleVertical = std::make_shared<SDL2pp::Texture>(rend, ".\\Assets\\Textures\\Active_toggle_vertical.png");
+	shared_ptr<SDL2pp::Texture> oneShotToggle = std::make_shared<SDL2pp::Texture>(rend, ".\\Assets\\Textures\\Oneshot_toggle.png");
+	shared_ptr<SDL2pp::Texture> oneShotToggleVertical = std::make_shared<SDL2pp::Texture>(rend, ".\\Assets\\Textures\\Oneshot_toggle_vertical.png");
 
-	// We would have just read "pads", so we can go ahead and start reading all of the pad info in
-	for (size_t i = 0; i < padPos.size(); ++i)
+
+    vector<shared_ptr<ToggleActor>> toggles;
+
+	// We would have just read "toggles", so we can go ahead and start reading all of the pad info in
+  	for (size_t i = 0; i < togglePos.size(); ++i)
 	{
 		std::getline(file, line);
 		std::transform(line.begin(), line.end(), line.begin(), ::tolower);
@@ -217,33 +239,102 @@ void LevelLoader::LoadPadsAndDoors(ifstream & file, vector<SDL2pp::Point> & padP
 		
 		Actor::Edge edge = Actor::Edge::NONE;
 		shared_ptr<SpriteSheet> sheet;
+        SpriteSheet::XAxisDirection xDir = SpriteSheet::XAxisDirection::RIGHT;
+        SpriteSheet::YAxisDirection yDir = SpriteSheet::YAxisDirection::UP;
+        Vector2 startPos(togglePos[i].x * level->GetTileWidth(), togglePos[i].y * level->GetTileHeight());
+		bool isActive = tokens[1] == "active";
+
 		if (tokens[0] == "top")
 		{
 			edge = Actor::Edge::TOP;
-			sheet = std::make_shared<SpriteSheet>(weightPad, 2, 0);
+            yDir = SpriteSheet::YAxisDirection::DOWN;
+			sheet = std::make_shared<SpriteSheet>(isActive ? activeToggle : oneShotToggle, 2, 0, false);
 		}
 		else if (tokens[0] == "bottom")
 		{
 			edge = Actor::Edge::BOTTOM;
-			sheet = std::make_shared<SpriteSheet>(weightPad, 2, 0);
+			sheet = std::make_shared<SpriteSheet>(isActive ? activeToggle : oneShotToggle, 2, 0, false);
+            startPos.SetY(startPos.GetY() + level->GetTileHeight() - sheet->GetFrameHeight());
 		}
 		else if (tokens[0] == "right")
 		{
 			edge = Actor::Edge::RIGHT;
-			sheet = std::make_shared<SpriteSheet>(weightPadVertical, 2, 0);
+			sheet = std::make_shared<SpriteSheet>(isActive ? activeToggleVertical : oneShotToggleVertical, 2, 0, false);
+            xDir = SpriteSheet::XAxisDirection::LEFT;
+            startPos.SetX(startPos.GetX() + level->GetTileWidth() - sheet->GetFrameWidth());
 		}
 		else if (tokens[0] == "left")
 		{
 			edge = Actor::Edge::LEFT;
-			sheet = std::make_shared<SpriteSheet>(weightPadVertical, 2, 0);
+			sheet = std::make_shared<SpriteSheet>(isActive ? activeToggleVertical : oneShotToggleVertical, 2, 0, false);
 		}
 
 		unordered_map<string, shared_ptr<SpriteSheet>> sprites;
-		sprites["pad"] = sheet;
+		sprites["toggle"] = sheet;
 
-		bool isWeighted = tokens[1] == "active";
-		
+        shared_ptr<ToggleActor> toggle(new ToggleActor(startPos, *GameManager::GetInstance(), Vector2(0, 0), sprites, "toggle", xDir, yDir, edge, isActive));
+        level->AddActor(toggle);
+        toggles.push_back(toggle);
+        tokens.clear();
  	}
 
-	
+	// Skip any newlines and the "doors" label
+     while (std::getline(file, line) && line.empty() || (line.size() == 1 && line[0] == '\r'));
+
+    // Read in all of the doors
+    for (size_t i = 0; i < doorPos.size(); ++i)
+    {
+        std::getline(file, line);
+        std::transform(line.begin(), line.end(), line.begin(), ::tolower);
+        split(line, ' ', tokens);
+
+        Actor::Edge edge = Actor::Edge::NONE;
+        shared_ptr<SpriteSheet> sheet;
+        SpriteSheet::XAxisDirection xDir = SpriteSheet::XAxisDirection::RIGHT;
+        SpriteSheet::YAxisDirection yDir = SpriteSheet::YAxisDirection::UP;
+        Vector2 startPos(doorPos[i].x * level->GetTileWidth(), doorPos[i].y * level->GetTileHeight());
+        if (tokens[0] == "top")
+        {
+            edge = Actor::Edge::TOP;
+            yDir = SpriteSheet::YAxisDirection::DOWN;
+            sheet = std::make_shared<SpriteSheet>(doorHoriz, 9, 1.0, false);
+        }
+        else if (tokens[0] == "bottom")
+        {
+            edge = Actor::Edge::BOTTOM;
+            sheet = std::make_shared<SpriteSheet>(doorHoriz, 9, 1.0, false);
+            startPos.SetY(startPos.GetY() + level->GetTileHeight() - sheet->GetFrameHeight());
+        }
+        else if (tokens[0] == "right")
+        {
+            edge = Actor::Edge::RIGHT;
+            sheet = std::make_shared<SpriteSheet>(door, 9, 1.0, false);
+            xDir = SpriteSheet::XAxisDirection::LEFT;
+            startPos.SetX(startPos.GetX() + level->GetTileWidth() - sheet->GetFrameWidth());
+        }
+        else if (tokens[0] == "left")
+        {
+            edge = Actor::Edge::LEFT;
+            sheet = std::make_shared<SpriteSheet>(door, 9, 1.0, false);
+        }
+
+        std::istringstream iss(tokens[2]);
+        size_t toggleIdx;
+        iss >> toggleIdx;
+
+        unordered_map<string, shared_ptr<SpriteSheet>> sprites;
+        sprites["open"] = sheet;
+
+        shared_ptr<DoorActor> doorActor(new DoorActor(startPos, 
+                                                   *GameManager::GetInstance(),
+                                                   Vector2(0, 0),
+                                                   sprites,
+                                                   "open",
+                                                   xDir,
+                                                   yDir,
+	                                               edge,
+                                                   toggles[toggleIdx]));
+        level->AddActor(doorActor);
+        tokens.clear();
+    }
 }

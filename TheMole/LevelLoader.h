@@ -16,6 +16,8 @@
 #include "BossActor.h"
 #include "ProjectileActor.h"
 #include "TurretActor.h"
+#include "ToggleActor.h"
+#include "DoorActor.h"
 
 /** Loads a level from a text file and returns a vector of tiles that represent the level. */
 class LevelLoader
@@ -53,11 +55,11 @@ private:
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	///<summary> Creates weight pads and doors described in the level's metadata and adds them to the level.</summary>
 	///
-	///<param name="file">    The map file input stream.</param>
-	///<param name="padPos">  The list of tiles containing weight pads.</param>
-	///<param name="doorPos"> The list of tiles containing doors.</param>
-	///<param name="level">   The level into which to load the actors.</param>
+	///<param name="file">      The map file input stream.</param>
+	///<param name="togglePos"> The list of tiles containing toggles.</param>
+	///<param name="doorPos">   The list of tiles containing doors.</param>
+	///<param name="level">     The level into which to load the actors.</param>
 	///
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	void LoadPadsAndDoors(std::ifstream& file, std::vector<SDL2pp::Point> & padPos, std::vector<SDL2pp::Point> & doorPos, std::shared_ptr<Level> level);
+	void LoadTogglesAndDoors(std::ifstream& file, std::vector<SDL2pp::Point> & togglePos, std::vector<SDL2pp::Point> & doorPos, std::shared_ptr<Level> level);
 };

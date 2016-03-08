@@ -3,6 +3,7 @@
 
 #pragma once
 #include <SDL2pp\SDL2pp.hh>
+#include "Vector2.h"
 class Actor;
 
 class AABB
@@ -39,30 +40,54 @@ public:
 	*
 	* @return _x, which is a float
 	*/
-	float AABB::GetX();
+	float GetX();
 
 	/**
 	* Getter for _y of this AABB
 	*
 	* @return _y, which is a float
 	*/
-	float AABB::GetY();
+	float GetY();
 
 	/**
 	* Getter for _width of this AABB
 	*
 	* @return _width, which is a float
 	*/
-	float AABB::GetWidth();
+	float GetWidth();
 
 	/**
 	* Getter for _height of this AABB
 	*
 	* @return _height, which is a float
 	*/
-	float AABB::GetHeight();
+	float GetHeight();
 
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	///<summary> Gets the amount of overlap between this AABB and the other.</summary>
+	///
+	///<remarks> The overlap in a given direction can be added to an actor's position to push them out of
+	///          the overlap. For instance, if this actor is on the right of another actor, the overlap
+	///          will be a positive value which will push the actor to the right of the other actor.</remarks>
+	///
+	///<param name="other">        The other AABB to check against.</param>
+	///<param name="makeIntegral"> Whether to convert the overlap values to integers (maximised in the
+	///                            appropriate direction.</param>
+	///
+	///<returns> The amount of overlap between the two boxes.</returns>
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	Vector2 GetOverlap(AABB other, bool makeIntegral) const;
 
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	///<summary> Checks whether this AABB contains the other in either axis.</summary>
+	///
+	///<param name="other"> The other AABB to check against.</param>
+	///<param name="xAxis"> [out] Whether this AABB contains the other one in the x axis.</param>
+	///<param name="yAxis"> [out] Whether this AABB contains the other one in the y axis.</param>
+	///
+	///<returns> true if the actors are colliding.</returns>
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	void Contains(AABB other, bool & xAxis, bool & yAxis) const;
 
 private:
 	float _x;

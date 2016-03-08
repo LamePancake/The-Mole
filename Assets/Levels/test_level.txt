@@ -1,6 +1,4 @@
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
-S             SES                                                               S
-S             SAS                                                               S
 S                                                                               S
 S                                                                               S
 S                                                                               S
@@ -8,18 +6,20 @@ S                                                                               
 S                                                                               S
 S                                                                               S
 S                                                                               S
+S               SES                                                             S
+S               SAS                                                             S
 S                                                                               S
-S   W                                                                           S
+S           W                                                                   S
 S                   SSSSSSSSSSASSS                                              S
-S   SO         W    A  E WS      S                                              S
+S   S          W O  A    WS      S                                              S
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 
-Pads
+Toggles
 Top one-shot
 Bottom one-shot
 Right active
 
 Doors
-Bottom switch 1
-Top switch 0
-Left switch 2
+Bottom toggle 1
+Top toggle 0
+Left toggle 2

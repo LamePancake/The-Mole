@@ -31,7 +31,7 @@ public:
 		boss        = 'B',
 		projectile  = 'P',
 		turret		= '!',
-		weightpad   = 'W',
+		toggle      = 'W',
 		door        = 'A'
 	};
 

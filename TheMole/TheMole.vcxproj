@@ -157,7 +157,7 @@
     <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="SoundEffectBank.cpp" />
     <ClCompile Include="SpriteSheet.cpp" />
-    <ClCompile Include="SwitchActor.cpp" />
+    <ClCompile Include="ToggleActor.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="TurretActor.cpp" />
     <ClCompile Include="Util.cpp" />
@@ -181,7 +181,7 @@
     <ClInclude Include="Quadtree.h" />
     <ClInclude Include="SoundEffectBank.h" />
     <ClInclude Include="SpriteSheet.h" />
-    <ClInclude Include="SwitchActor.h" />
+    <ClInclude Include="ToggleActor.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="TurretActor.h" />
     <ClInclude Include="Util.h" />

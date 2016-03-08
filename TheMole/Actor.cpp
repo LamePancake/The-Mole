@@ -9,7 +9,11 @@ Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::unordere
     _mgr(&manager),
 	_gameScreen(std::dynamic_pointer_cast<GameScreen>(manager.GetCurrentScreen())),
 	_isVisible(true),
-	_isDestroyed(false)
+	_isDestroyed(false),
+	_startXDir(startXDirection),
+	_startYDir(startYDirection),
+	_spriteXDir(startXDirection),
+	_spriteYDir(startYDirection)
 {
 	SetHealth(100);
 	
@@ -18,8 +22,6 @@ Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::unordere
 	_currentSpriteSheet = startSprite;
 
 	_aabb = AABB(_sprites[startSprite]->GetFrameWidth(), _sprites[startSprite]->GetFrameHeight(), *this);
-	_spriteXDir = startXDirection;
-	_spriteYDir = startYDirection;
 	_sprites[_currentSpriteSheet]->SetXAxisDirection(_spriteXDir);
 	_sprites[_currentSpriteSheet]->SetYAxisDirection(_spriteYDir);
 	_sprites[_currentSpriteSheet]->Start();
@@ -155,8 +157,8 @@ void Actor::Reset(Vector2 pos)
 {
 	SetPosition(pos);
 	SetHealth(100);
-	SetActorXDirection(SpriteSheet::XAxisDirection::RIGHT);
-	SetActorYDirection(SpriteSheet::YAxisDirection::UP);
+	SetActorXDirection(_startXDir);
+	SetActorYDirection(_startYDir);
 	_aabb.UpdatePosition(*this);
 }
 

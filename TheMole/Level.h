@@ -57,6 +57,29 @@ public:
 	 */
 	void GetTileRange(int startRow, int endRow, int startCol, int endCol, std::vector<std::shared_ptr<Tile>>& out);
 
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	///<summary> Gets the neighbouring tile in the given direction.</summary>
+	///
+	///<remarks> This method assumes that the neighbour is within bounds. Use HasNeighbourTile to check
+	///          before calling this method.</remarks>
+	///
+	///<param name="tile"> The tile for which to retrieve a neighbour.</param>
+	///<param name="edge"> The edge in which to get the neighbour.</param>
+	///
+	///<returns> The neighbour on the given tile edge.</returns>
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	std::shared_ptr<Tile> GetNeighbourTile(std::shared_ptr<Tile> tile, Actor::Edge edge);
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	///<summary> Determines whether the given tile has a neighbour on the given edge.</summary>
+	///
+	///<param name="tile"> The tile for which to check for a neighbour.</param>
+	///<param name="edge"> The edge on which to check.</param>
+	///
+	///<returns> True if the tile has a neighbour, false otherwise.</returns>
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	bool HasNeighbourTile(std::shared_ptr<Tile> tile, Actor::Edge edge) const;
+
 	/**
 	 * Stores the positions of a particular type of tile
 	 *

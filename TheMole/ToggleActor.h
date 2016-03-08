@@ -3,10 +3,10 @@
 
 #include "Actor.h"
 
-class SwitchActor : public Actor
+class ToggleActor : public Actor
 {
 public:
-	SwitchActor(Vector2 position,
+    ToggleActor(Vector2 position,
 		GameManager & manager,
 		Vector2 spd,
 		std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
@@ -17,18 +17,21 @@ public:
 		bool isWeightPad)
 		: Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection),
 		_isOn(false),
-		_isWeightPad(isWeightPad)
+		_isWeightPad(isWeightPad),
+        _edge(edge)
 	{
 		_sprites[_currentSpriteSheet]->Pause();
 	}
 
 	virtual void Update(double deltaTime) override;
 
+	virtual void Reset(Vector2 pos) override;
+
 	bool IsOn() const;
 
 	Edge GetEdge() const;
 
-	virtual Type GetType() const override { return Type::weightpad; }
+	virtual Type GetType() const override { return Type::toggle; }
 
 private:
 	Edge _edge;
