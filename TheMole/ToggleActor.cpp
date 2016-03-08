@@ -1,9 +1,9 @@
-#include "SwitchActor.h"
+#include "ToggleActor.h"
 #include "GameScreen.h"
 
 using std::shared_ptr;
 
-void SwitchActor::Update(double deltaTime)
+void ToggleActor::Update(double deltaTime)
 {
     Actor::Update(deltaTime);
 
@@ -13,25 +13,26 @@ void SwitchActor::Update(double deltaTime)
 	shared_ptr<Level> level = _gameScreen->GetLevel();
     bool wasOn = _isOn;
 
-    for (auto actor : level->GetActors())
+	vector<shared_ptr<Actor>> actors = level->GetActors();
+
+	_isOn = false;
+	for (auto it = actors.begin(); it != actors.end() && !_isOn; it++)
 	{
-		Actor::Type type = actor->GetType();
+		Actor::Type type = (*it)->GetType();
 		switch (type)
 		{
 		case player:
 		case enemy:
 		case projectile:
-			if (actor->GetAABB().CheckCollision(this->_aabb))
+			if ((*it)->GetAABB().CheckCollision(this->_aabb))
 			{
 				_isOn = true;
-				goto checkstate; // Heh
 			}
 		default:
 			break;
 		}
 	}
-    
-	checkstate:
+
     // Some hacks to depress/elevate the switch (there are only two frames, and there's no delay between them)
     if (wasOn && !_isOn)
     {
@@ -45,12 +46,20 @@ void SwitchActor::Update(double deltaTime)
     }
 }
 
-bool SwitchActor::IsOn() const
+void ToggleActor::Reset(Vector2 pos)
+{
+	Actor::Reset(pos);
+	_isOn = false;
+	_sprites[_currentSpriteSheet]->SetReversed(false);
+	_sprites[_currentSpriteSheet]->Reset();
+}
+
+bool ToggleActor::IsOn() const
 {
 	return _isOn;
 }
 
-Actor::Edge SwitchActor::GetEdge() const
+Actor::Edge ToggleActor::GetEdge() const
 {
 	return _edge;
 }

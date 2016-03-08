@@ -82,7 +82,7 @@
     <ClCompile Include="DoorActor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="SwitchActor.cpp">
+    <ClCompile Include="ToggleActor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Quadtree.cpp" />
@@ -169,10 +169,10 @@
     <ClInclude Include="Util.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SwitchActor.h">
+    <ClInclude Include="DoorActor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DoorActor.h">
+    <ClInclude Include="ToggleActor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Quadtree.h" />

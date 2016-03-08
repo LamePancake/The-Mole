@@ -17,7 +17,7 @@ void DoorActor::Update(double deltaTime)
 	 */
 	if(switchOn)
 	{
-		if (!_isOpening)
+		if (!_isOpening && !_isOpen)
 		{
 			_isOpening = true;
 			_isClosing = false;
@@ -33,7 +33,7 @@ void DoorActor::Update(double deltaTime)
 	}
 	else
 	{
-		if (!_isClosing)
+		if (_isOpening || _isOpen)
 		{
 			_isOpen = false;
 			_isOpening = false;
@@ -49,6 +49,16 @@ void DoorActor::Update(double deltaTime)
 	}
 }
 
+void DoorActor::Reset(Vector2 pos)
+{
+	Actor::Reset(pos);
+	_isClosing = false;
+	_isOpening = false;
+	_isOpen = false;
+	_sprites[_currentSpriteSheet]->SetReversed(false);
+	_sprites[_currentSpriteSheet]->Reset();
+}
+
 bool DoorActor::IsOpening() const
 {
 	return _isOpening;
@@ -62,4 +72,9 @@ bool DoorActor::IsClosing() const
 bool DoorActor::IsOpen() const
 {
 	return _isOpen;
+}
+
+Actor::Edge DoorActor::GetEdge() const
+{
+	return _edge;
 }
