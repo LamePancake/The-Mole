@@ -73,7 +73,3 @@ void MenuScreen::Unload() {
 	delete _settings;
     delete _menuTheme;
 }
-
-void MenuScreen::Reset()
-{
-}

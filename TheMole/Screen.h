@@ -56,9 +56,6 @@ public:
 		SCREEN_LOAD_SUCCESS,
 		SCREEN_LOAD_FAILTURE
 	};
-
-protected:
-	virtual void Reset() = 0;
 };
 
 #endif

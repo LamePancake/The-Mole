@@ -49,27 +49,21 @@ int LevelSelectScreen::Update(double elapsedSecs)
 		switch (_curMenuItem) 
 		{
 		case 0:
-			Reset();
 			_mgr->SetNextScreen("denIntro");
 			return SCREEN_FINISH;
 		case 1:
-			Reset();
 			_mgr->SetNextScreen("vikingIntro");
 			return SCREEN_FINISH;
 		case 2:
-			Reset();
 			_mgr->SetNextScreen("grassIntro");
 			return SCREEN_FINISH;
 		case 3:
-			Reset();
 			_mgr->SetNextScreen("starscapeIntro");
 			return SCREEN_FINISH;
 		case 4:
-			Reset();
 			_mgr->SetNextScreen("bossIntro");
 			return SCREEN_FINISH;
 		case 5:
-			Reset();
 			_mgr->SetNextScreen("menu");
 			return SCREEN_FINISH;
 		}
@@ -98,8 +92,3 @@ void LevelSelectScreen::Unload()
 	delete _bossLevel;
 	delete _back;
 }
-
-void LevelSelectScreen::Reset()
-{
-}
-

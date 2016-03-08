@@ -94,7 +94,6 @@ int GameScreen::Update(double elapsedSecs)
 	{
 		if (_mgr->inputManager->ActionOccurred("CONFIRM", Input::Pressed))
 		{
-			Reset();
 			_mgr->SetNextScreen(_nextLevel);
 			return SCREEN_FINISH;
 		}
@@ -156,6 +155,7 @@ void GameScreen::Draw()
 
 void GameScreen::Unload()
 {
+	_paused = false;
 	delete _mainMenu;
 	delete _levelSelect;
 	delete _return;
@@ -179,14 +179,10 @@ int GameScreen::OnPause()
 		switch (_curMenuItem)
 		{
 		case 0:
-			Reset();
 			_mgr->SetNextScreen("levelSelect");
-			_paused = false;
 			return SCREEN_FINISH;
 		case 1:
-			Reset();
 			_mgr->SetNextScreen("menu");
-			_paused = false;
 			return SCREEN_FINISH;
 		case 2:
 			_paused = false;
@@ -194,8 +190,4 @@ int GameScreen::OnPause()
 	}
 
 	return SCREEN_CONTINUE;
-}
-
-void GameScreen::Reset()
-{
 }

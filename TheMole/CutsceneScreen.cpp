@@ -54,7 +54,6 @@ int CutsceneScreen::Update(double elapsedSecs)
 		
 		if (_skipTimer >= SKIP_TIME)
 		{
-			Reset();
 			_currentProtagDialog = " ";
 			_mgr->SetNextScreen(_nextScreen);
 			return SCREEN_FINISH;
@@ -72,7 +71,6 @@ int CutsceneScreen::Update(double elapsedSecs)
 
 		if (_dialogIndex >= _dialog.size())
 		{
-			Reset();
 			_mgr->SetNextScreen(_nextScreen);
 			return SCREEN_FINISH;
 		}
@@ -180,6 +178,11 @@ void CutsceneScreen::Draw()
 // Could probably put this in a destructor, actually, but I guess it's nice to know when it will be called
 void CutsceneScreen::Unload()
 {
+	_dialogIndex = 0;
+	_skipTimer = 0;
+	_currentNPCDialog = " ";
+	_currentProtagDialog = " ";
+
 	delete _background;
 	delete _protagDialogBox;
 	delete _npcDialogBox;
@@ -224,12 +227,4 @@ void CutsceneScreen::UpdateDialog()
 		_currentNPCDialog = _dialog[_dialogIndex].substr(1).append(_dialog[_dialogIndex].substr(0, 1));
 		_currentlySpeaking = NPC;
 	}
-}
-
-void CutsceneScreen::Reset()
-{
-	_dialogIndex = 0;
-	_skipTimer = 0;
-	_currentNPCDialog = " ";
-	_currentProtagDialog = " ";
 }

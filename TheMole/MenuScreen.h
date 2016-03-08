@@ -21,7 +21,4 @@ private:
 	SDL2pp::Texture* _settings;
 	SDL2pp::Texture* _quit;
     SDL2pp::Music* _menuTheme;
-
-protected:
-	virtual void Reset() override;
 };
