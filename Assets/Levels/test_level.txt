@@ -11,7 +11,7 @@ S               SAS                                                             
 S                                                                               S
 S           W                                                                   S
 S                   SSSSSSSSSSASSS                                              S
-S   S          W O  A  E WS      S                                              S
+S   S          W O  A    WS      S                                              S
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 
 Toggles
@@ -21,5 +21,5 @@ Right active
 
 Doors
 Bottom toggle 1
-Top toggle 2
-Left toggle 0
+Top toggle 0
+Left toggle 2

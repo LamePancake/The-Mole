@@ -23,10 +23,21 @@ AABB::AABB(double width, double height, Actor & actor)
 
 bool AABB::CheckCollision(AABB otherBox)
 {
-	if (_x < otherBox.GetX() + otherBox.GetWidth() &&
-		_x + _width > otherBox.GetX() &&
-		_y < otherBox.GetY() + otherBox.GetHeight() &&
-		_y + _height > otherBox.GetY())
+    //
+	//     b0--------b1
+	//      |        |
+	// a0---|----a1  |
+	//  |   |    |   |
+	//  |  b3--------b2
+	//  |        |
+	//  |        |
+	// a3--------a2
+    //
+	// (a0.x is less than b1.x and a1.x is greater than b0.x) collided in x axis
+	// (a0.y is less than b3.y and a3.y is greater than b0.y) collided in y axis
+	//
+	if ((_x < otherBox.GetX() + otherBox.GetWidth() &&  _x + _width > otherBox.GetX()) &&
+		(_y < otherBox.GetY() + otherBox.GetHeight() && _y + _height > otherBox.GetY()))
 	{
 		// we collided
 		return true;

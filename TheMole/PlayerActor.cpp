@@ -106,10 +106,12 @@ void PlayerActor::Update(double elapsedSecs)
 					if (affectsY)
 					{
 						_curKinematic.position.SetY(_curKinematic.position.GetY() + overlap.GetY());
+						_prevKinematic.position.SetY(_curKinematic.position.GetY()); // Tile collision will screw up otherwise...
 					}
 					else
 					{
 						_curKinematic.position.SetX(_curKinematic.position.GetX() + overlap.GetX());
+						_prevKinematic.position.SetX(_curKinematic.position.GetX()); // Tile collision will screw up otherwise...
 					}
 				}
 				break;

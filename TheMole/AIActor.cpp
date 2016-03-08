@@ -31,17 +31,20 @@ void AIActor::SetIsMindControlCandidate(bool isCandidate)
 	_isCandidate = isCandidate;
 
 	// We're finishing up mind control selection and we're under control, so determine velocity
-	if(!_isCandidate && _underControl)
+	if(!_isCandidate)
 	{
-		// Change the x direction and speed appropriately
-		_spriteXDir = _controlDir;
-		int multiplier = _spriteXDir == SpriteSheet::XAxisDirection::LEFT ? -1 : 1;
-		float xSpeed = std::fabsf(_curKinematic.velocity.GetX());
-		_curKinematic.velocity.SetX(xSpeed * multiplier);
-		_controlTimeLeft = MIND_CONTROL_TIME;
-		_currentPulseTime = 0;
-		_pulseTimeTotal = PULSE_START_TIME;
 		_sprites[_currentSpriteSheet]->SetScale(1.0);
+		if (_underControl)
+		{
+			// Change the x direction and speed appropriately
+			_spriteXDir = _controlDir;
+			int multiplier = _spriteXDir == SpriteSheet::XAxisDirection::LEFT ? -1 : 1;
+			float xSpeed = std::fabsf(_curKinematic.velocity.GetX());
+			_curKinematic.velocity.SetX(xSpeed * multiplier);
+			_controlTimeLeft = MIND_CONTROL_TIME;
+			_currentPulseTime = 0;
+			_pulseTimeTotal = PULSE_START_TIME;
+		}
 	}
 }
 
@@ -118,21 +121,25 @@ void AIActor::Update(double elapsedSecs)
 						if (affectsY)
 						{
 							_curKinematic.position.SetY(_curKinematic.position.GetY() + overlap.GetY());
+							_prevKinematic.position.SetY(_curKinematic.position.GetY());
 						}
 						else
 						{
-							float reverseX = _curKinematic.velocity.GetX() * -1;
-							SpriteSheet::XAxisDirection reverseDir = _spriteXDir == SpriteSheet::XAxisDirection::LEFT ? SpriteSheet::XAxisDirection::RIGHT : SpriteSheet::XAxisDirection::LEFT;
-							_curKinematic.velocity.SetX(reverseX);
-							_spriteXDir = reverseDir;
 							_curKinematic.position.SetX(_curKinematic.position.GetX() + overlap.GetX());
+							_prevKinematic.position.SetX(_curKinematic.position.GetX());
+							if (!_underControl)
+							{
+								float reverseX = _curKinematic.velocity.GetX() * -1;
+								SpriteSheet::XAxisDirection reverseDir = _spriteXDir == SpriteSheet::XAxisDirection::LEFT ? SpriteSheet::XAxisDirection::RIGHT : SpriteSheet::XAxisDirection::LEFT;
+								_curKinematic.velocity.SetX(reverseX);
+								_spriteXDir = reverseDir;
+							}
 						}
 					}
 					break;
 				}
 			}
 		}
-
 		ScanNeighbouringTiles(_gameScreen->GetLevel());
 	}
     _prevKinematic = _curKinematic;
@@ -198,6 +205,7 @@ void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level>& level)
 			case Tile::spike:
 				SetHealth(0);
 			default:
+				float beforeX = _curKinematic.position.GetX();
                 if (_collisionInfo.colPenetration == 0) continue;
 				_curKinematic.position.SetX(correctedXPos);
 
