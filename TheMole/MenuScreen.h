@@ -1,7 +1,9 @@
 #pragma once
 #include "Screen.h"
+#include "SpriteSheet.h"
+#include "Vector2.h"
 
-#define NUM_MENU_ITEMS 3
+#define NUM_MENU_ITEMS 4
 
 class GameManager;
 
@@ -17,8 +19,19 @@ private:
 	GameManager* _mgr;
 	int _curMenuItem;
 	SDL2pp::Texture* _menuItems[NUM_MENU_ITEMS];
-	SDL2pp::Texture* _play;
-	SDL2pp::Texture* _settings;
-	SDL2pp::Texture* _quit;
+	SDL2pp::Texture* _background;
+	SDL2pp::Texture* _menuBorder;
+	SDL2pp::Texture* _controls;
     SDL2pp::Music* _menuTheme;
+	SDL2pp::Font* _font;
+
+	std::shared_ptr<SpriteSheet> _logo;
+	std::shared_ptr<SpriteSheet> _borin;
+	Vector2 _borinPosition;
+	bool _delay;
+	bool _update;
+	float _direction;
+	double _timer;
+
+	std::string _nextScreen;
 };

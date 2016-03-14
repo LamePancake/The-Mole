@@ -20,8 +20,8 @@ const static SDL_Color LOCKED   = { 80, 80, 80, 255 };
 const static SDL_Color SELECTED = { 255, 80, 80, 255 };
 const static SDL_Color LOCKED_AND_SELECTED = { 140, 80, 80, 255 };
 
-#define MAX_DELAY 1.5
-#define VELOCITY 350.0
+#define MAX_DELAY 1.2
+#define VELOCITY 400.0
 
 int LevelSelectScreen::Load() 
 {
@@ -175,20 +175,20 @@ void LevelSelectScreen::Draw()
 				c = LOCKED_AND_SELECTED;
 			else
 				c = SELECTED;
-			scaleFactor = 10;
+			scaleFactor = 15;
 		}
 		else if (!_mgr->_unlockedLevels[LEVEL_NAMES[i]])
 			c = LOCKED;
 		else
 			c = NORMAL;
 
-		rend.Copy(*_optionBorder, NullOpt, Rect(0.0f, size.GetY() * (0.25f + ((float)i * 0.12f)), _levels[i]->GetWidth() + size.GetX() * 0.17f, _levels[i]->GetHeight() + scaleFactor));
+		rend.Copy(*_optionBorder, NullOpt, Rect(0.0f, size.GetY() * (0.25f + ((float)i * 0.12f)) - (scaleFactor / 2), _levels[i]->GetWidth() + size.GetX() * 0.17f, _levels[i]->GetHeight() + scaleFactor));
 
 		_levels[i]->SetColorMod(c.r, c.g, c.b);
-		rend.Copy(*_levels[i], NullOpt, Rect(size.GetX() * 0.05f, size.GetY() * (0.25f + ((float)i * 0.12f)), _levels[i]->GetWidth() + scaleFactor, _levels[i]->GetHeight() + scaleFactor));
+		rend.Copy(*_levels[i], NullOpt, Rect(size.GetX() * 0.05f, size.GetY() * (0.25f + ((float)i * 0.12f)) - (scaleFactor / 2), _levels[i]->GetWidth() + scaleFactor, _levels[i]->GetHeight() + scaleFactor));
 
 		if (!_mgr->_unlockedLevels[LEVEL_NAMES[i]])
-			rend.Copy(*_lock, NullOpt, Rect(size.GetX() * 0.07f + _levels[i]->GetWidth(), size.GetY() * (0.26f + ((float)i * 0.12f)), _lock->GetWidth() + scaleFactor, _lock->GetHeight() + scaleFactor));
+			rend.Copy(*_lock, NullOpt, Rect(size.GetX() * 0.07f + _levels[i]->GetWidth(), size.GetY() * (0.26f + ((float)i * 0.12f)) - (scaleFactor / 2), _lock->GetWidth() + scaleFactor, _lock->GetHeight() + scaleFactor));
 	}
 	
 	if (_mgr->_unlockedLevels[LEVEL_NAMES[_curMenuItem]])
@@ -212,20 +212,20 @@ void LevelSelectScreen::Unload()
 	_nextScreen = "menu";
 	_curMenuItem = 0;
 
-	free(_levelSelect);
-	free(_lock);
-	free(_optionBorder);
-	free(_controls);
-	free(_unknown);
+	delete _levelSelect;
+	delete _lock;
+	delete _optionBorder;
+	delete _controls;
+	delete _unknown;
 
-	free(_font);
-	free(_descFont);
-	free(_headerFont);
+	delete _font;
+	delete _descFont;
+	delete _headerFont;
 
 	for (int i = 0; i < NUM_LEVELS; ++i)
 	{
-		free(_levels[i]);
-		free(_backgroundTextures[i]);
-		free(_descriptions[i]);
+		delete _levels[i];
+		delete _backgroundTextures[i];
+		delete _descriptions[i];
 	}
 }
