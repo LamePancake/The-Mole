@@ -1,6 +1,7 @@
 #pragma once
 #include "Screen.h"
 #include "SpriteSheet.h"
+#include "Vector2.h"
 
 #define NUM_LEVELS 6
 
@@ -22,8 +23,14 @@ private:
 	SDL2pp::Texture* _levels[NUM_LEVELS];
 	SDL2pp::Texture* _levelSelect;
 	SDL2pp::Texture* _lock;
+	SDL2pp::Texture* _optionBorder;
+	SDL2pp::Texture* _controls;
 
 	std::shared_ptr<SpriteSheet> _borin;
+	Vector2 _borinPosition;
+	bool _delay;
+	double _timer;
+	std::string _nextScreen;
 
 	SDL2pp::Font* _font;
 	SDL2pp::Font* _headerFont;
