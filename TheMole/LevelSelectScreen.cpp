@@ -93,13 +93,13 @@ int LevelSelectScreen::Update(double elapsedSecs)
 		return SCREEN_FINISH;
 	}
 
-	if (_mgr->inputManager->ActionOccurred("ARROWDOWN", Input::Pressed) || _mgr->inputManager->ActionOccurred("DOWN", Input::Pressed))
+	if (!_delay && _mgr->inputManager->ActionOccurred("ARROWDOWN", Input::Pressed) || _mgr->inputManager->ActionOccurred("DOWN", Input::Pressed))
 	{
 		_borin->SetXAxisDirection(_borin->GetXAxisDirection() == SpriteSheet::LEFT ? SpriteSheet::RIGHT : SpriteSheet::LEFT);
 		_curMenuItem++;
 		if (_curMenuItem == NUM_LEVELS) _curMenuItem = 0;
 	}
-	else if (_mgr->inputManager->ActionOccurred("ARROWUP", Input::Pressed) || _mgr->inputManager->ActionOccurred("UP", Input::Pressed))
+	else if (!_delay && _mgr->inputManager->ActionOccurred("ARROWUP", Input::Pressed) || _mgr->inputManager->ActionOccurred("UP", Input::Pressed))
 	{
 		_borin->SetXAxisDirection(_borin->GetXAxisDirection() == SpriteSheet::LEFT ? SpriteSheet::RIGHT : SpriteSheet::LEFT);
 		_curMenuItem--;
@@ -107,7 +107,7 @@ int LevelSelectScreen::Update(double elapsedSecs)
 	}
 
 	// We selected a menu item; do the appropriate thing
-	if (_mgr->inputManager->ActionOccurred("CONFIRM", Input::Pressed))
+	if (!_delay && _mgr->inputManager->ActionOccurred("CONFIRM", Input::Pressed))
 	{
 		switch (_curMenuItem) 
 		{

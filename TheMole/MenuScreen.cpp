@@ -88,7 +88,7 @@ int MenuScreen::Update(double elapsedSecs)
 	}
 
 	// Change the currently selected menu item
-	if (_mgr->inputManager->ActionOccurred("ARROWRIGHT", Input::Pressed) 
+	if (!_delay && _mgr->inputManager->ActionOccurred("ARROWRIGHT", Input::Pressed)
 		|| _mgr->inputManager->ActionOccurred("RIGHT", Input::Pressed)) 
 	{
 		_update = true;
@@ -97,7 +97,7 @@ int MenuScreen::Update(double elapsedSecs)
 		_borin->SetXAxisDirection(SpriteSheet::RIGHT);
 		if (_curMenuItem == NUM_MENU_ITEMS) _curMenuItem = NUM_MENU_ITEMS - 1;
 	}
-	else if (_mgr->inputManager->ActionOccurred("ARROWLEFT", Input::Pressed)
+	else if (!_delay && _mgr->inputManager->ActionOccurred("ARROWLEFT", Input::Pressed)
 		|| _mgr->inputManager->ActionOccurred("LEFT", Input::Pressed))
 	{
 		_update = true;
@@ -108,7 +108,7 @@ int MenuScreen::Update(double elapsedSecs)
 	}
 
 	// We selected a menu item; do the appropriate thing
-	if ((_direction == 1 && _borinPosition.GetX() >= size.GetX() * (0.14f + ((float)_curMenuItem * 0.24f)) - (_borin->GetFrameWidth() / 2)
+	if (!_delay &&  (_direction == 1 && _borinPosition.GetX() >= size.GetX() * (0.14f + ((float)_curMenuItem * 0.24f)) - (_borin->GetFrameWidth() / 2)
 		|| _direction == -1 && _borinPosition.GetX() <= size.GetX() * (0.14f + ((float)_curMenuItem * 0.24f)) - (_borin->GetFrameWidth() / 2))
 		&& _mgr->inputManager->ActionOccurred("CONFIRM", Input::Pressed))
 	{
