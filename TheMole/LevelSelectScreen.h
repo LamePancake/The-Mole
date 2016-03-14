@@ -1,5 +1,6 @@
 #pragma once
 #include "Screen.h"
+#include "SpriteSheet.h"
 
 #define NUM_LEVELS 6
 
@@ -17,13 +18,14 @@ private:
 
 	GameManager* _mgr;
 	int _curMenuItem;
-	SDL2pp::Texture* _levelItems[NUM_LEVELS];
-	
-	SDL2pp::Texture* _denLevel;
-	SDL2pp::Texture* _vikingLevel;
-	SDL2pp::Texture* _grassLevel;
-	SDL2pp::Texture* _starscapeLevel;
-	SDL2pp::Texture* _bossLevel;
-	SDL2pp::Texture* _back;
+	SDL2pp::Texture* _backgroundTextures[NUM_LEVELS];
+	SDL2pp::Texture* _levels[NUM_LEVELS];
+	SDL2pp::Texture* _levelSelect;
+	SDL2pp::Texture* _lock;
+
+	std::shared_ptr<SpriteSheet> _borin;
+
+	SDL2pp::Font* _font;
+	SDL2pp::Font* _headerFont;
 };
 

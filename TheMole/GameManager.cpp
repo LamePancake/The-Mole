@@ -102,3 +102,51 @@ void GameManager::Loop(string& startScreen) {
 		SDL_Delay(1);
 	}
 }
+
+void GameManager::ReadFile(std::string path)
+{
+	std::string line;
+	std::ifstream inFile(path.c_str());
+	std::string levels[] = { "den", "viking", "grass", "starscape", "boss", "back" };
+
+	if (!inFile.is_open())
+	{
+		_unlockedLevels["den"] = true;
+		_unlockedLevels["viking"] = false;
+		_unlockedLevels["grass"] = false;
+		_unlockedLevels["starscape"] = false;
+		_unlockedLevels["boss"] = false;
+		_unlockedLevels["back"] = true;
+		return;
+	}
+
+	std::getline(inFile, line);
+
+	if (line.size() > 6)
+	{
+		_unlockedLevels["den"] = true;
+		_unlockedLevels["viking"] = false;
+		_unlockedLevels["grass"] = false;
+		_unlockedLevels["starscape"] = false;
+		_unlockedLevels["boss"] = false;
+		_unlockedLevels["back"] = true;
+		return;
+	}
+
+	for (int i = 0; i < line.size(); ++i)
+	{
+		if (line[i] == '1')
+			_unlockedLevels[levels[i]] = true;
+		else
+			_unlockedLevels[levels[i]] = false;
+	}
+
+	inFile.close();
+	_unlockedLevels["den"] = true;
+	_unlockedLevels["back"] = true;
+}
+
+void GameManager::WriteFile(std::string path)
+{
+
+}

@@ -5,6 +5,8 @@
 #include <memory>
 #include <vector>
 #include <SDL2pp\SDL2pp.hh>
+#include <map>
+#include <fstream>
 #include "Screen.h"
 #include "Input.h"
 
@@ -57,6 +59,10 @@ public:
 	SDL2pp::Renderer& GetRenderer() const { return _renderer; }
 
 	static GameManager* GetInstance();
+
+	void ReadFile(std::string path);
+	void WriteFile(std::string path);
+	std::map<std::string, bool> _unlockedLevels;
 
 	/// Input *manager*
 	Input* inputManager;
