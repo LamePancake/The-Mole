@@ -4,7 +4,16 @@
 
 using namespace SDL2pp;
 
-const static std::string LEVEL_NAMES[6] = { "den", "viking", "grass", "starscape", "boos", "back" };
+const static std::string LEVEL_NAMES[6] = { "den", "viking", "grass", "starscape", "boss", "back" };
+const static std::string LEVEL_DESCRIPTION[6] =
+{
+	"Borin travels from his cozy den to the Viking Stronghold.",
+	"Borin explores the trap-filled Viking Stronghold.",
+	"Borin ventures through a field inhabited by chickens.",
+	"Borin discovers a spooky movie theatre.",
+	"Borin challenges the Underwatch to free his mole brethren.",
+	"Return to the Main Menu." 
+};
 
 const static SDL_Color NORMAL   = { 255, 255, 255, 255 };
 const static SDL_Color LOCKED   = { 80, 80, 80, 255 };
@@ -12,7 +21,7 @@ const static SDL_Color SELECTED = { 255, 80, 80, 255 };
 const static SDL_Color LOCKED_AND_SELECTED = { 140, 80, 80, 255 };
 
 #define MAX_DELAY 1.5
-#define VELOCITY 300.0
+#define VELOCITY 350.0
 
 int LevelSelectScreen::Load() 
 {
@@ -22,6 +31,7 @@ int LevelSelectScreen::Load()
 
 	_font = new SDL2pp::Font(".\\Assets\\GUI\\Exo-Regular.otf", 50);
 	_headerFont = new SDL2pp::Font(".\\Assets\\GUI\\BEBAS.ttf", 80);
+	_descFont = new SDL2pp::Font(".\\Assets\\GUI\\Exo-Regular.otf", 35);
 
 	_backgroundTextures[0] = new Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\den_bg.png");
 	_backgroundTextures[1] = new Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\viking_bg.png");
@@ -36,6 +46,14 @@ int LevelSelectScreen::Load()
 	_levels[3] = new Texture(_mgr->GetRenderer(), _font->RenderText_Solid("Abandoned Theatre",  NORMAL));
 	_levels[4] = new Texture(_mgr->GetRenderer(), _font->RenderText_Solid("The Final Showdown", NORMAL));
 	_levels[5] = new Texture(_mgr->GetRenderer(), _font->RenderText_Solid("Back",               NORMAL));
+
+	_descriptions[0] = new Texture(_mgr->GetRenderer(), _descFont->RenderText_Solid(LEVEL_DESCRIPTION[0], NORMAL));
+	_descriptions[1] = new Texture(_mgr->GetRenderer(), _descFont->RenderText_Solid(LEVEL_DESCRIPTION[1], NORMAL));
+	_descriptions[2] = new Texture(_mgr->GetRenderer(), _descFont->RenderText_Solid(LEVEL_DESCRIPTION[2], NORMAL));
+	_descriptions[3] = new Texture(_mgr->GetRenderer(), _descFont->RenderText_Solid(LEVEL_DESCRIPTION[3], NORMAL));
+	_descriptions[4] = new Texture(_mgr->GetRenderer(), _descFont->RenderText_Solid(LEVEL_DESCRIPTION[4], NORMAL));
+	_descriptions[5] = new Texture(_mgr->GetRenderer(), _descFont->RenderText_Solid(LEVEL_DESCRIPTION[5], NORMAL));
+	_unknown         = new Texture(_mgr->GetRenderer(), _descFont->RenderText_Solid("?????", NORMAL));
 
 	_levelSelect  = new Texture(_mgr->GetRenderer(), _headerFont->RenderText_Solid("Level Select", NORMAL));
 	_lock         = new Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\lock.png");
@@ -173,6 +191,11 @@ void LevelSelectScreen::Draw()
 			rend.Copy(*_lock, NullOpt, Rect(size.GetX() * 0.07f + _levels[i]->GetWidth(), size.GetY() * (0.26f + ((float)i * 0.12f)), _lock->GetWidth() + scaleFactor, _lock->GetHeight() + scaleFactor));
 	}
 	
+	if (_mgr->_unlockedLevels[LEVEL_NAMES[_curMenuItem]])
+		rend.Copy(*_descriptions[_curMenuItem], NullOpt, Rect(size.GetX() * 0.98f - _descriptions[_curMenuItem]->GetWidth(), size.GetY() * 0.92f, _descriptions[_curMenuItem]->GetWidth(), _descriptions[_curMenuItem]->GetHeight()));
+	else
+		rend.Copy(*_unknown, NullOpt, Rect(size.GetX() * 0.98f - _unknown->GetWidth(), size.GetY() * 0.92f, _unknown->GetWidth(), _unknown->GetHeight()));
+
 	rend.Copy(*_levelSelect, NullOpt, Rect(size.GetX() * 0.02f, size.GetY() * 0.07f, _levelSelect->GetWidth(), _levelSelect->GetHeight()));
 	_borin->Draw(SDL2pp::Point((int)_borinPosition.GetX(), (int)_borinPosition.GetY()));
 
@@ -193,10 +216,16 @@ void LevelSelectScreen::Unload()
 	free(_lock);
 	free(_optionBorder);
 	free(_controls);
+	free(_unknown);
+
+	free(_font);
+	free(_descFont);
+	free(_headerFont);
 
 	for (int i = 0; i < NUM_LEVELS; ++i)
 	{
 		free(_levels[i]);
 		free(_backgroundTextures[i]);
+		free(_descriptions[i]);
 	}
 }

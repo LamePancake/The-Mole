@@ -148,5 +148,18 @@ void GameManager::ReadFile(std::string path)
 
 void GameManager::WriteFile(std::string path)
 {
-
+	std::ofstream myfile;
+	myfile.open(path);
+	
+	if (myfile.is_open())
+	{
+		myfile << _unlockedLevels["den"] ? "1" : "0";
+		myfile << _unlockedLevels["viking"] ? "1" : "0";
+		myfile << _unlockedLevels["grass"] ? "1" : "0";
+		myfile << _unlockedLevels["starscape"] ? "1" : "0";
+		myfile << _unlockedLevels["boss"] ? "1" : "0";
+		myfile << _unlockedLevels["back"] ? "1" : "0";
+	}
+	
+	myfile.close();
 }

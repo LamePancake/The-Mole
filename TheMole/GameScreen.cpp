@@ -94,8 +94,8 @@ int GameScreen::Update(double elapsedSecs)
 	{
 		if (_mgr->inputManager->ActionOccurred("CONFIRM", Input::Pressed))
 		{
-			//_mgr->_unlockedLevels[_nextLevel] = true;
-			//_mgr->WriteFile(".\\Assets\\Levels\\level_unlocks.txt");
+			_mgr->_unlockedLevels[_nextLevel] = true;
+			_mgr->WriteFile(".\\Assets\\Levels\\level_unlocks.txt");
 			_mgr->SetNextScreen(_nextLevel);
 			return SCREEN_FINISH;
 		}

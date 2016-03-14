@@ -21,10 +21,12 @@ private:
 	int _curMenuItem;
 	SDL2pp::Texture* _backgroundTextures[NUM_LEVELS];
 	SDL2pp::Texture* _levels[NUM_LEVELS];
+	SDL2pp::Texture* _descriptions[NUM_LEVELS];
 	SDL2pp::Texture* _levelSelect;
 	SDL2pp::Texture* _lock;
 	SDL2pp::Texture* _optionBorder;
 	SDL2pp::Texture* _controls;
+	SDL2pp::Texture* _unknown;
 
 	std::shared_ptr<SpriteSheet> _borin;
 	Vector2 _borinPosition;
@@ -33,6 +35,7 @@ private:
 	std::string _nextScreen;
 
 	SDL2pp::Font* _font;
+	SDL2pp::Font* _descFont;
 	SDL2pp::Font* _headerFont;
 };
 
