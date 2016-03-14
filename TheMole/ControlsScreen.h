@@ -1,13 +1,10 @@
 #pragma once
 #include "Screen.h"
-#include "SpriteSheet.h"
 #include "Vector2.h"
-
-#define NUM_DEVELOPERS 4
 
 class GameManager;
 
-class CreditsScreen :public Screen
+class ControlsScreen :public Screen
 {
 public:
 	virtual int Load() override;
@@ -19,18 +16,12 @@ private:
 
 	GameManager* _mgr;
 	SDL2pp::Texture* _backgroundTexture;
-	SDL2pp::Texture* _developers[NUM_DEVELOPERS];
 	SDL2pp::Texture* _back;
 	SDL2pp::Texture* _border;
 	SDL2pp::Texture* _controls;
-	SDL2pp::Texture* _credits;
-
-	std::shared_ptr<SpriteSheet> _chicken;
-	Vector2 _chickenPosition;
-	bool _delay;
-	double _timer;
-	float _direction;
+	SDL2pp::Texture* _controlsImage;
 
 	SDL2pp::Font* _font;
 	SDL2pp::Font* _headerFont;
 };
+

@@ -11,6 +11,7 @@
 #include "Input.h"
 #include "CutsceneScreen.h"
 #include "CreditsScreen.h"
+#include "ControlsScreen.h"
 
 using std::string;
 using std::unordered_map;
@@ -56,10 +57,12 @@ int main(int argc, char** argv) {
 		shared_ptr<Screen> bossIntro(new CutsceneScreen(".\\Assets\\GUI\\dialog_box.png", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\Textures\\den_bg.png", 1, 0, ".\\Assets\\Textures\\Borin_dialog.png", 4, 0.8, ".\\Assets\\Textures\\Toad_dialog.png", 6, 0.50, bank, "bosslevel", ".\\Assets\\Dialog\\final_battle_dialog.txt", "Borin", "Gray"));
 
 		shared_ptr<Screen> credits(new CreditsScreen());
+		shared_ptr<Screen> controls(new ControlsScreen());
 
 		screens.insert({ "menu", menu });
 		screens.insert({ "levelSelect", levelSelect });
 		screens.insert({ "credits", credits });
+		screens.insert({ "controls", controls });
 
 		screens.insert({ "denlevel", den });
 		screens.insert({ "vikinglevel", viking });
