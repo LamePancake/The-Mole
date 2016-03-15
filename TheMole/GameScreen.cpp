@@ -128,10 +128,10 @@ void GameScreen::Draw()
 	float levelWidth  = _level->GetLevelSize().x * _level->GetTileWidth();
 	float levelHeight = _level->GetLevelSize().y * _level->GetTileHeight();
 
-	float xNew      = (_camera->GetViewport().x / levelWidth) * _background->GetWidth();
-	float yNew      = (_camera->GetViewport().y / levelHeight) * _background->GetHeight();
-	float newWidth  = (_camera->GetViewport().GetW() / levelWidth) * _background->GetWidth();
-	float newHeight = (_camera->GetViewport().GetH() / levelHeight) * _background->GetHeight();
+	float xNew      = ((float)_camera->GetViewport().x / levelWidth) * _background->GetWidth();
+	float yNew      = ((float)_camera->GetViewport().y / levelHeight) * _background->GetHeight();
+	float newWidth  = ((float)_camera->GetViewport().GetW() / levelWidth) * _background->GetWidth();
+	float newHeight = ((float)_camera->GetViewport().GetH() / levelHeight) * _background->GetHeight();
 
 	rend.Copy(*_background, SDL2pp::Rect(xNew, yNew, newWidth, newHeight), SDL2pp::NullOpt);
 	_camera->CentreView(_player->GetPosition());
