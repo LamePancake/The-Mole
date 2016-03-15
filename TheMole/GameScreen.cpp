@@ -120,11 +120,20 @@ int GameScreen::Update(double elapsedSecs)
 
 void GameScreen::Draw()
 {
+	SDL2pp::Point dim = GameManager::GetInstance()->GetWindow().GetSize();
 	SDL2pp::Renderer& rend = _mgr->GetRenderer();
 	rend.SetDrawColor(100, 100, 100, 255);
 	rend.Clear();
 
-	rend.Copy(*_background, SDL2pp::NullOpt, SDL2pp::NullOpt);
+	float levelWidth  = _level->GetLevelSize().x * _level->GetTileWidth();
+	float levelHeight = _level->GetLevelSize().y * _level->GetTileHeight();
+
+	float xNew      = (_camera->GetViewport().x / levelWidth) * _background->GetWidth();
+	float yNew      = (_camera->GetViewport().y / levelHeight) * _background->GetHeight();
+	float newWidth  = (_camera->GetViewport().GetW() / levelWidth) * _background->GetWidth();
+	float newHeight = (_camera->GetViewport().GetH() / levelHeight) * _background->GetHeight();
+
+	rend.Copy(*_background, SDL2pp::Rect(xNew, yNew, newWidth, newHeight), SDL2pp::NullOpt);
 	_camera->CentreView(_player->GetPosition());
 
 	// Render Level
@@ -140,7 +149,6 @@ void GameScreen::Draw()
 	// Draw the win or lose screen
 	if (_player->IsDead() || _player->AtGoal())
 	{
-		SDL2pp::Point dim = GameManager::GetInstance()->GetWindow().GetSize();
 		rend.Copy(_player->IsDead() ? *_loseScreen : *_winScreen, SDL2pp::NullOpt, SDL2pp::Rect((dim.x / 2) - (dim.x * 0.6 / 2), (dim.y / 2) - (dim.y * 0.6 / 2), dim.x * 0.6, dim.y * 0.6));
 		//Draw pancakes later
 	}
@@ -148,7 +156,6 @@ void GameScreen::Draw()
 	// Draw the pause menu
 	if (_paused)
 	{
-		SDL2pp::Point dim = GameManager::GetInstance()->GetWindow().GetSize();
 		rend.Copy(*_menuItems[_curMenuItem], SDL2pp::NullOpt, SDL2pp::Rect((dim.x / 2) - (dim.x * 0.6 / 2), (dim.y / 2) - (dim.y * 0.6 / 2), dim.x * 0.6, dim.y * 0.6));
 	}
 
