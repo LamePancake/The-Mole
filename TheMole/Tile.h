@@ -32,7 +32,8 @@ public:
 		projectile  = 'P',
 		turret		= '!',
 		toggle      = 'W',
-		door        = 'A'
+		door        = 'A',
+		dialog      = 'V',
 	};
 
 	/** Default constuctor. Initilizes everying to default values. */

@@ -33,7 +33,6 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 	// So long as we don't have *too* many repeated textures, I'm sure that this list will be totally manageable :):):):):):):););)
 	// 10/10 would read again - Trey
 	std::shared_ptr<SDL2pp::Texture> baddieWalkSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(),".\\Assets\\Textures\\Baddie_walk_56x56.png");
-	std::shared_ptr<SDL2pp::Texture> flagSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\Flag_raise.png");
 	std::shared_ptr<SDL2pp::Texture> pancakeSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\Pancake.png");
 	std::shared_ptr<SDL2pp::Texture> projectileSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\red_dot.png");
 	std::shared_ptr<SDL2pp::Texture> mindControlIndicator = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\Controlled_indicator.png");
@@ -77,7 +76,7 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 
 				player = std::make_shared<PlayerActor>(tile->GetWorldPosition(), gameManager, Vector2(.0f, 341.3f), sprites, "idle");
 				tile->SetID(Tile::blank);
-				level->SetSpawnPoint(tile->GetWorldPosition());
+				level->SetSpawnPoint(tile->GetWorldPosition(), 0);
 				level->AddActor(player);
 			}
 			break;
@@ -93,12 +92,7 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 			break;
 			case Tile::checkpoint:
 			{
-				std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
-				sprites["raise"] = std::make_shared<SpriteSheet>(flagSheet, 6, 1.0, false);
-				sprites["raise"]->Pause();
-
-				std::shared_ptr<ObjectActor> flag = std::make_shared<ObjectActor>(tile->GetWorldPosition(), gameManager, Vector2(0, 0), ObjectActor::flag, sprites, "raise");
-				level->AddActor(flag);
+				positions[Tile::checkpoint].push_back(SDL2pp::Point(tile->GetWorldPosition().GetX(), tile->GetWorldPosition().GetY()));
 				tile->SetID(Tile::blank);
 			}
 			break;
@@ -173,6 +167,11 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
                 positions[Tile::toggle].push_back(SDL2pp::Point(levelWidth, levelHeight));
                 tile->SetID(Tile::blank);
                 break;
+
+			case Tile::dialog:
+				positions[Tile::dialog].push_back(SDL2pp::Point(tile->GetWorldPosition().GetX(), tile->GetWorldPosition().GetY()));
+				tile->SetID(Tile::blank);
+				break;
 			}
 
 			level->AddTileToLevel(tile, levelHeight);
@@ -204,11 +203,23 @@ void LevelLoader::LoadActorSpecifics(ifstream & file, string & lastLine, unorder
 	std::string line = lastLine;
 
 	// Loop until we get to the first actual line
-	while (line.empty() && std::getline(file, line));
-	std::transform(line.begin(), line.end(), line.begin(), ::tolower); // make line lowercase
-	if (line == "toggles")
+	while (std::getline(file, line))
 	{
-		LoadTogglesAndDoors(file, positions[Tile::toggle], positions[Tile::door], level);
+		while (line.empty() && std::getline(file, line));
+
+		std::transform(line.begin(), line.end(), line.begin(), ::tolower); // make line lowercase
+		if (line == "toggles")
+		{
+			LoadTogglesAndDoors(file, positions[Tile::toggle], positions[Tile::door], level);
+		}
+		else if (line == "dialog")
+		{
+			LoadDialog(file, positions[Tile::dialog], level);
+		}
+		else if (line == "checkpoints")
+		{
+			LoadCheckPoints(file, positions[Tile::checkpoint], level);
+		}
 	}
 }
 
@@ -337,4 +348,42 @@ void LevelLoader::LoadTogglesAndDoors(ifstream & file, vector<SDL2pp::Point> & t
         level->AddActor(doorActor);
         tokens.clear();
     }
+}
+
+void LevelLoader::LoadDialog(ifstream & file, vector<SDL2pp::Point> & dialogPos, shared_ptr<Level> level)
+{
+	string line;
+	std::shared_ptr<SDL2pp::Texture> blankSheet = std::make_shared<SDL2pp::Texture>(GameManager::GetInstance()->GetRenderer(), ".\\Assets\\Textures\\Pancake.png");
+
+	for (size_t i = 0; i < dialogPos.size(); ++i)
+	{
+		std::getline(file, line);
+
+		std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
+		double infinity = std::numeric_limits<double>::infinity();
+		sprites["nothing"] = std::make_shared<SpriteSheet>(blankSheet, 1, infinity);
+
+		std::shared_ptr<ObjectActor> dialog = std::make_shared<ObjectActor>(Vector2(dialogPos[i].GetX(), dialogPos[i].GetY()), *GameManager::GetInstance(), Vector2(0, 0), ObjectActor::dialogTrigger, sprites, "nothing");
+		dialog->SetDialog(line);
+		level->AddActor(dialog);
+	}
+}
+
+void LevelLoader::LoadCheckPoints(ifstream & file, vector<SDL2pp::Point>& checkPointPos, shared_ptr<Level> level)
+{
+	string line;
+	std::shared_ptr<SDL2pp::Texture> flagSheet = std::make_shared<SDL2pp::Texture>(GameManager::GetInstance()->GetRenderer(), ".\\Assets\\Textures\\Flag_raise.png");
+
+	for (size_t i = 0; i < checkPointPos.size(); ++i)
+	{
+		std::getline(file, line);
+
+		std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
+		sprites["raise"] = std::make_shared<SpriteSheet>(flagSheet, 6, 1.0, false);
+		sprites["raise"]->Pause();
+
+		std::shared_ptr<ObjectActor> flag = std::make_shared<ObjectActor>(Vector2(checkPointPos[i].GetX(), checkPointPos[i].GetY()), *GameManager::GetInstance(), Vector2(0, 0), ObjectActor::flag, sprites, "raise");
+		flag->SetCheckPointID(atoi(line.c_str()));
+		level->AddActor(flag);
+	}
 }

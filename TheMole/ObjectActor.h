@@ -11,7 +11,8 @@ public:
 	{
 		flag,
 		pancake,
-		projectileThrower
+		projectileThrower,
+		dialogTrigger,
 	};
 
 	/**
@@ -27,7 +28,7 @@ public:
 	 * @param	startYDirection	The direction in the y axis which the actor will face at the start.
 	 */
 	ObjectActor(Vector2 position, GameManager & manager, Vector2 spd, int id, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites, const std::string&& startSprite,
-		SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP);
+		SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP, std::string dialog = " ", int checkPointId = 0);
 
 	/** Destructor. */
 	~ObjectActor();
@@ -72,6 +73,14 @@ public:
 	 */
 	void SetID(int id);
 
+	void SetDialog(std::string d);
+
+	std::string GetDialog();
+
+	void SetCheckPointID(int id);
+
+	int GetCheckPointID();
+
 private:
 
 	int _id;
@@ -83,5 +92,15 @@ private:
 	void PancakeUpdate(double elapsedSecs);
 
 	void ProjectileThrowerUpdate(double elapseSecs);
+
+	void DialogUpdate(double elapsedSecs);
+
+	int _checkPointID;
+
+	std::string _dialog;
+	double _timer;
+
+	SDL2pp::Texture* _dialogTexture;
+	SDL2pp::Font* _font;
 };
 

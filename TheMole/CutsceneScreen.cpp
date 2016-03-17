@@ -27,6 +27,7 @@ int CutsceneScreen::Load()
 	_dialog = OpenDialog(_dialogFilePath);
 	UpdateDialog();
 
+	_NPC->SetScale(0.8);
 	return SCREEN_LOAD_SUCCESS;
 }
 
@@ -155,15 +156,14 @@ void CutsceneScreen::Draw()
 	_nextDialogProtag->Draw(nextDialogProtagPos);
 
 	// Render the NPC dialog, sprite, and header
-	SDL2pp::Point NPCPos(dim.GetX() - _NPC->GetFrameWidth(), dim.GetY() * 0.25f - _NPC->GetFrameHeight());
-	_NPC->SetXAxisDirection(SpriteSheet::XAxisDirection::LEFT);
+	SDL2pp::Point NPCPos(dim.GetX() - _NPC->GetFrameWidth(), dim.GetY() * 0.30 - _NPC->GetFrameHeight());
 	_NPC->Draw(NPCPos);
-	rend.Copy(*_npcDialogBox, SDL2pp::NullOpt, Rect(dim.GetX() * 0.3f, dim.GetY() * 0.25f, dim.GetX() * 0.7f, dim.GetY() * 0.2f));
+	rend.Copy(*_npcDialogBox, SDL2pp::NullOpt, Rect(dim.GetX() * 0.3f, dim.GetY() * 0.30f, dim.GetX() * 0.7f, dim.GetY() * 0.2f));
 
-	rend.Copy(npcHeader, NullOpt, Rect(dim.GetX() * 0.35f, dim.GetY() * 0.28f, npcHeader.GetWidth(), npcHeader.GetHeight()));
-	rend.Copy(npcDialog, NullOpt, Rect(dim.GetX() * 0.35f, dim.GetY() * 0.28f + npcHeader.GetHeight(), npcDialog.GetWidth(), npcDialog.GetHeight()));
+	rend.Copy(npcHeader, NullOpt, Rect(dim.GetX() * 0.35f, dim.GetY() * 0.33f, npcHeader.GetWidth(), npcHeader.GetHeight()));
+	rend.Copy(npcDialog, NullOpt, Rect(dim.GetX() * 0.35f, dim.GetY() * 0.33f + npcHeader.GetHeight(), npcDialog.GetWidth(), npcDialog.GetHeight()));
 
-	SDL2pp::Point nextDialogNPCPos(dim.GetX() * 0.905f, dim.GetY() * 0.335f);
+	SDL2pp::Point nextDialogNPCPos(dim.GetX() * 0.905f, dim.GetY() * 0.385f);
 	_nextDialogNPC->SetScale(0.35f);
 	_nextDialogNPC->Draw(nextDialogNPCPos);
 

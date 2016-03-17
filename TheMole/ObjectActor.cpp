@@ -3,20 +3,38 @@
 #include "GameScreen.h"
 
 ObjectActor::ObjectActor(Vector2 position, GameManager & manager, Vector2 spd, int id, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites, const std::string&& startSprite,
-	SpriteSheet::XAxisDirection startXDirection, SpriteSheet::YAxisDirection startYDirection)
-	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection), _id(id), _collided(false)
+	SpriteSheet::XAxisDirection startXDirection, SpriteSheet::YAxisDirection startYDirection, std::string dialog, int checkPointID)
+	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection), _id(id), _collided(false), _dialog(dialog), _timer(0), _checkPointID(checkPointID)
 {
 	if (id == flag)
 		_sprites[_currentSpriteSheet]->Pause();
+
+	if (id == dialogTrigger)
+	{
+		SetVisibility(false);
+		_font = new SDL2pp::Font(".\\Assets\\GUI\\Exo-Regular.otf", 30);
+		_dialogTexture = new SDL2pp::Texture(_mgr->GetRenderer(), _font->RenderText_Solid(_dialog, SDL_Color{ 255, 255, 255, 255 }));
+	}
 }
 
 ObjectActor::~ObjectActor()
 {
+	if(_id == dialogTrigger && _font != nullptr)
+		delete _font;
+
+	if (_id == dialogTrigger && _dialogTexture != nullptr)
+		delete _dialogTexture;
 }
 
 void ObjectActor::Draw(Camera & camera)
 {
 	Actor::Draw(camera);
+
+	if (_id == dialogTrigger && _collided)
+	{
+		SDL2pp::Point size = GameManager::GetInstance()->GetWindow().GetSize();
+		_mgr->GetRenderer().Copy(*_dialogTexture, SDL2pp::NullOpt, SDL2pp::Rect(size.GetX() * 0.50f - (_dialogTexture->GetWidth() / 2), size.GetY() * 0.9f, _dialogTexture->GetWidth(), _dialogTexture->GetHeight()));
+	}
 }
 
 void ObjectActor::Update(double elapsedSecs)
@@ -36,12 +54,22 @@ void ObjectActor::Update(double elapsedSecs)
 			PancakeUpdate(elapsedSecs);
 			break;
 		}
+		case dialogTrigger:
+		{
+			DialogUpdate(elapsedSecs);
+			break;
+		}
 	}
 }
 
 void ObjectActor::Reset(Vector2 pos)
 {
 	Actor::Reset(pos);
+	_timer = 0;
+	_dialog = " ";
+	
+	if(_id == dialogTrigger)
+		_collided = false;
 }
 
 bool ObjectActor::CollisionCheck(Actor & otherAI)
@@ -59,6 +87,27 @@ void ObjectActor::SetID(int id)
 	_id = id;
 }
 
+void ObjectActor::SetDialog(std::string d)
+{
+	_dialog = d;
+	_dialogTexture = new SDL2pp::Texture(_mgr->GetRenderer(), _font->RenderText_Solid(_dialog, SDL_Color{ 255, 255, 255, 255 }));
+}
+
+std::string ObjectActor::GetDialog()
+{
+	return _dialog;
+}
+
+void ObjectActor::SetCheckPointID(int id)
+{
+	_checkPointID = id;
+}
+
+int ObjectActor::GetCheckPointID()
+{
+	return _checkPointID;
+}
+
 void ObjectActor::FlagUpdate(double elapsedSecs)
 {
 	if (!_collided && CollisionCheck(*(_gameScreen->GetPlayer())))
@@ -66,7 +115,7 @@ void ObjectActor::FlagUpdate(double elapsedSecs)
 		_sprites[_currentSpriteSheet]->Start();
 		_sprites[_currentSpriteSheet]->SetRepeating(false);
 
-		_gameScreen->GetLevel()->SetSpawnPoint(GetPosition());
+		_gameScreen->GetLevel()->SetSpawnPoint(GetPosition(), _checkPointID);
 		_collided = true;
 	}
 }
@@ -87,6 +136,24 @@ void ObjectActor::ProjectileThrowerUpdate(double elapseSecs)
 	{
 		_sprites[_currentSpriteSheet]->Stop();
 		SetVisibility(false);
+	}
+}
+
+void ObjectActor::DialogUpdate(double elapsedSecs)
+{
+	if (_collided)
+	{
+		_timer += elapsedSecs;
+		if (_timer > 4)
+		{
+			_timer = 0;
+			_collided = false;
+		}
+	}
+
+	if (CollisionCheck(*(_gameScreen->GetPlayer())))
+	{
+		_collided = true;
 	}
 }
 

@@ -14,7 +14,7 @@ class Level
 public:
 
 	/** Default constructor. */
-	Level(): _currentSpawnPoint(0, 0), _totalPancakes(0) {}
+	Level(): _currentSpawnPoint(0, 0), _totalPancakes(0), _checkPointID(-1) {}
 
 	/**
 	 * Adds a tile to the level.
@@ -228,7 +228,7 @@ public:
 
 	void Reset();
 
-	void SetSpawnPoint(Vector2 point);
+	void SetSpawnPoint(Vector2 point, int id);
 
 	Vector2 GetSpawnPoint();
 
@@ -266,6 +266,8 @@ private:
 	size_t _tileHeight;
 
 	Vector2 _currentSpawnPoint;
+
+	int _checkPointID;
 
 	/**
 	* Updates the dug tiles to see if they can be respaned.

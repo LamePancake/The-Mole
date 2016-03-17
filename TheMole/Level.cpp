@@ -266,9 +266,13 @@ void Level::Reset()
 	_dugDirtTiles.clear();
 }
 
-void Level::SetSpawnPoint(Vector2 point)
+void Level::SetSpawnPoint(Vector2 point, int id)
 {
-	_currentSpawnPoint = point;
+	if (id > _checkPointID)
+	{
+		_currentSpawnPoint = point;
+		_checkPointID = id;
+	}		
 }
 
 Vector2 Level::GetSpawnPoint()
