@@ -12,7 +12,7 @@ ObjectActor::ObjectActor(Vector2 position, GameManager & manager, Vector2 spd, i
 	if (id == dialogTrigger)
 	{
 		SetVisibility(false);
-		_font = new SDL2pp::Font(".\\Assets\\GUI\\Exo-Regular.otf", 30);
+		_font = new SDL2pp::Font(".\\Assets\\Fonts\\Exo-Regular.otf", 30);
 		_dialogTexture = new SDL2pp::Texture(_mgr->GetRenderer(), _font->RenderText_Solid(_dialog, SDL_Color{ 255, 255, 255, 255 }));
 	}
 }

@@ -2,6 +2,9 @@
 #include "GameManager.h"
 #include "Vector2.h"
 
+const static SDL_Color NORMAL = { 255, 255, 255, 255 };
+const static SDL_Color SELECTED = { 255, 80, 80, 255 };
+
 std::shared_ptr<Level> GameScreen::GetLevel() const
 {
 	return _level;
@@ -50,19 +53,23 @@ int GameScreen::Load()
 	levelSize.y *= _level->GetTileHeight();
 	_camera = new Camera(playerPos, viewportSize, levelSize);
 
+	_font = new SDL2pp::Font(".\\Assets\\Fonts\\Exo-Regular.otf", 50);
+	_headerFont = new SDL2pp::Font(".\\Assets\\Fonts\\BEBAS.ttf", 80);
+
 	_background = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), _backgroundPath);
 	_winScreen  = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), _winScreenPath);
 	_loseScreen = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), _loseScreenPath);
 	_pancake    = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), ".\\Assets\\Textures\\Pancake.png");
 
-	_return      = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\GUI\\Pause_Menu\\pause_return.png");
-	_mainMenu    = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\GUI\\Pause_Menu\\pause_main.png");
-	_levelSelect = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\GUI\\Pause_Menu\\pause_levelselect.png");
+	_menuItems[0] = new SDL2pp::Texture(_mgr->GetRenderer(), _font->RenderText_Solid("Level Select", NORMAL));
+	_menuItems[1] = new SDL2pp::Texture(_mgr->GetRenderer(), _font->RenderText_Solid("Main Menu", NORMAL));
+	_menuItems[2] = new SDL2pp::Texture(_mgr->GetRenderer(), _font->RenderText_Solid("Back", NORMAL));
+
+	_pausedText = new SDL2pp::Texture(_mgr->GetRenderer(), _headerFont->RenderText_Solid("Paused", NORMAL));;
+	_border = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\levelSelectBorder.png");
+	_controls = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\levelSelectControls.png");
 
 	_curMenuItem  = 0;
-	_menuItems[0] = _levelSelect;
-	_menuItems[1] = _mainMenu;
-	_menuItems[2] = _return;
 
 	return SCREEN_LOAD_SUCCESS;
 }
@@ -79,7 +86,7 @@ int GameScreen::Update(double elapsedSecs)
 			_paused = true;
 	}
 
-	if (_paused) return OnPause();
+	if (_paused) return OnPauseUpdate();
 
 	// Check if the player is dead
 	if (_player->IsDead())
@@ -158,9 +165,7 @@ void GameScreen::Draw()
 
 	// Draw the pause menu
 	if (_paused)
-	{
-		rend.Copy(*_menuItems[_curMenuItem], SDL2pp::NullOpt, SDL2pp::Rect((dim.x / 2) - (dim.x * 0.6 / 2), (dim.y / 2) - (dim.y * 0.6 / 2), dim.x * 0.6, dim.y * 0.6));
-	}
+		OnPauseDraw();
 
 	rend.Present();
 }
@@ -168,13 +173,22 @@ void GameScreen::Draw()
 void GameScreen::Unload()
 {
 	_paused = false;
-	delete _mainMenu;
-	delete _levelSelect;
-	delete _return;
+	
+	for (int i = 0; i < NUM_MENU_ITEMS; ++i)
+	{
+		delete _menuItems[i];
+	}
+
+	delete _pausedText;
+	delete _border;
+	delete _controls;
 	delete _camera;
+
+	delete _font;
+	delete _headerFont;
 }
 
-int GameScreen::OnPause()
+int GameScreen::OnPauseUpdate()
 {
 	if (_mgr->inputManager->ActionOccurred("ARROWDOWN", Input::Pressed) || _mgr->inputManager->ActionOccurred("DOWN", Input::Pressed))
 	{
@@ -198,8 +212,42 @@ int GameScreen::OnPause()
 			return SCREEN_FINISH;
 		case 2:
 			_paused = false;
+			_curMenuItem = 0;
 		}
 	}
 
 	return SCREEN_CONTINUE;
+}
+
+void GameScreen::OnPauseDraw()
+{
+	SDL2pp::Point size = GameManager::GetInstance()->GetWindow().GetSize();
+	SDL2pp::Renderer& rend = _mgr->GetRenderer();
+
+	_border->SetAlphaMod(120);
+	rend.Copy(*_border, SDL2pp::Rect(0, 0, 1, 1), SDL2pp::NullOpt);
+	_border->SetAlphaMod(255);
+
+	for (size_t i = 0; i < NUM_MENU_ITEMS; ++i)
+	{
+		int scaleFactor = 0;
+		SDL_Color c;
+		if (_curMenuItem == i)
+		{
+			c = SELECTED;
+			scaleFactor = 15;
+		}
+		else
+		{
+			c = NORMAL;
+		}
+			
+		rend.Copy(*_border, SDL2pp::NullOpt, SDL2pp::Rect(0.0f, size.GetY() * (0.25f + ((float)i * 0.12f)) - (scaleFactor / 2), _menuItems[i]->GetWidth() + size.GetX() * 0.17f, _menuItems[i]->GetHeight() + scaleFactor));
+
+		_menuItems[i]->SetColorMod(c.r, c.g, c.b);
+		rend.Copy(*_menuItems[i], SDL2pp::NullOpt, SDL2pp::Rect(size.GetX() * 0.05f, size.GetY() * (0.25f + ((float)i * 0.12f)) - (scaleFactor / 2), _menuItems[i]->GetWidth() + scaleFactor, _menuItems[i]->GetHeight() + scaleFactor));
+	}
+
+	rend.Copy(*_pausedText, SDL2pp::NullOpt, SDL2pp::Rect(size.GetX() * 0.02f, size.GetY() * 0.07f, _pausedText->GetWidth(), _pausedText->GetHeight()));
+	rend.Copy(*_controls, SDL2pp::NullOpt, SDL2pp::Rect(size.GetX() * 0.60f, 0, size.GetX() * 0.40f, size.GetY() * 0.1f));
 }

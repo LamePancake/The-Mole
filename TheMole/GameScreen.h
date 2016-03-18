@@ -74,16 +74,19 @@ protected:
 	std::shared_ptr<SDL2pp::Texture> _background;
 	std::shared_ptr<SDL2pp::Texture> _winScreen;
 	std::shared_ptr<SDL2pp::Texture> _loseScreen;
-	std::shared_ptr<SDL2pp::Texture> _pauseScreen;
 	std::shared_ptr<SDL2pp::Texture> _pancake;
 
 	int _curMenuItem;
 	SDL2pp::Texture* _menuItems[NUM_MENU_ITEMS];
-	SDL2pp::Texture* _return;
-	SDL2pp::Texture* _mainMenu;
-	SDL2pp::Texture* _levelSelect;
+	SDL2pp::Texture* _pausedText;
+	SDL2pp::Texture* _border;
+	SDL2pp::Texture* _controls;
 
-	int OnPause();
+	SDL2pp::Font* _font;
+	SDL2pp::Font* _headerFont;
+	
+	int OnPauseUpdate();
+	void OnPauseDraw();
 };
 
 #endif

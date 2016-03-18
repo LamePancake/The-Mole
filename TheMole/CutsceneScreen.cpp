@@ -20,9 +20,9 @@ int CutsceneScreen::Load()
 	_nextDialogProtag = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\dialog_enter.png", 4, 0.5f);
 	_nextDialogNPC    = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\dialog_enter.png", 4, 0.5f);
 
-	_promptFont = new SDL2pp::Font(".\\Assets\\GUI\\BEBAS.ttf", 20);
-	_dialogFont = new SDL2pp::Font(".\\Assets\\GUI\\Exo-Regular.otf", 45);
-	_headerFont = new SDL2pp::Font(".\\Assets\\GUI\\BEBAS.ttf", 25);
+	_promptFont = new SDL2pp::Font(".\\Assets\\Fonts\\BEBAS.ttf", 20);
+	_dialogFont = new SDL2pp::Font(".\\Assets\\Fonts\\Exo-Regular.otf", 45);
+	_headerFont = new SDL2pp::Font(".\\Assets\\Fonts\\BEBAS.ttf", 25);
 
 	_dialog = OpenDialog(_dialogFilePath);
 	UpdateDialog();

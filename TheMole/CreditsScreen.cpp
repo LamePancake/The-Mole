@@ -14,8 +14,8 @@ int CreditsScreen::Load()
 {
 	_mgr = GameManager::GetInstance();
 
-	_font = new SDL2pp::Font(".\\Assets\\GUI\\Exo-Regular.otf", 40);
-	_headerFont = new SDL2pp::Font(".\\Assets\\GUI\\BEBAS.ttf", 80);
+	_font = new SDL2pp::Font(".\\Assets\\Fonts\\Exo-Regular.otf", 40);
+	_headerFont = new SDL2pp::Font(".\\Assets\\Fonts\\BEBAS.ttf", 80);
 
 	_backgroundTexture = new Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\den_bg.png");
 	_border            = new Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\levelSelectBorder.png");

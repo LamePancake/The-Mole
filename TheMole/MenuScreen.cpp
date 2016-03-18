@@ -15,7 +15,7 @@ int MenuScreen::Load()
 {
 	_mgr = GameManager::GetInstance();	
 	
-	_font = new SDL2pp::Font(".\\Assets\\GUI\\Exo-Regular.otf", 50);
+	_font = new SDL2pp::Font(".\\Assets\\Fonts\\Exo-Regular.otf", 50);
 
 	_menuItems[0] = new Texture(_mgr->GetRenderer(), _font->RenderText_Solid("  Play  ",     NORMAL));
 	_menuItems[1] = new Texture(_mgr->GetRenderer(), _font->RenderText_Solid("Controls", NORMAL));

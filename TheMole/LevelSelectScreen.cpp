@@ -29,9 +29,9 @@ int LevelSelectScreen::Load()
 
 	_mgr->ReadFile(".\\Assets\\Levels\\level_unlocks.txt");
 
-	_font = new SDL2pp::Font(".\\Assets\\GUI\\Exo-Regular.otf", 50);
-	_headerFont = new SDL2pp::Font(".\\Assets\\GUI\\BEBAS.ttf", 80);
-	_descFont = new SDL2pp::Font(".\\Assets\\GUI\\Exo-Regular.otf", 35);
+	_font = new SDL2pp::Font(".\\Assets\\Fonts\\Exo-Regular.otf", 50);
+	_headerFont = new SDL2pp::Font(".\\Assets\\Fonts\\BEBAS.ttf", 80);
+	_descFont = new SDL2pp::Font(".\\Assets\\Fonts\\Exo-Regular.otf", 35);
 
 	_backgroundTextures[0] = new Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\den_bg.png");
 	_backgroundTextures[1] = new Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\viking_bg.png");
