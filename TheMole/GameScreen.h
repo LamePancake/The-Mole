@@ -28,8 +28,8 @@ public:
 	///<param name="loseScreenPath"> Path to the file containing the losing screen image.</param>
 	///<param name="nextLevel">      String indicating the next screen/level to load when this one is finished.</param>
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	GameScreen(std::string levelPath, std::string backgroundPath, std::string winScreenPath, std::string loseScreenPath, std::string nextLevel, SoundEffectBank & effectBank)
-		: _levelPath(levelPath), _backgroundPath(backgroundPath), _winScreenPath(winScreenPath), _loseScreenPath(loseScreenPath), _nextLevel(nextLevel), _soundBank(effectBank), _paused(false) {}
+	GameScreen(std::string levelPath, std::string backgroundPath, std::string nextLevel, SoundEffectBank & effectBank)
+		: _levelPath(levelPath), _backgroundPath(backgroundPath), _nextLevel(nextLevel), _soundBank(effectBank), _paused(false), _deaths(0), _deathCounterUpdated(false), _deathTimer(0){}
 
 	virtual int Load();
 	virtual int Update(double elapasedSecs) override;
@@ -58,8 +58,6 @@ public:
 protected:
 	std::string _levelPath;
 	std::string _backgroundPath;
-	std::string _winScreenPath;
-	std::string _loseScreenPath;
 	std::string _nextLevel;
 
 	bool _paused;
@@ -72,22 +70,36 @@ protected:
 	std::shared_ptr<Quadtree> _levelQuadtree;
 	std::shared_ptr<PlayerActor> _player;
 	std::shared_ptr<SDL2pp::Texture> _background;
-	std::shared_ptr<SDL2pp::Texture> _winScreen;
-	std::shared_ptr<SDL2pp::Texture> _loseScreen;
 	std::shared_ptr<SDL2pp::Texture> _pancake;
 	std::shared_ptr<SDL2pp::Texture> _pancakeMarker;
+	std::shared_ptr<SDL2pp::Texture> _pancakeMarker2;
+	std::shared_ptr<SDL2pp::Texture> _skull;
 
+	int _deaths;
+	double _deathTimer;
 	int _curMenuItem;
 	SDL2pp::Texture* _menuItems[NUM_MENU_ITEMS];
 	SDL2pp::Texture* _pausedText;
+	SDL2pp::Texture* _levelCompleteText;
+	SDL2pp::Texture* _gameOverText;
+	SDL2pp::Texture* _pressEnterToContinue;
+	SDL2pp::Texture* _newRecord;
+	SDL2pp::Texture* _deathCounter;
 	SDL2pp::Texture* _border;
 	SDL2pp::Texture* _controls;
+	SDL2pp::Texture* _levelCompleteControls;
 
 	SDL2pp::Font* _font;
 	SDL2pp::Font* _headerFont;
 	
+	bool _deathCounterUpdated;
+
 	int OnPauseUpdate();
 	void OnPauseDraw();
+
+	void OnLevelCompleteDraw();
+
+	void OnGameOverDraw();
 };
 
 #endif

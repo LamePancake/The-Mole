@@ -42,13 +42,13 @@ int main(int argc, char** argv) {
 		shared_ptr<Screen> menu(new MenuScreen);
 		shared_ptr<Screen> levelSelect(new LevelSelectScreen);
 		
-		shared_ptr<Screen> den(new GameScreen(".\\Assets\\Levels\\den_level.txt", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\Textures\\level_cleared_keyboard.png", ".\\Assets\\Textures\\level_failed_keyboard.png", "viking", bank));
-		shared_ptr<Screen> viking(new GameScreen(".\\Assets\\Levels\\viking_level.txt", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\Textures\\level_cleared_keyboard.png", ".\\Assets\\Textures\\level_failed_keyboard.png", "grass", bank));
-		shared_ptr<Screen> grass(new GameScreen(".\\Assets\\Levels\\grass_level.txt", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\Textures\\level_cleared_keyboard.png", ".\\Assets\\Textures\\level_failed_keyboard.png", "starscape", bank));
-		shared_ptr<Screen> starscape(new GameScreen(".\\Assets\\Levels\\starscape_level.txt", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\Textures\\level_cleared_keyboard.png", ".\\Assets\\Textures\\level_failed_keyboard.png", "boss", bank));
-		shared_ptr<Screen> boss(new GameScreen(".\\Assets\\Levels\\boss_level.txt", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\Textures\\level_cleared_keyboard.png", ".\\Assets\\Textures\\level_failed_keyboard.png", "levelSelect", bank));
+		shared_ptr<Screen> den(new GameScreen(".\\Assets\\Levels\\den_level.txt", ".\\Assets\\Textures\\den_bg.png", "viking", bank));
+		shared_ptr<Screen> viking(new GameScreen(".\\Assets\\Levels\\viking_level.txt", ".\\Assets\\Textures\\den_bg.png", "grass", bank));
+		shared_ptr<Screen> grass(new GameScreen(".\\Assets\\Levels\\grass_level.txt", ".\\Assets\\Textures\\den_bg.png", "starscape", bank));
+		shared_ptr<Screen> starscape(new GameScreen(".\\Assets\\Levels\\starscape_level.txt", ".\\Assets\\Textures\\den_bg.png", "boss", bank));
+		shared_ptr<Screen> boss(new GameScreen(".\\Assets\\Levels\\boss_level.txt", ".\\Assets\\Textures\\den_bg.png", "levelSelect", bank));
 		
-		shared_ptr<Screen> test(new GameScreen(".\\Assets\\Levels\\test_level.txt", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\Textures\\level_cleared_keyboard.png", ".\\Assets\\Textures\\level_failed_keyboard.png", "menu", bank));
+		shared_ptr<Screen> test(new GameScreen(".\\Assets\\Levels\\test_level.txt", ".\\Assets\\Textures\\den_bg.png", "menu", bank));
 		
 		shared_ptr<Screen> denIntro(new CutsceneScreen(".\\Assets\\Textures\\dialog_box.png", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\Textures\\den_bg.png", 1, 0, ".\\Assets\\Textures\\Borin_dialog.png", 4, 0.8, ".\\Assets\\Textures\\Toad_dialog.png", 6, 0.50, bank, "denlevel", ".\\Assets\\Dialog\\den_dialog.txt", "Borin", "Toad"));
 		shared_ptr<Screen> vikingIntro(new CutsceneScreen(".\\Assets\\Textures\\dialog_box.png", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\Textures\\den_bg.png", 1, 0, ".\\Assets\\Textures\\Borin_dialog.png", 4, 0.8, ".\\Assets\\Textures\\Adalbert_dialog.png", 4, 0.8, bank, "vikinglevel", ".\\Assets\\Dialog\\viking_dialog.txt", "Borin", "Adalbert"));
@@ -84,7 +84,6 @@ int main(int argc, char** argv) {
 		// Exception stores SDL_GetError() result and name of function which failed
 		std::cerr << "Error in: " << e.GetSDLFunction() << std::endl;
 		std::cerr << "  Reason: " << e.GetSDLError() << std::endl;
-		cin.get();
 	}
 	catch (std::exception& e) {
 		// This also works (e.g. "SDL_Init failed: No available video device")
