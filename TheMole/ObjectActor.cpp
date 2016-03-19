@@ -146,7 +146,7 @@ void ObjectActor::DialogUpdate(double elapsedSecs)
 	if (_collided)
 	{
 		_timer += elapsedSecs;
-		if (_timer > 4)
+		if (_timer > 1.75)
 		{
 			_timer = 0;
 			_collided = false;

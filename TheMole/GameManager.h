@@ -60,9 +60,16 @@ public:
 
 	static GameManager* GetInstance();
 
-	void ReadFile(std::string path);
-	void WriteFile(std::string path);
+	void ReadLevelUnlockFile(std::string path);
+	void WriteLevelUnlockFile(std::string path);
 	std::map<std::string, bool> _unlockedLevels;
+
+	void ReadHighScoreFile(std::string path);
+	void WriteHighScoreFile(std::string path);
+
+	void ClearHighScores();
+	int _bestDeathCount;
+	int _bestPancakeCount;
 
 	/// Input *manager*
 	Input* inputManager;
@@ -77,7 +84,7 @@ private:
 	GameManager(SDL2pp::SDL& sdl, SDL2pp::SDLImage& sdlImage, SDL2pp::Mixer& mixer, SDL2pp::SDLTTF& sdlTtf,
 		SDL2pp::Window& window, SDL2pp::Renderer& renderer, std::unordered_map<std::string, std::shared_ptr<Screen>>& screens)
 		:_sdl(sdl), _sdlImage(sdlImage), _mixer(mixer), _sdlTtf(sdlTtf),
-		_window(window), _renderer(renderer), _screens(screens){
+		_window(window), _renderer(renderer), _screens(screens), _bestDeathCount(999), _bestPancakeCount(0){
 
 		// Initialise the input manager's key maps
 		inputManager = new Input();

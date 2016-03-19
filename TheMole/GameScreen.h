@@ -4,6 +4,8 @@
 #include <cstring>
 #include <string>
 #include <cstdint>
+#include <sstream>
+#include <iomanip>
 #include "Screen.h"
 #include "LevelLoader.h"
 #include "Level.h"
@@ -28,8 +30,8 @@ public:
 	///<param name="loseScreenPath"> Path to the file containing the losing screen image.</param>
 	///<param name="nextLevel">      String indicating the next screen/level to load when this one is finished.</param>
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	GameScreen(std::string levelPath, std::string backgroundPath, std::string nextLevel, SoundEffectBank & effectBank)
-		: _levelPath(levelPath), _backgroundPath(backgroundPath), _nextLevel(nextLevel), _soundBank(effectBank), _paused(false), _deaths(0), _deathCounterUpdated(false), _deathTimer(0){}
+	GameScreen(std::string levelPath, std::string backgroundPath, std::string scorePath, std::string nextLevel, SoundEffectBank & effectBank)
+		: _levelPath(levelPath), _backgroundPath(backgroundPath), _scorePath(scorePath), _nextLevel(nextLevel), _soundBank(effectBank), _paused(false), _deaths(0), _deathCounterUpdated(false), _deathTimer(0){}
 
 	virtual int Load();
 	virtual int Update(double elapasedSecs) override;
@@ -58,6 +60,7 @@ public:
 protected:
 	std::string _levelPath;
 	std::string _backgroundPath;
+	std::string _scorePath;
 	std::string _nextLevel;
 
 	bool _paused;
@@ -92,6 +95,8 @@ protected:
 	SDL2pp::Font* _font;
 	SDL2pp::Font* _headerFont;
 	
+	std::stringstream _stringFormatter;
+
 	bool _deathCounterUpdated;
 
 	int OnPauseUpdate();

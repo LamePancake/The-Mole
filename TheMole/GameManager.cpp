@@ -7,11 +7,13 @@ using std::unordered_map;
 
 GameManager* GameManager::_instance = nullptr;
 
-GameManager* GameManager::GetInstance() {
+GameManager* GameManager::GetInstance() 
+{
 	return _instance;
 }
 
-void GameManager::SetNextScreen(std::string&& nextScreenName) {
+void GameManager::SetNextScreen(std::string&& nextScreenName) 
+{
 	// nextScreenName becomes an lvalue, so we can call the version accepting a reference instead
 	SetNextScreen(nextScreenName);
 }
@@ -103,7 +105,7 @@ void GameManager::Loop(string& startScreen) {
 	}
 }
 
-void GameManager::ReadFile(std::string path)
+void GameManager::ReadLevelUnlockFile(std::string path)
 {
 	std::string line;
 	std::ifstream inFile(path.c_str());
@@ -146,7 +148,7 @@ void GameManager::ReadFile(std::string path)
 	_unlockedLevels["back"] = true;
 }
 
-void GameManager::WriteFile(std::string path)
+void GameManager::WriteLevelUnlockFile(std::string path)
 {
 	std::ofstream myfile;
 	myfile.open(path);
@@ -162,4 +164,45 @@ void GameManager::WriteFile(std::string path)
 	}
 	
 	myfile.close();
+}
+
+void GameManager::ReadHighScoreFile(std::string path)
+{
+	std::string line;
+	std::ifstream inFile(path.c_str());
+
+	if (!inFile.is_open())
+	{
+		_bestDeathCount = 999;
+		_bestPancakeCount = 0;
+		return;
+	}
+
+	std::getline(inFile, line);
+	_bestDeathCount = atoi(line.c_str());
+
+	std::getline(inFile, line);
+	_bestPancakeCount = atoi(line.c_str());
+
+	inFile.close();
+}
+
+void GameManager::WriteHighScoreFile(std::string path)
+{
+	std::ofstream myfile;
+	myfile.open(path);
+
+	if (myfile.is_open())
+	{
+		myfile << _bestDeathCount << std::endl;
+		myfile << _bestPancakeCount << std::endl;
+	}
+
+	myfile.close();
+}
+
+void GameManager::ClearHighScores()
+{
+	_bestDeathCount = 999;
+	_bestPancakeCount = 0;
 }

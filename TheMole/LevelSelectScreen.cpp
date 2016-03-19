@@ -27,7 +27,7 @@ int LevelSelectScreen::Load()
 {
 	_mgr = GameManager::GetInstance();
 
-	_mgr->ReadFile(".\\Assets\\Levels\\level_unlocks.txt");
+	_mgr->ReadLevelUnlockFile(".\\Assets\\SavedData\\level_unlocks.txt");
 
 	_font = new SDL2pp::Font(".\\Assets\\Fonts\\Exo-Regular.otf", 50);
 	_headerFont = new SDL2pp::Font(".\\Assets\\Fonts\\BEBAS.ttf", 80);
