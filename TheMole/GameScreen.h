@@ -75,6 +75,7 @@ protected:
 	std::shared_ptr<SDL2pp::Texture> _winScreen;
 	std::shared_ptr<SDL2pp::Texture> _loseScreen;
 	std::shared_ptr<SDL2pp::Texture> _pancake;
+	std::shared_ptr<SDL2pp::Texture> _pancakeMarker;
 
 	int _curMenuItem;
 	SDL2pp::Texture* _menuItems[NUM_MENU_ITEMS];

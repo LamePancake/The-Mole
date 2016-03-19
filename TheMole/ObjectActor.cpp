@@ -3,8 +3,8 @@
 #include "GameScreen.h"
 
 ObjectActor::ObjectActor(Vector2 position, GameManager & manager, Vector2 spd, int id, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites, const std::string&& startSprite,
-	SpriteSheet::XAxisDirection startXDirection, SpriteSheet::YAxisDirection startYDirection, std::string dialog, int checkPointID)
-	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection), _id(id), _collided(false), _dialog(dialog), _timer(0), _checkPointID(checkPointID)
+	SpriteSheet::XAxisDirection startXDirection, SpriteSheet::YAxisDirection startYDirection, std::string dialog, int numericIdentifier)
+	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection), _id(id), _collided(false), _dialog(dialog), _timer(0), _numericIdentifier(numericIdentifier)
 {
 	if (id == flag)
 		_sprites[_currentSpriteSheet]->Pause();
@@ -98,14 +98,14 @@ std::string ObjectActor::GetDialog()
 	return _dialog;
 }
 
-void ObjectActor::SetCheckPointID(int id)
+void ObjectActor::SetNumericID(int id)
 {
-	_checkPointID = id;
+	_numericIdentifier = id;
 }
 
-int ObjectActor::GetCheckPointID()
+int ObjectActor::GetNumericID()
 {
-	return _checkPointID;
+	return _numericIdentifier;
 }
 
 void ObjectActor::FlagUpdate(double elapsedSecs)
@@ -115,17 +115,19 @@ void ObjectActor::FlagUpdate(double elapsedSecs)
 		_sprites[_currentSpriteSheet]->Start();
 		_sprites[_currentSpriteSheet]->SetRepeating(false);
 
-		_gameScreen->GetLevel()->SetSpawnPoint(GetPosition(), _checkPointID);
+		_gameScreen->GetLevel()->SetSpawnPoint(GetPosition(), _numericIdentifier);
 		_collided = true;
 	}
 }
  
 void ObjectActor::PancakeUpdate(double elapsedSecs)
 {
-	if (CollisionCheck(*(_gameScreen->GetPlayer())))
+	if (!_collided && CollisionCheck(*(_gameScreen->GetPlayer())))
 	{
 		_sprites[_currentSpriteSheet]->Stop();
 		SetVisibility(false);
+		_gameScreen->GetLevel()->CollectPancake(_numericIdentifier);
+		_collided = true;
 	}
 }
 

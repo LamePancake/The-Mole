@@ -280,3 +280,22 @@ Vector2 Level::GetSpawnPoint()
 	return _currentSpawnPoint;
 }
 
+void Level::InitialzeNumberOfPancakes(int numPancakes)
+{
+	for (size_t i = 0; i < numPancakes; i++)
+		_collectedPancakes.push_back(false);
+}
+
+void Level::CollectPancake(int id)
+{
+	if (id < 0 || id >= _collectedPancakes.size())
+		return;
+
+	_collectedPancakes[id] = true;
+}
+
+std::vector<bool> Level::GetPancakes()
+{
+	return _collectedPancakes;
+}
+

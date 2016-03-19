@@ -33,7 +33,6 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 	// So long as we don't have *too* many repeated textures, I'm sure that this list will be totally manageable :):):):):):):););)
 	// 10/10 would read again - Trey
 	std::shared_ptr<SDL2pp::Texture> baddieWalkSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(),".\\Assets\\Textures\\Baddie_walk_56x56.png");
-	std::shared_ptr<SDL2pp::Texture> pancakeSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\Pancake.png");
 	std::shared_ptr<SDL2pp::Texture> projectileSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\red_dot.png");
 	std::shared_ptr<SDL2pp::Texture> mindControlIndicator = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\Controlled_indicator.png");
   	std::shared_ptr<SDL2pp::Texture> turretSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\Turret.png");
@@ -98,14 +97,8 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 			break;
 			case Tile::collectible:
 				{
-					std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
-					double infinity = std::numeric_limits<double>::infinity();
-					sprites["whateverPancakesDo"] = std::make_shared<SpriteSheet>(pancakeSheet, 1, infinity);
-
-					std::shared_ptr<ObjectActor> collectible = std::make_shared<ObjectActor>(tile->GetWorldPosition(), gameManager, Vector2(0, 0), ObjectActor::pancake, sprites, "whateverPancakesDo");
-					level->AddActor(collectible);
+					positions[Tile::collectible].push_back(SDL2pp::Point(tile->GetWorldPosition().GetX(), tile->GetWorldPosition().GetY()));
 					tile->SetID(Tile::blank);
-					level->_totalPancakes++;
 				}
 				break;
 			case Tile::boss:
@@ -219,6 +212,10 @@ void LevelLoader::LoadActorSpecifics(ifstream & file, string & lastLine, unorder
 		else if (line == "checkpoints")
 		{
 			LoadCheckPoints(file, positions[Tile::checkpoint], level);
+		}
+		else if (line == "pancakes")
+		{
+			LoadPancakes(file, positions[Tile::collectible], level);
 		}
 	}
 }
@@ -383,7 +380,28 @@ void LevelLoader::LoadCheckPoints(ifstream & file, vector<SDL2pp::Point>& checkP
 		sprites["raise"]->Pause();
 
 		std::shared_ptr<ObjectActor> flag = std::make_shared<ObjectActor>(Vector2(checkPointPos[i].GetX(), checkPointPos[i].GetY()), *GameManager::GetInstance(), Vector2(0, 0), ObjectActor::flag, sprites, "raise");
-		flag->SetCheckPointID(atoi(line.c_str()));
+		flag->SetNumericID(atoi(line.c_str()));
 		level->AddActor(flag);
 	}
+}
+
+void LevelLoader::LoadPancakes(ifstream & file, vector<SDL2pp::Point>& pancakePos, shared_ptr<Level> level)
+{
+	string line;
+	std::shared_ptr<SDL2pp::Texture> pancakeSheet = std::make_shared<SDL2pp::Texture>(GameManager::GetInstance()->GetRenderer(), ".\\Assets\\Textures\\Pancake.png");
+
+	for (size_t i = 0; i < pancakePos.size(); ++i)
+	{
+		std::getline(file, line);
+
+		std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
+		double infinity = std::numeric_limits<double>::infinity();
+		sprites["whateverPancakesDo"] = std::make_shared<SpriteSheet>(pancakeSheet, 1, infinity);
+
+		std::shared_ptr<ObjectActor> collectible = std::make_shared<ObjectActor>(Vector2(pancakePos[i].GetX(), pancakePos[i].GetY()), *GameManager::GetInstance(), Vector2(0, 0), ObjectActor::pancake, sprites, "whateverPancakesDo");
+		collectible->SetNumericID(atoi(line.c_str()));
+		level->AddActor(collectible);
+	}
+
+	level->InitialzeNumberOfPancakes(pancakePos.size());
 }

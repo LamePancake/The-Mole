@@ -56,10 +56,11 @@ int GameScreen::Load()
 	_font = new SDL2pp::Font(".\\Assets\\Fonts\\Exo-Regular.otf", 50);
 	_headerFont = new SDL2pp::Font(".\\Assets\\Fonts\\BEBAS.ttf", 80);
 
-	_background = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), _backgroundPath);
-	_winScreen  = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), _winScreenPath);
-	_loseScreen = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), _loseScreenPath);
-	_pancake    = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), ".\\Assets\\Textures\\Pancake.png");
+	_background    = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), _backgroundPath);
+	_winScreen     = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), _winScreenPath);
+	_loseScreen    = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), _loseScreenPath);
+	_pancake       = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), ".\\Assets\\Textures\\Pancake.png");
+	_pancakeMarker = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), ".\\Assets\\Textures\\Pancakemarker.png");
 
 	_menuItems[0] = new SDL2pp::Texture(_mgr->GetRenderer(), _font->RenderText_Solid("Level Select", NORMAL));
 	_menuItems[1] = new SDL2pp::Texture(_mgr->GetRenderer(), _font->RenderText_Solid("Main Menu", NORMAL));
@@ -156,6 +157,14 @@ void GameScreen::Draw()
 		actor->Draw(*_camera);
 	}
 
+	for (int i = 0; i < _level->GetPancakes().size(); ++i) 
+	{
+		if (_level->GetPancakes()[i])
+			rend.Copy(*_pancake, SDL2pp::NullOpt, SDL2pp::Rect(dim.GetX() * 0.01 + (_pancake->GetWidth() * 0.64 * i), dim.GetY() * 0.93, _pancake->GetWidth() * 0.6, _pancake->GetHeight() * 0.6));
+		else
+			rend.Copy(*_pancakeMarker, SDL2pp::NullOpt, SDL2pp::Rect(dim.GetX() * 0.01 + (_pancake->GetWidth() * 0.64 * i), dim.GetY() * 0.93, _pancake->GetWidth() * 0.6, _pancake->GetHeight() * 0.6));
+	}
+
 	// Draw the win or lose screen
 	if (_player->IsDead() || _player->AtGoal())
 	{
@@ -172,6 +181,7 @@ void GameScreen::Draw()
 
 void GameScreen::Unload()
 {
+	_curMenuItem = 0;
 	_paused = false;
 	
 	for (int i = 0; i < NUM_MENU_ITEMS; ++i)

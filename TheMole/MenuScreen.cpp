@@ -168,7 +168,7 @@ void MenuScreen::Draw()
 		}
 			
 		_menuItems[i]->SetColorMod(c.r, c.g, c.b);
-		rend.Copy(*_menuBorder, Rect(0, 0, _menuBorder->GetWidth() * 0.5f, _menuBorder->GetHeight() * 0.5f), Rect(size.GetX() * (0.04f + ((float)i * 0.24f)), size.GetY() * 0.88f - scaleFactor, size.GetX() * 0.2, size.GetY() * 0.25f));
+		rend.Copy(*_menuBorder, Rect(0, 0, 1, 1), Rect(size.GetX() * (0.04f + ((float)i * 0.24f)), size.GetY() * 0.88f - scaleFactor, size.GetX() * 0.2, size.GetY() * 0.25f));
 		rend.Copy(*_menuItems[i], NullOpt, Rect(size.GetX() * (0.05f + (float)i * 0.24f), size.GetY() * 0.88f - scaleFactor, size.GetX() * 0.18, size.GetY() * 0.1f));
 	}
 

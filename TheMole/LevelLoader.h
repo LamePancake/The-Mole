@@ -66,4 +66,7 @@ private:
 	void LoadDialog(ifstream & file, vector<SDL2pp::Point> & dialogPos, shared_ptr<Level> level);
 
 	void LoadCheckPoints(ifstream & file, vector<SDL2pp::Point> & checkPointPos, shared_ptr<Level> level);
+
+	void LoadPancakes(ifstream & file, vector<SDL2pp::Point>& pancakePos, shared_ptr<Level> level);
+
 };

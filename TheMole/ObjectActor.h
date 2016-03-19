@@ -28,7 +28,7 @@ public:
 	 * @param	startYDirection	The direction in the y axis which the actor will face at the start.
 	 */
 	ObjectActor(Vector2 position, GameManager & manager, Vector2 spd, int id, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites, const std::string&& startSprite,
-		SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP, std::string dialog = " ", int checkPointId = 0);
+		SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP, std::string dialog = " ", int numericIdentifier = -1);
 
 	/** Destructor. */
 	~ObjectActor();
@@ -77,9 +77,9 @@ public:
 
 	std::string GetDialog();
 
-	void SetCheckPointID(int id);
+	void SetNumericID(int id);
 
-	int GetCheckPointID();
+	int GetNumericID();
 
 private:
 
@@ -95,7 +95,7 @@ private:
 
 	void DialogUpdate(double elapsedSecs);
 
-	int _checkPointID;
+	int _numericIdentifier;
 
 	std::string _dialog;
 	double _timer;
