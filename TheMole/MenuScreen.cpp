@@ -17,10 +17,10 @@ int MenuScreen::Load()
 	
 	_font = new SDL2pp::Font(".\\Assets\\Fonts\\Exo-Regular.otf", 50);
 
-	_menuItems[0] = new Texture(_mgr->GetRenderer(), _font->RenderText_Solid("  Play  ",     NORMAL));
-	_menuItems[1] = new Texture(_mgr->GetRenderer(), _font->RenderText_Solid("Controls", NORMAL));
+	_menuItems[0] = new Texture(_mgr->GetRenderer(), _font->RenderText_Solid(" Play ",     NORMAL));
+	_menuItems[1] = new Texture(_mgr->GetRenderer(), _font->RenderText_Solid("Options", NORMAL));
 	_menuItems[2] = new Texture(_mgr->GetRenderer(), _font->RenderText_Solid("Credits",  NORMAL));
-	_menuItems[3] = new Texture(_mgr->GetRenderer(), _font->RenderText_Solid("  Quit  ",     NORMAL));
+	_menuItems[3] = new Texture(_mgr->GetRenderer(), _font->RenderText_Solid(" Quit ",     NORMAL));
     
 	_background = new Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\den_bg.png");
 	_menuBorder = new Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\levelSelectBorder.png");
@@ -123,7 +123,7 @@ int MenuScreen::Update(double elapsedSecs)
 		case 1:
 			_borin->SetXAxisDirection(SpriteSheet::LEFT);
 			_direction = -1;
-			_nextScreen = "controls";
+			_nextScreen = "options";
 			_delay = true;
 			break;
 		case 2:

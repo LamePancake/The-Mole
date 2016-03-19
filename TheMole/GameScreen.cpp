@@ -62,12 +62,13 @@ int GameScreen::Load()
 
 	_font = new SDL2pp::Font(".\\Assets\\Fonts\\Exo-Regular.otf", 50);
 	_headerFont = new SDL2pp::Font(".\\Assets\\Fonts\\BEBAS.ttf", 80);
+	_recordFont = new SDL2pp::Font(".\\Assets\\Fonts\\Exo-Regular.otf", 25);
 
 	_background     = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), _backgroundPath);
 	_pancake        = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), ".\\Assets\\Textures\\Pancake.png");
 	_pancakeMarker  = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), ".\\Assets\\Textures\\Pancakemarker.png");
 	_pancakeMarker2 = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), ".\\Assets\\Textures\\Pancakemarker2.png");
-	_skull          = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), ".\\Assets\\Textures\\Pancake.png");
+	_skull          = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), ".\\Assets\\Textures\\Skull.png");
 
 	_menuItems[0] = new SDL2pp::Texture(_mgr->GetRenderer(), _font->RenderText_Solid("Level Select", NORMAL));
 	_menuItems[1] = new SDL2pp::Texture(_mgr->GetRenderer(), _font->RenderText_Solid("Main Menu", NORMAL));
@@ -78,7 +79,7 @@ int GameScreen::Load()
 	_gameOverText = new SDL2pp::Texture(_mgr->GetRenderer(), _headerFont->RenderText_Solid("Game Over", GAMEOVER));
 
 	_pressEnterToContinue = new SDL2pp::Texture(_mgr->GetRenderer(), _font->RenderText_Solid("               Continue               ", SELECTED));
-	_newRecord = new SDL2pp::Texture(_mgr->GetRenderer(), _font->RenderText_Solid("NEW RECORD!", RECORD));
+	_newRecord = new SDL2pp::Texture(_mgr->GetRenderer(), _recordFont->RenderText_Solid("NEW RECORD!", RECORD));
 
 	_stringFormatter << " : " << setfill('0') << setw(3) << to_string(_deaths);
 	_deathCounter = new SDL2pp::Texture(_mgr->GetRenderer(), _font->RenderText_Solid(_stringFormatter.str(), NORMAL));
@@ -209,32 +210,27 @@ void GameScreen::Draw()
 		actor->Draw(*_camera);
 	}
 
-	// Draw the win or lose screen
 	if (_player->IsDead())
 		OnGameOverDraw();
+	else if (_player->AtGoal())
+		OnLevelCompleteDraw();
+	else if (_paused)
+		OnPauseDraw();
 	else
 	{
 		// Render pancakes
 		for (int i = 0; i < _level->GetPancakes().size(); ++i)
 		{
 			if (_level->GetPancakes()[i])
-				rend.Copy(*_pancake, SDL2pp::NullOpt, SDL2pp::Rect(dim.GetX() * 0.01 + (_pancake->GetWidth() * 0.64 * i), dim.GetY() * 0.93, _pancake->GetWidth() * 0.6, _pancake->GetHeight() * 0.6));
+				rend.Copy(*_pancake, SDL2pp::NullOpt, SDL2pp::Rect(dim.GetX() * 0.01 + (_pancake->GetWidth() * 0.64 * i), dim.GetY() * 0.99 - (_pancake->GetHeight() * 0.6), _pancake->GetWidth() * 0.6, _pancake->GetHeight() * 0.6));
 			else
-				rend.Copy(*_pancakeMarker, SDL2pp::NullOpt, SDL2pp::Rect(dim.GetX() * 0.01 + (_pancake->GetWidth() * 0.64 * i), dim.GetY() * 0.93, _pancake->GetWidth() * 0.6, _pancake->GetHeight() * 0.6));
+				rend.Copy(*_pancakeMarker, SDL2pp::NullOpt, SDL2pp::Rect(dim.GetX() * 0.01 + (_pancake->GetWidth() * 0.64 * i), dim.GetY() * 0.99 - (_pancake->GetHeight() * 0.6), _pancake->GetWidth() * 0.6, _pancake->GetHeight() * 0.6));
 		}
 
 		// Render death counter
-		rend.Copy(*_skull, SDL2pp::NullOpt, SDL2pp::Rect(dim.GetX() * 0.01, dim.GetY() * 0.03, _skull->GetWidth() * 0.6, _skull->GetHeight() * 0.6));
-		rend.Copy(*_deathCounter, SDL2pp::NullOpt, SDL2pp::Rect(dim.GetX() * 0.01 + (_skull->GetWidth() * 0.6), dim.GetY() * 0.03, _deathCounter->GetWidth() * 0.6, _deathCounter->GetHeight() * 0.6));
-	}
-
-	// Draw Level complete Screen
-	if (_player->AtGoal())
-		OnLevelCompleteDraw();
-
-	// Draw the pause menu
-	if (_paused)
-		OnPauseDraw();
+		rend.Copy(*_skull, SDL2pp::NullOpt, SDL2pp::Rect(dim.GetX() * 0.01, dim.GetY() * 0.01, _skull->GetWidth() * 0.6, _skull->GetHeight() * 0.6));
+		rend.Copy(*_deathCounter, SDL2pp::NullOpt, SDL2pp::Rect(dim.GetX() * 0.01 + (_skull->GetWidth() * 0.6), dim.GetY() * 0.01, _deathCounter->GetWidth() * 0.6, _deathCounter->GetHeight() * 0.6));
+	}		
 
 	rend.Present();
 }
@@ -264,6 +260,7 @@ void GameScreen::Unload()
 
 	delete _font;
 	delete _headerFont;
+	delete _recordFont;
 
 	delete _pausedText;
 	delete _levelCompleteText;
@@ -362,13 +359,13 @@ void GameScreen::OnLevelCompleteDraw()
 	}
 
 	if (pancakeCount > _mgr->_bestPancakeCount)
-		rend.Copy(*_newRecord, SDL2pp::NullOpt, SDL2pp::Rect(size.GetX() * 0.82 - (_newRecord->GetWidth() / 2), size.GetY() * 0.35f, _newRecord->GetWidth(), _newRecord->GetHeight()));
+		rend.Copy(*_newRecord, SDL2pp::NullOpt, SDL2pp::Rect(size.GetX() * 0.87 - (_newRecord->GetWidth() / 2), size.GetY() * 0.38f, _newRecord->GetWidth(), _newRecord->GetHeight()));
 
 	rend.Copy(*_skull, SDL2pp::NullOpt, SDL2pp::Rect(size.GetX() * 0.35, size.GetY() * 0.55f, _skull->GetWidth() * 2.1, _skull->GetHeight() * 2.1));
 	rend.Copy(*_deathCounter, SDL2pp::NullOpt, SDL2pp::Rect(size.GetX() * 0.35 + (_skull->GetWidth() * 2.1), size.GetY() * 0.55f, _deathCounter->GetWidth() * 2.1, _deathCounter->GetHeight() * 2.1));
 	
 	if (_deaths < _mgr->_bestDeathCount)
-		rend.Copy(*_newRecord, SDL2pp::NullOpt, SDL2pp::Rect(size.GetX() * 0.82 - (_newRecord->GetWidth() / 2), size.GetY() * 0.55f, _newRecord->GetWidth(), _newRecord->GetHeight()));
+		rend.Copy(*_newRecord, SDL2pp::NullOpt, SDL2pp::Rect(size.GetX() * 0.87 - (_newRecord->GetWidth() / 2), size.GetY() * 0.58f, _newRecord->GetWidth(), _newRecord->GetHeight()));
 
 	rend.Copy(*_border, SDL2pp::Rect(0, 0, 1, 1), SDL2pp::Rect(size.GetX() * 0.5 - (_pressEnterToContinue->GetWidth() / 2), size.GetY() * 0.88f, _pressEnterToContinue->GetWidth(), size.GetY() * 0.13));
 	rend.Copy(*_pressEnterToContinue, SDL2pp::NullOpt, SDL2pp::Rect(size.GetX() * 0.5 - (_pressEnterToContinue->GetWidth() / 2), size.GetY() * 0.88f, _pressEnterToContinue->GetWidth(), _pressEnterToContinue->GetHeight()));

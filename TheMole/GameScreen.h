@@ -94,6 +94,7 @@ protected:
 
 	SDL2pp::Font* _font;
 	SDL2pp::Font* _headerFont;
+	SDL2pp::Font* _recordFont;
 	
 	std::stringstream _stringFormatter;
 

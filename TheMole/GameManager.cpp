@@ -206,3 +206,44 @@ void GameManager::ClearHighScores()
 	_bestDeathCount = 999;
 	_bestPancakeCount = 0;
 }
+
+void GameManager::ClearSavedData()
+{
+	std::string levelScores[NUM_LEVELS] =
+	{
+		".\\Assets\\SavedData\\den_score.txt",
+		".\\Assets\\SavedData\\viking_score.txt",
+		".\\Assets\\SavedData\\grasslands_score.txt",
+		".\\Assets\\SavedData\\starscape_score.txt",
+		".\\Assets\\SavedData\\boss_score.txt",
+	};
+
+	std::ofstream levelUnlock;
+	levelUnlock.open(".\\Assets\\SavedData\\level_unlocks.txt");
+
+	if (levelUnlock.is_open())
+	{
+		levelUnlock << 1;
+		levelUnlock << 0;
+		levelUnlock << 0;
+		levelUnlock << 0;
+		levelUnlock << 0;
+		levelUnlock << 1;
+	}
+
+	levelUnlock.close();
+
+	for (int i = 0; i < NUM_LEVELS; ++i)
+	{
+		std::ofstream myfile;
+		myfile.open(levelScores[i]);
+
+		if (myfile.is_open())
+		{
+			myfile << 999 << std::endl;
+			myfile << 0 << std::endl;
+		}
+
+		myfile.close();
+	}
+}

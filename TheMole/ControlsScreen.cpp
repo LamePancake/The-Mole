@@ -34,7 +34,7 @@ int ControlsScreen::Update(double elapsedSecs)
 	// We selected a menu item; do the appropriate thing
 	if (_mgr->inputManager->ActionOccurred("CONFIRM", Input::Pressed))
 	{
-		_mgr->SetNextScreen("menu");
+		_mgr->SetNextScreen("options");
 		return SCREEN_FINISH;
 	}
 

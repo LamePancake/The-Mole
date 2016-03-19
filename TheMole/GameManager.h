@@ -11,6 +11,7 @@
 #include "Input.h"
 
 #define FRAME_TIME_MS 16
+#define NUM_LEVELS 5
 
 class GameManager {
 public:
@@ -70,6 +71,8 @@ public:
 	void ClearHighScores();
 	int _bestDeathCount;
 	int _bestPancakeCount;
+
+	void ClearSavedData();
 
 	/// Input *manager*
 	Input* inputManager;

@@ -12,6 +12,7 @@
 #include "CutsceneScreen.h"
 #include "CreditsScreen.h"
 #include "ControlsScreen.h"
+#include "OptionsScreen.h"
 
 using std::string;
 using std::unordered_map;
@@ -56,11 +57,13 @@ int main(int argc, char** argv) {
 
 		shared_ptr<Screen> credits(new CreditsScreen());
 		shared_ptr<Screen> controls(new ControlsScreen());
+		shared_ptr<Screen> options(new OptionsScreen());
 
 		screens.insert({ "menu", menu });
 		screens.insert({ "levelSelect", levelSelect });
 		screens.insert({ "credits", credits });
 		screens.insert({ "controls", controls });
+		screens.insert({ "options", options });
 
 		screens.insert({ "denlevel", den });
 		screens.insert({ "vikinglevel", viking });
