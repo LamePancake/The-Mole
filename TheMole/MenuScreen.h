@@ -2,6 +2,7 @@
 #include "Screen.h"
 #include "SpriteSheet.h"
 #include "Vector2.h"
+#include "SoundEffectBank.h"
 
 #define NUM_MENU_ITEMS 4
 
@@ -9,10 +10,16 @@ class GameManager;
 
 class MenuScreen : public Screen {
 public:
+
+	MenuScreen(SoundEffectBank & effectBank)
+		: _soundBank(effectBank) {}
+
 	virtual int Load() override;
 	virtual int Update(double elasepdSecs) override;
 	virtual void Draw() override;
 	virtual void Unload() override;
+
+	SoundEffectBank & GetSoundBank();
 
 private:
 
@@ -22,6 +29,7 @@ private:
 	SDL2pp::Texture* _background;
 	SDL2pp::Texture* _menuBorder;
 	SDL2pp::Texture* _controls;
+	SDL2pp::Texture* _devLogo;
     SDL2pp::Music* _menuTheme;
 	SDL2pp::Font* _font;
 
@@ -34,4 +42,6 @@ private:
 	double _timer;
 
 	std::string _nextScreen;
+
+	SoundEffectBank & _soundBank;
 };

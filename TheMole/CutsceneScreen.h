@@ -33,6 +33,8 @@ public:
 	virtual void Draw() override;
 	virtual void Unload() override;
 
+	SoundEffectBank & GetSoundBank();
+
 private:
 
 	SoundEffectBank & _soundBank;

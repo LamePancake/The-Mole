@@ -274,16 +274,19 @@ int GameScreen::OnPauseUpdate()
 {
 	if (_mgr->inputManager->ActionOccurred("ARROWDOWN", Input::Pressed) || _mgr->inputManager->ActionOccurred("DOWN", Input::Pressed))
 	{
+		_soundBank.PlaySound("select");
 		_curMenuItem++;
 		if (_curMenuItem == NUM_MENU_ITEMS) _curMenuItem = 0;
 	}
 	else if (_mgr->inputManager->ActionOccurred("ARROWUP", Input::Pressed) || _mgr->inputManager->ActionOccurred("UP", Input::Pressed))
 	{
+		_soundBank.PlaySound("select");
 		_curMenuItem--;
 		if (_curMenuItem < 0) _curMenuItem = NUM_MENU_ITEMS - 1;
 	}
 	else if (_mgr->inputManager->ActionOccurred("CONFIRM", Input::Pressed))
 	{
+		_soundBank.PlaySound("accept");
 		switch (_curMenuItem)
 		{
 		case 0:

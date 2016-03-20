@@ -1,16 +1,22 @@
 #pragma once
 #include "Screen.h"
 #include "Vector2.h"
+#include "SoundEffectBank.h"
 
 class GameManager;
 
 class ControlsScreen :public Screen
 {
 public:
+	ControlsScreen(SoundEffectBank & effectBank)
+		: _soundBank(effectBank) {}
+
 	virtual int Load() override;
 	virtual int Update(double elasepdSecs) override;
 	virtual void Draw() override;
 	virtual void Unload() override;
+
+	SoundEffectBank & GetSoundBank();
 
 private:
 
@@ -23,5 +29,7 @@ private:
 
 	SDL2pp::Font* _font;
 	SDL2pp::Font* _headerFont;
+
+	SoundEffectBank & _soundBank;
 };
 

@@ -47,11 +47,13 @@ int OptionsScreen::Update(double elapsedSecs)
 
 	if (!_confirmClearing && _mgr->inputManager->ActionOccurred("ARROWDOWN", Input::Pressed) || _mgr->inputManager->ActionOccurred("DOWN", Input::Pressed))
 	{
+		_soundBank.PlaySound("select");
 		_curMenuItem++;
 		if (_curMenuItem == NUM_OPTIONS) _curMenuItem = 0;
 	}
 	else if (!_confirmClearing && _mgr->inputManager->ActionOccurred("ARROWUP", Input::Pressed) || _mgr->inputManager->ActionOccurred("UP", Input::Pressed))
 	{
+		_soundBank.PlaySound("select");
 		_curMenuItem--;
 		if (_curMenuItem < 0) _curMenuItem = NUM_OPTIONS - 1;
 	}
@@ -62,18 +64,22 @@ int OptionsScreen::Update(double elapsedSecs)
 		switch (_curMenuItem)
 		{
 		case 0:
+			_soundBank.PlaySound("accept");
 			_mgr->SetNextScreen("controls");
 			return SCREEN_FINISH;
 		case 1:
+			_soundBank.PlaySound("warning");
 			_confirmClearing = true;
 			break;
 		case 2:
+			_soundBank.PlaySound("accept");
 			_mgr->SetNextScreen("menu");
 			return SCREEN_FINISH;
 		}
 	}
 	else if (_confirmClearing && _mgr->inputManager->ActionOccurred("CONFIRM", Input::Pressed))
 	{
+		_soundBank.PlaySound("accept");
 		switch (_curEraseMenuItem)
 		{
 		case 0:
@@ -90,11 +96,13 @@ int OptionsScreen::Update(double elapsedSecs)
 
 	if (_confirmClearing && _mgr->inputManager->ActionOccurred("ARROWRIGHT", Input::Pressed) || _mgr->inputManager->ActionOccurred("RIGHT", Input::Pressed))
 	{
+		_soundBank.PlaySound("select");
 		_curEraseMenuItem++;
 		if (_curEraseMenuItem == 2) _curEraseMenuItem = 0;
 	}
 	else if (_confirmClearing && _mgr->inputManager->ActionOccurred("ARROWLEFT", Input::Pressed) || _mgr->inputManager->ActionOccurred("LEFT", Input::Pressed))
 	{
+		_soundBank.PlaySound("select");
 		_curEraseMenuItem--;
 		if (_curEraseMenuItem < 0) _curEraseMenuItem = 2 - 1;
 	}
@@ -189,4 +197,9 @@ void OptionsScreen::Unload()
 
 	delete _yesOrNo[0];
 	delete _yesOrNo[1];
+}
+
+SoundEffectBank & OptionsScreen::GetSoundBank()
+{
+	return _soundBank;
 }

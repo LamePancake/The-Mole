@@ -32,6 +32,9 @@ int main(int argc, char** argv) {
 
 		unordered_map<string, string> soundEffects;
 		soundEffects["dig"] = ".\\Assets\\Audio\\digging.ogg";
+		soundEffects["select"] = ".\\Assets\\Audio\\menu_selection.ogg";
+		soundEffects["accept"] = ".\\Assets\\Audio\\menu_accept.ogg";
+		soundEffects["warning"] = ".\\Assets\\Audio\\menu_warning.ogg";
 		SoundEffectBank bank(soundEffects);
 
 		// Straightforward wrappers around corresponding SDL2 objects
@@ -40,8 +43,8 @@ int main(int argc, char** argv) {
 		Renderer renderer(window, -1, SDL_RENDERER_ACCELERATED);
 
 		unordered_map<string, shared_ptr<Screen>> screens;
-		shared_ptr<Screen> menu(new MenuScreen);
-		shared_ptr<Screen> levelSelect(new LevelSelectScreen);
+		shared_ptr<Screen> menu(new MenuScreen(bank));
+		shared_ptr<Screen> levelSelect(new LevelSelectScreen(bank));
 		
 		shared_ptr<Screen> den(new GameScreen(".\\Assets\\Levels\\den_level.txt", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\SavedData\\den_score.txt", "viking", bank));
 		shared_ptr<Screen> viking(new GameScreen(".\\Assets\\Levels\\viking_level.txt", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\SavedData\\viking_score.txt", "grass", bank));
@@ -55,9 +58,9 @@ int main(int argc, char** argv) {
 		shared_ptr<Screen> starscapeIntro(new CutsceneScreen(".\\Assets\\Textures\\dialog_box.png", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\Textures\\den_bg.png", 1, 0, ".\\Assets\\Textures\\Borin_dialog.png", 4, 0.8, ".\\Assets\\Textures\\Adalbert_dialog.png", 4, 0.8, bank, "starscapelevel", ".\\Assets\\Dialog\\starscape_dialog.txt", "Borin", "Adalbert"));
 		shared_ptr<Screen> bossIntro(new CutsceneScreen(".\\Assets\\Textures\\dialog_box.png", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\Textures\\den_bg.png", 1, 0, ".\\Assets\\Textures\\Borin_dialog.png", 4, 0.8, ".\\Assets\\Textures\\Toad_dialog.png", 6, 0.50, bank, "bosslevel", ".\\Assets\\Dialog\\final_battle_dialog.txt", "Borin", "The Underwatch"));
 
-		shared_ptr<Screen> credits(new CreditsScreen());
-		shared_ptr<Screen> controls(new ControlsScreen());
-		shared_ptr<Screen> options(new OptionsScreen());
+		shared_ptr<Screen> credits(new CreditsScreen(bank));
+		shared_ptr<Screen> controls(new ControlsScreen(bank));
+		shared_ptr<Screen> options(new OptionsScreen(bank));
 
 		screens.insert({ "menu", menu });
 		screens.insert({ "levelSelect", levelSelect });

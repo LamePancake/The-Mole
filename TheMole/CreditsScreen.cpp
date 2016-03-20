@@ -77,6 +77,7 @@ int CreditsScreen::Update(double elapsedSecs)
 	// We selected a menu item; do the appropriate thing
 	if (!_delay && _mgr->inputManager->ActionOccurred("CONFIRM", Input::Pressed))
 	{
+		_soundBank.PlaySound("accept");
 		_delay = true;
 	}
 
@@ -128,4 +129,9 @@ void CreditsScreen::Unload()
 	{
 		delete _developers[i];
 	}
+}
+
+SoundEffectBank & CreditsScreen::GetSoundBank()
+{
+	return _soundBank;
 }

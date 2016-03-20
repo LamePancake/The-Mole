@@ -95,12 +95,14 @@ int LevelSelectScreen::Update(double elapsedSecs)
 
 	if (!_delay && _mgr->inputManager->ActionOccurred("ARROWDOWN", Input::Pressed) || _mgr->inputManager->ActionOccurred("DOWN", Input::Pressed))
 	{
+		_soundBank.PlaySound("select");
 		_borin->SetXAxisDirection(_borin->GetXAxisDirection() == SpriteSheet::LEFT ? SpriteSheet::RIGHT : SpriteSheet::LEFT);
 		_curMenuItem++;
 		if (_curMenuItem == NUM_LEVELS) _curMenuItem = 0;
 	}
 	else if (!_delay && _mgr->inputManager->ActionOccurred("ARROWUP", Input::Pressed) || _mgr->inputManager->ActionOccurred("UP", Input::Pressed))
 	{
+		_soundBank.PlaySound("select");
 		_borin->SetXAxisDirection(_borin->GetXAxisDirection() == SpriteSheet::LEFT ? SpriteSheet::RIGHT : SpriteSheet::LEFT);
 		_curMenuItem--;
 		if (_curMenuItem < 0) _curMenuItem = NUM_LEVELS - 1;
@@ -109,6 +111,7 @@ int LevelSelectScreen::Update(double elapsedSecs)
 	// We selected a menu item; do the appropriate thing
 	if (!_delay && _mgr->inputManager->ActionOccurred("CONFIRM", Input::Pressed))
 	{
+		_soundBank.PlaySound("accept");
 		switch (_curMenuItem) 
 		{
 		case 0:
@@ -228,4 +231,10 @@ void LevelSelectScreen::Unload()
 		delete _backgroundTextures[i];
 		delete _descriptions[i];
 	}
+}
+
+
+SoundEffectBank & LevelSelectScreen::GetSoundBank()
+{
+	return _soundBank;
 }

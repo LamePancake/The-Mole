@@ -25,7 +25,7 @@ int MenuScreen::Load()
 	_background = new Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\den_bg.png");
 	_menuBorder = new Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\levelSelectBorder.png");
 	_controls   = new Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\mainMenuControls.png");
-
+	_devLogo    = new Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\logo.png");
 	
 	_logo = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_walk_56x56.png", 8, 1);
 	_logo->SetScale(6.0);
@@ -91,6 +91,7 @@ int MenuScreen::Update(double elapsedSecs)
 	if (!_delay && _mgr->inputManager->ActionOccurred("ARROWRIGHT", Input::Pressed)
 		|| _mgr->inputManager->ActionOccurred("RIGHT", Input::Pressed)) 
 	{
+		_soundBank.PlaySound("select");
 		_update = true;
 		_direction = 1;
 		_curMenuItem++;
@@ -100,6 +101,7 @@ int MenuScreen::Update(double elapsedSecs)
 	else if (!_delay && _mgr->inputManager->ActionOccurred("ARROWLEFT", Input::Pressed)
 		|| _mgr->inputManager->ActionOccurred("LEFT", Input::Pressed))
 	{
+		_soundBank.PlaySound("select");
 		_update = true;
 		_direction = -1;
 		_curMenuItem--;
@@ -112,6 +114,7 @@ int MenuScreen::Update(double elapsedSecs)
 		|| _direction == -1 && _borinPosition.GetX() <= size.GetX() * (0.14f + ((float)_curMenuItem * 0.24f)) - (_borin->GetFrameWidth() / 2))
 		&& _mgr->inputManager->ActionOccurred("CONFIRM", Input::Pressed))
 	{
+		_soundBank.PlaySound("accept");
 		switch (_curMenuItem) 
 		{
 		case 0:
@@ -176,6 +179,8 @@ void MenuScreen::Draw()
 	rend.Copy(*_controls, NullOpt, Rect(size.GetX() * 0.60f, 0, size.GetX() * 0.40f, size.GetY() * 0.1f));
 	_borin->Draw(SDL2pp::Point((int)_borinPosition.GetX(), (int)_borinPosition.GetY()));
 
+	rend.Copy(*_devLogo, NullOpt, Rect(size.GetX() * 0.01f, size.GetY() * 0.01f, size.GetX() * 0.1f, size.GetY() * 0.13f));
+
 	rend.Present();
 }
 
@@ -189,6 +194,7 @@ void MenuScreen::Unload()
 	_direction = 1;
 	_nextScreen = "levelSelect";
 
+	delete _devLogo;
     delete _menuTheme;
 	delete _background;
 	delete _menuBorder;
@@ -200,3 +206,10 @@ void MenuScreen::Unload()
 		delete _menuItems[i];
 	}
 }
+
+
+SoundEffectBank & MenuScreen::GetSoundBank()
+{
+	return _soundBank;
+}
+

@@ -34,6 +34,7 @@ int ControlsScreen::Update(double elapsedSecs)
 	// We selected a menu item; do the appropriate thing
 	if (_mgr->inputManager->ActionOccurred("CONFIRM", Input::Pressed))
 	{
+		_soundBank.PlaySound("accept");
 		_mgr->SetNextScreen("options");
 		return SCREEN_FINISH;
 	}
@@ -69,4 +70,10 @@ void ControlsScreen::Unload()
 	delete _font;
 	delete _headerFont;
 	delete _controlsImage;
+}
+
+
+SoundEffectBank & ControlsScreen::GetSoundBank()
+{
+	return _soundBank;
 }

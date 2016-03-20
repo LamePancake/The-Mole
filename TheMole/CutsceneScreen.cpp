@@ -55,6 +55,7 @@ int CutsceneScreen::Update(double elapsedSecs)
 		
 		if (_skipTimer >= SKIP_TIME)
 		{
+			_soundBank.PlaySound("accept");
 			_currentProtagDialog = " ";
 			_mgr->SetNextScreen(_nextScreen);
 			return SCREEN_FINISH;
@@ -68,6 +69,8 @@ int CutsceneScreen::Update(double elapsedSecs)
 	// We selected a menu item; do the appropriate thing
 	if (_mgr->inputManager->ActionOccurred("CONFIRM", Input::Pressed))
 	{
+		_soundBank.PlaySound("select");
+
 		_dialogIndex++;
 
 		if (_dialogIndex >= _dialog.size())
@@ -228,3 +231,9 @@ void CutsceneScreen::UpdateDialog()
 		_currentlySpeaking = NPC;
 	}
 }
+
+SoundEffectBank & CutsceneScreen::GetSoundBank()
+{
+	return _soundBank;
+}
+

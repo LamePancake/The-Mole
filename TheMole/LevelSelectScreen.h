@@ -2,6 +2,7 @@
 #include "Screen.h"
 #include "SpriteSheet.h"
 #include "Vector2.h"
+#include "SoundEffectBank.h"
 
 #define NUM_LEVELS 6
 
@@ -10,10 +11,16 @@ class GameManager;
 class LevelSelectScreen :public Screen
 {
 public:
+
+	LevelSelectScreen(SoundEffectBank & effectBank)
+		: _soundBank(effectBank) {}
+
 	virtual int Load() override;
 	virtual int Update(double elasepdSecs) override;
 	virtual void Draw() override;
 	virtual void Unload() override;
+
+	SoundEffectBank & GetSoundBank();
 
 private:
 
@@ -37,5 +44,7 @@ private:
 	SDL2pp::Font* _font;
 	SDL2pp::Font* _descFont;
 	SDL2pp::Font* _headerFont;
+
+	SoundEffectBank & _soundBank;
 };
 

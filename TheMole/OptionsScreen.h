@@ -2,6 +2,7 @@
 #include "Screen.h"
 #include "SpriteSheet.h"
 #include "Vector2.h"
+#include "SoundEffectBank.h"
 
 class GameManager;
 
@@ -11,10 +12,16 @@ class GameManager;
 class OptionsScreen :public Screen
 {
 public:
+
+	OptionsScreen(SoundEffectBank & effectBank)
+		: _soundBank(effectBank) {}
+
 	virtual int Load() override;
 	virtual int Update(double elasepdSecs) override;
 	virtual void Draw() override;
 	virtual void Unload() override;
+
+	SoundEffectBank & GetSoundBank();
 
 private:
 
@@ -36,5 +43,7 @@ private:
 	bool _confirmClearing;
 	bool _dataErased;
 	int _curEraseMenuItem;
+
+	SoundEffectBank & _soundBank;
 };
 
