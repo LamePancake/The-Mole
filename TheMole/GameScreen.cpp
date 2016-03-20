@@ -228,8 +228,8 @@ void GameScreen::Draw()
 		}
 
 		// Render death counter
-		rend.Copy(*_skull, SDL2pp::NullOpt, SDL2pp::Rect(dim.GetX() * 0.01, dim.GetY() * 0.01, _skull->GetWidth() * 0.6, _skull->GetHeight() * 0.6));
-		rend.Copy(*_deathCounter, SDL2pp::NullOpt, SDL2pp::Rect(dim.GetX() * 0.01 + (_skull->GetWidth() * 0.6), dim.GetY() * 0.01, _deathCounter->GetWidth() * 0.6, _deathCounter->GetHeight() * 0.6));
+		rend.Copy(*_skull, SDL2pp::NullOpt, SDL2pp::Rect(dim.GetX() * 0.01, dim.GetY() * 0.01, _skull->GetWidth() * 0.5, _skull->GetHeight() * 0.5));
+		rend.Copy(*_deathCounter, SDL2pp::NullOpt, SDL2pp::Rect(dim.GetX() * 0.01 + (_skull->GetWidth() * 0.5), dim.GetY() * 0.01, _deathCounter->GetWidth() * 0.5, _deathCounter->GetHeight() * 0.5));
 	}		
 
 	rend.Present();

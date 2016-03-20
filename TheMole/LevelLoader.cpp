@@ -388,15 +388,14 @@ void LevelLoader::LoadCheckPoints(ifstream & file, vector<SDL2pp::Point>& checkP
 void LevelLoader::LoadPancakes(ifstream & file, vector<SDL2pp::Point>& pancakePos, shared_ptr<Level> level)
 {
 	string line;
-	std::shared_ptr<SDL2pp::Texture> pancakeSheet = std::make_shared<SDL2pp::Texture>(GameManager::GetInstance()->GetRenderer(), ".\\Assets\\Textures\\Pancake.png");
+	std::shared_ptr<SDL2pp::Texture> pancakeSheet = std::make_shared<SDL2pp::Texture>(GameManager::GetInstance()->GetRenderer(), ".\\Assets\\Textures\\PancakeSheet.png");
 
 	for (size_t i = 0; i < pancakePos.size(); ++i)
 	{
 		std::getline(file, line);
 
 		std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
-		double infinity = std::numeric_limits<double>::infinity();
-		sprites["whateverPancakesDo"] = std::make_shared<SpriteSheet>(pancakeSheet, 1, infinity);
+		sprites["whateverPancakesDo"] = std::make_shared<SpriteSheet>(pancakeSheet, 8, 0.8f);
 
 		std::shared_ptr<ObjectActor> collectible = std::make_shared<ObjectActor>(Vector2(pancakePos[i].GetX(), pancakePos[i].GetY()), *GameManager::GetInstance(), Vector2(0, 0), ObjectActor::pancake, sprites, "whateverPancakesDo");
 		collectible->SetNumericID(atoi(line.c_str()));
