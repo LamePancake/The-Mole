@@ -111,45 +111,60 @@ int LevelSelectScreen::Update(double elapsedSecs)
 	// We selected a menu item; do the appropriate thing
 	if (!_delay && _mgr->inputManager->ActionOccurred("CONFIRM", Input::Pressed))
 	{
-		_soundBank.PlaySound("accept");
 		switch (_curMenuItem) 
 		{
 		case 0:
 			if (_mgr->_unlockedLevels["den"])
 			{
+				_soundBank.PlaySound("accept");
 				_nextScreen = "den";
 				_delay = true;
 			}
+			else
+				_soundBank.PlaySound("decline");
 			break;
 		case 1:
 			if (_mgr->_unlockedLevels["viking"])
 			{
+				_soundBank.PlaySound("accept");
 				_nextScreen = "viking";
 				_delay = true;
 			}
+			else
+				_soundBank.PlaySound("decline");
 			break;
 		case 2:
 			if (_mgr->_unlockedLevels["grass"])
 			{
+				_soundBank.PlaySound("accept");
 				_nextScreen = "grass";
 				_delay = true;
 			}
+			else
+				_soundBank.PlaySound("decline");
 			break;
 		case 3:
 			if (_mgr->_unlockedLevels["starscape"])
 			{
+				_soundBank.PlaySound("accept");
 				_nextScreen = "starscape";
 				_delay = true;
 			}
+			else
+				_soundBank.PlaySound("decline");
 			break;
 		case 4:
 			if (_mgr->_unlockedLevels["boss"])
 			{
+				_soundBank.PlaySound("accept");
 				_nextScreen = "boss";
 				_delay = true;
 			}
+			else
+				_soundBank.PlaySound("decline");
 			break;
 		case 5:
+			_soundBank.PlaySound("accept");
 			_nextScreen = "menu";
 			_delay = true;
 			break;

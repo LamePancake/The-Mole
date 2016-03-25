@@ -1,5 +1,6 @@
 #include "CutsceneScreen.h"
 #include "GameManager.h"
+#include <time.h>
 
 using namespace SDL2pp;
 
@@ -27,7 +28,13 @@ int CutsceneScreen::Load()
 	_dialog = OpenDialog(_dialogFilePath);
 	UpdateDialog();
 
+	int idx = rand() % 3;
+	std::string key = _currentlySpeaking == PROTAG ? _protagVoices[idx] : _npcVoices[idx];
+	_soundBank.PlaySound(key);
+
 	_NPC->SetScale(0.8);
+
+	srand(time(NULL));
 	return SCREEN_LOAD_SUCCESS;
 }
 
@@ -47,7 +54,7 @@ int CutsceneScreen::Update(double elapsedSecs)
 		_nextDialogNPC->Update(elapsedSecs);
 	}
 		
-	_openingAnimation->Update(elapsedSecs);
+	//_openingAnimation->Update(elapsedSecs);
 
 	if (_mgr->inputManager->ActionOccurred("SKIP", Input::Held))
 	{
@@ -70,7 +77,6 @@ int CutsceneScreen::Update(double elapsedSecs)
 	if (_mgr->inputManager->ActionOccurred("CONFIRM", Input::Pressed))
 	{
 		_soundBank.PlaySound("select");
-
 		_dialogIndex++;
 
 		if (_dialogIndex >= _dialog.size())
@@ -80,6 +86,10 @@ int CutsceneScreen::Update(double elapsedSecs)
 		}
 
 		UpdateDialog();
+
+		int idx = rand() % 3;
+		std::string key = _currentlySpeaking == PROTAG ? _protagVoices[idx] : _npcVoices[idx];
+		_soundBank.PlaySound(key);
 	}
 
 	return SCREEN_CONTINUE;

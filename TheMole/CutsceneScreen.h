@@ -19,14 +19,15 @@ public:
 
 	CutsceneScreen(std::string dialogBoxPath, std::string backgroundPath, std::string openingSprite, double openingNumFrames, double openingDuration,
 		std::string protagSprite, double protagNumFrames, double protagDuration, std::string npcSpritePath, double npcNumFrames, double npcDuration, 
-		SoundEffectBank & effectBank, std::string nextScreen, std::string dialogFilePath, std::string protagName, std::string npcName)
+		SoundEffectBank & effectBank, std::string nextScreen, std::string dialogFilePath, std::string protagName, std::string npcName,
+		std::vector<std::string>& protagVoices, std::vector<std::string>& npcVoices)
 		: _dialogBoxPath(dialogBoxPath), _backgroundPath(backgroundPath), 
 		  _openingSpriteSheetPath(openingSprite), _openingNumFrames(openingNumFrames), _openingDuration(openingDuration),
 		  _protagSpritePath(protagSprite), _protagNumFrames(protagNumFrames), _protagDuration(protagDuration),
 		  _npcSpritePath(npcSpritePath), _npcNumFrames(npcNumFrames), _npcDuration(npcDuration), 
 		  _nextScreen(nextScreen), _soundBank(effectBank), _dialogFilePath(dialogFilePath), _skipTimer(0),
 		  _currentlySpeaking(0), _currentProtagDialog(" "), _currentNPCDialog(" "), _dialogIndex(0),
-		  _protagName(protagName), _npcName(npcName) {}
+		  _protagName(protagName), _npcName(npcName), _protagVoices{ protagVoices }, _npcVoices{ npcVoices } {}
 	
 	virtual int Load() override;
 	virtual int Update(double elasepdSecs) override;
@@ -69,6 +70,8 @@ private:
 	std::shared_ptr<SpriteSheet> _nextDialogNPC;
 
 	std::vector<std::string> _dialog;
+	std::vector<std::string> _protagVoices;
+	std::vector<std::string> _npcVoices;
 
 	double _skipTimer;
 
