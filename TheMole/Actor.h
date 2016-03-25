@@ -247,6 +247,13 @@ protected:
         /** The list of tiles parallel to the y-axis with which one of this actor's edges (specified in colEdge) is colliding. */
         std::vector<std::shared_ptr<Tile>> colIntersect;
 
+        // Whether a position correction should be applied in the given axis
+        bool shouldCorrectX;
+        bool shouldCorrectY;
+
+        // The corner tile (set only when shouldCorrectX && shouldCorrectY)
+        std::shared_ptr<Tile> corner;
+
         /** The number of pixels by which this actor has penetrated the row of tiles the tiles in rowIntersect. */
         int rowPenetration;
         /** The number of pixels by which this actor has penetrated the column of tiles in colIntersect. */

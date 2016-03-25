@@ -15,3 +15,5 @@ To build:
 10.	Set "Environment" to PATH=$(SolutionDir)Lib\SDL2pp\Debug;$(SolutionDir)Lib\SDL2;$(Path);
 11.	Repeat 8-11 for Release and Debug
 	[]	Change "$(SolutionDir)Lib\SDL2pp\Debug" to "$(SolutionDir)Lib\SDL2pp\RelWithDebInfo" for debugging a Release build or "$(SolutionDir)Lib\SDL2pp\Release" for a deployment build
+    
+    $(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)Lib\SDL2pp\Release;$(SolutionDir)Lib\SDL2;

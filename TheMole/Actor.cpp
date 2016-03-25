@@ -25,6 +25,9 @@ Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::unordere
 	_sprites[_currentSpriteSheet]->SetXAxisDirection(_spriteXDir);
 	_sprites[_currentSpriteSheet]->SetYAxisDirection(_spriteYDir);
 	_sprites[_currentSpriteSheet]->Start();
+
+    _collisionInfo.shouldCorrectX = false;
+    _collisionInfo.shouldCorrectY = false;
 }
 
 Actor::~Actor()
@@ -177,6 +180,9 @@ void Actor::DetectTileCollisions(TileCollisionInfo& colInfo, std::shared_ptr<Lev
     colInfo.rowEdge = Edge::NONE;
     colInfo.rowPenetration = 0;
     colInfo.colPenetration = 0;
+    colInfo.shouldCorrectX = false;
+    colInfo.shouldCorrectY = false;
+    colInfo.corner = nullptr;
 
     float xVel = _curKinematic.velocity.GetX();
     float yVel = _curKinematic.velocity.GetY();
@@ -188,21 +194,19 @@ void Actor::DetectTileCollisions(TileCollisionInfo& colInfo, std::shared_ptr<Lev
 
         int curCol;
         int prevCol;
-        int actualRowPenetration;
-        int actualColPenetration;
         if (colInfo.colEdge == Edge::RIGHT)
         {
             curCol = curBounds.rightCol;
             prevCol = prevBounds.rightCol;
             std::shared_ptr<Tile> tile = level->GetTileFromLevel(curCol, 0);
-            actualColPenetration = (int)ceil((curBounds.rightBound - tile->GetWorldPosition().GetX()));
+            colInfo.colPenetration = (int)ceil((curBounds.rightBound - tile->GetWorldPosition().GetX()));
         }
         else
         {
             curCol = curBounds.leftCol;
             prevCol = prevBounds.leftCol;
             std::shared_ptr<Tile> tile = level->GetTileFromLevel(curCol, 0);
-            actualColPenetration = (int)ceil((tile->GetWorldPosition().GetX() + tileWidth - curBounds.leftBound));
+            colInfo.colPenetration = (int)ceil((tile->GetWorldPosition().GetX() + tileWidth - curBounds.leftBound));
         }
 
         level->GetTileRange(curBounds.topRow, curBounds.bottomRow + 1, curCol, curCol + 1, colInfo.colIntersect);
@@ -213,25 +217,24 @@ void Actor::DetectTileCollisions(TileCollisionInfo& colInfo, std::shared_ptr<Lev
         {
             curRow = curBounds.topRow;
             prevRow = prevBounds.topRow;
-            actualRowPenetration = (int)ceil((level->GetTileFromLevel(0, curRow)->GetWorldPosition().GetY() + tileHeight - curBounds.topBound));
+            colInfo.rowPenetration = (int)ceil((level->GetTileFromLevel(0, curRow)->GetWorldPosition().GetY() + tileHeight - curBounds.topBound));
         }
         else
         {
             curRow = curBounds.bottomRow;
             prevRow = prevBounds.bottomRow;
-            actualRowPenetration = (int)ceil((curBounds.bottomBound - level->GetTileFromLevel(0, curRow)->GetWorldPosition().GetY()));
+            colInfo.rowPenetration = (int)ceil((curBounds.bottomBound - level->GetTileFromLevel(0, curRow)->GetWorldPosition().GetY()));
         }
 
         level->GetTileRange(curRow, curRow + 1, curBounds.leftCol, curBounds.rightCol + 1, colInfo.rowIntersect);
-
-        std::shared_ptr<Tile> corner = level->GetTileFromLevel(curCol, curRow);
+        colInfo.corner = level->GetTileFromLevel(curCol, curRow);
 
         int colNonCornerBlanks = 0;
         for (auto tile : colInfo.colIntersect)
         {
-            if (tile != corner && tile->GetID() != Tile::blank)
+            if (tile != colInfo.corner && tile->GetID() != Tile::blank)
             {
-                colInfo.colPenetration = actualColPenetration;
+                colInfo.shouldCorrectX = true;
                 break;
             }
             else
@@ -243,9 +246,9 @@ void Actor::DetectTileCollisions(TileCollisionInfo& colInfo, std::shared_ptr<Lev
         int rowNonCornerBlanks = 0;
         for (auto tile : colInfo.rowIntersect)
         {
-            if (tile != corner && tile->GetID() != Tile::blank)
+            if (tile != colInfo.corner && tile->GetID() != Tile::blank)
             {
-                colInfo.rowPenetration = actualRowPenetration;
+                colInfo.shouldCorrectY = true;
                 break;
             }
             else
@@ -255,19 +258,19 @@ void Actor::DetectTileCollisions(TileCollisionInfo& colInfo, std::shared_ptr<Lev
         }
 
 		// Every tile that the actor intersects - except for the for the corner tile - is blank
-        if (corner->GetID() != Tile::blank && colNonCornerBlanks == colInfo.colIntersect.size() && rowNonCornerBlanks == colInfo.rowIntersect.size())
+        if (colInfo.corner->GetID() != Tile::blank && colNonCornerBlanks == colInfo.colIntersect.size() && rowNonCornerBlanks == colInfo.rowIntersect.size())
         {
 			bool corrected = false;
 
             // Only correct in a direction if we weren't already there
             if (curCol != prevCol)
             {
-                colInfo.colPenetration = actualColPenetration;
+                colInfo.shouldCorrectX = true;
 				corrected = true;
             }
             if (curRow != prevRow)
             {
-                colInfo.rowPenetration = actualRowPenetration;
+                colInfo.shouldCorrectY = true;
 				corrected = true;
             }
 
@@ -276,10 +279,10 @@ void Actor::DetectTileCollisions(TileCollisionInfo& colInfo, std::shared_ptr<Lev
 			{
 				// Correct in the direction with least penetration
 				// We could be completely penetrating a tile in one direction, so the other direction is the one we probably want to correct in
-				if (actualColPenetration < actualRowPenetration)
-					colInfo.colPenetration = actualColPenetration;
+				if (colInfo.colPenetration < colInfo.rowPenetration)
+					colInfo.shouldCorrectX = true;
 				else
-					colInfo.rowPenetration = actualRowPenetration;
+					colInfo.shouldCorrectY = true;
 			}
         }
     }
@@ -296,6 +299,7 @@ void Actor::DetectTileCollisions(TileCollisionInfo& colInfo, std::shared_ptr<Lev
                 colInfo.colPenetration = colInfo.colEdge == Edge::LEFT
                     ? (int)ceil((tile->GetWorldPosition().GetX() + tileWidth - curBounds.leftBound))
                     : (int)ceil((curBounds.rightBound - tile->GetWorldPosition().GetX()));
+                colInfo.shouldCorrectX = true;
                 break;
             }
         }
@@ -313,6 +317,7 @@ void Actor::DetectTileCollisions(TileCollisionInfo& colInfo, std::shared_ptr<Lev
                 colInfo.rowPenetration = colInfo.rowEdge == Edge::TOP
                     ? (int)ceil((tile->GetWorldPosition().GetY() + tileHeight - curBounds.topBound))
                     : (int)ceil((curBounds.bottomBound - tile->GetWorldPosition().GetY()));
+                colInfo.shouldCorrectY = true;
                 break;
             }
         }

@@ -167,7 +167,7 @@ void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level>& level)
     _collisionInfo.rowIntersect.clear();
 	DetectTileCollisions(_collisionInfo, level);
 
-	if (_collisionInfo.rowEdge != Edge::NONE)
+	if (_collisionInfo.shouldCorrectY)
 	{
 		float correctedYPos = _curKinematic.position.GetY();
 		if (_collisionInfo.rowEdge == Edge::BOTTOM) correctedYPos -= _collisionInfo.rowPenetration;
@@ -188,7 +188,7 @@ void AIActor::ScanNeighbouringTiles(std::shared_ptr<Level>& level)
 		}
 	}
 	
-	if (_collisionInfo.colEdge != Edge::NONE)
+	if (_collisionInfo.shouldCorrectX)
 	{
 		float correctedXPos = _curKinematic.position.GetX();
 		if (_collisionInfo.colEdge == Edge::RIGHT) correctedXPos -= _collisionInfo.colPenetration;

@@ -131,24 +131,50 @@ void PlayerActor::UpdateCollisions(double elapsedSecs)
 {
 	std::shared_ptr<Level> level = _gameScreen->GetLevel();
 
-	if (_collisionInfo.rowEdge != Edge::NONE)
+    _wasOnGround = false;
+
+	if (_collisionInfo.shouldCorrectY)
 	{
 		float correctedYPos = _curKinematic.position.GetY();
 		if (_collisionInfo.rowEdge == Edge::BOTTOM) correctedYPos -= _collisionInfo.rowPenetration;
 		else if (_collisionInfo.rowEdge == Edge::TOP) correctedYPos += _collisionInfo.rowPenetration;
 		DefaultTileCollisionHandler(_collisionInfo.rowIntersect, _collisionInfo.rowEdge, correctedYPos);
 	}
+    else
+    {
+        // Check the tiles immediately below the ones we're intersecting to see if we're "close enough" to be on the ground
+        shared_ptr<Level> level = _gameScreen->GetLevel();
+        if (!_wasOnGround &&
+            _collisionInfo.rowEdge == Edge::BOTTOM &&
+            level->HasNeighbourTile(_collisionInfo.rowIntersect[0], Edge::BOTTOM))
+        {
+            for (auto & tile : _collisionInfo.rowIntersect)
+            {
+                // If we collided with x and this is the corner tile, then we don't want to consider the neighbour for collision
+                if (_collisionInfo.shouldCorrectX && tile == _collisionInfo.corner)
+                    continue;
 
-	if (_collisionInfo.colEdge != Edge::NONE)
+                // Determine how far we are from the neighbouring tile
+                shared_ptr<Tile> neighbour = level->GetNeighbourTile(tile, Edge::BOTTOM);
+                float bottomBound = _curKinematic.position.GetY() + _sprites[_currentSpriteSheet]->GetFrameHeight();
+                float distToNeighbour = neighbour->GetWorldPosition().GetY() - bottomBound;
+
+                if (neighbour->GetID() != Tile::blank && (distToNeighbour < 3))
+                {
+                    _wasOnGround = true;
+                    break;
+                }
+            }
+        }
+    }
+
+	if (_collisionInfo.shouldCorrectX)
 	{
 		float correctedXPos = _curKinematic.position.GetX();
 		if (_collisionInfo.colEdge == Edge::RIGHT) correctedXPos -= _collisionInfo.colPenetration;
 		else if (_collisionInfo.colEdge == Edge::LEFT) correctedXPos += _collisionInfo.colPenetration;
 		DefaultTileCollisionHandler(_collisionInfo.colIntersect, _collisionInfo.colEdge, correctedXPos);
 	}
-
-	if (_atGoal)
-		std::cout << "You Win." << std::endl;
 }
 
 void PlayerActor::StopJumping()
@@ -164,29 +190,6 @@ void PlayerActor::DefaultTileCollisionHandler(std::vector<std::shared_ptr<Tile>>
 	// Did you think I was done hacking? You were wrong
 	// Still confusing af with naming here... If we're processing columns of tiles, i.e. things that would be collided with by travelling along the x axis, then we're looking at the x direction
 	bool isXDirection = edge == Edge::RIGHT || edge == Edge::LEFT;
-
-	// Assume we weren't on the ground until proven otherwise, but only do this when we're looking at tiles above/below us
-	if (!isXDirection) _wasOnGround = false;
-
-    // If the tile we're intersecting with or a very close one directly below it is solid, then we were on the ground
-    if (edge == Edge::BOTTOM)
-    {
-        if (correctedPos == _curKinematic.position.GetY())
-        {
-            SDL2pp::Point indices = tiles[0]->GetIndices();
-            if (indices.y < _gameScreen->GetLevel()->GetLevelSize().y - 1)
-            {
-                std::shared_ptr<Tile> below = _gameScreen->GetLevel()->GetTileFromLevel(indices.x, indices.y + 1);
-                float bottomBound = _curKinematic.position.GetY() + _sprites[_currentSpriteSheet]->GetFrameHeight();
-                _wasOnGround = below->GetID() != Tile::blank && (below->GetWorldPosition().GetY() - bottomBound < 3);
-            }
-        }
-        else
-        {
-            _wasOnGround = true;
-        }
-    }
-
 	if (edge != Edge::NONE)
 	{
 		for (auto& tile : tiles)
@@ -209,25 +212,6 @@ void PlayerActor::DefaultTileCollisionHandler(std::vector<std::shared_ptr<Tile>>
 					_curKinematic.position.SetY(correctedPos); 
 					if (_jumped) StopJumping();
 				}
-				break;
-			}
-		}
-	}
-
-	// If we're checking the bottom edge and a very close tile below the ones we're checking is solid, then we were on the ground
-	shared_ptr<Level> level = _gameScreen->GetLevel();
-	if (!_wasOnGround && 
-		edge == Edge::BOTTOM && 
-		correctedPos == _curKinematic.position.GetY() && 
-		level->HasNeighbourTile(tiles[0], Edge::BOTTOM))
-	{
-		for (auto & tile : tiles)
-		{
-			shared_ptr<Tile> neighbour = level->GetNeighbourTile(tile, Edge::BOTTOM);
-			float bottomBound = _curKinematic.position.GetY() + _sprites[_currentSpriteSheet]->GetFrameHeight();
-			if (neighbour->GetID() != Tile::blank && (neighbour->GetWorldPosition().GetY() - bottomBound < 3))
-			{
-				_wasOnGround = true;
 				break;
 			}
 		}

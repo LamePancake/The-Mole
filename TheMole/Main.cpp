@@ -31,10 +31,10 @@ int main(int argc, char** argv) {
         Mixer mixer(44100, MIX_DEFAULT_FORMAT, 2, 2048);
 
 		unordered_map<string, string> soundEffects;
-		soundEffects["dig"] = ".\\Assets\\Audio\\digging.ogg";
-		soundEffects["select"] = ".\\Assets\\Audio\\menu_selection.ogg";
-		soundEffects["accept"] = ".\\Assets\\Audio\\menu_accept.ogg";
-		soundEffects["warning"] = ".\\Assets\\Audio\\menu_warning.ogg";
+		soundEffects["dig"] = "./Assets/Audio/digging.ogg";
+		soundEffects["select"] = "./Assets/Audio/menu_selection.ogg";
+		soundEffects["accept"] = "./Assets/Audio/menu_accept.ogg";
+		soundEffects["warning"] = "./Assets/Audio/menu_warning.ogg";
 		SoundEffectBank bank(soundEffects);
 
 		// Straightforward wrappers around corresponding SDL2 objects
@@ -45,18 +45,18 @@ int main(int argc, char** argv) {
 		unordered_map<string, shared_ptr<Screen>> screens;
 		shared_ptr<Screen> menu(new MenuScreen(bank));
 		shared_ptr<Screen> levelSelect(new LevelSelectScreen(bank));
+
+		shared_ptr<Screen> den(new GameScreen("./Assets/Levels/den_level.txt", "./Assets/Textures/den_bg.png", "./Assets/SavedData/den_score.txt", "viking", bank));
+		shared_ptr<Screen> viking(new GameScreen("./Assets/Levels/viking_level.txt", "./Assets/Textures/den_bg.png", "./Assets/SavedData/viking_score.txt", "grass", bank));
+		shared_ptr<Screen> grass(new GameScreen("./Assets/Levels/grass_level.txt", "./Assets/Textures/den_bg.png", "./Assets/SavedData/grasslands_score.txt", "starscape", bank));
+		shared_ptr<Screen> starscape(new GameScreen("./Assets/Levels/starscape_level.txt", "./Assets/Textures/den_bg.png", "./Assets/SavedData/starscape_score.txt", "boss", bank));
+		shared_ptr<Screen> boss(new GameScreen("./Assets/Levels/boss_level.txt", "./Assets/Textures/den_bg.png", "./Assets/SavedData/boss_score.txt", "levelSelect", bank));
 		
-		shared_ptr<Screen> den(new GameScreen(".\\Assets\\Levels\\den_level.txt", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\SavedData\\den_score.txt", "viking", bank));
-		shared_ptr<Screen> viking(new GameScreen(".\\Assets\\Levels\\viking_level.txt", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\SavedData\\viking_score.txt", "grass", bank));
-		shared_ptr<Screen> grass(new GameScreen(".\\Assets\\Levels\\grass_level.txt", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\SavedData\\grasslands_score.txt", "starscape", bank));
-		shared_ptr<Screen> starscape(new GameScreen(".\\Assets\\Levels\\starscape_level.txt", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\SavedData\\starscape_score.txt", "boss", bank));
-		shared_ptr<Screen> boss(new GameScreen(".\\Assets\\Levels\\boss_level.txt", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\SavedData\\boss_score.txt", "levelSelect", bank));
-		
-		shared_ptr<Screen> denIntro(new CutsceneScreen(".\\Assets\\Textures\\dialog_box.png", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\Textures\\den_bg.png", 1, 0, ".\\Assets\\Textures\\Borin_dialog.png", 4, 0.8, ".\\Assets\\Textures\\Toad_dialog.png", 6, 0.50, bank, "denlevel", ".\\Assets\\Dialog\\den_dialog.txt", "Borin", "Toad"));
-		shared_ptr<Screen> vikingIntro(new CutsceneScreen(".\\Assets\\Textures\\dialog_box.png", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\Textures\\den_bg.png", 1, 0, ".\\Assets\\Textures\\Borin_dialog.png", 4, 0.8, ".\\Assets\\Textures\\Adalbert_dialog.png", 4, 0.8, bank, "vikinglevel", ".\\Assets\\Dialog\\viking_dialog.txt", "Borin", "Adalbert"));
-		shared_ptr<Screen> grassIntro(new CutsceneScreen(".\\Assets\\Textures\\dialog_box.png", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\Textures\\den_bg.png", 1, 0, ".\\Assets\\Textures\\Borin_dialog.png", 4, 0.8, ".\\Assets\\Textures\\Toad_dialog.png", 6, 0.50, bank, "grasslevel", ".\\Assets\\Dialog\\grassland_dialog.txt", "Borin", "Cornelius"));
-		shared_ptr<Screen> starscapeIntro(new CutsceneScreen(".\\Assets\\Textures\\dialog_box.png", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\Textures\\den_bg.png", 1, 0, ".\\Assets\\Textures\\Borin_dialog.png", 4, 0.8, ".\\Assets\\Textures\\Adalbert_dialog.png", 4, 0.8, bank, "starscapelevel", ".\\Assets\\Dialog\\starscape_dialog.txt", "Borin", "Adalbert"));
-		shared_ptr<Screen> bossIntro(new CutsceneScreen(".\\Assets\\Textures\\dialog_box.png", ".\\Assets\\Textures\\den_bg.png", ".\\Assets\\Textures\\den_bg.png", 1, 0, ".\\Assets\\Textures\\Borin_dialog.png", 4, 0.8, ".\\Assets\\Textures\\Toad_dialog.png", 6, 0.50, bank, "bosslevel", ".\\Assets\\Dialog\\final_battle_dialog.txt", "Borin", "The Underwatch"));
+		shared_ptr<Screen> denIntro(new CutsceneScreen("./Assets/Textures/dialog_box.png", "./Assets/Textures/den_bg.png", "./Assets/Textures/den_bg.png", 1, 0, "./Assets/Textures/Borin_dialog.png", 4, 0.8, "./Assets/Textures/Toad_dialog.png", 6, 0.50, bank, "denlevel", "./Assets/Dialog/den_dialog.txt", "Borin", "Toad"));
+		shared_ptr<Screen> vikingIntro(new CutsceneScreen("./Assets/Textures/dialog_box.png", "./Assets/Textures/den_bg.png", "./Assets/Textures/den_bg.png", 1, 0, "./Assets/Textures/Borin_dialog.png", 4, 0.8, "./Assets/Textures/Adalbert_dialog.png", 4, 0.8, bank, "vikinglevel", "./Assets/Dialog/viking_dialog.txt", "Borin", "Adalbert"));
+		shared_ptr<Screen> grassIntro(new CutsceneScreen("./Assets/Textures/dialog_box.png", "./Assets/Textures/den_bg.png", "./Assets/Textures/den_bg.png", 1, 0, "./Assets/Textures/Borin_dialog.png", 4, 0.8, "./Assets/Textures/Toad_dialog.png", 6, 0.50, bank, "grasslevel", "./Assets/Dialog/grassland_dialog.txt", "Borin", "Cornelius"));
+		shared_ptr<Screen> starscapeIntro(new CutsceneScreen("./Assets/Textures/dialog_box.png", "./Assets/Textures/den_bg.png", "./Assets/Textures/den_bg.png", 1, 0, "./Assets/Textures/Borin_dialog.png", 4, 0.8, "./Assets/Textures/Adalbert_dialog.png", 4, 0.8, bank, "starscapelevel", "./Assets/Dialog/starscape_dialog.txt", "Borin", "Adalbert"));
+		shared_ptr<Screen> bossIntro(new CutsceneScreen("./Assets/Textures/dialog_box.png", "./Assets/Textures/den_bg.png", "./Assets/Textures/den_bg.png", 1, 0, "./Assets/Textures/Borin_dialog.png", 4, 0.8, "./Assets/Textures/Toad_dialog.png", 6, 0.50, bank, "bosslevel", "./Assets/Dialog/final_battle_dialog.txt", "Borin", "The Underwatch"));
 
 		shared_ptr<Screen> credits(new CreditsScreen(bank));
 		shared_ptr<Screen> controls(new ControlsScreen(bank));
