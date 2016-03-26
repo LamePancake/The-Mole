@@ -178,8 +178,6 @@ void Actor::DetectTileCollisions(TileCollisionInfo& colInfo, std::shared_ptr<Lev
 
 	colInfo.colEdge = Edge::NONE;
     colInfo.rowEdge = Edge::NONE;
-    colInfo.rowPenetration = 0;
-    colInfo.colPenetration = 0;
     colInfo.shouldCorrectX = false;
     colInfo.shouldCorrectY = false;
     colInfo.corner = nullptr;
