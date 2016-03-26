@@ -54,3 +54,8 @@ pancakes
 checkpoints
 1
 2
+
+hats
+SHIELD 0
+CHICKEN 0
+MIND_CONTROL 0

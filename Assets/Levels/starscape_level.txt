@@ -34,3 +34,8 @@ Hi Shane
 
 checkpoints
 1
+
+hats
+SHIELD 1
+CHICKEN 1
+MIND_CONTROL 1

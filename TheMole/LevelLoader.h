@@ -69,5 +69,7 @@ private:
 
 	void LoadPancakes(ifstream & file, vector<SDL2pp::Point>& pancakePos, shared_ptr<Level> level);
 
-	void LoadHelpSigns(ifstream & file, vector<SDL2pp::Point>& pancakePos, shared_ptr<Level> level);
+	void LoadHelpSigns(ifstream & file, vector<SDL2pp::Point>& signPos, shared_ptr<Level> level);
+
+	void LoadHats(ifstream & file, shared_ptr<Level> level);
 };

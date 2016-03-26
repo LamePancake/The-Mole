@@ -299,3 +299,13 @@ std::vector<bool> Level::GetPancakes()
 	return _collectedPancakes;
 }
 
+void Level::InsertHat(std::string hat, bool available)
+{
+	_availableHats.insert(pair<std::string, bool>(hat, available));
+}
+
+bool Level::IsHatAvailable(std::string hat)
+{
+	return _availableHats[hat];
+}
+

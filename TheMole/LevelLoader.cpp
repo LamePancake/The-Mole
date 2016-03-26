@@ -226,6 +226,10 @@ void LevelLoader::LoadActorSpecifics(ifstream & file, string & lastLine, unorder
 		{
 			LoadHelpSigns(file, positions[Tile::help], level);
 		}
+		else if (line == "hats")
+		{
+			LoadHats(file, level);
+		}
 	}
 }
 
@@ -429,6 +433,19 @@ void LevelLoader::LoadHelpSigns(ifstream & file, vector<SDL2pp::Point>& signPos,
 
 		std::shared_ptr<ObjectActor> sign = std::make_shared<ObjectActor>(Vector2(signPos[i].GetX(), signPos[i].GetY()), *GameManager::GetInstance(), Vector2(0, 0), ObjectActor::tutorialSign, sprites, "idle");
 		level->AddActor(sign);
+	}
+}
+
+void LevelLoader::LoadHats(ifstream & file, shared_ptr<Level> level)
+{
+	string line;
+	vector<string> tokens;
+	for (int i = 0; i < 3; ++i)
+	{
+		std::getline(file, line);
+		split(line, ' ', tokens);
+		level->InsertHat(tokens[0], tokens[1] == "1" ? true : false);
+		tokens.clear();
 	}
 }
 

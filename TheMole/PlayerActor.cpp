@@ -220,16 +220,18 @@ void PlayerActor::DefaultTileCollisionHandler(std::vector<std::shared_ptr<Tile>>
 
 void PlayerActor::UpdateInput(double elapsedSecs)
 {
+	shared_ptr<Level> level = _gameScreen->GetLevel();
+
 	if (_digDir != Edge::NONE) return;
 
 	_stoppedTime = false;
-	if (_mgr->inputManager->ActionOccurred("MIND_CONTROL", Input::Held))
+	if (_mgr->inputManager->ActionOccurred("MIND_CONTROL", Input::Held) && level->IsHatAvailable("MIND_CONTROL"))
 	{
 		_stoppedTime = true;
         UpdateMindControlSelection(false);
 		return;
 	}
-	else if (_mgr->inputManager->ActionOccurred("MIND_CONTROL", Input::Released))
+	else if (_mgr->inputManager->ActionOccurred("MIND_CONTROL", Input::Released) && level->IsHatAvailable("MIND_CONTROL"))
 	{
         UpdateMindControlSelection(true);
 	}
@@ -340,12 +342,12 @@ void PlayerActor::UpdateInput(double elapsedSecs)
 		SetSpeed(Vector2(_curKinematic.velocity.GetX(), GetJumpVelocity()));
 	}
 
-	if (_mgr->inputManager->ActionOccurred("CHICKEN", Input::Pressed) && !_jumpBoosted)
+	if (_mgr->inputManager->ActionOccurred("CHICKEN", Input::Pressed) && !_jumpBoosted  && level->IsHatAvailable("CHICKEN"))
 	{
 		_jumpVelocity -= _jumpBoost;
 		_jumpBoosted = true;
 	}
-	if (_mgr->inputManager->ActionOccurred("CHICKEN", Input::Down))
+	if (_mgr->inputManager->ActionOccurred("CHICKEN", Input::Down) && level->IsHatAvailable("CHICKEN"))
 	{
 		_gliding = true;
 	}
@@ -354,7 +356,7 @@ void PlayerActor::UpdateInput(double elapsedSecs)
 		_gliding = false;
 	}
 
-	if (_mgr->inputManager->ActionOccurred("SHIELD", Input::Pressed))
+	if (_mgr->inputManager->ActionOccurred("SHIELD", Input::Pressed) && level->IsHatAvailable("SHIELD"))
 	{
 		///Activate shield
 		_shieldActive = true;
@@ -366,7 +368,7 @@ void PlayerActor::UpdateInput(double elapsedSecs)
 	//	_shieldActive = true;
 	//	//_shieldReleased = false;
 	//}
-	if (_mgr->inputManager->ActionOccurred("SHIELD", Input::Released))
+	if (_mgr->inputManager->ActionOccurred("SHIELD", Input::Released) && level->IsHatAvailable("SHIELD"))
 	{
 		///Deactivate Shield
 		_shieldReleased = true;
