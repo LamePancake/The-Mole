@@ -1,38 +1,42 @@
-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSEEEEEEEEEEEEEEEEEEEEEESS
-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSDSSSSSSSSSDSSSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSC      D       D     CSS
-SSSSS                D                                  S     S     S                      SSSSSSSSSSSSSS     SSSSSSSSSS
-SSSSS                D                                   S    S    S                       SSSSS                   SSSSS
-SSSSS                D                                    S   S   S                          F                     SSSSS
-SSSSS                D   C                       SSS       S  S  S                    SSSSSSSSSS                   SSSSS
-SSSSS                                           SDDDSSSS    S S S                  SSSSS   SSSSS            SSSSSSSSSSSS
-SSSSS                                          SDDDDDDDDDDDDSSSSSSSSS                      SSSSSK                  SSSSS
-SSSSS                                    F    SDDDDDDDDDDDDDDDDDDDDDDDDD                   SSSSSSK                 SSSSS
-SSSSS       SSSSSS                     SSSSSSSSSSSSSSSSSDDDDDDDSSSSSSSSSSSSSSSS            SSSSSSSK                SSSSS
-SSSSS                                 SS               DDDDDDSSS                           SSSSSSSSK               SSSSS
-SSSSS                                                  DDD                                 SSSSSSSSSK              SSSSS
-SSSSS                                                                                      SSSSSSSSSSK             SSSSS
-SSSSS                   SSSSSSSSSS                                                         SSSSSSSSSSSK            SSSSS
-SSSSS                         D  SSSS                                                      SSSSSSSSSSSSK           SSSSS
-SSSSS                         D            SSSSSSSSSS                                      SSSSSSSSSSSSSK          SSSSS
-SSSSS                         D                D                                   F       SSSSSSSSSSSSSSK         SSSSS
-SSSSS                         D                D               SSSSSSSS          SSSSS   SSSSSSSSSSSSSSSSS         SSSSS
-SSSSS                         D                D                  DD                 S     SSSSSSSSSSSSSSSSS      FSSSSS
-SSSSS                         D                D                  DD                 S     SSSSS                 SSSSSSS
-SSSSS                         D                D                                     SSS   SSSSS               KSSSSSSSS
-SSSSS                         D                D                                     S     SSSSS              KSSSSSSSSS
-SSSSS                         D                D                                     S     SSSSS             KSSSSSSSSSS
-SSSSS                         D                D    F                                S   SSSSSSS            KSSSSSSSSSSS
-SSSSS                         D                SSSSSSSSSSSSS                         S     SSSSS           KSSSSSSSSSSSS
-SSSSS                       SSS          SSSSSSSSSS                                  SSS   SSSSS          KSSSSSSSSSSSSS
-SSSSS                    SSSS               SSSSSSS C                                      SSSSS         KSSSSSSSSSSSSSS
-SSSSS                 SSSS                   SSSSSSSSSSS                                 SSSSSSS        KSSSSSSSSSSSSSSS
-SSSSS        SSSSSDDDSSS                      SSSSSSSSS                                    SSSSS       KSSSSSSSSSSSSSSSS
-SSSSS       SSSSSSDDDDSSS                      SSSSSSS                      SSSSSSSSS      SSSSS       SS          SSSSS
-SSSSTO     SSSSSSSSDDDDCDD                      SSSSSKKKKKKKKKKKKKKKKKKKKKKKKKKSSSSSSSSSSSSSSSSS            N     GSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSEEEEEEEEEEEEEEEEEEEEEESS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSDSSSSSSSSSDSSSSSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSC      D       D     CSS
+SSSSS                 D                                  S     S     S                      SSSSSSSSSSSSSS     SSSSSSSSSS
+SSSSS                 D                                   S    S    S                       SSSSS                   SSSSS
+SSSSS                 D                                    S   S   S                          F                     SSSSS
+SSSSS                 D   C                       SSS       S  S  S                    SSSSSSSSSS                   SSSSS
+SSSSS                                            SDDDSSSS    S S S                  SSSSS   SSSSS            SSSSSSSSSSSS
+SSSSS                                           SDDDDDDDDDDDDSSSSSSSSS                      SSSSSK                  SSSSS
+SSSSS                                     F    SDDDDDDDDDDDDDDDDDDDDDDDDD                   SSSSSSK                 SSSSS
+SSSSS        SSSSSS                     SSSSSSSSSSSSSSSSSDDDDDDDSSSSSSSSSSSSSSSS            SSSSSSSK                SSSSS
+SSSSS              S                   SS               DDDDDDSSS                           SSSSSSSSK               SSSSS
+SSSSS                                                   DDD                                 SSSSSSSSSK              SSSSS
+SSSSS                                                                                       SSSSSSSSSSK             SSSSS
+SSSSS                    SSSSSSSSSS                                                         SSSSSSSSSSSK            SSSSS
+SSSSS                          D  SSSS                                                      SSSSSSSSSSSSK           SSSSS
+SSSSS                          D            SSSSSSSSSS                                      SSSSSSSSSSSSSK          SSSSS
+SSSSS                          D                D                                   F       SSSSSSSSSSSSSSK         SSSSS
+SSSSS                          D                D               SSSSSSSS          SSSSS   SSSSSSSSSSSSSSSSS         SSSSS
+SSSSS                          D                D                  DD                 S     SSSSSSSSSSSSSSSSS      FSSSSS
+SSSSS                          D                D                  DD                 S     SSSSS                 SSSSSSS
+SSSSS                          D                D                                     SSS   SSSSS               KSSSSSSSS
+SSSSS                          D                D                                     S     SSSSS              KSSSSSSSSS
+SSSSS                          D                D                                     S     SSSSS             KSSSSSSSSSS
+SSSSS                    H     D                D    F                                S   SSSSSSS            KSSSSSSSSSSS
+SSSSS                          D                SSSSSSSSSSSSS                         S     SSSSS           KSSSSSSSSSSSS
+SSSSS         H              SSS          SSSSSSSSSS                                  SSS   SSSSS          KSSSSSSSSSSSSS
+SSSSS                    SSSSS               SSSSSSS C                                      SSSSS         KSSSSSSSSSSSSSS
+SSSSS                 SSSS                    SSSSSSSSSSS                                 SSSSSSS        KSSSSSSSSSSSSSSS
+SSSSS        SSSSSDDDSSS                       SSSSSSSSS                                    SSSSS       KSSSSSSSSSSSSSSSS
+SSSSS       SSSSSSDDDDSSS                       SSSSSSS                     SSSSSSSSSS      SSSSS       SS          SSSSS
+SSSSTO     SSSSSSSSDDDDCDD                       SSSSSKKKKKKKKKKKKKKKKKKKKKKKKKKSSSSSSSSSSSSSSSSS            N     GSSSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+
+signs
+.\\Assets\\Textures\\chickenGlide_sign.png
+.\\Assets\\Textures\\chickenBoost_sign.png
 
 pancakes
 3

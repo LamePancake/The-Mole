@@ -13,6 +13,7 @@ public:
 		pancake,
 		projectileThrower,
 		dialogTrigger,
+		tutorialSign,
 	};
 
 	/**

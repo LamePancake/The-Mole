@@ -59,6 +59,10 @@ void ObjectActor::Update(double elapsedSecs)
 			DialogUpdate(elapsedSecs);
 			break;
 		}
+		default:
+		{
+			break;
+		}
 	}
 }
 

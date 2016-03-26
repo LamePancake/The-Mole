@@ -115,7 +115,7 @@ void Level::AddActor(std::shared_ptr<Actor> actor)
 
 	_actorCounts[actor->GetType()]++;
 
-	_actorsToAdd.push_back(actor);
+	_actorsToAdd.insert(_actorsToAdd.begin(), actor);
 }
 
 std::vector<std::shared_ptr<Actor>>& Level::GetActors()

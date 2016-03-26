@@ -34,6 +34,7 @@ public:
 		toggle      = 'W',
 		door        = 'A',
 		dialog      = 'V',
+		help        = 'H',
 	};
 
 	/** Default constuctor. Initilizes everying to default values. */

@@ -165,6 +165,11 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 				positions[Tile::dialog].push_back(SDL2pp::Point(tile->GetWorldPosition().GetX(), tile->GetWorldPosition().GetY()));
 				tile->SetID(Tile::blank);
 				break;
+
+			case Tile::help:
+				positions[Tile::help].push_back(SDL2pp::Point(tile->GetWorldPosition().GetX(), tile->GetWorldPosition().GetY()));
+				tile->SetID(Tile::blank);
+				break;
 			}
 
 			level->AddTileToLevel(tile, levelHeight);
@@ -216,6 +221,10 @@ void LevelLoader::LoadActorSpecifics(ifstream & file, string & lastLine, unorder
 		else if (line == "pancakes")
 		{
 			LoadPancakes(file, positions[Tile::collectible], level);
+		}
+		else if (line == "signs")
+		{
+			LoadHelpSigns(file, positions[Tile::help], level);
 		}
 	}
 }
@@ -404,3 +413,22 @@ void LevelLoader::LoadPancakes(ifstream & file, vector<SDL2pp::Point>& pancakePo
 
 	level->InitialzeNumberOfPancakes(pancakePos.size());
 }
+
+void LevelLoader::LoadHelpSigns(ifstream & file, vector<SDL2pp::Point>& signPos, shared_ptr<Level> level)
+{
+	string line;
+
+	for (size_t i = 0; i < signPos.size(); ++i)
+	{
+		std::getline(file, line);
+
+		std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
+		std::shared_ptr<SDL2pp::Texture> signSheet = std::make_shared<SDL2pp::Texture>(GameManager::GetInstance()->GetRenderer(), line);
+		double infinity = std::numeric_limits<double>::infinity();
+		sprites["idle"] = std::make_shared<SpriteSheet>(signSheet, 1, infinity);
+
+		std::shared_ptr<ObjectActor> sign = std::make_shared<ObjectActor>(Vector2(signPos[i].GetX(), signPos[i].GetY()), *GameManager::GetInstance(), Vector2(0, 0), ObjectActor::tutorialSign, sprites, "idle");
+		level->AddActor(sign);
+	}
+}
+
