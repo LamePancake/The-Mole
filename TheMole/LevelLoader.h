@@ -35,7 +35,7 @@ public:
 	 *
 	 * @return	null if it fails, else the level.
 	 */
-	std::shared_ptr<Level> LoadLevel(std::string levelPath, std::shared_ptr<PlayerActor> & player);
+	std::shared_ptr<Level> LoadLevel(std::string levelPath, std::shared_ptr<PlayerActor> & player, bool den = false);
 
 private:
 	////////////////////////////////////////////////////////////////////////////////////////////////////

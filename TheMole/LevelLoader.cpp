@@ -9,7 +9,7 @@ using std::string;
 using std::ifstream;
 
 // Loads the level
-std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared_ptr<PlayerActor> & player)
+std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared_ptr<PlayerActor> & player, bool den)
 {
 	int    levelWidth = 0; // Keeps track of the width of the level
 	int    levelHeight = 0; // Keeps track of the height of the level
@@ -68,11 +68,21 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 			{
 				std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
 				sprites.reserve(4);
-				sprites["sideDig"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_sidedig_56x56.png", 4, 0.30, false);
-				sprites["verticalDig"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_downdig_56x56.png", 4, 0.30, false, SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection::DOWN);
-				sprites["walk"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_walk_56x56.png", 8, 1);
-				sprites["idle"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_idle_56x56.png", 4, 0.8);
-
+				if (den)
+				{
+					sprites["sideDig"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_den_sidedig_56x56.png", 4, 0.30, false);
+					sprites["verticalDig"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_downdig_56x56.png", 4, 0.30, false, SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection::DOWN);
+					sprites["walk"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_den_walk_56x56.png", 8, 1);
+					sprites["idle"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_den_idle_56x56.png", 4, 0.8);
+				}
+				else
+				{
+					sprites["sideDig"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_sidedig_56x56.png", 4, 0.30, false);
+					sprites["verticalDig"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_downdig_56x56.png", 4, 0.30, false, SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection::DOWN);
+					sprites["walk"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_walk_56x56.png", 8, 1);
+					sprites["idle"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_idle_56x56.png", 4, 0.8);
+				}
+				
 				player = std::make_shared<PlayerActor>(tile->GetWorldPosition(), gameManager, Vector2(.0f, 341.3f), sprites, "idle");
 				tile->SetID(Tile::blank);
 				level->SetSpawnPoint(tile->GetWorldPosition(), 0);
