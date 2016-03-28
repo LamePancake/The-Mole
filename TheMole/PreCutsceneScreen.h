@@ -6,7 +6,7 @@
 #include <cstdint>
 #include <sstream>
 #include <iomanip>
-#include "Screen.h"
+#include "GameScreen.h"
 #include "LevelLoader.h"
 #include "Level.h"
 #include "LevelRenderer.h"
@@ -18,7 +18,7 @@
 #define NUM_MENU_ITEMS 3
 
 class PreCutsceneScreen :
-	public Screen
+	public GameScreen
 {
 public:
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -31,7 +31,7 @@ public:
 	///<param name="nextLevel">      String indicating the next screen/level to load when this one is finished.</param>
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	PreCutsceneScreen(std::string levelPath, std::string backgroundPath, std::string scorePath, std::string nextLevel, SoundEffectBank & effectBank)
-		: _levelPath(levelPath), _backgroundPath(backgroundPath), _scorePath(scorePath), _nextLevel(nextLevel), _soundBank(effectBank), _paused(false), _deaths(0), _deathCounterUpdated(false), _deathTimer(0) {}
+		: GameScreen(levelPath, backgroundPath, scorePath, nextLevel, effectBank), _levelPath(levelPath), _backgroundPath(backgroundPath), _scorePath(scorePath), _nextLevel(nextLevel), _soundBank(effectBank), _paused(false), _deaths(0), _deathCounterUpdated(false), _deathTimer(0) {}
 
 	virtual int Load();
 	virtual int Update(double elapasedSecs) override;
