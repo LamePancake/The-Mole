@@ -8,9 +8,9 @@ const static std::string LEVEL_NAMES[6] = { "den", "viking", "grass", "starscape
 const static std::string LEVEL_DESCRIPTION[6] =
 {
 	"Borin travels from his cozy den to the Viking Stronghold.",
-	"Borin explores the trap-filled Viking Stronghold.",
-	"Borin ventures through a field inhabited by chickens.",
-	"Borin discovers a spooky movie theatre.",
+	"Borin explores the trap-filled Viking Stronghold to meet Cornelius.",
+	"Borin ventures through a grassy field with his new chicken friend.",
+	"Borin finds the theatre where an old acquaintance is waiting for him.",
 	"Borin challenges the Underwatch to free his mole brethren.",
 	"Return to the Main Menu." 
 };
@@ -31,7 +31,7 @@ int LevelSelectScreen::Load()
 
 	_font = new SDL2pp::Font(".\\Assets\\Fonts\\Exo-Regular.otf", 50);
 	_headerFont = new SDL2pp::Font(".\\Assets\\Fonts\\BEBAS.ttf", 80);
-	_descFont = new SDL2pp::Font(".\\Assets\\Fonts\\Exo-Regular.otf", 35);
+	_descFont = new SDL2pp::Font(".\\Assets\\Fonts\\Exo-Regular.otf", 30);
 
 	_backgroundTextures[0] = new Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\den_bg.png");
 	_backgroundTextures[1] = new Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\viking_bg.png");
