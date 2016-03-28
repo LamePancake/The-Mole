@@ -193,13 +193,12 @@ void CutsceneScreen::Unload()
 	_currentNPCDialog = " ";
 	_currentProtagDialog = " ";
 
-	delete _background;
-	delete _protagDialogBox;
-	delete _npcDialogBox;
-	delete _headerFont;
-	delete _promptFont;
-	delete _headerFont;
-	delete _dialogFont;
+    delete _background;
+    delete _protagDialogBox;
+    delete _npcDialogBox;
+    delete _promptFont;
+    delete _headerFont;
+    delete _dialogFont;
 }
 
 std::vector<std::string> CutsceneScreen::OpenDialog(std::string dialogFilePath)
@@ -242,5 +241,9 @@ void CutsceneScreen::UpdateDialog()
 SoundEffectBank & CutsceneScreen::GetSoundBank()
 {
 	return _soundBank;
+}
+
+CutsceneScreen::~CutsceneScreen()
+{
 }
 

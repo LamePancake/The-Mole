@@ -1,4 +1,4 @@
-#include "GameScreen.h"
+#include "PreCutsceneScreen.h"
 #include "GameManager.h"
 #include "Vector2.h"
 
@@ -10,32 +10,29 @@ const static SDL_Color RECORD = { 255, 153, 51, 255 };
 
 #define GAMEOVER_DELAY 1.2
 
-std::shared_ptr<Level> GameScreen::GetLevel() const
+std::shared_ptr<Level> PreCutsceneScreen::GetLevel() const
 {
 	return _level;
 }
 
-const std::shared_ptr<PlayerActor> GameScreen::GetPlayer() const
+const std::shared_ptr<PlayerActor> PreCutsceneScreen::GetPlayer() const
 {
 	return _player;
 }
 
-SoundEffectBank & GameScreen::GetSoundBank()
+SoundEffectBank & PreCutsceneScreen::GetSoundBank()
 {
 	return _soundBank;
 }
 
-int GameScreen::Load()
+int PreCutsceneScreen::Load()
 {
 	_mgr = GameManager::GetInstance();
 
 	_mgr->ReadHighScoreFile(_scorePath);
 
 	// Load level one in order to render
-	if(_levelPath == "./Assets/Levels/den_level.txt")
-		_level = _levelLoader.LoadLevel(_levelPath, _player, true);
-	else
-		_level = _levelLoader.LoadLevel(_levelPath, _player);
+	_level = _levelLoader.LoadLevel(_levelPath, _player);
 	SDL2pp::Point levelSize = _level->GetLevelSize();
 
 	// Inialize the quadtree
@@ -55,7 +52,7 @@ int GameScreen::Load()
 		}
 	}
 
-   	_levelRenderer.Load(*_mgr);
+	_levelRenderer.Load(*_mgr);
 
 	SDL2pp::Point playerPos((int)(_player->GetPosition().GetX()), (int)(_player->GetPosition().GetY()));
 	SDL2pp::Point viewportSize = _mgr->GetWindow().GetSize();
@@ -67,11 +64,11 @@ int GameScreen::Load()
 	_headerFont = new SDL2pp::Font(".\\Assets\\Fonts\\BEBAS.ttf", 80);
 	_recordFont = new SDL2pp::Font(".\\Assets\\Fonts\\Exo-Regular.otf", 25);
 
-	_background     = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), _backgroundPath);
-	_pancake        = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), ".\\Assets\\Textures\\Pancake.png");
-	_pancakeMarker  = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), ".\\Assets\\Textures\\Pancakemarker.png");
+	_background = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), _backgroundPath);
+	_pancake = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), ".\\Assets\\Textures\\Pancake.png");
+	_pancakeMarker = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), ".\\Assets\\Textures\\Pancakemarker.png");
 	_pancakeMarker2 = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), ".\\Assets\\Textures\\Pancakemarker2.png");
-	_skull          = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), ".\\Assets\\Textures\\Skull.png");
+	_skull = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), ".\\Assets\\Textures\\Skull.png");
 
 	_menuItems[0] = new SDL2pp::Texture(_mgr->GetRenderer(), _font->RenderText_Solid("Level Select", NORMAL));
 	_menuItems[1] = new SDL2pp::Texture(_mgr->GetRenderer(), _font->RenderText_Solid("Main Menu", NORMAL));
@@ -93,12 +90,12 @@ int GameScreen::Load()
 	_controls = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\levelSelectControls.png");
 	_levelCompleteControls = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\CreditsControls.png");
 
-	_curMenuItem  = 0;
+	_curMenuItem = 0;
 
 	return SCREEN_LOAD_SUCCESS;
 }
 
-int GameScreen::Update(double elapsedSecs)
+int PreCutsceneScreen::Update(double elapsedSecs)
 {
 	SDL_PumpEvents();
 	_mgr->inputManager->UpdateKeyboardState();
@@ -126,14 +123,14 @@ int GameScreen::Update(double elapsedSecs)
 					_stringFormatter << " : " << setfill('0') << setw(3) << to_string(_deaths);
 				else
 					_stringFormatter << " : " << "???";
-				
+
 				_deathCounter = new SDL2pp::Texture(_mgr->GetRenderer(), _font->RenderText_Solid(_stringFormatter.str(), NORMAL));
 				_stringFormatter.str(std::string());
 				_stringFormatter.clear();
 				_deathCounterUpdated = true;
 			}
 		}
-		
+
 		if (_deathTimer >= GAMEOVER_DELAY)
 		{
 			_deathTimer = 0;
@@ -185,19 +182,19 @@ int GameScreen::Update(double elapsedSecs)
 	return SCREEN_CONTINUE;
 }
 
-void GameScreen::Draw()
+void PreCutsceneScreen::Draw()
 {
 	SDL2pp::Point dim = GameManager::GetInstance()->GetWindow().GetSize();
 	SDL2pp::Renderer& rend = _mgr->GetRenderer();
 	rend.SetDrawColor(100, 100, 100, 255);
 	rend.Clear();
 
-	float levelWidth  = _level->GetLevelSize().x * _level->GetTileWidth();
+	float levelWidth = _level->GetLevelSize().x * _level->GetTileWidth();
 	float levelHeight = _level->GetLevelSize().y * _level->GetTileHeight();
 
-	float xNew      = ((float)_camera->GetViewport().x / levelWidth) * _background->GetWidth();
-	float yNew      = ((float)_camera->GetViewport().y / levelHeight) * _background->GetHeight();
-	float newWidth  = ((float)_camera->GetViewport().GetW() / levelWidth) * _background->GetWidth();
+	float xNew = ((float)_camera->GetViewport().x / levelWidth) * _background->GetWidth();
+	float yNew = ((float)_camera->GetViewport().y / levelHeight) * _background->GetHeight();
+	float newWidth = ((float)_camera->GetViewport().GetW() / levelWidth) * _background->GetWidth();
 	float newHeight = ((float)_camera->GetViewport().GetH() / levelHeight) * _background->GetHeight();
 
 	rend.Copy(*_background, SDL2pp::Rect(xNew, yNew, newWidth, newHeight), SDL2pp::NullOpt);
@@ -233,12 +230,12 @@ void GameScreen::Draw()
 		// Render death counter
 		rend.Copy(*_skull, SDL2pp::NullOpt, SDL2pp::Rect(dim.GetX() * 0.01, dim.GetY() * 0.01, _skull->GetWidth() * 0.5, _skull->GetHeight() * 0.5));
 		rend.Copy(*_deathCounter, SDL2pp::NullOpt, SDL2pp::Rect(dim.GetX() * 0.01 + (_skull->GetWidth() * 0.5), dim.GetY() * 0.01, _deathCounter->GetWidth() * 0.5, _deathCounter->GetHeight() * 0.5));
-	}		
+	}
 
 	rend.Present();
 }
 
-void GameScreen::Unload()
+void PreCutsceneScreen::Unload()
 {
 	_mgr->ClearHighScores();
 
@@ -249,17 +246,17 @@ void GameScreen::Unload()
 	_curMenuItem = 0;
 	_paused = false;
 	_deaths = 0;
-	
+
 	for (int i = 0; i < NUM_MENU_ITEMS; ++i)
 	{
 		delete _menuItems[i];
 	}
 
-    delete _camera;
-    
-    delete _border;
+	delete _pausedText;
+	delete _border;
 	delete _controls;
 	delete _levelCompleteControls;
+	delete _camera;
 
 	delete _font;
 	delete _headerFont;
@@ -273,7 +270,7 @@ void GameScreen::Unload()
 	delete _gameOverText;
 }
 
-int GameScreen::OnPauseUpdate()
+int PreCutsceneScreen::OnPauseUpdate()
 {
 	if (_mgr->inputManager->ActionOccurred("ARROWDOWN", Input::Pressed) || _mgr->inputManager->ActionOccurred("DOWN", Input::Pressed))
 	{
@@ -307,7 +304,7 @@ int GameScreen::OnPauseUpdate()
 	return SCREEN_CONTINUE;
 }
 
-void GameScreen::OnPauseDraw()
+void PreCutsceneScreen::OnPauseDraw()
 {
 	SDL2pp::Point size = GameManager::GetInstance()->GetWindow().GetSize();
 	SDL2pp::Renderer& rend = _mgr->GetRenderer();
@@ -329,7 +326,7 @@ void GameScreen::OnPauseDraw()
 		{
 			c = NORMAL;
 		}
-			
+
 		rend.Copy(*_border, SDL2pp::NullOpt, SDL2pp::Rect(0.0f, size.GetY() * (0.25f + ((float)i * 0.12f)) - (scaleFactor / 2), _menuItems[i]->GetWidth() + size.GetX() * 0.17f, _menuItems[i]->GetHeight() + scaleFactor));
 
 		_menuItems[i]->SetColorMod(c.r, c.g, c.b);
@@ -340,7 +337,7 @@ void GameScreen::OnPauseDraw()
 	rend.Copy(*_controls, SDL2pp::NullOpt, SDL2pp::Rect(size.GetX() * 0.60f, 0, size.GetX() * 0.40f, size.GetY() * 0.1f));
 }
 
-void GameScreen::OnLevelCompleteDraw()
+void PreCutsceneScreen::OnLevelCompleteDraw()
 {
 	SDL2pp::Point size = GameManager::GetInstance()->GetWindow().GetSize();
 	SDL2pp::Renderer& rend = _mgr->GetRenderer();
@@ -369,7 +366,7 @@ void GameScreen::OnLevelCompleteDraw()
 
 	rend.Copy(*_skull, SDL2pp::NullOpt, SDL2pp::Rect(size.GetX() * 0.35, size.GetY() * 0.55f, _skull->GetWidth() * 2.1, _skull->GetHeight() * 2.1));
 	rend.Copy(*_deathCounter, SDL2pp::NullOpt, SDL2pp::Rect(size.GetX() * 0.35 + (_skull->GetWidth() * 2.1), size.GetY() * 0.55f, _deathCounter->GetWidth() * 2.1, _deathCounter->GetHeight() * 2.1));
-	
+
 	if (_deaths < _mgr->_bestDeathCount)
 		rend.Copy(*_newRecord, SDL2pp::NullOpt, SDL2pp::Rect(size.GetX() * 0.87 - (_newRecord->GetWidth() / 2), size.GetY() * 0.58f, _newRecord->GetWidth(), _newRecord->GetHeight()));
 
@@ -379,7 +376,7 @@ void GameScreen::OnLevelCompleteDraw()
 	rend.Copy(*_levelCompleteControls, SDL2pp::NullOpt, SDL2pp::Rect(size.GetX() * 0.7f, 0, size.GetX() * 0.40f, size.GetY() * 0.1f));
 }
 
-void GameScreen::OnGameOverDraw()
+void PreCutsceneScreen::OnGameOverDraw()
 {
 	SDL2pp::Point size = GameManager::GetInstance()->GetWindow().GetSize();
 	SDL2pp::Renderer& rend = _mgr->GetRenderer();
