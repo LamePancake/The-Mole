@@ -6,8 +6,20 @@ using std::shared_ptr;
 
 PlayerActor::PlayerActor(Vector2 position, GameManager& manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
 	const std::string&& startSprite, SpriteSheet::XAxisDirection startXDir, SpriteSheet::YAxisDirection startYDir)
-	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDir, startYDir), _prevDirection(startXDir), _atGoal(false), _jumpVelocity(0), _maxJumpVel(400),
-	_digDir{ Edge::NONE }, _jumped(false), _jumpDuration(0.75), _jumpTimeElapsed(0), _godMode(false), _stoppedTime(false), _selected(0), _jumpBoost(600), _jumpBoosted(false)
+	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDir, startYDir),
+    _prevDirection(startXDir),
+    _atGoal(false),
+    _jumpVelocity(0),
+    _maxJumpVel(400),
+	_digDir{ Edge::NONE },
+    _jumped(false),
+    _jumpDuration(0.75),
+    _jumpTimeElapsed(0),
+    _godMode(false),
+    _stoppedTime(false),
+    _selected(0),
+    _jumpBoost(600), 
+    _jumpBoosted(false)
 {
 	_shieldActive = false;///Start shield in inactive state
 	_shieldReleased = false;
@@ -49,23 +61,18 @@ void PlayerActor::Update(double elapsedSecs)
 
 	UpdateShieldStatus(elapsedSecs);
 
-	_jumpVelocity = Math::Clamp(_jumpVelocity, -_maxJumpVel, _maxJumpVel);
+    // Slow gravity if we're gliding
 	if (_gliding && _jumpVelocity > 0)
 	{
 		_jumpVelocity += -5.9 * 64 * elapsedSecs;
-	}
-	if (!_jumped)
-	{
-		_jumpVelocity += -9.8 * 64 * elapsedSecs * -1.0;
-	}
-	if (_jumpVelocity <= _maxJumpVel)
-	{
-		StopJumping();
 	}
 	if (_wasOnGround)
 	{
 		_jumpBoosted = false;
 	}
+
+    _jumpVelocity -= -9.8 * 64 * elapsedSecs;
+    _jumpVelocity = Math::Clamp(_jumpVelocity, -_maxJumpVel, _maxJumpVel);
 
 
 	// Check whether we're finished digging and update sprites accordingly
@@ -180,8 +187,7 @@ void PlayerActor::UpdateCollisions(double elapsedSecs)
 void PlayerActor::StopJumping()
 {
 	_jumped = false;
-	//SetJumpVelocity(0);
-	//_jumpVelocity = -_jumpVelocity;
+	_jumpVelocity = 0;
 	_jumpTimeElapsed = 0;
 }
 
@@ -208,9 +214,12 @@ void PlayerActor::DefaultTileCollisionHandler(std::vector<std::shared_ptr<Tile>>
 				if (isXDirection) _curKinematic.position.SetX(correctedPos);
 				else
 				{
-					_wasOnGround = true;
+					_wasOnGround = edge == Edge::BOTTOM;
 					_curKinematic.position.SetY(correctedPos); 
-					if (_jumped) StopJumping();
+                    if (_jumped)
+                    {
+                        StopJumping();
+                    }
 				}
 				break;
 			}

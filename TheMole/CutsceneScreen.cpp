@@ -30,7 +30,7 @@ int CutsceneScreen::Load()
 
 	int idx = rand() % 3;
 	std::string key = _currentlySpeaking == PROTAG ? _protagVoices[idx] : _npcVoices[idx];
-	_soundBank.PlaySound(key);
+	_soundBank.PlaySound(std::move(key));
 
 	_NPC->SetScale(0.8);
 
@@ -89,7 +89,7 @@ int CutsceneScreen::Update(double elapsedSecs)
 
 		int idx = rand() % 3;
 		std::string key = _currentlySpeaking == PROTAG ? _protagVoices[idx] : _npcVoices[idx];
-		_soundBank.PlaySound(key);
+		_soundBank.PlaySound(std::move(key));
 	}
 
 	return SCREEN_CONTINUE;

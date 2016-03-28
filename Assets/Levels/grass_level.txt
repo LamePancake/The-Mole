@@ -28,7 +28,7 @@ UUUUU                          D                ULLLLLLLLLLLL                   
 UUUUU         H              LLU          LLLLLLUUUU                                  ULL   UUUUU          KUUUUUUUUUUUUU
 UUUUU                    LLLLU               UUUUUUU C                                      UUUUU         KUUUUUUUUUUUUUU
 UUUUU                 LLLU                    UUUUUULLLLL                                 LLUUUUU        KUUUUUUUUUUUUUUU
-UUUUU        LLLLLLLLLUU                       UUUUUUUUU                                    UUUUU       KUUUUUUUUUUUUUUUU
+UUUUU        LLLLLDDLLUU                       UUUUUUUUU                                    UUUUU       KUUUUUUUUUUUUUUUU
 UUUUU       LUUUUUDDDDUUU                       UUUUUUU                     LLLLLLLLLL      UUUUU       UU          UUUUU
 UUUUTO     LUUUUUUUDDDDCDD                       UUUUUKKKKKKKKKKKKKKKKKKKKKKKKKKUUUUUULLLLLLUUUUU            N     GUUUUU
 UUUUULLLLLLUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUULLLLLLLLLLLLLLLLLLLUUUUU
@@ -49,6 +49,7 @@ checkpoints
 4
 3
 2
+5
 1
 
 hats

@@ -32,6 +32,8 @@ int main(int argc, char** argv) {
 
 		unordered_map<string, string> soundEffects;
 		soundEffects["dig"] = "./Assets/Audio/digging.ogg";
+        soundEffects["door_finish"] = "./Assets/Audio/door_finish.ogg";
+        soundEffects["door_progress"] = "./Assets/Audio/door_progress.ogg";
 		soundEffects["select"] = "./Assets/Audio/menu_selection.ogg";
 		soundEffects["accept"] = "./Assets/Audio/menu_accept.ogg";
 		soundEffects["decline"] = "./Assets/Audio/menu_decline.ogg";
@@ -99,6 +101,7 @@ int main(int argc, char** argv) {
 		screens.insert({ "boss", bossIntro });
 
 		GameManager::_instance = new GameManager(std::move(sdl), std::move(image), std::move(mixer), std::move(sdl_ttf), std::move(window), std::move(renderer), screens);
+        bank.LoadSounds();
 		GameManager::_instance->Loop(startScreen);
 	}
 	catch (SDL2pp::Exception& e) {
@@ -110,5 +113,6 @@ int main(int argc, char** argv) {
 		// This also works (e.g. "SDL_Init failed: No available video device")
 		std::cerr << e.what() << std::endl;
 	}
+    delete GameManager::_instance;
 	return 0;
 }

@@ -1,18 +1,54 @@
 #include "SoundEffectBank.h"
 using std::shared_ptr;
 
-SoundEffectBank::SoundEffectBank(std::unordered_map<std::string, std::string>& soundFiles)
-	: _mgr(nullptr), _sounds()
+static SoundEffectBank* instance = nullptr;
+
+void ChannelFinishedHandler(int channel)
 {
-	for (auto entry : soundFiles)
-	{
-		_sounds[entry.first] = shared_ptr<SDL2pp::Chunk>(new SDL2pp::Chunk(entry.second));
-	}
+    // God damn do I ever hate this...
+    // Hopefully we never end up with multiple sound effect banks at the same time
+    instance->_channelSounds[channel] = "";
 }
 
-void SoundEffectBank::PlaySound(const std::string & name)
+SoundEffectBank::SoundEffectBank(std::unordered_map<std::string, std::string>& soundFiles)
+    : _mgr(nullptr), _sounds(), _channelSounds(), _soundFiles(soundFiles)
 {
-	// Ugly hack since GameManager is actually initialised after this object...
-	if (!_mgr) _mgr = GameManager::GetInstance();
-	_mgr->GetMixer().PlayChannel(-1, *_sounds[name], 0);
+    instance = this;
+}
+
+void SoundEffectBank::LoadSounds()
+{
+    for (auto entry : _soundFiles)
+    {
+        _sounds[entry.first] = shared_ptr<SDL2pp::Chunk>(new SDL2pp::Chunk(entry.second));
+    }
+    _soundFiles.clear();
+
+    _mgr = GameManager::GetInstance();
+    _channelSounds.resize(_mgr->GetMixer().GetNumChannels(), "");
+    
+    // Set callback to use when a channel stops playing
+    _mgr->GetMixer().SetChannelFinishedHandler(ChannelFinishedHandler);
+}
+
+void SoundEffectBank::PlaySound(std::string && name, bool repeat)
+{
+	int channel = _mgr->GetMixer().PlayChannel(-1, *_sounds[name], repeat ? -1 : 0);
+    _channelSounds[channel] = name;
+}
+
+
+void SoundEffectBank::StopSound(std::string && name)
+{
+    auto it = std::find_if(_channelSounds.begin(), _channelSounds.end(), [&](std::string& sound) {return sound == name; });
+    if (it != _channelSounds.end())
+    {
+        _mgr->GetMixer().HaltChannel(it - _channelSounds.begin());
+    }
+}
+
+bool SoundEffectBank::IsPlaying(std::string&& name)
+{
+    auto it = std::find_if(_channelSounds.begin(), _channelSounds.end(), [&](std::string& sound) {return sound == name; });
+    return it != _channelSounds.end();
 }
