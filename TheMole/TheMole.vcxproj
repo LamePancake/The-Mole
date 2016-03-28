@@ -156,6 +156,7 @@
     <ClCompile Include="OptionsScreen.cpp" />
     <ClCompile Include="PlayerActor.cpp" />
     <ClCompile Include="AIActor.cpp" />
+    <ClCompile Include="PreCutsceneScreen.cpp" />
     <ClCompile Include="ProjectileActor.cpp" />
     <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="SoundEffectBank.cpp" />
@@ -183,6 +184,7 @@
     <ClInclude Include="ObjectActor.h" />
     <ClInclude Include="OptionsScreen.h" />
     <ClInclude Include="PlayerActor.h" />
+    <ClInclude Include="PreCutsceneScreen.h" />
     <ClInclude Include="ProjectileActor.h" />
     <ClInclude Include="Quadtree.h" />
     <ClInclude Include="SoundEffectBank.h" />
