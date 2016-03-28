@@ -17,12 +17,12 @@ class CutsceneScreen : public Screen
 
 public:
 
-	CutsceneScreen(std::string dialogBoxPath, std::string backgroundPath, std::string openingSprite, double openingNumFrames, double openingDuration,
-		std::string protagSprite, double protagNumFrames, double protagDuration, std::string npcSpritePath, double npcNumFrames, double npcDuration, 
+	CutsceneScreen(std::string dialogBoxPath, std::string backgroundPath, 
+		std::string protagSprite, double protagNumFrames, double protagDuration, 
+		std::string npcSpritePath, double npcNumFrames, double npcDuration, 
 		SoundEffectBank & effectBank, std::string nextScreen, std::string dialogFilePath, std::string protagName, std::string npcName,
 		std::vector<std::string>& protagVoices, std::vector<std::string>& npcVoices)
 		: _dialogBoxPath(dialogBoxPath), _backgroundPath(backgroundPath), 
-		  _openingSpriteSheetPath(openingSprite), _openingNumFrames(openingNumFrames), _openingDuration(openingDuration),
 		  _protagSpritePath(protagSprite), _protagNumFrames(protagNumFrames), _protagDuration(protagDuration),
 		  _npcSpritePath(npcSpritePath), _npcNumFrames(npcNumFrames), _npcDuration(npcDuration), 
 		  _nextScreen(nextScreen), _soundBank(effectBank), _dialogFilePath(dialogFilePath), _skipTimer(0),
@@ -36,20 +36,18 @@ public:
 
 	SoundEffectBank & GetSoundBank();
 
+    virtual ~CutsceneScreen();
+
 private:
 
 	SoundEffectBank & _soundBank;
 
 	std::string _backgroundPath;
 	std::string _dialogBoxPath;
-	std::string _openingSpriteSheetPath;
 	std::string _protagSpritePath;
 	std::string _npcSpritePath;
 	std::string _nextScreen;
 	std::string _dialogFilePath;
-
-	double _openingNumFrames;
-	double _openingDuration;
 
 	double _protagNumFrames;
 	double _protagDuration;
@@ -65,7 +63,6 @@ private:
 	
 	std::shared_ptr<SpriteSheet> _protagonist;
 	std::shared_ptr<SpriteSheet> _NPC;
-	std::shared_ptr<SpriteSheet> _openingAnimation;
 	std::shared_ptr<SpriteSheet> _nextDialogProtag;
 	std::shared_ptr<SpriteSheet> _nextDialogNPC;
 
