@@ -35,6 +35,7 @@ int main(int argc, char** argv) {
 		soundEffects["dig"] = "./Assets/Audio/digging.ogg";
         soundEffects["door_finish"] = "./Assets/Audio/door_finish.ogg";
         soundEffects["door_progress"] = "./Assets/Audio/door_progress.ogg";
+        soundEffects["switch_on"] = "./Assets/Audio/switch_on.ogg";
 		soundEffects["select"] = "./Assets/Audio/menu_selection.ogg";
 		soundEffects["accept"] = "./Assets/Audio/menu_accept.ogg";
 		soundEffects["decline"] = "./Assets/Audio/menu_decline.ogg";

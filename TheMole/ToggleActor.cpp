@@ -41,6 +41,7 @@ void ToggleActor::Update(double deltaTime)
     }
     else if (!wasOn && _isOn)
     {
+        _gameScreen->GetSoundBank().PlaySound("switch_on");
         _sprites[_currentSpriteSheet]->SetReversed(false);
         _sprites[_currentSpriteSheet]->Start();
     }

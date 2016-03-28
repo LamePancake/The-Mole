@@ -216,7 +216,7 @@ void PlayerActor::DefaultTileCollisionHandler(std::vector<std::shared_ptr<Tile>>
 				{
 					_wasOnGround = edge == Edge::BOTTOM;
 					_curKinematic.position.SetY(correctedPos); 
-                    if (_jumped)
+                    if (_jumped && !_gliding)
                     {
                         StopJumping();
                     }
