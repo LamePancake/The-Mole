@@ -255,11 +255,11 @@ void GameScreen::Unload()
 		delete _menuItems[i];
 	}
 
-	delete _pausedText;
-	delete _border;
+    delete _camera;
+    
+    delete _border;
 	delete _controls;
 	delete _levelCompleteControls;
-	delete _camera;
 
 	delete _font;
 	delete _headerFont;

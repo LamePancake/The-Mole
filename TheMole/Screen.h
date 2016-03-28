@@ -46,6 +46,8 @@ public:
 	 */
 	virtual void Unload() = 0;
 
+    virtual ~Screen() {};
+
 	enum {
 		SCREEN_CONTINUE,
 		SCREEN_OVERLAY,

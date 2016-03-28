@@ -36,6 +36,8 @@ public:
 
 	SoundEffectBank & GetSoundBank();
 
+    virtual ~CutsceneScreen();
+
 private:
 
 	SoundEffectBank & _soundBank;
