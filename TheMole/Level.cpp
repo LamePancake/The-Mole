@@ -115,7 +115,15 @@ void Level::AddActor(std::shared_ptr<Actor> actor)
 
 	_actorCounts[actor->GetType()]++;
 
-	_actorsToAdd.push_back(actor);
+	if (actor->GetType() == Actor::Type::object 
+		&& dynamic_pointer_cast<ObjectActor>(actor)->GetID() == ObjectActor::tutorialSign)
+	{
+		_actorsToAdd.insert(_actorsToAdd.begin(), actor);
+	}
+	else
+	{
+		_actorsToAdd.push_back(actor);
+	}
 }
 
 std::vector<std::shared_ptr<Actor>>& Level::GetActors()
@@ -297,5 +305,15 @@ void Level::CollectPancake(int id)
 std::vector<bool> Level::GetPancakes()
 {
 	return _collectedPancakes;
+}
+
+void Level::InsertHat(std::string hat, bool available)
+{
+	_availableHats.insert(pair<std::string, bool>(hat, available));
+}
+
+bool Level::IsHatAvailable(std::string hat)
+{
+	return _availableHats[hat];
 }
 

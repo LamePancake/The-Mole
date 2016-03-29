@@ -63,23 +63,18 @@ void PlayerActor::Update(double elapsedSecs)
 
 	UpdateShieldStatus(elapsedSecs);
 
-	_jumpVelocity = Math::Clamp(_jumpVelocity, -_maxJumpVel, _maxJumpVel);
+    // Slow gravity if we're gliding
 	if (_gliding && _jumpVelocity > 0)
 	{
 		_jumpVelocity += -5.9 * 64 * elapsedSecs;
-	}
-	if (!_jumped)
-	{
-		_jumpVelocity += -9.8 * 64 * elapsedSecs * -1.0;
-	}
-	if (_jumpVelocity <= _maxJumpVel)
-	{
-		StopJumping();
 	}
 	if (_wasOnGround)
 	{
 		_jumpBoosted = false;
 	}
+
+    _jumpVelocity -= -9.8 * 64 * elapsedSecs;
+    _jumpVelocity = Math::Clamp(_jumpVelocity, -_maxJumpVel, _maxJumpVel);
 
 
 	// Check whether we're finished digging and update sprites accordingly
@@ -192,8 +187,7 @@ void PlayerActor::UpdateCollisions(double elapsedSecs)
 void PlayerActor::StopJumping()
 {
 	_jumped = false;
-	//SetJumpVelocity(0);
-	//_jumpVelocity = -_jumpVelocity;
+	_jumpVelocity = 0;
 	_jumpTimeElapsed = 0;
 }
 
@@ -220,9 +214,12 @@ void PlayerActor::DefaultTileCollisionHandler(std::vector<std::shared_ptr<Tile>>
 				if (isXDirection) _curKinematic.position.SetX(correctedPos);
 				else
 				{
-					_wasOnGround = true;
+					_wasOnGround = edge == Edge::BOTTOM;
 					_curKinematic.position.SetY(correctedPos); 
-					if (_jumped) StopJumping();
+                    if (_jumped && !_gliding)
+                    {
+                        StopJumping();
+                    }
 				}
 				break;
 			}
@@ -235,13 +232,15 @@ void PlayerActor::UpdateInput(double elapsedSecs)
     Edge newDigDir = Edge::NONE;
     _digDir = Edge::NONE;
 	_stoppedTime = false;
-	if (_mgr->inputManager->ActionOccurred("MIND_CONTROL", Input::Down))
+	shared_ptr<Level> level = _gameScreen->GetLevel();
+
+	if (_mgr->inputManager->ActionOccurred("MIND_CONTROL", Input::Held) && level->IsHatAvailable("MIND_CONTROL"))
 	{
 		_stoppedTime = true;
         UpdateMindControlSelection(false);
 		return;
 	}
-	else if (_mgr->inputManager->ActionOccurred("MIND_CONTROL", Input::Released))
+	else if (_mgr->inputManager->ActionOccurred("MIND_CONTROL", Input::Released) && level->IsHatAvailable("MIND_CONTROL"))
 	{
         UpdateMindControlSelection(true);
 	}
@@ -348,7 +347,6 @@ void PlayerActor::UpdateInput(double elapsedSecs)
 		    // jump 7.5 tiles tall of 1 metre each, at 64 pixels per metre, multiplied by -1 because positive moves down in our world
 	    	_jumped = true;
 		    SetJumpVelocity(7.5f * 1.0f * 64.0f * -1.0f);
-		    //SetMaximumJumpVelocity(3.0f * 1.0f * 64.0f * -1.0f);
 		}
 	}
 
@@ -364,12 +362,12 @@ void PlayerActor::UpdateInput(double elapsedSecs)
 		SetSpeed(Vector2(_curKinematic.velocity.GetX(), GetJumpVelocity()));
 	}
 
-	if (_mgr->inputManager->ActionOccurred("CHICKEN", Input::Pressed) && !_jumpBoosted)
+	if (_mgr->inputManager->ActionOccurred("CHICKEN", Input::Pressed) && !_jumpBoosted  && level->IsHatAvailable("CHICKEN"))
 	{
 		_jumpVelocity -= _jumpBoost;
 		_jumpBoosted = true;
 	}
-	if (_mgr->inputManager->ActionOccurred("CHICKEN", Input::Down))
+	if (_mgr->inputManager->ActionOccurred("CHICKEN", Input::Down) && level->IsHatAvailable("CHICKEN"))
 	{
 		_gliding = true;
 	}
@@ -378,13 +376,14 @@ void PlayerActor::UpdateInput(double elapsedSecs)
 		_gliding = false;
 	}
 
-	if (_mgr->inputManager->ActionOccurred("SHIELD", Input::Pressed))
+	if (_mgr->inputManager->ActionOccurred("SHIELD", Input::Pressed) && level->IsHatAvailable("SHIELD"))
 	{
 		///Activate shield
 		_shieldActive = true;
 		_shieldReleased = false;
 	}
-	if (_mgr->inputManager->ActionOccurred("SHIELD", Input::Released))
+
+	if (_mgr->inputManager->ActionOccurred("SHIELD", Input::Released) && level->IsHatAvailable("SHIELD"))
 	{
 		///Deactivate Shield
 		_shieldReleased = true;

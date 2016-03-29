@@ -1,5 +1,6 @@
 #include "CutsceneScreen.h"
 #include "GameManager.h"
+#include <time.h>
 
 using namespace SDL2pp;
 
@@ -16,18 +17,23 @@ int CutsceneScreen::Load()
 	_npcDialogBox     = new Texture(_mgr->GetRenderer(), _dialogBoxPath);
 	_protagonist      = std::make_shared<SpriteSheet>(std::move(_protagSpritePath), _protagNumFrames, _protagDuration);
 	_NPC              = std::make_shared<SpriteSheet>(std::move(_npcSpritePath), _npcNumFrames, _npcDuration);
-	_openingAnimation = std::make_shared<SpriteSheet>(std::move(_openingSpriteSheetPath), _openingNumFrames, _openingDuration);
 	_nextDialogProtag = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\dialog_enter.png", 4, 0.5f);
 	_nextDialogNPC    = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\dialog_enter.png", 4, 0.5f);
 
 	_promptFont = new SDL2pp::Font(".\\Assets\\Fonts\\BEBAS.ttf", 20);
-	_dialogFont = new SDL2pp::Font(".\\Assets\\Fonts\\Exo-Regular.otf", 45);
+	_dialogFont = new SDL2pp::Font(".\\Assets\\Fonts\\Exo-Regular.otf", 27);
 	_headerFont = new SDL2pp::Font(".\\Assets\\Fonts\\BEBAS.ttf", 25);
 
 	_dialog = OpenDialog(_dialogFilePath);
 	UpdateDialog();
 
+	int idx = rand() % 3;
+	std::string key = _currentlySpeaking == PROTAG ? _protagVoices[idx] : _npcVoices[idx];
+	_soundBank.PlaySound(std::move(key));
+
 	_NPC->SetScale(0.8);
+
+	srand(time(NULL));
 	return SCREEN_LOAD_SUCCESS;
 }
 
@@ -46,8 +52,6 @@ int CutsceneScreen::Update(double elapsedSecs)
 		_NPC->Update(elapsedSecs);
 		_nextDialogNPC->Update(elapsedSecs);
 	}
-		
-	_openingAnimation->Update(elapsedSecs);
 
 	if (_mgr->inputManager->ActionOccurred("SKIP", Input::Held))
 	{
@@ -70,7 +74,6 @@ int CutsceneScreen::Update(double elapsedSecs)
 	if (_mgr->inputManager->ActionOccurred("CONFIRM", Input::Pressed))
 	{
 		_soundBank.PlaySound("select");
-
 		_dialogIndex++;
 
 		if (_dialogIndex >= _dialog.size())
@@ -80,6 +83,10 @@ int CutsceneScreen::Update(double elapsedSecs)
 		}
 
 		UpdateDialog();
+
+		int idx = rand() % 3;
+		std::string key = _currentlySpeaking == PROTAG ? _protagVoices[idx] : _npcVoices[idx];
+		_soundBank.PlaySound(std::move(key));
 	}
 
 	return SCREEN_CONTINUE;
@@ -152,7 +159,7 @@ void CutsceneScreen::Draw()
 	rend.Copy(*_protagDialogBox, SDL2pp::NullOpt, Rect(0, dim.GetY() * 0.75f, dim.GetX() * 0.7f, dim.GetY() * 0.2f));
 
 	rend.Copy(protagHeader, NullOpt, Rect(dim.GetX() * 0.05f, dim.GetY() * 0.78f, protagHeader.GetWidth(), protagHeader.GetHeight()));
-	rend.Copy(protagDialog, NullOpt, Rect(dim.GetX() * 0.05f, dim.GetY() * 0.78f + protagHeader.GetHeight(), protagDialog.GetWidth(), protagDialog.GetHeight()));
+	rend.Copy(protagDialog, NullOpt, Rect(dim.GetX() * 0.05f, dim.GetY() * 0.79f + protagHeader.GetHeight(), protagDialog.GetWidth(), protagDialog.GetHeight()));
 
 	SDL2pp::Point nextDialogProtagPos(dim.GetX() * 0.605f, dim.GetY() * 0.835f);
 	_nextDialogProtag->SetScale(0.35f);
@@ -164,7 +171,7 @@ void CutsceneScreen::Draw()
 	rend.Copy(*_npcDialogBox, SDL2pp::NullOpt, Rect(dim.GetX() * 0.3f, dim.GetY() * 0.30f, dim.GetX() * 0.7f, dim.GetY() * 0.2f));
 
 	rend.Copy(npcHeader, NullOpt, Rect(dim.GetX() * 0.35f, dim.GetY() * 0.33f, npcHeader.GetWidth(), npcHeader.GetHeight()));
-	rend.Copy(npcDialog, NullOpt, Rect(dim.GetX() * 0.35f, dim.GetY() * 0.33f + npcHeader.GetHeight(), npcDialog.GetWidth(), npcDialog.GetHeight()));
+	rend.Copy(npcDialog, NullOpt, Rect(dim.GetX() * 0.35f, dim.GetY() * 0.34f + npcHeader.GetHeight(), npcDialog.GetWidth(), npcDialog.GetHeight()));
 
 	SDL2pp::Point nextDialogNPCPos(dim.GetX() * 0.905f, dim.GetY() * 0.385f);
 	_nextDialogNPC->SetScale(0.35f);
@@ -186,13 +193,12 @@ void CutsceneScreen::Unload()
 	_currentNPCDialog = " ";
 	_currentProtagDialog = " ";
 
-	delete _background;
-	delete _protagDialogBox;
-	delete _npcDialogBox;
-	delete _headerFont;
-	delete _promptFont;
-	delete _headerFont;
-	delete _dialogFont;
+    delete _background;
+    delete _protagDialogBox;
+    delete _npcDialogBox;
+    delete _promptFont;
+    delete _headerFont;
+    delete _dialogFont;
 }
 
 std::vector<std::string> CutsceneScreen::OpenDialog(std::string dialogFilePath)
@@ -235,5 +241,9 @@ void CutsceneScreen::UpdateDialog()
 SoundEffectBank & CutsceneScreen::GetSoundBank()
 {
 	return _soundBank;
+}
+
+CutsceneScreen::~CutsceneScreen()
+{
 }
 

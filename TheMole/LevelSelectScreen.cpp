@@ -8,9 +8,9 @@ const static std::string LEVEL_NAMES[6] = { "den", "viking", "grass", "starscape
 const static std::string LEVEL_DESCRIPTION[6] =
 {
 	"Borin travels from his cozy den to the Viking Stronghold.",
-	"Borin explores the trap-filled Viking Stronghold.",
-	"Borin ventures through a field inhabited by chickens.",
-	"Borin discovers a spooky movie theatre.",
+	"Borin explores the trap-filled Viking Stronghold to meet Cornelius.",
+	"Borin ventures through a grassy field with his new chicken friend.",
+	"Borin finds the theatre where an old acquaintance is waiting for him.",
 	"Borin challenges the Underwatch to free his mole brethren.",
 	"Return to the Main Menu." 
 };
@@ -31,7 +31,7 @@ int LevelSelectScreen::Load()
 
 	_font = new SDL2pp::Font(".\\Assets\\Fonts\\Exo-Regular.otf", 50);
 	_headerFont = new SDL2pp::Font(".\\Assets\\Fonts\\BEBAS.ttf", 80);
-	_descFont = new SDL2pp::Font(".\\Assets\\Fonts\\Exo-Regular.otf", 35);
+	_descFont = new SDL2pp::Font(".\\Assets\\Fonts\\Exo-Regular.otf", 30);
 
 	_backgroundTextures[0] = new Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\den_bg.png");
 	_backgroundTextures[1] = new Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\viking_bg.png");
@@ -111,45 +111,60 @@ int LevelSelectScreen::Update(double elapsedSecs)
 	// We selected a menu item; do the appropriate thing
 	if (!_delay && _mgr->inputManager->ActionOccurred("CONFIRM", Input::Pressed))
 	{
-		_soundBank.PlaySound("accept");
 		switch (_curMenuItem) 
 		{
 		case 0:
 			if (_mgr->_unlockedLevels["den"])
 			{
+				_soundBank.PlaySound("accept");
 				_nextScreen = "den";
 				_delay = true;
 			}
+			else
+				_soundBank.PlaySound("decline");
 			break;
 		case 1:
 			if (_mgr->_unlockedLevels["viking"])
 			{
+				_soundBank.PlaySound("accept");
 				_nextScreen = "viking";
 				_delay = true;
 			}
+			else
+				_soundBank.PlaySound("decline");
 			break;
 		case 2:
 			if (_mgr->_unlockedLevels["grass"])
 			{
+				_soundBank.PlaySound("accept");
 				_nextScreen = "grass";
 				_delay = true;
 			}
+			else
+				_soundBank.PlaySound("decline");
 			break;
 		case 3:
 			if (_mgr->_unlockedLevels["starscape"])
 			{
+				_soundBank.PlaySound("accept");
 				_nextScreen = "starscape";
 				_delay = true;
 			}
+			else
+				_soundBank.PlaySound("decline");
 			break;
 		case 4:
 			if (_mgr->_unlockedLevels["boss"])
 			{
+				_soundBank.PlaySound("accept");
 				_nextScreen = "boss";
 				_delay = true;
 			}
+			else
+				_soundBank.PlaySound("decline");
 			break;
 		case 5:
+			_soundBank.PlaySound("accept");
 			_nextScreen = "menu";
 			_delay = true;
 			break;

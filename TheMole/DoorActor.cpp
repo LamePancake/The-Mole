@@ -1,4 +1,5 @@
 #include "DoorActor.h"
+#include "GameScreen.h"
 
 void DoorActor::Update(double deltaTime)
 {
@@ -6,7 +7,12 @@ void DoorActor::Update(double deltaTime)
 
 	std::shared_ptr<SpriteSheet> currentSheet = _sprites[_currentSpriteSheet];
 	bool switchOn = _switch->IsOn();
+    SoundEffectBank& bank = _gameScreen->GetSoundBank();
 
+    if (currentSheet->IsAnimating() && !_gameScreen->GetSoundBank().IsPlaying("door_progress"))
+    {
+        bank.PlaySound("door_progress", true);
+    }
 	/*
 	  Switch turns on  - start opening
       Switch on and animating - keep opening
@@ -26,6 +32,11 @@ void DoorActor::Update(double deltaTime)
 		}
 		else if (currentSheet->IsFinished())
 		{
+            if (!_isOpen)
+            {
+                bank.StopSound("door_progress");
+                bank.PlaySound("door_finish");
+            }
 			_isOpening = false;
 			_isClosing = false;
 			_isOpen = true;
@@ -43,6 +54,11 @@ void DoorActor::Update(double deltaTime)
 		}
 		else if (currentSheet->IsFinished())
 		{
+            if (_isClosing)
+            {
+                bank.StopSound("door_progress");
+                bank.PlaySound("door_finish");
+            }
 			_isOpening = false;
 			_isClosing = false;
 		}

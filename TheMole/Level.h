@@ -14,7 +14,7 @@ class Level
 public:
 
 	/** Default constructor. */
-	Level(): _currentSpawnPoint(0, 0), _checkPointID(-1) {}
+	Level(): _currentSpawnPoint(0, 0), _checkPointID(-1), _availableHats() {}
 
 	/**
 	 * Adds a tile to the level.
@@ -238,6 +238,10 @@ public:
 
 	std::vector<bool> GetPancakes();
 
+	void InsertHat(std::string hat, bool available);
+
+	bool IsHatAvailable(std::string hat);
+
 private:
 	
 	/** Stores the tiles that have been dug and need to be respawned. */
@@ -274,6 +278,8 @@ private:
 	int _checkPointID;
 
 	std::vector<bool> _collectedPancakes;
+
+	std::map<std::string, bool> _availableHats;
 
 	/**
 	* Updates the dug tiles to see if they can be respaned.

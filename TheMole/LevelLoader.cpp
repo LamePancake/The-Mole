@@ -9,7 +9,7 @@ using std::string;
 using std::ifstream;
 
 // Loads the level
-std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared_ptr<PlayerActor> & player)
+std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared_ptr<PlayerActor> & player, bool den)
 {
 	int    levelWidth = 0; // Keeps track of the width of the level
 	int    levelHeight = 0; // Keeps track of the height of the level
@@ -68,11 +68,21 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 			{
 				std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
 				sprites.reserve(4);
-				sprites["sideDig"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_sidedig_56x56.png", 4, 0.30);
-				sprites["verticalDig"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_downdig_56x56.png", 4, 0.30, true, SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection::DOWN);
-				sprites["walk"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_walk_56x56.png", 8, 1);
-				sprites["idle"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_idle_56x56.png", 4, 0.8);
-
+				if (den)
+				{
+					sprites["sideDig"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_den_sidedig_56x56.png", 4, 0.30, false);
+					sprites["verticalDig"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_downdig_56x56.png", 4, 0.30, false, SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection::DOWN);
+					sprites["walk"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_den_walk_56x56.png", 8, 1);
+					sprites["idle"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_den_idle_56x56.png", 4, 0.8);
+				}
+				else
+				{
+					sprites["sideDig"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_sidedig_56x56.png", 4, 0.30, false);
+					sprites["verticalDig"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_downdig_56x56.png", 4, 0.30, false, SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection::DOWN);
+					sprites["walk"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_walk_56x56.png", 8, 1);
+					sprites["idle"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_idle_56x56.png", 4, 0.8);
+				}
+				
 				player = std::make_shared<PlayerActor>(tile->GetWorldPosition(), gameManager, Vector2(.0f, 341.3f), sprites, "idle");
 				tile->SetID(Tile::blank);
 				level->SetSpawnPoint(tile->GetWorldPosition(), 0);
@@ -165,6 +175,11 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 				positions[Tile::dialog].push_back(SDL2pp::Point(tile->GetWorldPosition().GetX(), tile->GetWorldPosition().GetY()));
 				tile->SetID(Tile::blank);
 				break;
+
+			case Tile::help:
+				positions[Tile::help].push_back(SDL2pp::Point(tile->GetWorldPosition().GetX(), tile->GetWorldPosition().GetY()));
+				tile->SetID(Tile::blank);
+				break;
 			}
 
 			level->AddTileToLevel(tile, levelHeight);
@@ -216,6 +231,14 @@ void LevelLoader::LoadActorSpecifics(ifstream & file, string & lastLine, unorder
 		else if (line == "pancakes")
 		{
 			LoadPancakes(file, positions[Tile::collectible], level);
+		}
+		else if (line == "signs")
+		{
+			LoadHelpSigns(file, positions[Tile::help], level);
+		}
+		else if (line == "hats")
+		{
+			LoadHats(file, level);
 		}
 	}
 }
@@ -404,3 +427,35 @@ void LevelLoader::LoadPancakes(ifstream & file, vector<SDL2pp::Point>& pancakePo
 
 	level->InitialzeNumberOfPancakes(pancakePos.size());
 }
+
+void LevelLoader::LoadHelpSigns(ifstream & file, vector<SDL2pp::Point>& signPos, shared_ptr<Level> level)
+{
+	string line;
+
+	for (size_t i = 0; i < signPos.size(); ++i)
+	{
+		std::getline(file, line);
+
+		std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
+		std::shared_ptr<SDL2pp::Texture> signSheet = std::make_shared<SDL2pp::Texture>(GameManager::GetInstance()->GetRenderer(), line);
+		double infinity = std::numeric_limits<double>::infinity();
+		sprites["idle"] = std::make_shared<SpriteSheet>(signSheet, 1, infinity);
+
+		std::shared_ptr<ObjectActor> sign = std::make_shared<ObjectActor>(Vector2(signPos[i].GetX(), signPos[i].GetY()), *GameManager::GetInstance(), Vector2(0, 0), ObjectActor::tutorialSign, sprites, "idle");
+		level->AddActor(sign);
+	}
+}
+
+void LevelLoader::LoadHats(ifstream & file, shared_ptr<Level> level)
+{
+	string line;
+	vector<string> tokens;
+	for (int i = 0; i < 3; ++i)
+	{
+		std::getline(file, line);
+		split(line, ' ', tokens);
+		level->InsertHat(tokens[0], tokens[1] == "1" ? true : false);
+		tokens.clear();
+	}
+}
+

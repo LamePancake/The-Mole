@@ -35,7 +35,7 @@ public:
 	 *
 	 * @return	null if it fails, else the level.
 	 */
-	std::shared_ptr<Level> LoadLevel(std::string levelPath, std::shared_ptr<PlayerActor> & player);
+	std::shared_ptr<Level> LoadLevel(std::string levelPath, std::shared_ptr<PlayerActor> & player, bool den = false);
 
 private:
 	////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,4 +69,7 @@ private:
 
 	void LoadPancakes(ifstream & file, vector<SDL2pp::Point>& pancakePos, shared_ptr<Level> level);
 
+	void LoadHelpSigns(ifstream & file, vector<SDL2pp::Point>& signPos, shared_ptr<Level> level);
+
+	void LoadHats(ifstream & file, shared_ptr<Level> level);
 };

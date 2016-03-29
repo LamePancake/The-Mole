@@ -32,7 +32,10 @@ int GameScreen::Load()
 	_mgr->ReadHighScoreFile(_scorePath);
 
 	// Load level one in order to render
-    _level = _levelLoader.LoadLevel(_levelPath, _player);
+	if(_levelPath == "./Assets/Levels/den_level.txt")
+		_level = _levelLoader.LoadLevel(_levelPath, _player, true);
+	else
+		_level = _levelLoader.LoadLevel(_levelPath, _player);
 	SDL2pp::Point levelSize = _level->GetLevelSize();
 
 	// Inialize the quadtree
@@ -252,11 +255,11 @@ void GameScreen::Unload()
 		delete _menuItems[i];
 	}
 
-	delete _pausedText;
-	delete _border;
+    delete _camera;
+    
+    delete _border;
 	delete _controls;
 	delete _levelCompleteControls;
-	delete _camera;
 
 	delete _font;
 	delete _headerFont;

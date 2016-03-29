@@ -4,7 +4,7 @@ SS   TO                                                                         
 SS  SSSS                                                 C    !                            SSSSS
 SS            !                      D                                                     SSSSS
 SS            !                      D                 S  S                                SSSSS
-SS DDDDDDD                           D                                                     SSSSS
+SS DDDDDDD       H                   D                                                     SSSSS
 SS DDDDDDD    !                    S   S            !        SSS  SSS  SSS  SSS            SSSSS
 SSKKKKKKKKKKKKKSE                S      S              E  S                                SSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSKK   KSSS         !SSSSSS                               !SSSSS
@@ -32,6 +32,9 @@ SSSSSSSSSSSSSSKKKKKKKSSSSSSS                          SSSKKSSS       SSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 
+signs
+.\\Assets\\Textures\\shield_sign.png
+
 pancakes
 0
 3
@@ -41,3 +44,8 @@ pancakes
 checkpoints
 2
 1
+
+hats
+SHIELD 1
+CHICKEN 0
+MIND_CONTROL 0

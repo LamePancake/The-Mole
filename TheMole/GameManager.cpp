@@ -56,11 +56,12 @@ void GameManager::FinishScreen() {
 	if (_nextScreen) {
 		_curScreen = _nextScreen;
 		_nextScreen = nullptr;
+        _backStack.push(_curScreen);
 		_curScreen->Load();
 	}
 	else {
 		if (_backStack.empty()) {
-			// We shouldn't get here (screens that clear the back stack and then provide no next screen are assholes). Let's blow this popsicle stand
+			// Looks like we're exiting the program
 			std::cerr << "No more screens in back stack and no next screen specified. See ya!" << std::endl;
 			exit(1);
 		}

@@ -19,8 +19,11 @@ public:
 		blank       = ' ',
 		stone       = 'S',
 		dirt        = 'D',
+		dirtU       = 'U',
+		brick       = 'R',
 		spike       = 'K',
 		metal       = 'M',
+		grass       = 'L',
 		enemy       = 'E',
 		goal        = 'G',
 		collectible = 'C',
@@ -34,6 +37,7 @@ public:
 		toggle      = 'W',
 		door        = 'A',
 		dialog      = 'V',
+		help        = 'H',
 	};
 
 	/** Default constuctor. Initilizes everying to default values. */
