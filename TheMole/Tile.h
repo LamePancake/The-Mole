@@ -39,6 +39,7 @@ public:
 		dialog      = 'V',
 		help        = 'H',
 		introtrig   = 'I',
+		tunneltrig  = 'Q',
 	};
 
 	/** Default constuctor. Initilizes everying to default values. */

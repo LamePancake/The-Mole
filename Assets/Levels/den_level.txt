@@ -4,7 +4,7 @@ UUUUUUUUUU                                                                      
 UUUUUUUUUU                                                                  CV                      UUUUU
 UUUUUUUUUU                                                    SSSSSSS    SSSSSSS                    UUUUU
 UUUUUUUUUU                                                                                          UUUUU
-UUUUUUUUUU    H          H            SSS            SSSSSS                                     H   UUUUU
+UUUUUUUUUU               H            SSS            SSSSSS                                     H   UUUUU
 UUUUUUUUUU                     U  U         U  U                     SSS  SSS  SSS  UUU             UUUUU
 UUUUUUUUUUTO         EUU      UU  UU   E   UU  UUUUU        S  E  S                 UUUUUU          UUUUU
 UUUUUUUUUUUUUDUUUUDUUUUUUUUUUUUUUUUUUUUUUUUUU  UUUUUKKKKKKKKUUUUUUU                 UUUUUUUUUDDDUUUUUUUUU
@@ -33,7 +33,6 @@ UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
 UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
 
 signs
-.\\Assets\\Textures\\move_sign.png
 .\\Assets\\Textures\\jump_sign.png
 .\\Assets\\Textures\\diggingUpDown_sign.png
 .\\Assets\\Textures\\diggingLeftRight_sign.png

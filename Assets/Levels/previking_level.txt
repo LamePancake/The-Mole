@@ -1,17 +1,20 @@
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSS           I               SSSS
-SSSSS           I               SSSS
-SSSSS           I               SSSS
-SSSSS           I               SSSS
-SSSSS           I               SSSS
-SSSSS           I               SSSS
-SSSSS           I               SSSS
-SSSSTO          IN              GSSS
-SSSSSSDSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+                I               SSSS
+                I               SSSS
+                I               SSSS
+                I               SSSS
+U               I               SSSS
+UU              I               SSSS
+UUU             I               SSSS
+UUUU            I               SSSS
+UUUUU           I               SSSS
+UUUUU           I               SSSS
+UUUUTO          IN              QSSS
+UUUUULLLLLLLLLLLLLLLLLLLLLLLLLLLUUUU
+UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
 
 hats
 SHIELD 0
