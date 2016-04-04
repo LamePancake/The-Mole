@@ -97,9 +97,6 @@
     <ClCompile Include="OptionsScreen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="PreCutsceneScreen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AABB.h">
@@ -199,9 +196,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="OptionsScreen.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PreCutsceneScreen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

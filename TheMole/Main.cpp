@@ -13,7 +13,7 @@
 #include "CreditsScreen.h"
 #include "ControlsScreen.h"
 #include "OptionsScreen.h"
-#include "PreCutsceneScreen.h"
+
 
 using std::string;
 using std::unordered_map;
@@ -110,12 +110,6 @@ int main(int argc, char** argv) {
 		screens.insert({ "starscapelevel", starscape });
 		screens.insert({ "bosslevel", boss });
 		
-		//screens.insert({ "den", denIntro });
-		//screens.insert({ "viking", vikingIntro });
-		//screens.insert({ "grass", grassIntro });
-		//screens.insert({ "starscape", starscapeIntro });
-		//screens.insert({ "boss", bossIntro });
-
 		screens.insert({ "denintro", denIntro });
 		screens.insert({ "vikingintro", vikingIntro });
 		screens.insert({ "grassintro", grassIntro });
