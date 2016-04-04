@@ -31,7 +31,8 @@ int CreditsScreen::Load()
 
 	_credits = new Texture(_mgr->GetRenderer(), _headerFont->RenderText_Solid("Credits", NORMAL));
 
-	_chicken = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_walk_56x56.png", 8, 1);
+	_chicken = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Chicken_walk.png", 8, 1);
+	_chicken->SetScale(2);
 
 	SDL2pp::Point size = GameManager::GetInstance()->GetWindow().GetSize();
 	_chickenPosition = Vector2(size.GetX() * 0.21f, size.GetY() * 0.9f);

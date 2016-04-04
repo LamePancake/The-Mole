@@ -475,5 +475,6 @@ void LevelLoader::LoadNPCS(ifstream & file, vector<SDL2pp::Point>& npcPos, share
 
 		std::shared_ptr<NPCActor> npc = std::make_shared<NPCActor>(Vector2(npcPos[i].GetX(), npcPos[i].GetY()), *GameManager::GetInstance(), Vector2(0, 0), sprites, "idle", atoi(tokens[3].c_str()) ? SpriteSheet::XAxisDirection::LEFT : SpriteSheet::XAxisDirection::RIGHT);
 		level->AddActor(npc);
+		tokens.clear();
 	}
 }

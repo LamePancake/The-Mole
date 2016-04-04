@@ -5,11 +5,11 @@ SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSS                       I   SSSSS
 SSSSS                       I   SSSSS
 SSSSS                       IN  SSSSS
-SSSSS                       I   SSSSS
+SSSSS                       I NNSSSSS
 SSSSS                 SSSSSSSSSSSSSSS
 SSSSS                SSSSSSSSSSSSSSSS
 SSSSS               SSSSSSSSSSSSSSSSS
-SSSSTO             SSSSSSSSSSSSSSSSSS
+SSSSTO   N     N   SSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
@@ -22,3 +22,7 @@ MIND_CONTROL 0
 
 npcs
 .\\Assets\\Textures\\Cornelius_idle.png 4 0.8 0
+.\\Assets\\Textures\\Chicken_idle.png 4 0.7 1
+.\\Assets\\Textures\\Chicken_idle.png 4 0.9 1
+.\\Assets\\Textures\\Chicken_idle.png 4 0.8 1
+.\\Assets\\Textures\\Chicken_idle.png 4 0.6 1
