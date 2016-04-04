@@ -210,7 +210,7 @@ void GameScreen::Draw()
 {
 	SDL2pp::Point dim = GameManager::GetInstance()->GetWindow().GetSize();
 	SDL2pp::Renderer& rend = _mgr->GetRenderer();
-	rend.SetDrawColor(100, 100, 100, 255);
+	rend.SetDrawColor(200, 100, 100, 255);
 	rend.Clear();
 
 	float levelWidth  = _level->GetLevelSize().x * _level->GetTileWidth();
