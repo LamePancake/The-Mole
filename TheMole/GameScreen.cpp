@@ -32,10 +32,18 @@ int GameScreen::Load()
 	_mgr->ReadHighScoreFile(_scorePath);
 
 	// Load level one in order to render
-	if(_levelPath == "./Assets/Levels/den_level.txt")
+	if (_levelPath == "./Assets/Levels/den_level.txt"
+		|| _levelPath == "./Assets/Levels/preden_level.txt"
+		|| _levelPath == "./Assets/Levels/postden_level.txt"
+		|| _levelPath == "./Assets/Levels/previking_level.txt")
+	{
 		_level = _levelLoader.LoadLevel(_levelPath, _player, true);
+	}	
 	else
+	{
 		_level = _levelLoader.LoadLevel(_levelPath, _player);
+	}
+		
 	SDL2pp::Point levelSize = _level->GetLevelSize();
 
 	// Inialize the quadtree
@@ -171,21 +179,6 @@ int GameScreen::Update(double elapsedSecs)
 
 	if (_player->TriggeredIntro())
 	{
-		if (_deaths < _mgr->_bestDeathCount)
-			_mgr->_bestDeathCount = _deaths;
-
-		int count = 0;
-		for (auto e : _level->GetPancakes())
-			if (e)
-				count++;
-
-		if (count > _mgr->_bestPancakeCount)
-			_mgr->_bestPancakeCount = count;
-
-		_deaths = 0;
-		_mgr->_unlockedLevels[_nextLevel] = true;
-		_mgr->WriteLevelUnlockFile(".\\Assets\\SavedData\\level_unlocks.txt");
-		_mgr->WriteHighScoreFile(_scorePath);
 		_mgr->SetNextScreen(_nextLevel);
 		return SCREEN_FINISH;
 	}
@@ -240,7 +233,7 @@ void GameScreen::Draw()
 		OnLevelCompleteDraw();
 	else if (_paused)
 		OnPauseDraw();
-	else
+	else if (_drawHUD)
 	{
 		// Render pancakes
 		for (int i = 0; i < _level->GetPancakes().size(); ++i)

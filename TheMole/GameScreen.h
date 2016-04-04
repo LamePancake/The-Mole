@@ -30,8 +30,8 @@ public:
 	///<param name="loseScreenPath"> Path to the file containing the losing screen image.</param>
 	///<param name="nextLevel">      String indicating the next screen/level to load when this one is finished.</param>
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	GameScreen(std::string levelPath, std::string backgroundPath, std::string scorePath, std::string nextLevel, SoundEffectBank & effectBank)
-		: _levelPath(levelPath), _backgroundPath(backgroundPath), _scorePath(scorePath), _nextLevel(nextLevel), _soundBank(effectBank), _paused(false), _deaths(0), _deathCounterUpdated(false), _deathTimer(0){}
+	GameScreen(std::string levelPath, std::string backgroundPath, std::string scorePath, std::string nextLevel, SoundEffectBank & effectBank, bool drawHUD = true)
+		: _levelPath(levelPath), _backgroundPath(backgroundPath), _scorePath(scorePath), _nextLevel(nextLevel), _soundBank(effectBank), _paused(false), _deaths(0), _deathCounterUpdated(false), _deathTimer(0), _drawHUD(drawHUD){}
 
 	virtual int Load();
 	virtual int Update(double elapasedSecs) override;
@@ -56,6 +56,8 @@ public:
 	const std::shared_ptr<PlayerActor> GetPlayer() const;
 
 	SoundEffectBank & GetSoundBank();
+
+	bool _drawHUD;
 
 protected:
 	std::string _levelPath;
@@ -99,7 +101,7 @@ protected:
 	std::stringstream _stringFormatter;
 
 	bool _deathCounterUpdated;
-
+	
 	int OnPauseUpdate();
 	void OnPauseDraw();
 

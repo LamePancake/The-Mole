@@ -39,18 +39,21 @@ void PlayerActor::Draw(Camera& camera)
 	SDL2pp::Renderer& rend = _mgr->GetRenderer();
 	SDL2pp::Point dim = GameManager::GetInstance()->GetWindow().GetSize();
 
-	for (size_t i = 0; i < _shieldStr; i++) {
-		rend.FillRect(SDL2pp::Rect(dim.GetX() * (0.90f + (i * 0.02f))
-			, dim.GetY()  * 0.97f
-			, 10.0f
-			, 10.0f));
-	}
+	if (_gameScreen->_drawHUD && _gameScreen->GetLevel()->IsHatAvailable("SHIELD"))
+	{
+		for (size_t i = 0; i < _shieldStr; i++) {
+			rend.FillRect(SDL2pp::Rect(dim.GetX() * (0.90f + (i * 0.02f))
+				, dim.GetY()  * 0.97f
+				, 10.0f
+				, 10.0f));
+		}
 
-	if(_shieldActive)
-		rend.FillRect(SDL2pp::Rect(dim.GetX() * (0.2f)
-			, dim.GetY()  * 0.2f
-			, 20.0f
-			, 20.0f));
+		if (_shieldActive)
+			rend.FillRect(SDL2pp::Rect(dim.GetX() * (0.2f)
+				, dim.GetY()  * 0.2f
+				, 20.0f
+				, 20.0f));
+	}
 }
 
 void PlayerActor::Update(double elapsedSecs)
@@ -212,6 +215,7 @@ void PlayerActor::DefaultTileCollisionHandler(std::vector<std::shared_ptr<Tile>>
 				SetHealth(0);
 				break;
 			case Tile::introtrig:
+			case Tile::tunneltrig:
 				_triggeredIntro = true;
 				break;
 			default:

@@ -72,4 +72,6 @@ private:
 	void LoadHelpSigns(ifstream & file, vector<SDL2pp::Point>& signPos, shared_ptr<Level> level);
 
 	void LoadHats(ifstream & file, shared_ptr<Level> level);
+
+	void LoadNPCS(ifstream & file, vector<SDL2pp::Point>& npcPos, shared_ptr<Level> level);
 };

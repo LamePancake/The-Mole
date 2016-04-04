@@ -12,7 +12,7 @@ void LevelRenderer::Load(GameManager & manager)
 	_tileTextures[Tile::dirtU]       = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\block_dirtUnbreakable.png");
 	_tileTextures[Tile::grass]       = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\block_grass.png");
 	_tileTextures[Tile::brick]       = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\block_brick.png");
-	_tileTextures[Tile::introtrig]   = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\intro_trigger.png");
+	_tileTextures[Tile::tunneltrig]  = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\mineShaft.png");
 
 	_shadowTileTextures[Tile::dirt]        = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\block_dirt.png");
 	_shadowTileTextures[Tile::spike]       = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\block_spike.png");
@@ -22,7 +22,7 @@ void LevelRenderer::Load(GameManager & manager)
 	_shadowTileTextures[Tile::dirtU]       = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\block_dirtUnbreakable.png");
 	_shadowTileTextures[Tile::grass]       = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\block_grass.png");
 	_shadowTileTextures[Tile::brick]       = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\block_brick.png");
-	_shadowTileTextures[Tile::introtrig]      = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\intro_trigger.png");
+	_shadowTileTextures[Tile::tunneltrig]  = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\mineShaft.png");
 
 	for (auto it : _shadowTileTextures)
 	{
@@ -66,7 +66,7 @@ void LevelRenderer::RenderLevel(std::shared_ptr<Level> level, Camera& camera)
 			std::shared_ptr<Tile> tempTile = level->GetTileFromLevel(width, height);
 			char id = tempTile->GetID();
 
-			if (id == Tile::blank || id == Tile::enemy)
+			if (id == Tile::blank || id == Tile::enemy || id == Tile::introtrig)
 				continue;
 
 			tempPoint = { (int)tempTile->GetWorldPosition().GetX(), (int)tempTile->GetWorldPosition().GetY() };
@@ -96,6 +96,10 @@ void LevelRenderer::RenderLevel(std::shared_ptr<Quadtree> level, Camera& camera,
    	for (auto it : drawableTiles)
 	{
 		char id = it->GetID();
+
+		if (id == Tile::blank || id == Tile::enemy || id == Tile::introtrig)
+			continue;
+
 		SDL2pp::Point tempPoint = { (int)it->GetWorldPosition().GetX(), (int)it->GetWorldPosition().GetY() };
 
 		//Render shadow

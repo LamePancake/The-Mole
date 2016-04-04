@@ -1,19 +1,28 @@
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSS                           SSSS
-SSSSS                           SSSS
-SSSSS                           SSSS
-SSSSS                           SSSS
-SSSSS                           SSSS
-SSSSS                           SSSS
-SSSSS                           SSSS
-SSSST           ON              GSSS
-SSSSSSDSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+                                SSSS
+                                SSSS
+                                SSSS
+                                SSSS
+U                               SSSS
+UU                              SSSS
+UUU                             SSSS
+UUUU                            SSSS
+UUUUU                           SSSS
+UUUUU            N              SSSS
+UUUUT           O      V        QSSS
+UUUUULLLLLLLLLLLLLLLLLLLLLLLLLLLUUUU
+UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
 
 hats
 SHIELD 0
 CHICKEN 0
 MIND_CONTROL 0
+
+dialog
+What a strange man. He kinda reminds me of someone.
+
+npcs
+.\\Assets\\Textures\\Adalbert_idle.png 4 0.8 0

@@ -91,11 +91,7 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 			break;
 			case Tile::npc:
 			{
-				std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
-				sprites["idle"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Toad_idle.png", 6, 0.50, true, SpriteSheet::XAxisDirection::LEFT);
-
-				std::shared_ptr<NPCActor> npc = std::make_shared<NPCActor>(tile->GetWorldPosition(), gameManager, Vector2(0, 0), sprites, "idle", SpriteSheet::XAxisDirection::LEFT);
-				level->AddActor(npc);
+				positions[Tile::npc].push_back(SDL2pp::Point(tile->GetWorldPosition().GetX(), tile->GetWorldPosition().GetY()));
 				tile->SetID(Tile::blank);
 			}
 			break;
@@ -239,6 +235,10 @@ void LevelLoader::LoadActorSpecifics(ifstream & file, string & lastLine, unorder
 		else if (line == "hats")
 		{
 			LoadHats(file, level);
+		}
+		else if (line == "npcs")
+		{
+			LoadNPCS(file, positions[Tile::npc], level);
 		}
 	}
 }
@@ -459,3 +459,21 @@ void LevelLoader::LoadHats(ifstream & file, shared_ptr<Level> level)
 	}
 }
 
+void LevelLoader::LoadNPCS(ifstream & file, vector<SDL2pp::Point>& npcPos, shared_ptr<Level> level)
+{
+	string line;
+	vector<string> tokens;
+
+	for (size_t i = 0; i < npcPos.size(); ++i)
+	{
+		std::getline(file, line);
+		split(line, ' ', tokens);
+
+		std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
+		std::shared_ptr<SDL2pp::Texture> npcSheet = std::make_shared<SDL2pp::Texture>(GameManager::GetInstance()->GetRenderer(), tokens[0]);
+		sprites["idle"] = std::make_shared<SpriteSheet>(npcSheet, atoi(tokens[1].c_str()), atof(tokens[2].c_str()));
+
+		std::shared_ptr<NPCActor> npc = std::make_shared<NPCActor>(Vector2(npcPos[i].GetX(), npcPos[i].GetY()), *GameManager::GetInstance(), Vector2(0, 0), sprites, "idle", atoi(tokens[3].c_str()) ? SpriteSheet::XAxisDirection::LEFT : SpriteSheet::XAxisDirection::RIGHT);
+		level->AddActor(npc);
+	}
+}

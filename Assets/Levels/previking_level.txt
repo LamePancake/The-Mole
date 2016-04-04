@@ -1,19 +1,25 @@
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSS           I               SSSS
-SSSSS           I               SSSS
-SSSSS           I               SSSS
-SSSSS           I               SSSS
-SSSSS           I               SSSS
-SSSSS           I               SSSS
-SSSSS           I               SSSS
-SSSSTO          IN              GSSS
-SSSSSSDSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+                I               SSSS
+                I               SSSS
+                I               SSSS
+                I               SSSS
+U               I               SSSS
+UU              I               SSSS
+UUU             I               SSSS
+UUUU            I               SSSS
+UUUUU           I               SSSS
+UUUUU           IN              SSSS
+UUUUTO          I               QSSS
+UUUUULLLLLLLLLLLLLLLLLLLLLLLLLLLUUUU
+UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
 
 hats
 SHIELD 0
 CHICKEN 0
 MIND_CONTROL 0
+
+npcs
+.\\Assets\\Textures\\Adalbert_idle.png 4 0.8 0
