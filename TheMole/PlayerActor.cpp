@@ -376,7 +376,8 @@ void PlayerActor::UpdateInput(double elapsedSecs)
 	if (_mgr->inputManager->ActionOccurred("SHIELD", Input::Pressed) && level->IsHatAvailable("SHIELD"))
 	{
 		///Activate shield
-		_shieldActive = true;
+		if(_shieldStr > 0)
+			_shieldActive = true;
 		_shieldReleased = false;
 	}
 	//if (_mgr->inputManager->ActionOccurred("SHIELD", Input::Held))
