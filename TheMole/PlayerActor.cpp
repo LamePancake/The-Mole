@@ -7,8 +7,9 @@ using std::shared_ptr;
 PlayerActor::PlayerActor(Vector2 position, GameManager& manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
 	const std::string&& startSprite, SpriteSheet::XAxisDirection startXDir, SpriteSheet::YAxisDirection startYDir)
 	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDir, startYDir),
-    _prevDirection(startXDir),
-    _atGoal(false),
+	_prevDirection(startXDir),
+	_atGoal(false),
+	_triggeredIntro(false),
     _jumpVelocity(0),
     _maxJumpVel(400),
 	_digDir{ Edge::NONE },
@@ -209,6 +210,9 @@ void PlayerActor::DefaultTileCollisionHandler(std::vector<std::shared_ptr<Tile>>
 				break;
 			case Tile::spike:
 				SetHealth(0);
+				break;
+			case Tile::introtrig:
+				_triggeredIntro = true;
 				break;
 			default:
 				if (isXDirection) _curKinematic.position.SetX(correctedPos);
@@ -622,6 +626,10 @@ bool PlayerActor::AtGoal()
 	return _atGoal;
 }
 
+bool PlayerActor::TriggeredIntro()
+{
+	return _triggeredIntro;
+}
 void PlayerActor::SetJumpVelocity(float initVel)
 {
 	_jumpVelocity = initVel;
@@ -649,6 +657,7 @@ void PlayerActor::Reset(Vector2 pos)
 	_godMode = false;
 	_stoppedTime = false;
 	_atGoal = false;
+	_triggeredIntro = false;
 	_wasOnGround = true;
 
 	SetSpeed(Vector2(0.0f, 341.3f));

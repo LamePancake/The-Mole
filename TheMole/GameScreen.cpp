@@ -169,6 +169,27 @@ int GameScreen::Update(double elapsedSecs)
 		return SCREEN_CONTINUE;
 	}
 
+	if (_player->TriggeredIntro())
+	{
+		if (_deaths < _mgr->_bestDeathCount)
+			_mgr->_bestDeathCount = _deaths;
+
+		int count = 0;
+		for (auto e : _level->GetPancakes())
+			if (e)
+				count++;
+
+		if (count > _mgr->_bestPancakeCount)
+			_mgr->_bestPancakeCount = count;
+
+		_deaths = 0;
+		_mgr->_unlockedLevels[_nextLevel] = true;
+		_mgr->WriteLevelUnlockFile(".\\Assets\\SavedData\\level_unlocks.txt");
+		_mgr->WriteHighScoreFile(_scorePath);
+		_mgr->SetNextScreen(_nextLevel);
+		return SCREEN_FINISH;
+	}
+
 	// Update player
 	_player->Update(elapsedSecs);
 	if (_player->StoppedTime())	return SCREEN_CONTINUE;

@@ -7,7 +7,7 @@ SSSSS                           SSSS
 SSSSS                           SSSS
 SSSSS                           SSSS
 SSSSS                           SSSS
-SSSSTO                          GSSS
+SSSST           ON              GSSS
 SSSSSSDSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS

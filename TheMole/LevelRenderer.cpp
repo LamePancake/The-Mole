@@ -12,6 +12,7 @@ void LevelRenderer::Load(GameManager & manager)
 	_tileTextures[Tile::dirtU]       = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\block_dirtUnbreakable.png");
 	_tileTextures[Tile::grass]       = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\block_grass.png");
 	_tileTextures[Tile::brick]       = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\block_brick.png");
+	_tileTextures[Tile::introtrig]   = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\intro_trigger.png");
 
 	_shadowTileTextures[Tile::dirt]        = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\block_dirt.png");
 	_shadowTileTextures[Tile::spike]       = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\block_spike.png");
@@ -21,6 +22,7 @@ void LevelRenderer::Load(GameManager & manager)
 	_shadowTileTextures[Tile::dirtU]       = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\block_dirtUnbreakable.png");
 	_shadowTileTextures[Tile::grass]       = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\block_grass.png");
 	_shadowTileTextures[Tile::brick]       = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\block_brick.png");
+	_shadowTileTextures[Tile::introtrig]      = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\intro_trigger.png");
 
 	for (auto it : _shadowTileTextures)
 	{

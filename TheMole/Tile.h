@@ -38,6 +38,7 @@ public:
 		door        = 'A',
 		dialog      = 'V',
 		help        = 'H',
+		introtrig   = 'I',
 	};
 
 	/** Default constuctor. Initilizes everying to default values. */
