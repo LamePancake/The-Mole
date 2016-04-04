@@ -601,7 +601,7 @@ void PlayerActor::DigDiggableTiles()
             tile->SetID(Tile::blank);
         }
     }
-    if (!dug && hasNeighbour && dist < 3)
+    if (!dug && hasNeighbour && dist < _digDir != Edge::TOP ? 3 : 6)
     {
         for (auto tile : tiles)
         {

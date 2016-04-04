@@ -79,7 +79,7 @@ int main(int argc, char** argv) {
 		shared_ptr<Screen> grassIntro(new CutsceneScreen("./Assets/Textures/dialog_box.png", "./Assets/Textures/den_bg.png", "./Assets/Textures/Borin_dialog.png", 4, 0.8, "./Assets/Textures/Toad_dialog.png", 6, 0.50, bank, "grasspost", "./Assets/Dialog/grassland_dialog.txt", "Borin", "Cornelius", borinVoices, vikingVoices));
 		shared_ptr<Screen> starscapeIntro(new CutsceneScreen("./Assets/Textures/dialog_box.png", "./Assets/Textures/den_bg.png", "./Assets/Textures/Borin_dialog.png", 4, 0.8, "./Assets/Textures/Adalbert_dialog.png", 4, 0.8, bank, "starscapepost", "./Assets/Dialog/starscape_dialog.txt", "Borin", "Adalbert", borinVoices, vikingVoices));
 		shared_ptr<Screen> bossIntro(new CutsceneScreen("./Assets/Textures/dialog_box.png", "./Assets/Textures/den_bg.png", "./Assets/Textures/Borin_dialog.png", 4, 0.8, "./Assets/Textures/Toad_dialog.png", 6, 0.50, bank, "bosspost", "./Assets/Dialog/final_battle_dialog.txt", "Borin", "The Underwatch", borinVoices, alienVoices));
-
+        
 		// The Pre Dialog Intro screens
 		shared_ptr<Screen> denPreIntro(new GameScreen("./Assets/Levels/preden_level.txt", "./Assets/Textures/den_bg.png", "./Assets/SavedData/den_score.txt", "denintro", bank));
 		shared_ptr<Screen> vikingPreIntro(new GameScreen("./Assets/Levels/previking_level.txt", "./Assets/Textures/den_bg.png", "./Assets/SavedData/viking_score.txt", "vikingintro", bank));
