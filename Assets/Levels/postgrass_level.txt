@@ -4,8 +4,8 @@ SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSS                           SSSSS
 SSSSS                           SSSSS
-SSSSS                           SSSSS
-SSSSS                       ON  SSSSS
+SSSSS                        N  SSSSS
+SSSSS                       O   SSSSS
 SSSSS                 SSSSSSSSSSSSSSS
 SSSSS                SSSSSSSSSSSSSSSS
 SSSSS               SSSSSSSSSSSSSSSSS
@@ -19,3 +19,6 @@ hats
 SHIELD 0
 CHICKEN 0
 MIND_CONTROL 0
+
+npcs
+.\\Assets\\Textures\\Cornelius_idle.png 4 0.8 0

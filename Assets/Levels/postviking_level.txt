@@ -9,8 +9,8 @@ UU                              SSSS
 UUU                             SSSS
 UUUU                            SSSS
 UUUUU                           SSSS
-UUUUU                           SSSS
-UUUUT           ON     V        QSSS
+UUUUU            N              SSSS
+UUUUT           O      V        QSSS
 UUUUULLLLLLLLLLLLLLLLLLLLLLLLLLLUUUU
 UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
 UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
@@ -23,3 +23,6 @@ MIND_CONTROL 0
 
 dialog
 What a strange man. He kinda reminds me of someone.
+
+npcs
+.\\Assets\\Textures\\Adalbert_idle.png 4 0.8 0

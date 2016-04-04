@@ -6,10 +6,10 @@ SSSSS               SSSSS
 SSSSS               SSSSS
 SSSSS               SSSSS
 SSSSS               SSSSS
-SSSSS               SSSSS
+SSSSS          N    SSSSS
 SSSSS               SSSSS
 SSSSSII             SSSSS
-SSSSTOI          N  SSSSS
+SSSSTOI             SSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSS
@@ -19,3 +19,6 @@ hats
 SHIELD 0
 CHICKEN 0
 MIND_CONTROL 0
+
+npcs
+.\\Assets\\Textures\\Watch_idle.png 4 0.8 0

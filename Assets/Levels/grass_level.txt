@@ -56,3 +56,6 @@ hats
 SHIELD 1
 CHICKEN 1
 MIND_CONTROL 0
+
+npcs
+.\\Assets\\Textures\\Toad_idle.png 6 0.50 0

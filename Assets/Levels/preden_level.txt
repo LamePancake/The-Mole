@@ -23,3 +23,6 @@ dialog
 
 signs
 .\\Assets\\Textures\\move_sign.png
+
+npcs
+.\\Assets\\Textures\\Toad_idle.png 6 0.50 0
