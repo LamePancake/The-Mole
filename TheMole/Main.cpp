@@ -74,17 +74,25 @@ int main(int argc, char** argv) {
 		shared_ptr<Screen> starscape(new GameScreen("./Assets/Levels/starscape_level.txt", "./Assets/Textures/den_bg.png", "./Assets/SavedData/starscape_score.txt", "boss", bank));
 		shared_ptr<Screen> boss(new GameScreen("./Assets/Levels/boss_level.txt", "./Assets/Textures/den_bg.png", "./Assets/SavedData/boss_score.txt", "levelSelect", bank));
 		
-		shared_ptr<Screen> denIntro(new CutsceneScreen("./Assets/Textures/dialog_box.png", "./Assets/Textures/den_bg.png", "./Assets/Textures/Borin_den_dialog.png", 4, 0.8, "./Assets/Textures/Toad_dialog.png", 6, 0.50, bank, "denlevel", "./Assets/Dialog/den_dialog.txt", "Borin", "Toad", borinVoices, toadVoices));
-		shared_ptr<Screen> vikingIntro(new CutsceneScreen("./Assets/Textures/dialog_box.png", "./Assets/Textures/den_bg.png", "./Assets/Textures/Borin_dialog.png", 4, 0.8, "./Assets/Textures/Adalbert_dialog.png", 4, 0.8, bank, "vikinglevel", "./Assets/Dialog/viking_dialog.txt", "Borin", "Adalbert", borinVoices, vikingVoices));
-		shared_ptr<Screen> grassIntro(new CutsceneScreen("./Assets/Textures/dialog_box.png", "./Assets/Textures/den_bg.png", "./Assets/Textures/Borin_dialog.png", 4, 0.8, "./Assets/Textures/Toad_dialog.png", 6, 0.50, bank, "grasslevel", "./Assets/Dialog/grassland_dialog.txt", "Borin", "Cornelius", borinVoices, vikingVoices));
-		shared_ptr<Screen> starscapeIntro(new CutsceneScreen("./Assets/Textures/dialog_box.png", "./Assets/Textures/den_bg.png", "./Assets/Textures/Borin_dialog.png", 4, 0.8, "./Assets/Textures/Adalbert_dialog.png", 4, 0.8, bank, "starscapelevel", "./Assets/Dialog/starscape_dialog.txt", "Borin", "Adalbert", borinVoices, vikingVoices));
-		shared_ptr<Screen> bossIntro(new CutsceneScreen("./Assets/Textures/dialog_box.png", "./Assets/Textures/den_bg.png", "./Assets/Textures/Borin_dialog.png", 4, 0.8, "./Assets/Textures/Toad_dialog.png", 6, 0.50, bank, "bosslevel", "./Assets/Dialog/final_battle_dialog.txt", "Borin", "The Underwatch", borinVoices, alienVoices));
+		shared_ptr<Screen> denIntro(new CutsceneScreen("./Assets/Textures/dialog_box.png", "./Assets/Textures/den_bg.png", "./Assets/Textures/Borin_den_dialog.png", 4, 0.8, "./Assets/Textures/Toad_dialog.png", 6, 0.50, bank, "denpost", "./Assets/Dialog/den_dialog.txt", "Borin", "Toad", borinVoices, toadVoices));
+		shared_ptr<Screen> vikingIntro(new CutsceneScreen("./Assets/Textures/dialog_box.png", "./Assets/Textures/den_bg.png", "./Assets/Textures/Borin_dialog.png", 4, 0.8, "./Assets/Textures/Adalbert_dialog.png", 4, 0.8, bank, "vikingpost", "./Assets/Dialog/viking_dialog.txt", "Borin", "Adalbert", borinVoices, vikingVoices));
+		shared_ptr<Screen> grassIntro(new CutsceneScreen("./Assets/Textures/dialog_box.png", "./Assets/Textures/den_bg.png", "./Assets/Textures/Borin_dialog.png", 4, 0.8, "./Assets/Textures/Toad_dialog.png", 6, 0.50, bank, "grasspost", "./Assets/Dialog/grassland_dialog.txt", "Borin", "Cornelius", borinVoices, vikingVoices));
+		shared_ptr<Screen> starscapeIntro(new CutsceneScreen("./Assets/Textures/dialog_box.png", "./Assets/Textures/den_bg.png", "./Assets/Textures/Borin_dialog.png", 4, 0.8, "./Assets/Textures/Adalbert_dialog.png", 4, 0.8, bank, "starscapepost", "./Assets/Dialog/starscape_dialog.txt", "Borin", "Adalbert", borinVoices, vikingVoices));
+		shared_ptr<Screen> bossIntro(new CutsceneScreen("./Assets/Textures/dialog_box.png", "./Assets/Textures/den_bg.png", "./Assets/Textures/Borin_dialog.png", 4, 0.8, "./Assets/Textures/Toad_dialog.png", 6, 0.50, bank, "bosspost", "./Assets/Dialog/final_battle_dialog.txt", "Borin", "The Underwatch", borinVoices, alienVoices));
 
-		shared_ptr<Screen> denPreIntro(new PreCutsceneScreen("./Assets/Levels/preden_level.txt", "./Assets/Textures/den_bg.png", "./Assets/SavedData/den_score.txt", "denIntro", bank));
-		shared_ptr<Screen> vikingPreIntro(new PreCutsceneScreen("./Assets/Levels/previking_level.txt", "./Assets/Textures/den_bg.png", "./Assets/SavedData/viking_score.txt", "vikingIntro", bank));
-		shared_ptr<Screen> grassPreIntro(new PreCutsceneScreen("./Assets/Levels/pregrass_level.txt", "./Assets/Textures/den_bg.png", "./Assets/SavedData/grasslands_score.txt", "grasslandsIntro", bank));
-		shared_ptr<Screen> starscapePreIntro(new PreCutsceneScreen("./Assets/Levels/prestarscape_level.txt", "./Assets/Textures/den_bg.png", "./Assets/SavedData/starscape_score.txt", "starscapeIntro", bank));
-		shared_ptr<Screen> bossPreIntro(new PreCutsceneScreen("./Assets/Levels/preboss_level.txt", "./Assets/Textures/den_bg.png", "./Assets/SavedData/boss_score.txt", "bossIntro", bank));
+		// The Pre Dialog Intro screens
+		shared_ptr<Screen> denPreIntro(new GameScreen("./Assets/Levels/preden_level.txt", "./Assets/Textures/den_bg.png", "./Assets/SavedData/den_score.txt", "denintro", bank));
+		shared_ptr<Screen> vikingPreIntro(new GameScreen("./Assets/Levels/previking_level.txt", "./Assets/Textures/den_bg.png", "./Assets/SavedData/viking_score.txt", "vikingintro", bank));
+		shared_ptr<Screen> grassPreIntro(new GameScreen("./Assets/Levels/pregrass_level.txt", "./Assets/Textures/den_bg.png", "./Assets/SavedData/grasslands_score.txt", "grasslandsintro", bank));
+		shared_ptr<Screen> starscapePreIntro(new GameScreen("./Assets/Levels/prestarscape_level.txt", "./Assets/Textures/den_bg.png", "./Assets/SavedData/starscape_score.txt", "starscapeintro", bank));
+		shared_ptr<Screen> bossPreIntro(new GameScreen("./Assets/Levels/preboss_level.txt", "./Assets/Textures/den_bg.png", "./Assets/SavedData/boss_score.txt", "bossintro", bank));
+
+		// The Post Dialog Intro screens
+		shared_ptr<Screen> denPostIntro(new GameScreen("./Assets/Levels/postden_level.txt", "./Assets/Textures/den_bg.png", "./Assets/SavedData/den_score.txt", "denlevel", bank));
+		shared_ptr<Screen> vikingPostIntro(new GameScreen("./Assets/Levels/postviking_level.txt", "./Assets/Textures/den_bg.png", "./Assets/SavedData/viking_score.txt", "vikinglevel", bank));
+		shared_ptr<Screen> grassPostIntro(new GameScreen("./Assets/Levels/postgrass_level.txt", "./Assets/Textures/den_bg.png", "./Assets/SavedData/grasslands_score.txt", "grasslandslevel", bank));
+		shared_ptr<Screen> starscapePostIntro(new GameScreen("./Assets/Levels/poststarscape_level.txt", "./Assets/Textures/den_bg.png", "./Assets/SavedData/starscape_score.txt", "starscapelevel", bank));
+		shared_ptr<Screen> bossPostIntro(new GameScreen("./Assets/Levels/postboss_level.txt", "./Assets/Textures/den_bg.png", "./Assets/SavedData/boss_score.txt", "bosslevel", bank));
 
 		shared_ptr<Screen> credits(new CreditsScreen(bank));
 		shared_ptr<Screen> controls(new ControlsScreen(bank));
@@ -102,23 +110,29 @@ int main(int argc, char** argv) {
 		screens.insert({ "starscapelevel", starscape });
 		screens.insert({ "bosslevel", boss });
 		
-		screens.insert({ "den", denIntro });
-		screens.insert({ "viking", vikingIntro });
-		screens.insert({ "grass", grassIntro });
-		screens.insert({ "starscape", starscapeIntro });
-		screens.insert({ "boss", bossIntro });
+		//screens.insert({ "den", denIntro });
+		//screens.insert({ "viking", vikingIntro });
+		//screens.insert({ "grass", grassIntro });
+		//screens.insert({ "starscape", starscapeIntro });
+		//screens.insert({ "boss", bossIntro });
 
-		//screens.insert({ "denIntro", denIntro });
-		//screens.insert({ "vikingIntro", vikingIntro });
-		//screens.insert({ "grassIntro", grassIntro });
-		//screens.insert({ "starscapeIntro", starscapeIntro });
-		//screens.insert({ "bossIntro", bossIntro });
-		//
-		//screens.insert({ "den", denPreIntro });
-		//screens.insert({ "viking", vikingPreIntro });
-		//screens.insert({ "grass", grassPreIntro });
-		//screens.insert({ "starscape", starscapePreIntro });
-		//screens.insert({ "boss", bossPreIntro });
+		screens.insert({ "denintro", denIntro });
+		screens.insert({ "vikingintro", vikingIntro });
+		screens.insert({ "grassintro", grassIntro });
+		screens.insert({ "starscapeintro", starscapeIntro });
+		screens.insert({ "bossintro", bossIntro });
+		
+		screens.insert({ "den", denPreIntro });
+		screens.insert({ "viking", vikingPreIntro });
+		screens.insert({ "grass", grassPreIntro });
+		screens.insert({ "starscape", starscapePreIntro });
+		screens.insert({ "boss", bossPreIntro });
+
+		screens.insert({ "denpost", denPostIntro });
+		screens.insert({ "vikingpost", vikingPostIntro });
+		screens.insert({ "grasspost", grassPostIntro });
+		screens.insert({ "starscapepost", starscapePostIntro });
+		screens.insert({ "bosspost", bossPostIntro });
 
 		GameManager::_instance = new GameManager(std::move(sdl), std::move(image), std::move(mixer), std::move(sdl_ttf), std::move(window), std::move(renderer), screens);
         bank.LoadSounds();
