@@ -253,100 +253,72 @@ void PlayerActor::UpdateInput(double elapsedSecs)
         UpdateMindControlSelection(true);
 	}
 
-	bool triedDigging = _mgr->inputManager->ActionOccurred("DIG", Input::Down);
-
-	if (_mgr->inputManager->ActionOccurred("LEFT", Input::Down))
-	{
-		SetActorXDirection(SpriteSheet::XAxisDirection::LEFT);
-		SetSpeed(Vector2(Math::Clamp(_curKinematic.velocity.GetX() - 50.0f, -300.0f, -50.0f), _curKinematic.velocity.GetY()));
-
-		if (triedDigging)
-		{
-			_digDir = Edge::LEFT;
-            if(_currentSpriteSheet != "sideDig")
-            {
-                _sprites[_currentSpriteSheet]->Stop();
-                _currentSpriteSheet = "sideDig";
-                _sprites[_currentSpriteSheet]->Start();
-            }
-		}
-		else if (_currentSpriteSheet != "walk")
-		{
-			_sprites[_currentSpriteSheet]->Stop();
-			_currentSpriteSheet = "walk";
-			_sprites[_currentSpriteSheet]->Start();
-		}
-	}
-	else if (_mgr->inputManager->ActionOccurred("RIGHT", Input::Down))
-	{
-		SetActorXDirection(SpriteSheet::XAxisDirection::RIGHT);
-		SetSpeed(Vector2(Math::Clamp(_curKinematic.velocity.GetX() + 50.0f, 50.0f, 300.0f), _curKinematic.velocity.GetY()));
-
-		if (triedDigging)
-		{
-			_digDir = Edge::RIGHT;
+    if (_mgr->inputManager->ActionOccurred("DIG", Input::Down))
+    {
+        if (_mgr->inputManager->ActionOccurred("LEFT", Input::Down) ||
+            _mgr->inputManager->ActionOccurred("RIGHT", Input::Down))
+        {
+            _digDir = _mgr->inputManager->ActionOccurred("RIGHT", Input::Down) ? Edge::RIGHT : Edge::LEFT;
+            SetActorXDirection(_digDir == Edge::LEFT ? SpriteSheet::XAxisDirection::LEFT : SpriteSheet::XAxisDirection::RIGHT);
+            SetActorYDirection(SpriteSheet::YAxisDirection::UP);
             if (_currentSpriteSheet != "sideDig")
             {
                 _sprites[_currentSpriteSheet]->Stop();
                 _currentSpriteSheet = "sideDig";
                 _sprites[_currentSpriteSheet]->Start();
             }
-		}
-		else if (_currentSpriteSheet != "walk")
-		{
-			_sprites[_currentSpriteSheet]->Stop();
-			_currentSpriteSheet = "walk";
-			_sprites[_currentSpriteSheet]->Start();
-		}
-	}
-	else
-	{
-		// If we're not trying to move in a given direction, stop all motion on the x axis and use the idle animation
-		SetSpeed(Vector2(0.0f, _curKinematic.velocity.GetY()));
-        if (_currentSpriteSheet == "walk")
-		{
-			_sprites[_currentSpriteSheet]->Stop();
-			_currentSpriteSheet = "idle";
-			_sprites[_currentSpriteSheet]->Start();
-		}
-	}
+        }
+        else if (_mgr->inputManager->ActionOccurred("UP", Input::Down) ||
+            _mgr->inputManager->ActionOccurred("DOWN", Input::Down))
+        {
+            _digDir = _mgr->inputManager->ActionOccurred("UP", Input::Down) ? Edge::TOP : Edge::BOTTOM;
+            SetActorYDirection(_digDir == Edge::TOP ? SpriteSheet::YAxisDirection::UP : SpriteSheet::YAxisDirection::DOWN);
+            if (_currentSpriteSheet != "verticalDig")
+            {
+                _sprites[_currentSpriteSheet]->Stop();
+                _currentSpriteSheet = "verticalDig";
+                _sprites[_currentSpriteSheet]->Start();
+            }
+        }
+    }
+    else
+    {
+        SetActorYDirection(SpriteSheet::YAxisDirection::UP);
+        if (_mgr->inputManager->ActionOccurred("LEFT", Input::Down))
+        {
+            SetActorXDirection(SpriteSheet::XAxisDirection::LEFT);
+            SetSpeed(Vector2(Math::Clamp(_curKinematic.velocity.GetX() - 50.0f, -300.0f, -50.0f), _curKinematic.velocity.GetY()));
+            if (_currentSpriteSheet != "walk")
+            {
+                _sprites[_currentSpriteSheet]->Stop();
+                _currentSpriteSheet = "walk";
+                _sprites[_currentSpriteSheet]->Start();
+            }
+        }
+        else if (_mgr->inputManager->ActionOccurred("RIGHT", Input::Down))
+        {
+            SetActorXDirection(SpriteSheet::XAxisDirection::RIGHT);
+            SetSpeed(Vector2(Math::Clamp(_curKinematic.velocity.GetX() + 50.0f, 50.0f, 300.0f), _curKinematic.velocity.GetY()));
 
-	if (_mgr->inputManager->ActionOccurred("UP", Input::Down))
-	{
-		if (triedDigging)
-		{
-			_digDir = Edge::TOP;
-			SetActorYDirection(SpriteSheet::YAxisDirection::UP);
-            if (_currentSpriteSheet != "verticalDig")
+            if (_currentSpriteSheet != "walk")
             {
                 _sprites[_currentSpriteSheet]->Stop();
-                _currentSpriteSheet = "verticalDig";
+                _currentSpriteSheet = "walk";
                 _sprites[_currentSpriteSheet]->Start();
             }
-		}
-		if (_godMode)
-		{
-			SetSpeed(Vector2(_curKinematic.velocity.GetX(), Math::Clamp(_curKinematic.velocity.GetY() - 50.0f, -50.0f, -300.0f)));
-		}
-	}
-	else if (_mgr->inputManager->ActionOccurred("DOWN", Input::Held))
-	{
-		if (triedDigging)
-		{
-			_digDir = Edge::BOTTOM;
-			SetActorYDirection(SpriteSheet::YAxisDirection::DOWN);
-            if (_currentSpriteSheet != "verticalDig")
+        }
+        else
+        {
+            // If we're not trying to move in a given direction, stop all motion on the x axis and use the idle animation
+            SetSpeed(Vector2(0.0f, _curKinematic.velocity.GetY()));
+            if (_currentSpriteSheet == "walk")
             {
                 _sprites[_currentSpriteSheet]->Stop();
-                _currentSpriteSheet = "verticalDig";
+                _currentSpriteSheet = "idle";
                 _sprites[_currentSpriteSheet]->Start();
             }
-		}
-		if (_godMode)
-		{
-			SetSpeed(Vector2(_curKinematic.velocity.GetX(), Math::Clamp(_curKinematic.velocity.GetY() + 50.0f, 50.0f, 300.0f)));
-		}
-	}
+        }
+    }
 
 	if (_mgr->inputManager->ActionOccurred("JUMP", Input::Pressed))
 	{
@@ -398,7 +370,6 @@ void PlayerActor::UpdateInput(double elapsedSecs)
 		_shieldReleased = true;
 	}
 
-    //_digDir = newDigDir;
 }
 
 void PlayerActor::UpdateShieldStatus(double deltaTime)
