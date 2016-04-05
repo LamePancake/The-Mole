@@ -545,46 +545,51 @@ void PlayerActor::DigDiggableTiles()
 	{
 	case Edge::LEFT:
 	{
-		hasNeighbour = level->HasNeighbourTile(tiles[0], Edge::LEFT);
-		neighbourIndices.x = tiles[0]->GetIndices().x - 1;
-		neighbourIndices.y = tiles[0]->GetIndices().y;
-		if (hasNeighbour)
-		{
-			dist = _curKinematic.position.GetX() - (level->GetTileFromLevel(neighbourIndices.x, neighbourIndices.y)->GetWorldPosition().GetX() + level->GetTileWidth());
-		}
+        hasNeighbour = level->HasNeighbourTile(tiles[0], Edge::LEFT);
+        if (hasNeighbour)
+        {
+            std::shared_ptr<Tile> neighbour = level->GetNeighbourTile(tiles[0], Edge::LEFT);
+            dist = _curKinematic.position.GetX() - (neighbour->GetWorldPosition().GetX() + level->GetTileWidth());
+        }
         break;
 	}
 	case Edge::RIGHT:
 	{
-		hasNeighbour = tiles[0]->GetIndices().x < level->GetLevelSize().x - 1;
-		neighbourIndices.x = tiles[0]->GetIndices().x + 1;
-		neighbourIndices.y = tiles[0]->GetIndices().y;
-		if (hasNeighbour)
-		{
-			dist = (level->GetTileFromLevel(neighbourIndices.x, neighbourIndices.y)->GetWorldPosition().GetX() + level->GetTileWidth()) - _curKinematic.position.GetX();
-		}
+        hasNeighbour = level->HasNeighbourTile(tiles[0], Edge::RIGHT);
+        if (hasNeighbour)
+        {
+            std::shared_ptr<Tile> neighbour = level->GetNeighbourTile(tiles[0], Edge::RIGHT);
+            dist = neighbour->GetWorldPosition().GetX() - (_curKinematic.position.GetX() + _sprites[_currentSpriteSheet]->GetFrameWidth());
+        }
         break;
 	}
 	case Edge::TOP:
 	{
-		hasNeighbour = tiles[0]->GetIndices().y > 0;
-		neighbourIndices.x = tiles[0]->GetIndices().x;
-		neighbourIndices.y = tiles[0]->GetIndices().y - 1;
+        // WELCOME TO THE ULTRA-HACK 5000
+        if (_curKinematic.velocity.GetY() >= 0)
+        {
+            _curKinematic.velocity.SetY(-1);
+            _collisionInfo.rowIntersect.clear();
+            DetectTileCollisions(_collisionInfo, level);
+            tiles = _collisionInfo.rowIntersect;
+        }
+
+        hasNeighbour = level->HasNeighbourTile(tiles[0], Edge::TOP);
 		if (hasNeighbour)
 		{
-			dist = _curKinematic.position.GetY() - (level->GetTileFromLevel(neighbourIndices.x, neighbourIndices.y)->GetWorldPosition().GetY() + level->GetTileHeight());
+            std::shared_ptr<Tile> neighbour = level->GetNeighbourTile(tiles[0], Edge::TOP);
+			dist = _curKinematic.position.GetY() - (neighbour->GetWorldPosition().GetY() + level->GetTileHeight());
 		}
         break;
 	}
 	case Edge::BOTTOM:
 	{
-		hasNeighbour = tiles[0]->GetIndices().y < level->GetLevelSize().y - 1;
-		neighbourIndices.x = tiles[0]->GetIndices().x;
-		neighbourIndices.y = tiles[0]->GetIndices().y + 1;
-		if (hasNeighbour)
-		{
-			dist = level->GetTileFromLevel(neighbourIndices.x, neighbourIndices.y)->GetWorldPosition().GetY() - (_curKinematic.position.GetY() + _sprites[_currentSpriteSheet]->GetFrameHeight());
-		}
+        hasNeighbour = level->HasNeighbourTile(tiles[0], Edge::BOTTOM);
+        if (hasNeighbour)
+        {
+            std::shared_ptr<Tile> neighbour = level->GetNeighbourTile(tiles[0], Edge::BOTTOM);
+            dist = neighbour->GetWorldPosition().GetY() - (_curKinematic.position.GetY() + _sprites[_currentSpriteSheet]->GetFrameHeight());
+        }
         break;
 	}
 	}
@@ -605,28 +610,32 @@ void PlayerActor::DigDiggableTiles()
             tile->SetID(Tile::blank);
         }
     }
-    if (!dug && hasNeighbour && dist < _digDir != Edge::TOP ? 3 : 6)
+    if (!dug && hasNeighbour && dist < (_digDir != Edge::TOP ? 3 : 10))
     {
         for (auto tile : tiles)
         {
-            tileRect.x = tile->GetWorldPosition().GetX();
-            tileRect.y = tile->GetWorldPosition().GetY();
+            std::shared_ptr<Tile> neighbour = level->GetNeighbourTile(tile, _digDir);
+            tileRect.x = neighbour->GetWorldPosition().GetX();
+            tileRect.y = neighbour->GetWorldPosition().GetY();
             float intersect = isX ? std::min(playerRect.y + playerRect.h, tileRect.y + tileRect.h) - std::max(playerRect.y, tileRect.y)
                                   : std::min(playerRect.x + playerRect.w, tileRect.x + tileRect.w) - std::max(playerRect.x, tileRect.x);
             float alignment = isX ? intersect / tile->GetHeight() : intersect / tile->GetWidth();
 
-			std::shared_ptr<Tile> neighbour = level->GetTileFromLevel(neighbourIndices.x, neighbourIndices.y);
-			if (tile->GetID() == Tile::dirt && alignment > 0.3f)
+			if (neighbour->GetID() == Tile::dirt && alignment > 0.3f)
 			{
                 dug = true;
-				level->AddDugTile(tile);
-				tile->SetID(Tile::blank);
+				level->AddDugTile(neighbour);
+                neighbour->SetID(Tile::blank);
 			}
         }
     }
 
     if (dug)
     {
+        if (_digDir == Edge::TOP)
+        {
+            SetJumpVelocity(7.5f * 1.0f * 64.0f * -1.0f);
+        }
         _gameScreen->GetSoundBank().PlaySound("dig");
     }
 }
