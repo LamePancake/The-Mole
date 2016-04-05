@@ -1,6 +1,9 @@
 #include "Actor.h"
 #include "GameScreen.h"
 
+using std::vector;
+using std::shared_ptr;
+
 Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
 			const std::string&& startSprite, SpriteSheet::XAxisDirection startXDirection, SpriteSheet::YAxisDirection startYDirection)
 	:_curKinematic{ position, spd },
@@ -287,8 +290,7 @@ void Actor::DetectTileCollisions(TileCollisionInfo& colInfo, std::shared_ptr<Lev
     else if (xVel != 0)
     {
         colInfo.colEdge = xVel > 0 ? Edge::RIGHT : Edge::LEFT;
-        int col = colInfo.colEdge == Edge::RIGHT ? curBounds.rightCol : curBounds.leftCol;
-        level->GetTileRange(curBounds.topRow, curBounds.bottomRow + 1, col, col + 1, colInfo.colIntersect);
+        GetTilesAlongEdge(colInfo.colEdge, curBounds, colInfo.colIntersect);
 
         for (auto tile : colInfo.colIntersect)
         {
@@ -305,20 +307,35 @@ void Actor::DetectTileCollisions(TileCollisionInfo& colInfo, std::shared_ptr<Lev
     else if (yVel != 0)
     {
         colInfo.rowEdge = yVel > 0 ? Edge::BOTTOM : Edge::TOP;
-        int row = colInfo.rowEdge == Edge::TOP ? curBounds.topRow : curBounds.bottomRow;
-        level->GetTileRange(row, row + 1, curBounds.leftCol, curBounds.rightCol + 1, colInfo.rowIntersect);
+        GetTilesAlongEdge(colInfo.rowEdge, curBounds, colInfo.rowIntersect);
+
+        colInfo.rowPenetration = colInfo.rowEdge == Edge::TOP
+            ? (int)ceil((colInfo.rowIntersect[0]->GetWorldPosition().GetY() + tileHeight - curBounds.topBound))
+            : (int)ceil((curBounds.bottomBound - colInfo.rowIntersect[0]->GetWorldPosition().GetY()));
 
         for (auto tile : colInfo.rowIntersect)
         {
             if (tile->GetID() != Tile::blank)
             {
-                colInfo.rowPenetration = colInfo.rowEdge == Edge::TOP
-                    ? (int)ceil((tile->GetWorldPosition().GetY() + tileHeight - curBounds.topBound))
-                    : (int)ceil((curBounds.bottomBound - tile->GetWorldPosition().GetY()));
                 colInfo.shouldCorrectY = true;
                 break;
             }
         }
+    }
+}
+
+void Actor::GetTilesAlongEdge(Edge edge, const Bounds& bounds, vector<shared_ptr<Tile>>& tiles)
+{
+    if (edge == Edge::NONE) return;
+    if (edge == Edge::TOP || edge == Edge::BOTTOM)
+    {
+        int row = edge == Edge::TOP ? bounds.topRow : bounds.bottomRow;
+        _gameScreen->GetLevel()->GetTileRange(row, row + 1, bounds.leftCol, bounds.rightCol + 1, tiles);
+    }
+    else
+    {
+        int col = edge == Edge::RIGHT ? bounds.rightCol : bounds.leftCol;
+        _gameScreen->GetLevel()->GetTileRange(bounds.topRow, bounds.bottomRow + 1, col, col + 1, tiles);
     }
 }
 

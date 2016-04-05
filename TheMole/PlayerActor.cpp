@@ -533,10 +533,16 @@ void PlayerActor::DigDiggableTiles()
     std::shared_ptr<Level> level = _gameScreen->GetLevel();
     bool dug = false;
     bool isX = _digDir == Edge::LEFT || _digDir == Edge::RIGHT;
-	vector<shared_ptr<Tile>>& tiles = isX ? _collisionInfo.colIntersect : _collisionInfo.rowIntersect;
 	bool hasNeighbour = false;
-	SDL2pp::Point neighbourIndices;
-	float dist;
+
+    // We need to copy tiles by value so as not to modify the stuff in DetectTileCollisions
+    // This is basically entirely due to digging upward. Oh well
+    vector<shared_ptr<Tile>> tiles;
+    Bounds playerBounds;
+    GetBounds(_curKinematic, playerBounds);
+    GetTilesAlongEdge(_digDir, playerBounds, tiles);
+
+    float dist;
     float distMargin; // How close can we be to be considered "touching"?
     SDL2pp::Rect playerRect{ (int)_aabb.GetX(), (int)_aabb.GetY(), (int)_aabb.GetWidth(), (int)_aabb.GetHeight() };
     SDL2pp::Rect tileRect{ 0, 0, (int)tiles[0]->GetWidth(), (int)tiles[0]->GetHeight() };
@@ -565,15 +571,6 @@ void PlayerActor::DigDiggableTiles()
 	}
 	case Edge::TOP:
 	{
-        // WELCOME TO THE ULTRA-HACK 5000
-        if (_curKinematic.velocity.GetY() >= 0)
-        {
-            _curKinematic.velocity.SetY(-1);
-            _collisionInfo.rowIntersect.clear();
-            DetectTileCollisions(_collisionInfo, level);
-            tiles = _collisionInfo.rowIntersect;
-        }
-
         hasNeighbour = level->HasNeighbourTile(tiles[0], Edge::TOP);
 		if (hasNeighbour)
 		{
@@ -610,7 +607,10 @@ void PlayerActor::DigDiggableTiles()
             tile->SetID(Tile::blank);
         }
     }
-    if (!dug && hasNeighbour && dist < (_digDir != Edge::TOP ? 3 : 10))
+
+    // Check neighbouring tiles that are "close enough" to see if they're diggable
+    // Tiles above the player are given a wider margin because reasons
+    if (!dug && hasNeighbour && dist < (_digDir == Edge::TOP ? 13 : 3))
     {
         for (auto tile : tiles)
         {
