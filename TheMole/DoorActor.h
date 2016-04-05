@@ -18,11 +18,9 @@ public:
 		Edge edge,
 		const std::shared_ptr<ToggleActor> doorSwitch)
 		: Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection),
-		_isOpen(false),
-		_isClosing(false),
-		_isOpening(false),
 		_edge(edge),
-		_switch(doorSwitch)
+		_switch(doorSwitch),
+        _curState(Closed)
 	{
 		_sprites[_currentSpriteSheet]->Pause();
 	}
@@ -38,9 +36,14 @@ public:
 	Edge GetEdge() const;
 
 private:
-	bool _isOpening;
-	bool _isClosing;
-	bool _isOpen;
+    enum State {
+        Closed,
+        Closing,
+        Opening,
+        Open
+    };
+
+    State _curState;
 	Edge _edge;
 	std::shared_ptr<ToggleActor> _switch;
 };

@@ -314,6 +314,8 @@ protected:
 	 */
 	void DetectTileCollisions(TileCollisionInfo& colInfo, std::shared_ptr<Level>& level);
 
+    void GetTilesAlongEdge(Edge edge, const Bounds& bounds, std::vector<std::shared_ptr<Tile>>& tiles);
+
 	/**
 	 * @brief	Determines the actor's bounding box and which tiles they intersect at the given kinematic state.
 	 *

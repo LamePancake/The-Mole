@@ -9,10 +9,6 @@ void DoorActor::Update(double deltaTime)
 	bool switchOn = _switch->IsOn();
     SoundEffectBank& bank = _gameScreen->GetSoundBank();
 
-    if (currentSheet->IsAnimating() && !_gameScreen->GetSoundBank().IsPlaying("door_progress"))
-    {
-        bank.PlaySound("door_progress", true);
-    }
 	/*
 	  Switch turns on  - start opening
       Switch on and animating - keep opening
@@ -21,73 +17,83 @@ void DoorActor::Update(double deltaTime)
       Switch off and animating - keep closing
       Switch off and not animating - stop closing
 	 */
-	if(switchOn)
-	{
-		if (!_isOpening && !_isOpen)
-		{
-			_isOpening = true;
-			_isClosing = false;
-			currentSheet->SetReversed(false);
-			currentSheet->Start();
-		}
-		else if (currentSheet->IsFinished())
-		{
-            if (!_isOpen)
-            {
-                bank.StopSound("door_progress");
-                bank.PlaySound("door_finish");
-            }
-			_isOpening = false;
-			_isClosing = false;
-			_isOpen = true;
-		}
-	}
-	else
-	{
-		if (_isOpening || _isOpen)
-		{
-			_isOpen = false;
-			_isOpening = false;
-			_isClosing = true;
-			currentSheet->SetReversed(true);
-			currentSheet->Start();
-		}
-		else if (currentSheet->IsFinished())
-		{
-            if (_isClosing)
-            {
-                bank.StopSound("door_progress");
-                bank.PlaySound("door_finish");
-            }
-			_isOpening = false;
-			_isClosing = false;
-		}
-	}
+    switch (_curState)
+    {
+    case Closed:
+        std::cout << "Closed" << std::endl;
+        if (switchOn)
+        {
+            _curState = Opening;
+            bank.PlaySound("door_progress", true);
+            currentSheet->SetReversed(false);
+            currentSheet->Start();
+        }
+        break;
+    case Closing:
+        std::cout << "Closing" << std::endl;
+        if (currentSheet->IsFinished())
+        {
+            _curState = Closed;
+            bank.StopSound("door_progress");
+            bank.PlaySound("door_finish");
+        }
+        else if (switchOn)
+        {
+            _curState = Opening;
+            currentSheet->SetReversed(false);
+        }
+        break;
+    case Open:
+        std::cout << "Open" << std::endl;
+        if (!switchOn)
+        {
+            _curState = Closing;
+            bank.PlaySound("door_progress", true);
+            currentSheet->SetReversed(true);
+            currentSheet->Start();
+        }
+        break;
+    case Opening:
+        std::cout << "Opening" << std::endl;
+        if (currentSheet->IsFinished())
+        {
+            _curState = Open;
+            bank.StopSound("door_progress");
+            bank.PlaySound("door_finish");
+        }
+        else if (!switchOn)
+        {
+            _curState = Closing;
+            currentSheet->SetReversed(true);
+        }
+        break;
+    }
 }
 
 void DoorActor::Reset(Vector2 pos)
 {
 	Actor::Reset(pos);
-	_isClosing = false;
-	_isOpening = false;
-	_isOpen = false;
+    SoundEffectBank& bank = _gameScreen->GetSoundBank();
+    _curState = Closed;
+    bank.StopSound("door_progress");
+    bank.StopSound("door_finish");
 	_sprites[_currentSpriteSheet]->SetReversed(false);
 	_sprites[_currentSpriteSheet]->Reset();
 }
 
 bool DoorActor::IsOpening() const
 {
-	return _isOpening;
+    return _curState == Opening;
 }
 
 bool DoorActor::IsClosing() const
 {
-	return _isClosing;
+	return _curState == Closing;
 }
 
 bool DoorActor::IsOpen() const
 {
-	return _isOpen;
+    return _curState == Open;
 }
 
 Actor::Edge DoorActor::GetEdge() const

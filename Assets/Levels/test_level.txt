@@ -6,20 +6,16 @@ S                                                                               
 S                                                                               S
 S                                                                               S
 S                                                                               S
-S               SES                                                             S
-S               SAS                                                             S
 S                                                                               S
-S           W                                                                   S
-S                   SSSSSSSSSSASSS                                              S
-S   S          W O  A    WS      S                                              S
+S                                                                               S
+S                                                                               S
+S                                                                               S
+S                                                                               S
+S                      O  WS   A                                                S
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 
 Toggles
-Top one-shot
-Bottom one-shot
 Right active
 
 Doors
-Bottom toggle 1
 Top toggle 0
-Left toggle 2

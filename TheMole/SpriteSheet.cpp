@@ -56,7 +56,7 @@ void SpriteSheet::Update(double elapsedTime) {
 		}
 
 		// Stop the animation at the last frame, if it is not repeating
-		if (!_isRepeating && _currentFrame == finalFrame)
+		if (!_isRepeating && _currentFrame == sentinelFrame)
 		{
 			Pause();
 			_currentFrame = finalFrame;

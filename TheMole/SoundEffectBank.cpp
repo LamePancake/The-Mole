@@ -7,6 +7,7 @@ void ChannelFinishedHandler(int channel)
 {
     // God damn do I ever hate this...
     // Hopefully we never end up with multiple sound effect banks at the same time
+    // Which we completely could since that was the point... Oh well
     instance->_channelSounds[channel] = "";
 }
 
@@ -33,8 +34,18 @@ void SoundEffectBank::LoadSounds()
 
 void SoundEffectBank::PlaySound(std::string && name, bool repeat)
 {
-	int channel = _mgr->GetMixer().PlayChannel(-1, *_sounds[name], repeat ? -1 : 0);
-    _channelSounds[channel] = name;
+    try
+    {
+        int channel = _mgr->GetMixer().PlayChannel(-1, *_sounds[name], repeat ? -1 : 0);
+        _channelSounds[channel] = name;
+    }
+    catch (SDL2pp::Exception & e)
+    {
+        // We've probably exceeded the number of channels available
+        // This is pretty unlikely to happen in actual gameplay (I think) so we're just going to spit
+        // out a warning and ignore it for now
+        std::cerr << "Warning: no free sound channels!" << std::endl;
+    }
 }
 
 

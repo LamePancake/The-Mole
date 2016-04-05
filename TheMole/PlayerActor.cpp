@@ -19,7 +19,7 @@ PlayerActor::PlayerActor(Vector2 position, GameManager& manager, Vector2 spd, st
     _godMode(false),
     _stoppedTime(false),
     _selected(0),
-    _jumpBoost(600), 
+    _jumpBoost(600),
     _jumpBoosted(false)
 {
 	_shieldActive = false;///Start shield in inactive state
@@ -58,6 +58,8 @@ void PlayerActor::Draw(Camera& camera)
 
 void PlayerActor::Update(double elapsedSecs)
 {
+    bool wasDigging = _digDir != Edge::NONE;
+
 	UpdateInput(elapsedSecs);
 	if (_stoppedTime) return;
 
@@ -80,14 +82,12 @@ void PlayerActor::Update(double elapsedSecs)
 
 
 	// Check whether we're finished digging and update sprites accordingly
-	if (!_sprites[_currentSpriteSheet]->IsAnimating() && _digDir != Edge::NONE)
+	if (wasDigging && _digDir == Edge::NONE)
 	{
 		_sprites[_currentSpriteSheet]->Stop();
-		_currentSpriteSheet = "idle";
+		_currentSpriteSheet = _curKinematic.velocity.GetX() > 1 ? "walk" : "idle";
 		SetActorYDirection(SpriteSheet::YAxisDirection::UP);
 		_sprites[_currentSpriteSheet]->Start();
-
-        _digDir = Edge::NONE;
 	}
 
 	UpdatePosition(elapsedSecs);
@@ -237,11 +237,11 @@ void PlayerActor::DefaultTileCollisionHandler(std::vector<std::shared_ptr<Tile>>
 
 void PlayerActor::UpdateInput(double elapsedSecs)
 {
+    Edge newDigDir = Edge::NONE;
+    _digDir = Edge::NONE;
+	_stoppedTime = false;
 	shared_ptr<Level> level = _gameScreen->GetLevel();
 
-	if (_digDir != Edge::NONE) return;
-
-	_stoppedTime = false;
 	if (_mgr->inputManager->ActionOccurred("MIND_CONTROL", Input::Held) && level->IsHatAvailable("MIND_CONTROL"))
 	{
 		_stoppedTime = true;
@@ -253,88 +253,72 @@ void PlayerActor::UpdateInput(double elapsedSecs)
         UpdateMindControlSelection(true);
 	}
 
-	bool triedDigging = _mgr->inputManager->ActionOccurred("DIG", Input::Pressed);
+    if (_mgr->inputManager->ActionOccurred("DIG", Input::Down))
+    {
+        if (_mgr->inputManager->ActionOccurred("LEFT", Input::Down) ||
+            _mgr->inputManager->ActionOccurred("RIGHT", Input::Down))
+        {
+            _digDir = _mgr->inputManager->ActionOccurred("RIGHT", Input::Down) ? Edge::RIGHT : Edge::LEFT;
+            SetActorXDirection(_digDir == Edge::LEFT ? SpriteSheet::XAxisDirection::LEFT : SpriteSheet::XAxisDirection::RIGHT);
+            SetActorYDirection(SpriteSheet::YAxisDirection::UP);
+            if (_currentSpriteSheet != "sideDig")
+            {
+                _sprites[_currentSpriteSheet]->Stop();
+                _currentSpriteSheet = "sideDig";
+                _sprites[_currentSpriteSheet]->Start();
+            }
+        }
+        else if (_mgr->inputManager->ActionOccurred("UP", Input::Down) ||
+            _mgr->inputManager->ActionOccurred("DOWN", Input::Down))
+        {
+            _digDir = _mgr->inputManager->ActionOccurred("UP", Input::Down) ? Edge::TOP : Edge::BOTTOM;
+            SetActorYDirection(_digDir == Edge::TOP ? SpriteSheet::YAxisDirection::UP : SpriteSheet::YAxisDirection::DOWN);
+            if (_currentSpriteSheet != "verticalDig")
+            {
+                _sprites[_currentSpriteSheet]->Stop();
+                _currentSpriteSheet = "verticalDig";
+                _sprites[_currentSpriteSheet]->Start();
+            }
+        }
+    }
+    else
+    {
+        SetActorYDirection(SpriteSheet::YAxisDirection::UP);
+        if (_mgr->inputManager->ActionOccurred("LEFT", Input::Down))
+        {
+            SetActorXDirection(SpriteSheet::XAxisDirection::LEFT);
+            SetSpeed(Vector2(Math::Clamp(_curKinematic.velocity.GetX() - 50.0f, -300.0f, -50.0f), _curKinematic.velocity.GetY()));
+            if (_currentSpriteSheet != "walk")
+            {
+                _sprites[_currentSpriteSheet]->Stop();
+                _currentSpriteSheet = "walk";
+                _sprites[_currentSpriteSheet]->Start();
+            }
+        }
+        else if (_mgr->inputManager->ActionOccurred("RIGHT", Input::Down))
+        {
+            SetActorXDirection(SpriteSheet::XAxisDirection::RIGHT);
+            SetSpeed(Vector2(Math::Clamp(_curKinematic.velocity.GetX() + 50.0f, 50.0f, 300.0f), _curKinematic.velocity.GetY()));
 
-	if (_mgr->inputManager->ActionOccurred("LEFT", Input::Held))
-	{
-		SetActorXDirection(SpriteSheet::XAxisDirection::LEFT);
-		SetSpeed(Vector2(Math::Clamp(_curKinematic.velocity.GetX() - 50.0f, -300.0f, -50.0f), _curKinematic.velocity.GetY()));
-
-		if (triedDigging)
-		{
-			_digDir = Edge::LEFT;
-			_sprites[_currentSpriteSheet]->Stop();
-			_currentSpriteSheet = "sideDig";
-			_sprites[_currentSpriteSheet]->Start();
-		}
-		else if (_currentSpriteSheet != "walk")
-		{
-			_sprites[_currentSpriteSheet]->Stop();
-			_currentSpriteSheet = "walk";
-			_sprites[_currentSpriteSheet]->Start();
-		}
-	}
-	else if (_mgr->inputManager->ActionOccurred("RIGHT", Input::Held))
-	{
-		SetActorXDirection(SpriteSheet::XAxisDirection::RIGHT);
-		SetSpeed(Vector2(Math::Clamp(_curKinematic.velocity.GetX() + 50.0f, 50.0f, 300.0f), _curKinematic.velocity.GetY()));
-
-		if (triedDigging)
-		{
-			_digDir = Edge::RIGHT;
-			_sprites[_currentSpriteSheet]->Stop();
-			_currentSpriteSheet = "sideDig";
-			_sprites[_currentSpriteSheet]->Start();
-		}
-		else if (_currentSpriteSheet != "walk")
-		{
-			_sprites[_currentSpriteSheet]->Stop();
-			_currentSpriteSheet = "walk";
-			_sprites[_currentSpriteSheet]->Start();
-		}
-	}
-	else
-	{
-		// If we're not trying to move in a given direction, stop all motion on the x axis and use the idle animation
-		SetSpeed(Vector2(0.0f, _curKinematic.velocity.GetY()));
-		if (_currentSpriteSheet != "idle")
-		{
-			_sprites[_currentSpriteSheet]->Stop();
-			_currentSpriteSheet = "idle";
-			_sprites[_currentSpriteSheet]->Start();
-		}
-	}
-
-	if (_mgr->inputManager->ActionOccurred("UP", Input::Held))
-	{
-		if (triedDigging)
-		{
-			_digDir = Edge::TOP;
-			SetActorYDirection(SpriteSheet::YAxisDirection::UP);
-			_sprites[_currentSpriteSheet]->Stop();
-			_currentSpriteSheet = "verticalDig";
-			_sprites[_currentSpriteSheet]->Start();
-		}
-		if (_godMode)
-		{
-			SetSpeed(Vector2(_curKinematic.velocity.GetX(), Math::Clamp(_curKinematic.velocity.GetY() - 50.0f, -50.0f, -300.0f)));
-		}
-	}
-	else if (_mgr->inputManager->ActionOccurred("DOWN", Input::Held))
-	{
-		if (triedDigging)
-		{
-			_digDir = Edge::BOTTOM;
-			SetActorYDirection(SpriteSheet::YAxisDirection::DOWN);
-			_sprites[_currentSpriteSheet]->Stop();
-			_currentSpriteSheet = "verticalDig";
-			_sprites[_currentSpriteSheet]->Start();
-		}
-		if (_godMode)
-		{
-			SetSpeed(Vector2(_curKinematic.velocity.GetX(), Math::Clamp(_curKinematic.velocity.GetY() + 50.0f, 50.0f, 300.0f)));
-		}
-	}
+            if (_currentSpriteSheet != "walk")
+            {
+                _sprites[_currentSpriteSheet]->Stop();
+                _currentSpriteSheet = "walk";
+                _sprites[_currentSpriteSheet]->Start();
+            }
+        }
+        else
+        {
+            // If we're not trying to move in a given direction, stop all motion on the x axis and use the idle animation
+            SetSpeed(Vector2(0.0f, _curKinematic.velocity.GetY()));
+            if (_currentSpriteSheet == "walk")
+            {
+                _sprites[_currentSpriteSheet]->Stop();
+                _currentSpriteSheet = "idle";
+                _sprites[_currentSpriteSheet]->Start();
+            }
+        }
+    }
 
 	if (_mgr->inputManager->ActionOccurred("JUMP", Input::Pressed))
 	{
@@ -343,7 +327,6 @@ void PlayerActor::UpdateInput(double elapsedSecs)
 		    // jump 7.5 tiles tall of 1 metre each, at 64 pixels per metre, multiplied by -1 because positive moves down in our world
 	    	_jumped = true;
 		    SetJumpVelocity(7.5f * 1.0f * 64.0f * -1.0f);
-		    //SetMaximumJumpVelocity(3.0f * 1.0f * 64.0f * -1.0f);
 		}
 	}
 
@@ -380,17 +363,13 @@ void PlayerActor::UpdateInput(double elapsedSecs)
 			_shieldActive = true;
 		_shieldReleased = false;
 	}
-	//if (_mgr->inputManager->ActionOccurred("SHIELD", Input::Held))
-	//{
-	//	///Drain shield
-	//	_shieldActive = true;
-	//	//_shieldReleased = false;
-	//}
+
 	if (_mgr->inputManager->ActionOccurred("SHIELD", Input::Released) && level->IsHatAvailable("SHIELD"))
 	{
 		///Deactivate Shield
 		_shieldReleased = true;
 	}
+
 }
 
 void PlayerActor::UpdateShieldStatus(double deltaTime)
@@ -524,79 +503,111 @@ void PlayerActor::DigDiggableTiles()
 
     std::shared_ptr<Level> level = _gameScreen->GetLevel();
     bool dug = false;
-
-	vector<shared_ptr<Tile>>& tiles = _digDir == Edge::LEFT || _digDir == Edge::RIGHT ? _collisionInfo.colIntersect : _collisionInfo.rowIntersect;
+    bool isX = _digDir == Edge::LEFT || _digDir == Edge::RIGHT;
 	bool hasNeighbour = false;
-	SDL2pp::Point neighbourIndices;
-	float dist;
+
+    // We need to copy tiles by value so as not to modify the stuff in DetectTileCollisions
+    // This is basically entirely due to digging upward. Oh well
+    vector<shared_ptr<Tile>> tiles;
+    Bounds playerBounds;
+    GetBounds(_curKinematic, playerBounds);
+    GetTilesAlongEdge(_digDir, playerBounds, tiles);
+
+    float dist;
+    float distMargin; // How close can we be to be considered "touching"?
+    SDL2pp::Rect playerRect{ (int)_aabb.GetX(), (int)_aabb.GetY(), (int)_aabb.GetWidth(), (int)_aabb.GetHeight() };
+    SDL2pp::Rect tileRect{ 0, 0, (int)tiles[0]->GetWidth(), (int)tiles[0]->GetHeight() };
 
 	switch (_digDir)
 	{
 	case Edge::LEFT:
 	{
-		hasNeighbour = tiles[0]->GetIndices().x > 0;
-		neighbourIndices.x = tiles[0]->GetIndices().x - 1;
-		neighbourIndices.y = tiles[0]->GetIndices().y;
-		if (hasNeighbour)
-		{
-			dist = _curKinematic.position.GetX() - (level->GetTileFromLevel(neighbourIndices.x, neighbourIndices.y)->GetWorldPosition().GetX() + level->GetTileWidth());
-		}
+        hasNeighbour = level->HasNeighbourTile(tiles[0], Edge::LEFT);
+        if (hasNeighbour)
+        {
+            std::shared_ptr<Tile> neighbour = level->GetNeighbourTile(tiles[0], Edge::LEFT);
+            dist = _curKinematic.position.GetX() - (neighbour->GetWorldPosition().GetX() + level->GetTileWidth());
+        }
+        break;
 	}
 	case Edge::RIGHT:
 	{
-		hasNeighbour = tiles[0]->GetIndices().x < level->GetLevelSize().x - 1;
-		neighbourIndices.x = tiles[0]->GetIndices().x + 1;
-		neighbourIndices.y = tiles[0]->GetIndices().y;
-		if (hasNeighbour)
-		{
-			dist = (level->GetTileFromLevel(neighbourIndices.x, neighbourIndices.y)->GetWorldPosition().GetX() + level->GetTileWidth()) - _curKinematic.position.GetX();
-		}
+        hasNeighbour = level->HasNeighbourTile(tiles[0], Edge::RIGHT);
+        if (hasNeighbour)
+        {
+            std::shared_ptr<Tile> neighbour = level->GetNeighbourTile(tiles[0], Edge::RIGHT);
+            dist = neighbour->GetWorldPosition().GetX() - (_curKinematic.position.GetX() + _sprites[_currentSpriteSheet]->GetFrameWidth());
+        }
+        break;
 	}
 	case Edge::TOP:
 	{
-		hasNeighbour = tiles[0]->GetIndices().y > 0;
-		neighbourIndices.x = tiles[0]->GetIndices().x;
-		neighbourIndices.y = tiles[0]->GetIndices().y - 1;
+        hasNeighbour = level->HasNeighbourTile(tiles[0], Edge::TOP);
 		if (hasNeighbour)
 		{
-			dist = _curKinematic.position.GetY() - (level->GetTileFromLevel(neighbourIndices.x, neighbourIndices.y)->GetWorldPosition().GetY() + level->GetTileHeight());
+            std::shared_ptr<Tile> neighbour = level->GetNeighbourTile(tiles[0], Edge::TOP);
+			dist = _curKinematic.position.GetY() - (neighbour->GetWorldPosition().GetY() + level->GetTileHeight());
 		}
+        break;
 	}
 	case Edge::BOTTOM:
 	{
-		hasNeighbour = tiles[0]->GetIndices().y < level->GetLevelSize().y - 1;
-		neighbourIndices.x = tiles[0]->GetIndices().x;
-		neighbourIndices.y = tiles[0]->GetIndices().y + 1;
-		if (hasNeighbour)
-		{
-			dist = level->GetTileFromLevel(neighbourIndices.x, neighbourIndices.y)->GetWorldPosition().GetY() - (_curKinematic.position.GetY() + _sprites[_currentSpriteSheet]->GetFrameHeight());
-		}
+        hasNeighbour = level->HasNeighbourTile(tiles[0], Edge::BOTTOM);
+        if (hasNeighbour)
+        {
+            std::shared_ptr<Tile> neighbour = level->GetNeighbourTile(tiles[0], Edge::BOTTOM);
+            dist = neighbour->GetWorldPosition().GetY() - (_curKinematic.position.GetY() + _sprites[_currentSpriteSheet]->GetFrameHeight());
+        }
+        break;
 	}
 	}
 
 	// Actually dig applicable tiles
     for (auto tile : tiles)
     {
-        if (tile->GetID() == Tile::dirt)
+        tileRect.x = tile->GetWorldPosition().GetX();
+        tileRect.y = tile->GetWorldPosition().GetY();
+        float intersect = isX ? std::min(playerRect.y + playerRect.h, tileRect.y + tileRect.h) - std::max(playerRect.y, tileRect.y)
+                              : std::min(playerRect.x + playerRect.w, tileRect.x + tileRect.w) - std::max(playerRect.x, tileRect.x);
+        float alignment = isX ? intersect / tile->GetHeight() : intersect / tile->GetWidth();
+
+        if (tile->GetID() == Tile::dirt && alignment > 0.3f)
         {
             dug = true;
-			_gameScreen->GetSoundBank().PlaySound("dig");
 			level->AddDugTile(tile);
             tile->SetID(Tile::blank);
         }
     }
-    if (!dug && hasNeighbour && dist < 3)
+
+    // Check neighbouring tiles that are "close enough" to see if they're diggable
+    // Tiles above the player are given a wider margin because reasons
+    if (!dug && hasNeighbour && dist < (_digDir == Edge::TOP ? 13 : 3))
     {
         for (auto tile : tiles)
         {
-			std::shared_ptr<Tile> neighbour = level->GetTileFromLevel(neighbourIndices.x, neighbourIndices.y);
-			if (tile->GetID() == Tile::dirt)
+            std::shared_ptr<Tile> neighbour = level->GetNeighbourTile(tile, _digDir);
+            tileRect.x = neighbour->GetWorldPosition().GetX();
+            tileRect.y = neighbour->GetWorldPosition().GetY();
+            float intersect = isX ? std::min(playerRect.y + playerRect.h, tileRect.y + tileRect.h) - std::max(playerRect.y, tileRect.y)
+                                  : std::min(playerRect.x + playerRect.w, tileRect.x + tileRect.w) - std::max(playerRect.x, tileRect.x);
+            float alignment = isX ? intersect / tile->GetHeight() : intersect / tile->GetWidth();
+
+			if (neighbour->GetID() == Tile::dirt && alignment > 0.3f)
 			{
-				_gameScreen->GetSoundBank().PlaySound("dig");
-				level->AddDugTile(tile);
-				tile->SetID(Tile::blank);
+                dug = true;
+				level->AddDugTile(neighbour);
+                neighbour->SetID(Tile::blank);
 			}
         }
+    }
+
+    if (dug)
+    {
+        if (_digDir == Edge::TOP)
+        {
+            SetJumpVelocity(7.5f * 1.0f * 64.0f * -1.0f);
+        }
+        _gameScreen->GetSoundBank().PlaySound("dig");
     }
 }
 
