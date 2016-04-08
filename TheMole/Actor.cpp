@@ -275,7 +275,9 @@ void Actor::DetectTileCollisions(TileCollisionInfo& colInfo, std::shared_ptr<Lev
         }
 
 		// Every tile that the actor intersects - except for the for the corner tile - is blank
-        if (colInfo.corner->GetID() != Tile::blank && colNonCornerBlanks == colInfo.colIntersect.size() && rowNonCornerBlanks == colInfo.rowIntersect.size())
+        if (colInfo.corner->GetID() != Tile::blank &&
+            colNonCornerBlanks == colInfo.colIntersect.size() &&
+            rowNonCornerBlanks == colInfo.rowIntersect.size())
         {
 			bool corrected = false;
 
