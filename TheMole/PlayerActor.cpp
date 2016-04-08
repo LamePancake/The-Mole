@@ -1,4 +1,6 @@
 #include "PlayerActor.h"
+#include "AIActor.h"
+#include "DoorActor.h"
 #include "GameScreen.h"
 
 using std::vector;

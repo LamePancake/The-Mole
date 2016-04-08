@@ -4,6 +4,7 @@
 #include "TurretActor.h"
 #include "GameScreen.h"
 #include "BombAIActor.h"
+#include "ProjectileActor.h"
 #include <memory>
 
 TurretActor::TurretActor(

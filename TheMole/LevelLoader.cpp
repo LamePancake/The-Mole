@@ -2,6 +2,20 @@
 #include "GameScreen.h"
 #include "Util.h"
 
+#include "Tile.h"
+#include "Level.h"
+#include "AIActor.h"
+#include "BombAIActor.h"
+#include "Actor.h"
+#include "PlayerActor.h"
+#include "NPCActor.h"
+#include "ObjectActor.h"
+#include "BossActor.h"
+#include "ProjectileActor.h"
+#include "TurretActor.h"
+#include "ToggleActor.h"
+#include "DoorActor.h"
+
 using std::shared_ptr;
 using std::vector;
 using std::unordered_map;
@@ -129,7 +143,26 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 					sprites["prepunch"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Watch_prepunch_small.png", 1, 0.50, true, SpriteSheet::XAxisDirection::LEFT);
 					sprites["punch"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Watch_punch_small.png", 1, 0.50, true, SpriteSheet::XAxisDirection::LEFT);
 
-					std::shared_ptr<BossActor> boss = std::make_shared<BossActor>(tile->GetWorldPosition(), gameManager, Vector2(200, 0), sprites, "idle", SpriteSheet::XAxisDirection::LEFT);
+                    // Create a prototype projectile actor for the boss to clone later
+                    std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> projSprites;
+                    double infinity = std::numeric_limits<double>::infinity();
+                    projSprites["shoot"] = std::make_shared<SpriteSheet>(projectileSheet, 1, infinity);
+
+                    std::shared_ptr<ProjectileActor> projectile = std::make_shared<ProjectileActor>(
+                        tile->GetWorldPosition() ///Vec2 position
+                        , gameManager ///Gamemanager
+                        , Vector2(100.0f, 0.0f) ///Vec2 spd
+                        , projSprites ///sprites
+                        , "shoot" ///startsprite
+                        , SpriteSheet::XAxisDirection::LEFT); ///direction
+
+					std::shared_ptr<BossActor> boss = std::make_shared<BossActor>(tile->GetWorldPosition(),
+                                                                                  gameManager,
+                                                                                  Vector2(200, 0),
+                                                                                  sprites,
+                                                                                  "idle",
+                                                                                  projectile,
+                                                                                  SpriteSheet::XAxisDirection::LEFT);
 					level->AddActor(boss);
 					tile->SetID(Tile::blank);
 				}

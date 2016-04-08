@@ -12,7 +12,6 @@
 #include "SpriteSheet.h"
 #include "Tile.h"
 
-
 class GameScreen;
 class Level;
 

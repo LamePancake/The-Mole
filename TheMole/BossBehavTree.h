@@ -2,191 +2,92 @@
 #include <list>
 #include <iostream>
 #include <memory>
+#include <functional>
+#include <vector>
 #include "Vector2.h"
 
-using namespace std;
 class GameScreen;
 class BossActor;
 
 class Node
 {
 public:
-	Node();
-	virtual bool run(double elapsedSecs) = 0;
-	std::shared_ptr<GameScreen> _gameScreen;
-private:
+    enum Result
+    {
+        Success,
+        Failure,
+        Running
+    };
 
+    Node(bool interruptible);
+
+	virtual Result Run(double elapsedSecs) = 0;
+    virtual bool IsInterruptible() const { return _interruptible; };
+
+    std::shared_ptr<Node> Node::GetRunningChild();
+
+	std::shared_ptr<GameScreen> _gameScreen;
+
+protected:
+    std::shared_ptr<Node>_runningChild;
+
+private:
+    bool _interruptible;
 };
 
 class CompositeNode : public Node
 {
 private:
-	list<Node*> children;
+    std::vector<std::shared_ptr<Node>> children;
 public:
-	const list<Node*>& getChildren() const;
-	void addChild(Node* child);
+    CompositeNode() : Node(true) {}
+
+	const std::vector<std::shared_ptr<Node>>& GetChildren() const;
+	void AddChild(std::shared_ptr<Node> child);
 };
 
 class Selector : public CompositeNode
 {
 public:
-	virtual bool run(double elapsedSecs) override;
+	virtual Result Run(double elapsedSecs) override;
 };
 
 class Sequence : public CompositeNode
 {
 public:
-	virtual bool run(double elapsedSecs) override;
+	virtual Result Run(double elapsedSecs) override;
 };
 
-class CheckHeatTask : public Node
+/**
+ * @brief Generic task that takes a function pointer for use in the behaviour tree.
+ */
+class Task : public Node
 {
-private:
-	int _btHeat;
 public:
-	CheckHeatTask(int heat) : _btHeat(heat) {}
-	virtual bool run(double elapsedSecs) override;
+
+    Task(bool interruptible, std::function<Result(double)> &taskFunction)
+        : Node{ interruptible }, _taskFunc(taskFunction) {}
+
+    virtual Result Run(double elapsedSeconds)
+    {
+        return _taskFunc(elapsedSeconds);
+    }
+
+private:
+    std::function<Result(double)> _taskFunc;
 };
 
-class CheckAliveTask : public Node
-{
-private:
-	int _btHealth;
-public:
-	CheckAliveTask(int health) : _btHealth(health) {}
-	virtual bool run(double elapsedSecs) override;
-};
-
-class CheckDeadTask : public Node
-{
-private:
-	int _btHealth;
-public:
-	CheckDeadTask(int health) : _btHealth(health) {}
-	virtual bool run(double elapsedSecs) override;
-};
-
-class CheckIfOverheatedTask : public Node
-{
-private:
-	int _btHeat;
-public:
-	CheckIfOverheatedTask(int heat) : _btHeat(heat) {}
-	virtual bool run(double elapsedSecs) override;
-};
-
-class PrePunchTask : public Node
-{
-private:
-	float &_btDist;
-	float _triggerRange;
-public:
-	PrePunchTask(float &dist, float _range) : _btDist(dist), _triggerRange(_range) {}
-	virtual bool run(double elapsedSecs) override;
-};
-
-class PunchTask : public Node
-{
-private:
-	Vector2* _targetPos;
-public:
-	PunchTask(Vector2 *tPos) : _targetPos(tPos) {}
-	virtual bool run(double elapsedSecs) override;
-};
-
-class PreRollTask : public Node
-{
-private:
-	float &_btDist;
-	float _triggerRange;
-public:
-	PreRollTask(float &dist, float _range) : _btDist(dist), _triggerRange(_range) {}
-	virtual bool run(double elapsedSecs) override;
-};
-
-class RollTask : public Node
-{
-private:
-	Vector2* _targetPos;
-public:
-	RollTask(Vector2 *tPos) : _targetPos(tPos) {}
-	virtual bool run(double elapsedSecs) override;	
-};
-
-class ShortHopTask : public Node
-{
-private:
-
-public:
-	ShortHopTask() {}
-	virtual bool run(double elapsedSecs) override;
-};
-
-class ShockWaveTask : public Node
-{
-private:
-	Vector2* _targetPos;
-public:
-	ShockWaveTask(Vector2 *tPos) : _targetPos(tPos) {}
-	virtual bool run(double elapsedSecs) override;
-};
-
-class IdleTask : public Node
-{
-private:
-	Vector2* _targetPos;
-public:
-	IdleTask(Vector2 *tPos) : _targetPos(tPos) {}
-	virtual bool run(double elapsedSecs) override;
-};
-
-class EjectTask : public Node
-{
-private:
-
-public:
-	EjectTask() {}
-	virtual bool run(double elapsedSecs) override;
-};
 
 class BossBehavTree
 {
 public:
-	BossBehavTree();
-
-	void ExecuteTree();
-	void UpdateVariables(Vector2* pPos, Vector2* bPos, int health, int heat, double elapsedSecs);
-	Vector2 GetTarget();
+    BossBehavTree() {}
+	BossBehavTree(std::shared_ptr<Node> root, double updatePeriod);
+    void Update(double detlaTime);
 private:
-	double _elapsedSecs;
-	double _idleDur;
-	double _rollDur;
-	float _pDist;
-	int _health;
-	int _heat;
-	float _meleeRange;
+    double _updatePeriod;
+    double _timeSinceUpdate;
 
-	Vector2 _targetPos;
-	Vector2 _playerPos;
-	Vector2 _bossPos;
-
-	CheckIfOverheatedTask* _tChkOverheat;
-	CheckHeatTask* _tChkHeat;
-	CheckAliveTask* _tChkAlive;
-	CheckDeadTask* _tChkDead;
-	PrePunchTask* _tPrePunch;
-	PunchTask* _tPunch;
-	PreRollTask* _tPreRoll;
-	RollTask* _tRoll;
-	ShortHopTask* _tShortHop;
-	ShockWaveTask* _tShockWave;
-	IdleTask* _tIdle;
-	EjectTask* _tEject;
-
-	Selector *_root;
-	Selector *_selAlive;
-	Sequence *_seqDead;
-	Sequence *_seq1Close;
-	Sequence *_seq1Far;
-	Sequence *_seqOverHeat;
+    std::shared_ptr<Node> _root;
+    std::shared_ptr<Node> _current;
 };

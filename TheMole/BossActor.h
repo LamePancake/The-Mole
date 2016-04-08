@@ -1,14 +1,19 @@
 #pragma once
+
 #include "Actor.h"
 #include "BossBehavTree.h"
-
-using namespace std;
 
 class BossActor : public Actor
 {
 public:
-	BossActor(Vector2 position, GameManager & manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites, const std::string&& startSprite,
-		SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP);
+	BossActor(Vector2 position, GameManager & manager,
+              Vector2 spd,
+              std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
+              const std::string&& startSprite,
+              std::shared_ptr<Actor> projectile,
+		      SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT,
+              SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP);
+
 	~BossActor();
 
 	// Updates position of the agent by adding _speed to it.
@@ -32,7 +37,7 @@ public:
 
 	void ResetDurations();
 
-	void SetSprite(string name);
+	void SetSprite(std::string name);
 
 	double _idleDur;
 	double _preRollDur;
@@ -45,7 +50,11 @@ public:
 private:
 	BossBehavTree _bossTree;
 	int _heat;
+    std::shared_ptr<Actor> _projPrototype;
+
 	Vector2 _playerPos;
 	Vector2 _bossPos;
+
+    void CreateBehaviourTree();
 };
  
