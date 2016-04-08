@@ -30,8 +30,8 @@ public:
 	///<param name="loseScreenPath"> Path to the file containing the losing screen image.</param>
 	///<param name="nextLevel">      String indicating the next screen/level to load when this one is finished.</param>
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	GameScreen(std::string levelPath, std::string backgroundPath, std::string scorePath, std::string nextLevel, SoundEffectBank & effectBank, bool drawHUD = true)
-		: _levelPath(levelPath), _backgroundPath(backgroundPath), _scorePath(scorePath), _nextLevel(nextLevel), _soundBank(effectBank), _paused(false), _deaths(0), _deathCounterUpdated(false), _deathTimer(0), _drawHUD(drawHUD){}
+	GameScreen(std::string levelPath, std::string backgroundPath, std::string scorePath, std::string nextLevel, SoundEffectBank & effectBank, bool isIntroScreen = false)
+		: _levelPath(levelPath), _backgroundPath(backgroundPath), _scorePath(scorePath), _nextLevel(nextLevel), _soundBank(effectBank), _paused(false), _deaths(0), _deathCounterUpdated(false), _deathTimer(0), isIntroScreen(isIntroScreen), _skipTimer(0){}
 
 	virtual int Load();
 	virtual int Update(double elapasedSecs) override;
@@ -57,7 +57,7 @@ public:
 
 	SoundEffectBank & GetSoundBank();
 
-	bool _drawHUD;
+	bool isIntroScreen;
 
 protected:
 	std::string _levelPath;
@@ -97,9 +97,11 @@ protected:
 	SDL2pp::Font* _font;
 	SDL2pp::Font* _headerFont;
 	SDL2pp::Font* _recordFont;
+	SDL2pp::Font* _promptFont;
 	
 	std::stringstream _stringFormatter;
 
+	double _skipTimer;
 	bool _deathCounterUpdated;
 	
 	int OnPauseUpdate();

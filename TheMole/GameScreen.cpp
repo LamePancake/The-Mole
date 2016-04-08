@@ -9,6 +9,7 @@ const static SDL_Color GAMEOVER = { 255, 20, 20, 255 };
 const static SDL_Color RECORD = { 255, 153, 51, 255 };
 
 #define GAMEOVER_DELAY 1.2
+#define SKIP_TIME 1.1
 
 std::shared_ptr<Level> GameScreen::GetLevel() const
 {
@@ -74,6 +75,7 @@ int GameScreen::Load()
 	_font = new SDL2pp::Font(".\\Assets\\Fonts\\Exo-Regular.otf", 50);
 	_headerFont = new SDL2pp::Font(".\\Assets\\Fonts\\BEBAS.ttf", 80);
 	_recordFont = new SDL2pp::Font(".\\Assets\\Fonts\\Exo-Regular.otf", 25);
+	_promptFont = new SDL2pp::Font(".\\Assets\\Fonts\\BEBAS.ttf", 20);
 
 	_background     = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), _backgroundPath);
 	_pancake        = std::make_shared<SDL2pp::Texture>(_mgr->GetRenderer(), ".\\Assets\\Textures\\Pancake.png");
@@ -196,6 +198,25 @@ int GameScreen::Update(double elapsedSecs)
 
 	_level->Update(elapsedSecs);
 
+	if (isIntroScreen)
+	{
+		if (_mgr->inputManager->ActionOccurred("SKIP", Input::Held))
+		{
+			_skipTimer += elapsedSecs;
+
+			if (_skipTimer >= SKIP_TIME)
+			{
+				_soundBank.PlaySound("accept");
+				_mgr->SetNextScreen(_nextLevel);
+				return SCREEN_FINISH;
+			}
+		}
+		else
+		{
+			_skipTimer = 0;
+		}
+	}
+	
 	return SCREEN_CONTINUE;
 }
 
@@ -209,12 +230,13 @@ void GameScreen::Draw()
 	float levelWidth  = _level->GetLevelSize().x * _level->GetTileWidth();
 	float levelHeight = _level->GetLevelSize().y * _level->GetTileHeight();
 
-	float xNew      = ((float)_camera->GetViewport().x / levelWidth) * _background->GetWidth();
-	float yNew      = ((float)_camera->GetViewport().y / levelHeight) * _background->GetHeight();
-	float newWidth  = ((float)_camera->GetViewport().GetW() / levelWidth) * _background->GetWidth();
-	float newHeight = ((float)_camera->GetViewport().GetH() / levelHeight) * _background->GetHeight();
+	//float xNew      = ((float)_camera->GetViewport().x / levelWidth) * _background->GetWidth();
+	//float yNew      = ((float)_camera->GetViewport().y / levelHeight) * _background->GetHeight();
+	//float newWidth  = ((float)_camera->GetViewport().GetW() / levelWidth) * _background->GetWidth();
+	//float newHeight = ((float)_camera->GetViewport().GetH() / levelHeight) * _background->GetHeight();
 
-	rend.Copy(*_background, SDL2pp::Rect(xNew, yNew, newWidth, newHeight), SDL2pp::NullOpt);
+	//rend.Copy(*_background, SDL2pp::Rect(xNew, yNew, newWidth, newHeight), SDL2pp::NullOpt);
+	rend.Copy(*_background, SDL2pp::NullOpt, SDL2pp::NullOpt);
 	_camera->CentreView(_player->GetPosition());
 
 	// Render Level
@@ -233,7 +255,14 @@ void GameScreen::Draw()
 		OnLevelCompleteDraw();
 	else if (_paused)
 		OnPauseDraw();
-	else if (_drawHUD)
+	else if (isIntroScreen)
+	{
+		// Draw skip prompt
+		SDL2pp::Texture holdToSkip(rend, _promptFont->RenderText_Solid("Hold TAB to Skip", SDL_Color{ 255, 255, 255, 255 }));
+		rend.Copy(holdToSkip, SDL2pp::NullOpt, SDL2pp::Rect(dim.GetX() * 0.97f - holdToSkip.GetWidth(), dim.GetY()  * 0.97f - holdToSkip.GetHeight(), holdToSkip.GetWidth(), holdToSkip.GetHeight()));
+		rend.FillRect(SDL2pp::Rect(dim.GetX() * 0.97f - holdToSkip.GetWidth(), dim.GetY()  * 0.97f, holdToSkip.GetWidth() * _skipTimer / SKIP_TIME, holdToSkip.GetHeight() * 0.3f));
+	}
+	else
 	{
 		// Render pancakes
 		for (int i = 0; i < _level->GetPancakes().size(); ++i)
@@ -263,6 +292,7 @@ void GameScreen::Unload()
 	_curMenuItem = 0;
 	_paused = false;
 	_deaths = 0;
+	_skipTimer = 0;
 	
 	for (int i = 0; i < NUM_MENU_ITEMS; ++i)
 	{
@@ -278,6 +308,7 @@ void GameScreen::Unload()
 	delete _font;
 	delete _headerFont;
 	delete _recordFont;
+	delete _promptFont;
 
 	delete _pausedText;
 	delete _levelCompleteText;
@@ -350,6 +381,7 @@ void GameScreen::OnPauseDraw()
 		rend.Copy(*_menuItems[i], SDL2pp::NullOpt, SDL2pp::Rect(size.GetX() * 0.05f, size.GetY() * (0.25f + ((float)i * 0.12f)) - (scaleFactor / 2), _menuItems[i]->GetWidth() + scaleFactor, _menuItems[i]->GetHeight() + scaleFactor));
 	}
 
+	rend.Copy(*_border, SDL2pp::Rect(0, 0, 1, 1), SDL2pp::Rect(0.0f, size.GetY() * 0.075f, size.GetX(), _pausedText->GetHeight()));
 	rend.Copy(*_pausedText, SDL2pp::NullOpt, SDL2pp::Rect(size.GetX() * 0.02f, size.GetY() * 0.07f, _pausedText->GetWidth(), _pausedText->GetHeight()));
 	rend.Copy(*_controls, SDL2pp::NullOpt, SDL2pp::Rect(size.GetX() * 0.60f, 0, size.GetX() * 0.40f, size.GetY() * 0.1f));
 }

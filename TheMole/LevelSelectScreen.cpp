@@ -214,6 +214,7 @@ void LevelSelectScreen::Draw()
 	else
 		rend.Copy(*_unknown, NullOpt, Rect(size.GetX() * 0.98f - _unknown->GetWidth(), size.GetY() * 0.92f, _unknown->GetWidth(), _unknown->GetHeight()));
 
+	rend.Copy(*_optionBorder, Rect(0, 0, 1, 1), Rect(0.0f, size.GetY() * 0.075f, size.GetX(), _levelSelect->GetHeight()));
 	rend.Copy(*_levelSelect, NullOpt, Rect(size.GetX() * 0.02f, size.GetY() * 0.07f, _levelSelect->GetWidth(), _levelSelect->GetHeight()));
 	_borin->Draw(SDL2pp::Point((int)_borinPosition.GetX(), (int)_borinPosition.GetY()));
 

@@ -137,6 +137,7 @@ void OptionsScreen::Draw()
 		rend.Copy(*_options[i], NullOpt, Rect(size.GetX() * 0.05f, size.GetY() * (0.25f + ((float)i * 0.12f)) - (scaleFactor / 2), _options[i]->GetWidth() + scaleFactor, _options[i]->GetHeight() + scaleFactor));
 	}
 
+	rend.Copy(*_border, Rect(0, 0, 1, 1), Rect(0.0f, size.GetY() * 0.075f, size.GetX(), _optionsText->GetHeight()));
 	rend.Copy(*_optionsText, NullOpt, Rect(size.GetX() * 0.02f, size.GetY() * 0.07f, _optionsText->GetWidth(), _optionsText->GetHeight()));
 	rend.Copy(*_controls, NullOpt, Rect(size.GetX() * 0.60f, 0, size.GetX() * 0.40f, size.GetY() * 0.1f));
 

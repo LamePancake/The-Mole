@@ -39,7 +39,7 @@ void PlayerActor::Draw(Camera& camera)
 	SDL2pp::Renderer& rend = _mgr->GetRenderer();
 	SDL2pp::Point dim = GameManager::GetInstance()->GetWindow().GetSize();
 
-	if (_gameScreen->_drawHUD && _gameScreen->GetLevel()->IsHatAvailable("SHIELD"))
+	if (!_gameScreen->isIntroScreen && _gameScreen->GetLevel()->IsHatAvailable("SHIELD"))
 	{
 		for (size_t i = 0; i < _shieldStr; i++) {
 			rend.FillRect(SDL2pp::Rect(dim.GetX() * (0.90f + (i * 0.02f))

@@ -34,6 +34,7 @@ int CutsceneScreen::Load()
 	_NPC->SetScale(0.8);
 
 	srand(time(NULL));
+	_skipTimer = 0;
 	return SCREEN_LOAD_SUCCESS;
 }
 
