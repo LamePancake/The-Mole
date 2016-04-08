@@ -56,6 +56,8 @@ void TurretActor::Update(double elapsedSecs)
 void TurretActor::Reset(Vector2 pos)
 {
 	Actor::Reset(pos);
+    SetActive(true);
+    SetVisibility(true);
 }
 
 bool TurretActor::CollisionCheck(Actor & otherAI)
