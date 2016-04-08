@@ -157,7 +157,7 @@ void AIActor::Update(double elapsedSecs)
                     {
                         // Yet another hack
                         // If we're actually a bomb AI, then we need to explode instead of simply dying
-                        if (GetType() == Type::bombenemy)
+                        if (GetType() == Type::bombenemy && !((BombAIActor*)this)->IsBlowingUp())
                         {
                             ((BombAIActor*)this)->BlowUp();
                         }

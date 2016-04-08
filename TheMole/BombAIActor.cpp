@@ -19,7 +19,7 @@ void BombAIActor::BlowUp()
     CancelMindControl();
 
     // Stop movement and adjust position to look centred on previous sprite
-    _curKinematic.velocity.SetX(0);
+    _curKinematic.velocity = Vector2(0, 0);
     _curKinematic.position.SetX(_curKinematic.position.GetX() - 
         (_sprites[_currentSpriteSheet]->GetFrameWidth() - _sprites[oldSheet]->GetFrameWidth()));
 }
@@ -39,6 +39,6 @@ void BombAIActor::Update(double deltaTime)
 void BombAIActor::Reset(Vector2 position)
 {
     AIActor::Reset(position);
-    _curKinematic.velocity.SetX(100.0f);
+    _curKinematic.velocity = Vector2(100.0f, 341.3f);
     _isBlowingUp = false;
 }
