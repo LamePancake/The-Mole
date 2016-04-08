@@ -114,7 +114,7 @@ int GameScreen::Update(double elapsedSecs)
 	_mgr->inputManager->UpdateKeyboardState();
 
 	// Check if the player pauses the game and handle the pause
-	if (_mgr->inputManager->ActionOccurred("QUIT", Input::Pressed))
+	if (_mgr->inputManager->ActionOccurred("QUIT", Input::Pressed) && !isIntroScreen)
 	{
 		if (!_player->IsDead() && !_player->AtGoal())
 			_paused = true;
