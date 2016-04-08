@@ -27,7 +27,7 @@ int MenuScreen::Load()
 	_controls   = new Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\mainMenuControls.png");
 	_devLogo    = new Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\logo.png");
 	
-	_logo = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\TitleLogo.png", 8, 1);
+	_logo = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\TitleLogo.png", 8, 2);
 	_logo->SetScale(2);
 
 	_curMenuItem = 0;
