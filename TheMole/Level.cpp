@@ -86,19 +86,6 @@ SDL2pp::Point Level::GetPosition(char key, size_t idx)
 	return _tilePositions[key][idx];
 }
 
-void Level::AddEnemySpawn(Vector2 e)
-{
-	_enemySpawns.push_back(e);
-}
-
-Vector2 Level::GetEnemySpawn(size_t idx)
-{
-	if (idx > _enemySpawns.size())
-		return Vector2(0, 0);
-
-	return _enemySpawns[idx];
-}
-
 std::shared_ptr<BossActor> Level::GetBoss()
 {
 	return _boss;
@@ -245,6 +232,15 @@ void Level::Update(double deltaTime)
 	// Clean up all destroyed actors
 	auto destroyedFinder = [](shared_ptr<Actor> a) {return a->IsDestroyed(); };
 	_actors.erase(std::remove_if(_actors.begin(), _actors.end(), destroyedFinder), _actors.end());
+
+    if (_hitCheckpoint)
+    {
+        // Clear out inactive actors since we're not letting people re-activate them
+        // Heh
+        auto inactiveFinder = [](shared_ptr<Actor> a) {return !a->IsActive(); };
+        _actors.erase(std::remove_if(_actors.begin(), _actors.end(), inactiveFinder), _actors.end());
+        _hitCheckpoint = false;
+    }
 }
 
 void Level::Reset()
@@ -259,7 +255,11 @@ void Level::Reset()
 			actor->Reset(GetSpawnPoint());
 			break;
 		case Actor::Type::enemy:
-			actor->Reset(_enemySpawns[enemyNum++]);
+        case Actor::Type::bombenemy:
+        {
+            auto enemy = dynamic_pointer_cast<AIActor>(actor);
+            enemy->Reset(enemy->GetSpawnPoint());
+        }
 			break;
 		default:
 			actor->Reset(actor->GetPosition());
@@ -280,6 +280,7 @@ void Level::SetSpawnPoint(Vector2 point, int id)
 	{
 		_currentSpawnPoint = point;
 		_checkPointID = id;
+        _hitCheckpoint = true;
 	}		
 }
 

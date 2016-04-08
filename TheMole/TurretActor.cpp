@@ -3,6 +3,7 @@
 
 #include "TurretActor.h"
 #include "GameScreen.h"
+#include "BombAIActor.h"
 #include <memory>
 
 TurretActor::TurretActor(
@@ -32,7 +33,23 @@ void TurretActor::Draw(Camera & camera)
 void TurretActor::Update(double elapsedSecs)
 {
 	Actor::Update(elapsedSecs);
-	_aabb.UpdatePosition(*this);
+    if (_isDestroyed || !_isActive) return;
+
+    for (auto & actor : _gameScreen->GetLevel()->GetActors())
+    {
+        if (actor->GetType() == Type::bombenemy)
+        {
+            auto bomber = dynamic_pointer_cast<BombAIActor>(actor);
+            if (CollisionCheck(*bomber) && bomber->IsUnderMindControl())
+            {
+                bomber->BlowUp();
+                SetActive(false);
+                SetVisibility(false);
+                return;
+            }
+        }
+    }
+
 	TurretUpdate(elapsedSecs);
 }
 
@@ -43,7 +60,7 @@ void TurretActor::Reset(Vector2 pos)
 
 bool TurretActor::CollisionCheck(Actor & otherAI)
 {
-	return false;
+    return _aabb.CheckCollision(otherAI.GetAABB());
 }
 
 void TurretActor::SetPattern(Vector2 prjDir)

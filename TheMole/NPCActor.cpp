@@ -12,6 +12,7 @@ void NPCActor::Draw(Camera & camera)
 
 void NPCActor::Update(double elapsedSecs)
 {
+    if (_isDestroyed || !_isActive) return;
 	Actor::Update(elapsedSecs);
 	_aabb.UpdatePosition(*this);
 }

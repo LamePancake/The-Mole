@@ -1,4 +1,5 @@
 #include "AIActor.h"
+#include "BombAIActor.h"
 #include "GameScreen.h"
 #include "DoorActor.h"
 #include <cmath>
@@ -69,9 +70,15 @@ SpriteSheet::XAxisDirection AIActor::GetMindControlDirection() const
 	return _controlDir;
 }
 
+Vector2 AIActor::GetSpawnPoint() const
+{
+    return _spawn;
+}
+
 void AIActor::Update(double elapsedSecs)
 {
 	Actor::Update(elapsedSecs);
+    if (_isDestroyed || !_isActive) return;
 
 	if (_underControl)
 	{
@@ -91,12 +98,10 @@ void AIActor::Update(double elapsedSecs)
 		}
 	}
 
-	// While the AI is alive, do stuff.
-	const Uint8* keys = SDL_GetKeyboardState(nullptr);
-
 	if (_health <= 0)
 	{
-		//std::cout << "Dead\n";
+		SetVisibility(false);
+        SetActive(false);
 	}
 	else
 	{
@@ -105,38 +110,65 @@ void AIActor::Update(double elapsedSecs)
 
 		for (auto actor : _gameScreen->GetLevel()->GetActors())
 		{
+            if (actor.get() == (Actor*)this || !actor->IsActive()) continue;
 			if (_aabb.CheckCollision(actor->GetAABB()))
 			{
 				Type type = actor->GetType();
 				switch (type)
 				{
 				case Type::door:
-					shared_ptr<DoorActor> door = dynamic_pointer_cast<DoorActor>(actor);
-					if (!door->IsOpen())
-					{
-						Edge edge = door->GetEdge();
-						bool affectsY = edge == Edge::BOTTOM || edge == Edge::TOP;
-						Vector2 overlap = _aabb.GetOverlap(actor->GetAABB(), true);
-						// Push our hero out of the door
-						if (affectsY)
-						{
-							_curKinematic.position.SetY(_curKinematic.position.GetY() + overlap.GetY());
-							_prevKinematic.position.SetY(_curKinematic.position.GetY());
-						}
-						else
-						{
-							_curKinematic.position.SetX(_curKinematic.position.GetX() + overlap.GetX());
-							_prevKinematic.position.SetX(_curKinematic.position.GetX());
-							if (!_underControl)
-							{
-								float reverseX = _curKinematic.velocity.GetX() * -1;
-								SpriteSheet::XAxisDirection reverseDir = _spriteXDir == SpriteSheet::XAxisDirection::LEFT ? SpriteSheet::XAxisDirection::RIGHT : SpriteSheet::XAxisDirection::LEFT;
-								_curKinematic.velocity.SetX(reverseX);
-								_spriteXDir = reverseDir;
-							}
-						}
-					}
+                {
+                    shared_ptr<DoorActor> door = dynamic_pointer_cast<DoorActor>(actor);
+                    if (!door->IsOpen())
+                    {
+                        Edge edge = door->GetEdge();
+                        bool affectsY = edge == Edge::BOTTOM || edge == Edge::TOP;
+                        Vector2 overlap = _aabb.GetOverlap(actor->GetAABB(), true);
+                        // Push our hero out of the door
+                        if (affectsY)
+                        {
+                            _curKinematic.position.SetY(_curKinematic.position.GetY() + overlap.GetY());
+                            _prevKinematic.position.SetY(_curKinematic.position.GetY());
+                        }
+                        else
+                        {
+                            _curKinematic.position.SetX(_curKinematic.position.GetX() + overlap.GetX());
+                            _prevKinematic.position.SetX(_curKinematic.position.GetX());
+                            if (!_underControl)
+                            {
+                                float reverseX = _curKinematic.velocity.GetX() * -1;
+                                SpriteSheet::XAxisDirection reverseDir = _spriteXDir == SpriteSheet::XAxisDirection::LEFT ? SpriteSheet::XAxisDirection::RIGHT : SpriteSheet::XAxisDirection::LEFT;
+                                _curKinematic.velocity.SetX(reverseX);
+                                _spriteXDir = reverseDir;
+                            }
+                        }
+                    }
+                }
 					break;
+                case Type::bombenemy:
+                {
+                    shared_ptr<BombAIActor> bomber = dynamic_pointer_cast<BombAIActor>(actor);
+                    if (!bomber->IsBlowingUp() && bomber->IsUnderMindControl())
+                    {
+                        bomber->BlowUp();
+                    }
+                    
+                    if (bomber->IsBlowingUp())
+                    {
+                        // Yet another hack
+                        // If we're actually a bomb AI, then we need to explode instead of simply dying
+                        if (GetType() == Type::bombenemy)
+                        {
+                            ((BombAIActor*)this)->BlowUp();
+                        }
+                        else
+                        {
+                            SetVisibility(false);
+                            SetActive(false);
+                        }
+                    }
+                }
+                    break;
 				}
 			}
 		}
@@ -241,6 +273,14 @@ void AIActor::Reset(Vector2 pos)
 	_collisionInfo.rowEdge = Edge::NONE;
 	_collisionInfo.rowIntersect.clear();
 	_collisionInfo.rowPenetration = 0;
+
+    SetVisibility(true);
+    SetActive(true);
+}
+
+void AIActor::CancelMindControl()
+{
+    _underControl = false;
 }
 
 void AIActor::GetPulseColour(const Uint8* startColour, const Uint8* endColour, Uint8* result)

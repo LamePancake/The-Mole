@@ -1,0 +1,44 @@
+#include "BombAIActor.h"
+
+bool BombAIActor::IsBlowingUp() const
+{
+    return _isBlowingUp;
+}
+
+void BombAIActor::BlowUp()
+{
+    std::string oldSheet = _currentSpriteSheet;
+
+    // Start blowing up
+    _sprites[_currentSpriteSheet]->Stop();
+    _currentSpriteSheet = "blow_up";
+    _sprites[_currentSpriteSheet]->Start();
+    _isBlowingUp = true;
+
+    // Cancel mind control
+    CancelMindControl();
+
+    // Stop movement and adjust position to look centred on previous sprite
+    _curKinematic.velocity.SetX(0);
+    _curKinematic.position.SetX(_curKinematic.position.GetX() - 
+        (_sprites[_currentSpriteSheet]->GetFrameWidth() - _sprites[oldSheet]->GetFrameWidth()));
+}
+
+void BombAIActor::Update(double deltaTime)
+{
+    // We do some pretty awful things here
+    AIActor::Update(deltaTime);
+    if (_isBlowingUp && _sprites[_currentSpriteSheet]->IsFinished())
+    {
+        SetVisibility(false);
+        SetActive(false);
+        _isBlowingUp = false;
+    }
+}
+
+void BombAIActor::Reset(Vector2 position)
+{
+    AIActor::Reset(position);
+    _curKinematic.velocity.SetX(100.0f);
+    _isBlowingUp = false;
+}

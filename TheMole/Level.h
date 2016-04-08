@@ -14,7 +14,7 @@ class Level
 public:
 
 	/** Default constructor. */
-	Level(): _currentSpawnPoint(0, 0), _checkPointID(-1), _availableHats() {}
+	Level(): _currentSpawnPoint(0, 0), _checkPointID(-1), _availableHats(), _hitCheckpoint(false) {}
 
 	/**
 	 * Adds a tile to the level.
@@ -106,22 +106,6 @@ public:
 	 * @return	The position.
 	 */
 	SDL2pp::Point GetPosition(char key, size_t idx);
-
-	/**
-	* Adds an enem spawn point to the enemy spawn array.
-	*
-	* @param	p the position of the spawn point
-	*/
-	void AddEnemySpawn(Vector2 p);
-
-	/**
-	* Gets an enemy spawn point.
-	*
-	* @param	idx	The index into the enemy array.
-	*
-	* @return	The enemy.
-	*/
-	Vector2 GetEnemySpawn(size_t idx);
 
 	/**
 	* Gets an boss.
@@ -280,6 +264,8 @@ private:
 	std::vector<bool> _collectedPancakes;
 
 	std::map<std::string, bool> _availableHats;
+
+    bool _hitCheckpoint;
 
 	/**
 	* Updates the dug tiles to see if they can be respaned.

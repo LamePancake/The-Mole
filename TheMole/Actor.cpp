@@ -5,7 +5,7 @@ using std::vector;
 using std::shared_ptr;
 
 Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
-			const std::string&& startSprite, SpriteSheet::XAxisDirection startXDirection, SpriteSheet::YAxisDirection startYDirection)
+			const std::string&& startSprite, SpriteSheet::XAxisDirection startXDirection, SpriteSheet::YAxisDirection startYDirection, bool active)
 	:_curKinematic{ position, spd },
 	_prevKinematic{ position, spd },
 	_collisionInfo(),
@@ -16,7 +16,8 @@ Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::unordere
 	_startXDir(startXDirection),
 	_startYDir(startYDirection),
 	_spriteXDir(startXDirection),
-	_spriteYDir(startYDirection)
+	_spriteYDir(startYDirection),
+    _isActive(active)
 {
 	SetHealth(100);
 	
@@ -117,6 +118,16 @@ bool Actor::IsDestroyed() const
 	return _isDestroyed;
 }
 
+bool Actor::IsActive() const
+{
+    return _isActive;
+}
+
+void Actor::SetActive(bool active)
+{
+    _isActive = active;
+}
+
 void Actor::Destroy()
 {
 	_isVisible = false;
@@ -166,6 +177,11 @@ void Actor::Reset(Vector2 pos)
 	SetActorXDirection(_startXDir);
 	SetActorYDirection(_startYDir);
 	_aabb.UpdatePosition(*this);
+
+    for (auto & sheetKey : _sprites)
+    {
+        sheetKey.second->Reset();
+    }
 }
 
 void Actor::DetectTileCollisions(TileCollisionInfo& colInfo, std::shared_ptr<Level>& level)

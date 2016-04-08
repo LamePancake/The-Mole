@@ -41,7 +41,7 @@ void PlayerActor::Draw(Camera& camera)
 
 	if (_gameScreen->_drawHUD && _gameScreen->GetLevel()->IsHatAvailable("SHIELD"))
 	{
-		for (size_t i = 0; i < _shieldStr; i++) {
+		for (int i = 0; i < _shieldStr; i++) {
 			rend.FillRect(SDL2pp::Rect(dim.GetX() * (0.90f + (i * 0.02f))
 				, dim.GetY()  * 0.97f
 				, 10.0f
@@ -61,7 +61,7 @@ void PlayerActor::Update(double elapsedSecs)
     bool wasDigging = _digDir != Edge::NONE;
 
 	UpdateInput(elapsedSecs);
-	if (_stoppedTime) return;
+	if (_isDestroyed || !_isActive || _stoppedTime) return;
 
 	Actor::Update(elapsedSecs);
 
@@ -95,12 +95,15 @@ void PlayerActor::Update(double elapsedSecs)
 
 	for (auto actor : _gameScreen->GetLevel()->GetActors())
 	{
+        if (!actor->IsActive() || actor.get() == (Actor*)this) continue;
+
 		if (CollisionCheck(*actor))
 		{
 			Type type = actor->GetType();
 			switch (type)
 			{
 			case Type::enemy:
+            case Type::bombenemy:
 				if (CollisionCheck(*actor))
 				{
 					SetHealth(0);
@@ -326,6 +329,7 @@ void PlayerActor::UpdateInput(double elapsedSecs)
         {
 		    // jump 7.5 tiles tall of 1 metre each, at 64 pixels per metre, multiplied by -1 because positive moves down in our world
 	    	_jumped = true;
+            _gameScreen->GetSoundBank().PlaySound("jump");
 		    SetJumpVelocity(7.5f * 1.0f * 64.0f * -1.0f);
 		}
 	}
@@ -442,16 +446,18 @@ void PlayerActor::UpdateMindControlSelection(bool released)
 	Vector2 centre{ _curKinematic.position.GetX() + _sprites[_currentSpriteSheet]->GetFrameWidth() / 2, _curKinematic.position.GetY() + _sprites[_currentSpriteSheet]->GetFrameHeight() / 2 };
 	for (auto actor : level->GetActors())
 	{
-		if (actor->GetType() != Type::enemy) continue;
-		// Check whether the enemy is in range, offsetting their position as necessary 
-		// to make sure that the distance is the same on all sides
-		shared_ptr<AIActor> enemy = dynamic_pointer_cast<AIActor>(actor);
-		Vector2 enemyPos = enemy->GetPosition();
-		AABB enemyAABB = enemy->GetAABB();
-		if (enemyPos.GetX() < _curKinematic.position.GetX()) enemyPos.SetX(enemyPos.GetX() + enemyAABB.GetWidth());
-		if (enemyPos.GetY() < _curKinematic.position.GetY()) enemyPos.SetY(enemyPos.GetY() + enemyAABB.GetHeight());
+        if (actor->GetType() == Type::enemy || actor->GetType() == Type::bombenemy)
+        {
+            // Check whether the enemy is in range, offsetting their position as necessary 
+            // to make sure that the distance is the same on all sides
+            shared_ptr<AIActor> enemy = dynamic_pointer_cast<AIActor>(actor);
+            Vector2 enemyPos = enemy->GetPosition();
+            AABB enemyAABB = enemy->GetAABB();
+            if (enemyPos.GetX() < _curKinematic.position.GetX()) enemyPos.SetX(enemyPos.GetX() + enemyAABB.GetWidth());
+            if (enemyPos.GetY() < _curKinematic.position.GetY()) enemyPos.SetY(enemyPos.GetY() + enemyAABB.GetHeight());
 
-		if (centre.Distance(enemyPos) <= _mindControlRadius) inRange.push_back(enemy);
+            if (centre.Distance(enemyPos) <= _mindControlRadius) inRange.push_back(enemy);
+        }
 	}
 
 	if (inRange.empty()) return;

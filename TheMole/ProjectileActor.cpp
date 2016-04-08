@@ -24,6 +24,8 @@ void ProjectileActor::Draw(Camera & camera)
 void ProjectileActor::Update(double elapsedSecs)
 {
 	Actor::Update(elapsedSecs);
+    if (_isDestroyed || !_isActive) return;
+
 	_aabb.UpdatePosition(*this);
 
 	_collisionInfo.colIntersect.clear();

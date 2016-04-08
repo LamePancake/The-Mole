@@ -40,7 +40,8 @@ void ObjectActor::Draw(Camera & camera)
 void ObjectActor::Update(double elapsedSecs)
 {
 	Actor::Update(elapsedSecs);
-	_aabb.UpdatePosition(*this);
+    if (_isDestroyed || !_isActive) return;
+    _aabb.UpdatePosition(*this);
 
 	switch (_id)
 	{
@@ -131,6 +132,7 @@ void ObjectActor::PancakeUpdate(double elapsedSecs)
 		_sprites[_currentSpriteSheet]->Stop();
 		SetVisibility(false);
 		_gameScreen->GetLevel()->CollectPancake(_numericIdentifier);
+        _gameScreen->GetSoundBank().PlaySound("eat");
 		_collided = true;
 	}
 }

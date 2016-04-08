@@ -4,6 +4,7 @@
 void DoorActor::Update(double deltaTime)
 {
     Actor::Update(deltaTime);
+    if (_isDestroyed || !_isActive) return;
 
 	std::shared_ptr<SpriteSheet> currentSheet = _sprites[_currentSpriteSheet];
 	bool switchOn = _switch->IsOn();

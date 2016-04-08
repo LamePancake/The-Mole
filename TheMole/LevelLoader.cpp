@@ -33,6 +33,7 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 	// So long as we don't have *too* many repeated textures, I'm sure that this list will be totally manageable :):):):):):):););)
 	// 10/10 would read again - Trey
 	std::shared_ptr<SDL2pp::Texture> baddieWalkSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(),".\\Assets\\Textures\\Baddie_walk_56x56.png");
+    std::shared_ptr<SDL2pp::Texture> bombSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), "./Assets/Textures/Shimmer.png");
 	std::shared_ptr<SDL2pp::Texture> projectileSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\red_dot.png");
 	std::shared_ptr<SDL2pp::Texture> mindControlIndicator = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\Controlled_indicator.png");
   	std::shared_ptr<SDL2pp::Texture> turretSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\Turret.png");
@@ -58,12 +59,24 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 				std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> enemySprites;
 				enemySprites["walk"] = std::make_shared<SpriteSheet>(baddieWalkSheet, 8, 1.f);
 
-				std::shared_ptr<AIActor> e = std::make_shared<AIActor>(tile->GetWorldPosition(), gameManager, Vector2(100.0f, 341.3f), enemySprites, "walk", mindControlIndicator);
+				std::shared_ptr<AIActor> e = std::make_shared<AIActor>(tile->GetWorldPosition(), gameManager, Vector2(100.0f, 341.3f), enemySprites, "walk",
+                    mindControlIndicator, tile->GetWorldPosition());
 				level->AddActor(e);
-				level->AddEnemySpawn(tile->GetWorldPosition());
 				tile->SetID(Tile::blank);
 			}
 			break;
+            case Tile::bombenemy:
+            {
+                std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> bombSprites;
+                bombSprites["walk"] = std::make_shared<SpriteSheet>(baddieWalkSheet, 8, 1.f);
+                bombSprites["blow_up"] = std::make_shared<SpriteSheet>(bombSheet, 46, 2.f, false);
+
+                std::shared_ptr<BombAIActor> e = std::make_shared<BombAIActor>(tile->GetWorldPosition(), gameManager, Vector2(100.0f, 341.3f), bombSprites, "walk",
+                    mindControlIndicator, tile->GetWorldPosition());
+                level->AddActor(e);
+                tile->SetID(Tile::blank);
+            }
+            break;
 			case Tile::origin:
 			{
 				std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;

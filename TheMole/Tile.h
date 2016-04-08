@@ -25,6 +25,7 @@ public:
 		metal       = 'M',
 		grass       = 'L',
 		enemy       = 'E',
+        bombenemy   = '*',
 		goal        = 'G',
 		collectible = 'C',
 		tunnel      = 'T',

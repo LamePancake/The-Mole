@@ -8,6 +8,7 @@
 #include "Tile.h"
 #include "Level.h"
 #include "AIActor.h"
+#include "BombAIActor.h"
 #include "Vector2.h"
 #include "Actor.h"
 #include "PlayerActor.h"

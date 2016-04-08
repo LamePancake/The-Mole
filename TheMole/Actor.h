@@ -55,6 +55,7 @@ public:
 		projectile,
 		turret,
 		toggle,
+        bombenemy,
 		enemy
 	};
 
@@ -70,7 +71,7 @@ public:
 	 * @param	startYDirection	The direction in the y axis which the actor will face at the start.
 	 */
 	Actor(Vector2 position, GameManager & manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites, const std::string&& startSprite,
-			SpriteSheet::XAxisDirection startXDirection, SpriteSheet::YAxisDirection startYDirection);
+			SpriteSheet::XAxisDirection startXDirection, SpriteSheet::YAxisDirection startYDirection, bool active = true);
 
 	/** Destructor. */
 	~Actor();
@@ -192,6 +193,21 @@ public:
 	*/
 	bool IsDestroyed() const;
 
+    /**
+     * @brief Query if this object is active (should be considered in updates).
+     *        Actors that are inactive when a checkpoint is hit are destroyed.
+     *
+     * @return Whether this object is active.
+     */
+    bool IsActive() const;
+
+    /**
+     * @brief Sets whether this object is active (should be considered in updates).
+     *
+     * @param active Whether this object should be active.
+     */
+    void SetActive(bool active);
+
 	/**
 	 * @brief	Destroy this object.
 	 */
@@ -215,11 +231,11 @@ public:
 	virtual void Draw(Camera& camera);
 
 	/**
-	* Resets the actor.
-	*
-	* @param [in,out]	Position to reset at.
-	*
-	*/
+	 * Resets the actor.
+	 *
+	 * @param [in,out]	Position to reset at.
+	 *
+	 */
 	virtual void Reset(Vector2 pos);
 
 protected:
@@ -303,6 +319,9 @@ protected:
 	bool _isVisible;
 
 	bool _isDestroyed;
+
+    /** @brief true if this Actor should be updated, checked against for collision, etc. */
+    bool _isActive;
 
 	/**
 	 * @brief	Determines the tiles with which this actor is colliding.

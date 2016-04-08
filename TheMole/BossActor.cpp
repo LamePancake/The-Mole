@@ -38,6 +38,8 @@ void BossActor::Draw(Camera & camera)
 void BossActor::Update(double elapsedSecs)
 {
 	Actor::Update(elapsedSecs);
+    if (_isDestroyed || !_isActive) return;
+
 	_playerPos = _gameScreen->GetPlayer()->GetPosition();
 	_bossPos = GetPosition();
 	_bossTree.UpdateVariables(&_playerPos, &_bossPos, _health, _heat, elapsedSecs);

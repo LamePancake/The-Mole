@@ -26,16 +26,17 @@ public:
 	* @param	startXDirection	The actor's default facing direction along the x axis.
 	* @param	startYDirection	The actor's default facing direction along the y axis.
 	*/
-	AIActor(Vector2 position
-		, GameManager & manager
-		, Vector2 spd
-		, std::unordered_map<std::string
-		, std::shared_ptr<SpriteSheet>>& sprites
-		, const std::string&& startSprite
-		, std::shared_ptr<SDL2pp::Texture> mindControlIndicator
-		,SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP)
+	AIActor(Vector2 position,
+		GameManager & manager,
+		Vector2 spd,
+		std::unordered_map<std::string,
+		std::shared_ptr<SpriteSheet>>& sprites,
+        const std::string&& startSprite,
+		std::shared_ptr<SDL2pp::Texture> mindControlIndicator,
+        Vector2 spawn,
+		SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP)
 		: Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection),
-		_underControl{ false }, _controlTimeLeft{ 0.0f }, _isSelected{ false }, _isCandidate{ false }, _ctrlIndicator{ mindControlIndicator } 
+		_underControl{ false }, _controlTimeLeft{ 0.0f }, _isSelected{ false }, _isCandidate{ false }, _ctrlIndicator{ mindControlIndicator }, _spawn(spawn)
 	{
 	}
 
@@ -101,6 +102,13 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	SpriteSheet::XAxisDirection GetMindControlDirection() const;
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///<summary> Queries the spawn point of this AI actor.</summary>
+    ///
+    ///<returns> The spawn point of this AI actor.</returns>
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    Vector2 GetSpawnPoint() const;
+
 	// All the state changing stuff happens in here.
 	virtual void Update(double elapsedSecs) override;
 
@@ -132,9 +140,13 @@ public:
 
 	void Reset(Vector2 position);
 
+    void CancelMindControl();
+
 private:
 	
 	void GetPulseColour(const Uint8* startColour, const Uint8* endColour, Uint8* result);
+
+    Vector2 _spawn; // Where this actor spawned
 
 	// Mind control properties
 	std::shared_ptr<SDL2pp::Texture> _ctrlIndicator; // A texture drawn to indicate whether this actor is under mind control

@@ -6,6 +6,7 @@ using std::shared_ptr;
 void ToggleActor::Update(double deltaTime)
 {
     Actor::Update(deltaTime);
+    if (_isDestroyed || !_isActive) return;
 
 	// No need to check for collisions if we're not a weight pad and already on
 	if (_isOn && !_isWeightPad) return;

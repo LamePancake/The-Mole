@@ -190,7 +190,7 @@ int GameScreen::Update(double elapsedSecs)
 	for (auto actor : _level->GetActors())
 	{
 		// A bit hacky, to be sure
-		if (actor->GetType() == Actor::Type::player) continue;
+		if (actor->GetType() == Actor::Type::player || !actor->IsActive()) continue;
 		actor->Update(elapsedSecs);
 	}
 

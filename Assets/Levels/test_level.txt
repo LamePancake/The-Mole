@@ -10,8 +10,8 @@ S                                                                               
 S                                                                               S
 S                                                                               S
 S                                                                               S
-S                                                                               S
-S                      O  WS   A                                                S
+S                          O                                                    S
+S                         WS   A   *    E  !                                    S
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 
 Toggles
@@ -19,3 +19,8 @@ Right active
 
 Doors
 Top toggle 0
+
+hats
+SHIELD 0
+CHICKEN 0
+MIND_CONTROL 1

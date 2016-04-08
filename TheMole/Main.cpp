@@ -33,6 +33,9 @@ int main(int argc, char** argv) {
 
 		unordered_map<string, string> soundEffects;
 		soundEffects["dig"] = "./Assets/Audio/digging.ogg";
+        soundEffects["jump"] = "./Assets/Audio/jump_11.wav";
+        soundEffects["eat"] = "./Assets/Audio/yum.ogg";
+        soundEffects["dig_miss_side"] = "./Assets/Audio/swish-11.wav";
         soundEffects["door_finish"] = "./Assets/Audio/door_finish.ogg";
         soundEffects["door_progress"] = "./Assets/Audio/door_progress.ogg";
         soundEffects["switch_on"] = "./Assets/Audio/switch_on.ogg";
