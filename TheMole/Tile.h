@@ -41,6 +41,7 @@ public:
 		help        = 'H',
 		introtrig   = 'I',
 		tunneltrig  = 'Q',
+        spawner     = '+',
 	};
 
 	/** Default constuctor. Initilizes everying to default values. */

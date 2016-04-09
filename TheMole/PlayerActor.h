@@ -107,6 +107,10 @@ public:
 	// Resets the player
 	virtual void Reset(Vector2 pos);
 
+    virtual Actor* Clone();
+
+    virtual bool IsCloneable() const { return false; }
+
 	virtual Type GetType() const override { return Type::player; }
 
 private:

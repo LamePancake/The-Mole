@@ -61,6 +61,11 @@ void TurretActor::Reset(Vector2 pos)
     SetVisibility(true);
 }
 
+TurretActor * TurretActor::Clone()
+{
+    return new TurretActor(*this);
+}
+
 bool TurretActor::CollisionCheck(Actor & otherAI)
 {
     return _aabb.CheckCollision(otherAI.GetAABB());

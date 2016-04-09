@@ -41,6 +41,10 @@ public:
 	// Resets the actor
 	virtual void Reset(Vector2 pos);
 
+    virtual NPCActor* Clone() override;
+
+    virtual bool IsCloneable() const { return true; }
+
 	virtual Type GetType() const override { return Type::npc; }
 
 private:

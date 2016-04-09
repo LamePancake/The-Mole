@@ -33,6 +33,9 @@ public:
 	// Resets the actor
 	virtual void Reset(Vector2 pos);
 
+    virtual BossActor* Clone();
+    virtual bool IsCloneable() const { return false; }
+
 	virtual Type GetType() const override { return Type::boss; }
 
 	void ResetDurations();

@@ -15,6 +15,7 @@
 #include "TurretActor.h"
 #include "ToggleActor.h"
 #include "DoorActor.h"
+#include "ActorSpawner.h"
 
 using std::shared_ptr;
 using std::vector;
@@ -73,7 +74,7 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 				std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> enemySprites;
 				enemySprites["walk"] = std::make_shared<SpriteSheet>(baddieWalkSheet, 8, 1.f);
 
-				std::shared_ptr<AIActor> e = std::make_shared<AIActor>(tile->GetWorldPosition(), gameManager, Vector2(100.0f, 341.3f), enemySprites, "walk",
+				std::shared_ptr<AIActor> e = std::make_shared<AIActor>(gameManager, tile->GetWorldPosition(), Vector2(100.0f, 341.3f), enemySprites, "walk",
                     mindControlIndicator, tile->GetWorldPosition());
 				level->AddActor(e);
 				tile->SetID(Tile::blank);
@@ -225,6 +226,11 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 				positions[Tile::help].push_back(SDL2pp::Point(tile->GetWorldPosition().GetX(), tile->GetWorldPosition().GetY()));
 				tile->SetID(Tile::blank);
 				break;
+
+            case Tile::spawner:
+                positions[Tile::spawner].push_back(SDL2pp::Point(tile->GetWorldPosition().GetX(), tile->GetWorldPosition().GetY()));
+                tile->SetID(Tile::blank);
+                break;
 			}
 
 			level->AddTileToLevel(tile, levelHeight);
@@ -289,6 +295,10 @@ void LevelLoader::LoadActorSpecifics(ifstream & file, string & lastLine, unorder
 		{
 			LoadNPCS(file, positions[Tile::npc], level);
 		}
+        else if (line == "spawners")
+        {
+            LoadActorSpawners(file, positions[Tile::spawner], level);
+        }
 	}
 }
 
@@ -526,4 +536,82 @@ void LevelLoader::LoadNPCS(ifstream & file, vector<SDL2pp::Point>& npcPos, share
 		level->AddActor(npc);
 		tokens.clear();
 	}
+}
+
+void LevelLoader::LoadActorSpawners(std::ifstream & file, std::vector<SDL2pp::Point>& spawnerPos, std::shared_ptr<Level> level)
+{
+    vector<shared_ptr<ActorSpawner>> spawners;
+    string line;
+    for (int i = 0; i < spawnerPos.size(); i++)
+    {
+        // Skip any blank lines at the start
+        do
+        {
+            getline(file, line);
+            line.erase(std::remove(line.end() - 1, line.end(), '\r'), line.end());
+        } while (line.size() == 0);
+
+        // Read in requested period for spawner
+        std::istringstream spawnPeriodStream(line);
+        double period;
+        spawnPeriodStream >> period;
+
+        // Read in whether spawner can spawn many actors simulataneously
+        getline(file, line);
+        line.erase(std::remove(line.end() - 1, line.end(), '\r'), line.end());
+        std::istringstream allowMultipleStream(line);
+        bool allowMultiple;
+        allowMultipleStream >> allowMultiple;
+
+        // Hacky way to check whether we're specifying the actor prototype or copying another
+        // This line will only ever have one character if we're 
+        getline(file, line);
+        line.erase(std::remove(line.end() - 1, line.end(), '\r'), line.end());
+        if (line.size() == 1)
+        {
+            char enumVal = line[0];
+            string serialised;
+            
+            // Get the serialised prototype
+            while (getline(file, line) && line.size() > 0 && line != "\r")
+                serialised.append(line).append("\n");
+
+            switch (enumVal)
+            {
+            case Tile::enemy:
+            {
+                shared_ptr<Actor> enemy = shared_ptr<AIActor>(new AIActor(serialised));
+                enemy->SetPosition(Vector2(spawnerPos[i].x, spawnerPos[i].y));
+                shared_ptr<ActorSpawner> spawner = shared_ptr<ActorSpawner>(new ActorSpawner(level, enemy, period, allowMultiple));
+                spawners.push_back(spawner);
+            }
+                break;
+            case Tile::bombenemy:
+            {
+                shared_ptr<Actor> enemy = shared_ptr<AIActor>(new BombAIActor(serialised));
+                enemy->SetPosition(Vector2(spawnerPos[i].x, spawnerPos[i].y));
+                shared_ptr<ActorSpawner> spawner = shared_ptr<ActorSpawner>(new ActorSpawner(level, enemy, period, allowMultiple));
+                spawners.push_back(spawner);
+            }
+                break;
+            }
+        }
+        else
+        {
+            // Determine which prototype to copy
+            vector<string> splitLine = split(line, ' ');
+            int toCopy;
+            std::istringstream toCopyReader(splitLine[1]);
+            toCopyReader >> toCopy;
+
+            // Copy the prototype and create the spawner
+            shared_ptr<Actor> prototype = shared_ptr<Actor>(spawners[toCopy]->GetPrototype()->Clone());
+            prototype->SetPosition(Vector2(Vector2(spawnerPos[i].x, spawnerPos[i].y)));
+            shared_ptr<ActorSpawner> spawner = shared_ptr<ActorSpawner>(new ActorSpawner(level, prototype, period, allowMultiple));
+            spawners.push_back(spawner);
+        }
+    }
+
+    for (auto & s : spawners)
+        level->AddSpawner(s);
 }

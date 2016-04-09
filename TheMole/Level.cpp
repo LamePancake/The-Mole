@@ -1,4 +1,5 @@
 #include "Level.h"
+#include "ActorSpawner.h"
 #include "GameScreen.h"
 #include "Actor.h"
 #include "AIActor.h"
@@ -16,6 +17,11 @@ int Level::AddTileToLevel(std::shared_ptr<Tile> tile, size_t row)
 
 	_level[row].push_back(std::move(tile));
 	return 1;
+}
+
+void Level::AddSpawner(std::shared_ptr<ActorSpawner> spawner)
+{
+    _spawners.push_back(spawner);
 }
 
 SDL2pp::Point Level::GetLevelSize() const
@@ -91,6 +97,8 @@ std::shared_ptr<BossActor> Level::GetBoss()
 	return _boss;
 }
 
+
+
 void Level::AddActor(std::shared_ptr<Actor> actor)
 {
 	// Hack, but if we don't do this then a huge chunk of Tim's code will have unwanted dependencies
@@ -111,6 +119,15 @@ void Level::AddActor(std::shared_ptr<Actor> actor)
 	{
 		_actorsToAdd.push_back(actor);
 	}
+}
+
+shared_ptr<Actor> Level::AddActorCopy(std::shared_ptr<Actor> prototype)
+{
+    // Should probably check whether the actor is actually cloneable
+    // ...Nahhh
+    shared_ptr<Actor> actorCopy = shared_ptr<Actor>(prototype->Clone());
+    AddActor(actorCopy);
+    return actorCopy;
 }
 
 std::vector<std::shared_ptr<Actor>>& Level::GetActors()
@@ -222,6 +239,8 @@ void Level::UpdateDugTiles(double deltaTime)
 void Level::Update(double deltaTime)
 {
 	UpdateDugTiles(deltaTime);
+    for (auto & spawner : _spawners)
+        spawner->Update(deltaTime);
 
 	// Add any actors added during the update
 	_actors.insert(_actors.end(), _actorsToAdd.begin(), _actorsToAdd.end());

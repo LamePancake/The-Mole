@@ -29,6 +29,7 @@ void BossActor::UpdatePosition(double elapsedSecs)
 	Actor::UpdatePosition(elapsedSecs);
     _curKinematic.position.SetX(_curKinematic.position.GetX() + elapsedSecs * _curKinematic.velocity.GetX());
     _curKinematic.position.SetY(_curKinematic.position.GetY() + elapsedSecs * _curKinematic.velocity.GetY());
+    _aabb.UpdatePosition(*this);
 }
 
 void BossActor::Draw(Camera & camera)
@@ -48,6 +49,11 @@ void BossActor::Update(double elapsedSecs)
 void BossActor::Reset(Vector2 pos)
 {
 	Actor::Reset(pos);
+}
+
+BossActor * BossActor::Clone()
+{
+    return nullptr;
 }
 
 void BossActor::ResetDurations()
@@ -76,8 +82,11 @@ void BossActor::CreateBehaviourTree()
 
     auto isPlayerClose = [this](double deltaTime)
     {
-        // TODO: Use player and boss AABB's for bounds calculations
-        float distToPlayer = _curKinematic.position.Distance(_gameScreen->GetPlayer()->GetPosition());
+        shared_ptr<PlayerActor> player = _gameScreen->GetPlayer();
+        Vector2 playerCentre = Vector2(player->GetAABB().GetX() + player->GetAABB().GetWidth() / 2, player->GetAABB().GetY() + player->GetAABB().GetHeight() / 2);
+        Vector2 bossCentre = Vector2(_aabb.GetX() + _aabb.GetWidth() / 2, _aabb.GetY() + _aabb.GetHeight() / 2);
+        float distToPlayer = playerCentre.Distance(bossCentre);
+
         return distToPlayer < 30 ? Node::Result::Success : Node::Result::Failure;
     };
 

@@ -11,16 +11,24 @@ S                                                                               
 S                                                                               S
 S                                                                               S
 S                          O                                                    S
-S                         WS   A   *    E  !                                    S
+S                          S       +   S                                        S
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
-
-Toggles
-Right active
-
-Doors
-Top toggle 0
 
 hats
 SHIELD 0
 CHICKEN 0
 MIND_CONTROL 1
+
+Spawners
+2.6
+1
+E
+0 0
+100 341.3
+walk ./Assets/Textures/Baddie_walk_56x56.png 8 1.0 1 RIGHT UP
+walk
+RIGHT
+UP
+1
+0 0
+./Assets/Textures/Controlled_indicator.png

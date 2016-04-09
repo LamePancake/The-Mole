@@ -7,6 +7,7 @@
 #include "Tile.h"
 
 class BossActor;
+class ActorSpawner;
 
 /** Stores data for a level. It may be overkill, so chief refactorer may refactor if he wants to. */
 class Level
@@ -25,6 +26,8 @@ public:
 	 * @return	An 0 if row is out of bounds, 1 otherwise.
 	 */
 	int AddTileToLevel(std::shared_ptr<Tile> tile, size_t row);
+
+    void AddSpawner(std::shared_ptr<ActorSpawner> spawner);
 
 	/**
 	* Gets level  array size.
@@ -122,6 +125,14 @@ public:
 	///<param name="actor"> The actor to add.</param>
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	void AddActor(std::shared_ptr<Actor> actor);
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    ///<summary> Creates a copy of the given actor and adds it to the level.</summary>
+    ///
+    ///<param name="actor"> The actor to copy and add.</param>
+    ///<returns> A pointer to the copied actor.</returns>
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    std::shared_ptr<Actor> AddActorCopy(std::shared_ptr<Actor> prototype);
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	///<summary> Gets the list of all actors.</summary>
@@ -233,6 +244,8 @@ private:
 
 	/** Stores the spawn point of the enemies */
 	std::vector<Vector2> _enemySpawns;
+
+    std::vector<std::shared_ptr<ActorSpawner>> _spawners;
 
 	/** Stores the list of every actor in the level. */
 	std::vector<std::shared_ptr<Actor>> _actors;

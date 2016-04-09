@@ -46,6 +46,11 @@ void ProjectileActor::Reset(Vector2 pos)
 	Actor::Reset(pos);
 }
 
+ProjectileActor * ProjectileActor::Clone()
+{
+    return new ProjectileActor(*this);
+}
+
 void ProjectileActor::UpdatePosition(double elapsedSecs) {
 	// Copy everything over so that we can use this in collision detection stuff later
 	_prevKinematic = _curKinematic;

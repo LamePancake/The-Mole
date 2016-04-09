@@ -2,6 +2,7 @@
 #include "GameScreen.h"
 
 using std::vector;
+using std::string;
 using std::shared_ptr;
 
 Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
@@ -17,7 +18,8 @@ Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::unordere
 	_startYDir(startYDirection),
 	_spriteXDir(startXDirection),
 	_spriteYDir(startYDirection),
-    _isActive(active)
+    _isActive(active),
+    _destroyOnReset(false)
 {
 	SetHealth(100);
 	
@@ -32,6 +34,87 @@ Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::unordere
 
     _collisionInfo.shouldCorrectX = false;
     _collisionInfo.shouldCorrectY = false;
+}
+
+Actor::Actor(std::string & serialised)
+    : _collisionInfo(),
+    _mgr(GameManager::GetInstance()),
+    _gameScreen(std::dynamic_pointer_cast<GameScreen>(_mgr->GetCurrentScreen())),
+    _isVisible(true),
+    _isDestroyed(false),
+    _destroyOnReset(false)
+{
+    SetHealth(100);
+
+    std::istringstream lineStream(serialised);
+    std::string line;
+    
+    // Get position
+    getline(lineStream, line);
+    float pos;
+    std::istringstream posReader(line);
+    posReader >> pos;
+    _curKinematic.position.SetX(pos);
+    posReader >> pos;
+    _curKinematic.position.SetY(pos);
+
+    // Get speed
+    getline(lineStream, line);
+    float speed;
+    std::istringstream speedReader(line);
+    speedReader >> speed;
+    _curKinematic.velocity.SetX(speed);
+    speedReader >> speed;
+    _curKinematic.velocity.SetY(speed);
+
+    // Get the list of sprites
+    vector<string> splitLine;
+    while(true)
+    {
+        getline(lineStream, line);
+        line.erase(std::remove(line.end() - 1, line.end(), '\r'), line.end());
+
+        splitLine = split(line, ' ');
+        if (splitLine.size() <= 1) break;
+
+        int numFrames;
+        double duration;
+        bool isRepeating;
+        SpriteSheet::XAxisDirection xDir;
+        SpriteSheet::YAxisDirection yDir;
+        std::istringstream spriteParamsStream(line);
+        spriteParamsStream.ignore(splitLine[0].size() + splitLine[1].size() + 1);
+
+        // Read in spritesheet parameters
+        spriteParamsStream >> numFrames;
+        spriteParamsStream >> duration;
+        spriteParamsStream >> isRepeating;
+        xDir = splitLine[5] == "LEFT" ? SpriteSheet::XAxisDirection::LEFT : SpriteSheet::XAxisDirection::RIGHT;
+        yDir = splitLine[6] == "UP" ? SpriteSheet::YAxisDirection::UP : SpriteSheet::YAxisDirection::DOWN;
+
+        // Add sprite
+        _sprites[splitLine[0]] = shared_ptr<SpriteSheet>(new SpriteSheet(std::move(splitLine[1]), numFrames, duration, isRepeating, xDir, yDir));
+        _spriteXDir = xDir;
+        _spriteYDir = yDir;
+    }
+
+    // splitLine[0] contains the name of the start sheet after the above loop
+    _currentSpriteSheet = splitLine[0];
+
+    // Get start x and y directions
+    getline(lineStream, line);
+    line.erase(std::remove(line.end() - 1, line.end(), '\r'), line.end());
+    _startXDir = line == "LEFT" ? SpriteSheet::XAxisDirection::LEFT : SpriteSheet::XAxisDirection::RIGHT;
+    getline(lineStream, line);
+    line.erase(std::remove(line.end() - 1, line.end(), '\r'), line.end());
+    _startYDir = line == "UP" ? SpriteSheet::YAxisDirection::UP : SpriteSheet::YAxisDirection::DOWN;
+    
+    // Determine whether we're active
+    getline(lineStream, line);
+    line.erase(std::remove(line.end() - 1, line.end(), '\r'), line.end());
+    _isActive = line == "1" ? true : false;
+
+    serialised.erase(0, lineStream.tellg());
 }
 
 Actor::~Actor()
@@ -134,6 +217,16 @@ void Actor::Destroy()
 	_isDestroyed = true;
 }
 
+bool Actor::DestroysOnReset() const
+{
+    return _destroyOnReset;
+}
+
+void Actor::SetDestroyOnReset(bool destroyOnReset)
+{
+    _destroyOnReset = destroyOnReset;
+}
+
 void Actor::Update(double elapsedSecs)
 {
 	if (_isDestroyed) return;
@@ -172,6 +265,12 @@ void Actor::Draw(Camera& camera)
 
 void Actor::Reset(Vector2 pos)
 {
+    if (_destroyOnReset)
+    {
+        Destroy();
+        return;
+    }
+
 	SetPosition(pos);
 	SetHealth(100);
 	SetActorXDirection(_startXDir);

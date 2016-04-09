@@ -22,3 +22,8 @@ void NPCActor::Reset(Vector2 pos)
 	Actor::Reset(pos);
 }
 
+NPCActor * NPCActor::Clone()
+{
+    return new NPCActor(*this);
+}
+

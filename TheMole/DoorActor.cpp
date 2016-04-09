@@ -82,6 +82,11 @@ void DoorActor::Reset(Vector2 pos)
 	_sprites[_currentSpriteSheet]->Reset();
 }
 
+DoorActor * DoorActor::Clone()
+{
+    return new DoorActor(*this);
+}
+
 bool DoorActor::IsOpening() const
 {
     return _curState == Opening;

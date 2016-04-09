@@ -56,6 +56,11 @@ void ToggleActor::Reset(Vector2 pos)
 	_sprites[_currentSpriteSheet]->Reset();
 }
 
+ToggleActor * ToggleActor::Clone()
+{
+    return new ToggleActor(*this);
+}
+
 bool ToggleActor::IsOn() const
 {
 	return _isOn;

@@ -39,6 +39,10 @@ public:
 	// Resets the actor
 	virtual void Reset(Vector2 pos);
 
+    virtual ProjectileActor* Clone() override;
+
+    virtual bool IsCloneable() const { return true; }
+
 	virtual Type GetType() const override { return Type::projectile; }
 
 	void UpdatePosition(double elapsedSecs);

@@ -18,6 +18,30 @@ const static double PULSE_MULTIPLIER = ((PULSE_END_TIME - PULSE_START_TIME) / MI
 
 using std::shared_ptr;
 
+AIActor::AIActor(std::string & serialised)
+    : Actor(serialised), _underControl{ false }, _controlTimeLeft{ 0.0f }, _isSelected{ false }, _isCandidate{ false }
+{
+    std::istringstream lineStream(serialised);
+    string line;
+    getline(lineStream, line);
+    line.erase(std::remove(line.end() - 1, line.end(), '\r'), line.end());
+
+    // Get spawn point
+    std::istringstream spawnPosStream(line);
+    double pos;
+    spawnPosStream >> pos;
+    _spawn.SetX(pos);
+    spawnPosStream >> pos;
+    _spawn.SetY(pos);
+
+    // Get mind control indicator texture
+    getline(lineStream, line);
+    line.erase(std::remove(line.end() - 1, line.end(), '\r'), line.end());
+    _ctrlIndicator = shared_ptr<SDL2pp::Texture>(new SDL2pp::Texture(_mgr->GetRenderer(), line));
+
+    serialised.erase(0, lineStream.tellg());
+}
+
 AIActor::~AIActor()
 {
 }
@@ -276,6 +300,11 @@ void AIActor::Reset(Vector2 pos)
 
     SetVisibility(true);
     SetActive(true);
+}
+
+AIActor * AIActor::Clone()
+{
+    return new AIActor(*this);
 }
 
 void AIActor::CancelMindControl()

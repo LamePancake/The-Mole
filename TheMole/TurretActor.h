@@ -33,6 +33,10 @@ public:
 	// Resets the actor
 	virtual void Reset(Vector2 pos);
 
+    virtual TurretActor* Clone() override;
+
+    virtual bool IsCloneable() const { return true; }
+
 	/**
 	* Collision check.
 	*

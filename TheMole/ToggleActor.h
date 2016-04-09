@@ -27,6 +27,10 @@ public:
 
 	virtual void Reset(Vector2 pos) override;
 
+    virtual ToggleActor* Clone() override;
+
+    virtual bool IsCloneable() const { return true; }
+
 	bool IsOn() const;
 
 	Edge GetEdge() const;

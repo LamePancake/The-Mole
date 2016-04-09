@@ -703,3 +703,8 @@ void PlayerActor::Reset(Vector2 pos)
 	_jumpVelocity = 0.0f;
 	_digDir = Edge::NONE;
 }
+
+Actor * PlayerActor::Clone()
+{
+    return nullptr;
+}
