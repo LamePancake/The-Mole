@@ -33,9 +33,7 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 	// So long as we don't have *too* many repeated textures, I'm sure that this list will be totally manageable :):):):):):):););)
 	// 10/10 would read again - Trey
 	std::shared_ptr<SDL2pp::Texture> baddieWalkSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(),".\\Assets\\Textures\\Baddie_walk_56x56.png");
-	std::shared_ptr<SDL2pp::Texture> projectileSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\red_dot.png");
 	std::shared_ptr<SDL2pp::Texture> mindControlIndicator = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\Controlled_indicator.png");
-  	std::shared_ptr<SDL2pp::Texture> turretSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\Turret.png");
 
     std::unordered_map<char, std::vector<SDL2pp::Point>> positions;
 
@@ -121,7 +119,7 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 					tile->SetID(Tile::blank);
 				}
 				break;
-			case Tile::projectile:
+			/*case Tile::projectile:
 				{
 					std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
 					double infinity = std::numeric_limits<double>::infinity();
@@ -137,23 +135,10 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 					level->AddActor(projectile);
 					tile->SetID(Tile::blank);
 				}
-				break;
+				break;*/
 			case Tile::turret:
 			{
-				std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
-				double infinity = std::numeric_limits<double>::infinity();
-				sprites["turret"] = std::make_shared<SpriteSheet>(turretSheet, 1, infinity);
-				sprites["shoot"] = std::make_shared<SpriteSheet>(projectileSheet, 1, infinity);
-
-				std::shared_ptr<TurretActor> turret = std::make_shared<TurretActor>(
-					tile->GetWorldPosition()
-					, gameManager
-					, Vector2(0, 0)
-					, sprites
-					, "turret"
-					, SpriteSheet::XAxisDirection::LEFT
-					, SpriteSheet::YAxisDirection::UP);
-				level->AddActor(turret);
+				positions[Tile::turret].push_back(SDL2pp::Point(tile->GetWorldPosition().GetX(), tile->GetWorldPosition().GetY()));
 				tile->SetID(Tile::blank);
 			}
 			break;
@@ -239,6 +224,10 @@ void LevelLoader::LoadActorSpecifics(ifstream & file, string & lastLine, unorder
 		else if (line == "npcs")
 		{
 			LoadNPCS(file, positions[Tile::npc], level);
+		}
+		else if (line == "turrets")
+		{
+			LoadTurrets(file, positions[Tile::turret], level);
 		}
 	}
 }
@@ -476,5 +465,33 @@ void LevelLoader::LoadNPCS(ifstream & file, vector<SDL2pp::Point>& npcPos, share
 		std::shared_ptr<NPCActor> npc = std::make_shared<NPCActor>(Vector2(npcPos[i].GetX(), npcPos[i].GetY()), *GameManager::GetInstance(), Vector2(0, 0), sprites, "idle", atoi(tokens[3].c_str()) ? SpriteSheet::XAxisDirection::LEFT : SpriteSheet::XAxisDirection::RIGHT);
 		level->AddActor(npc);
 		tokens.clear();
+	}
+}
+
+void LevelLoader::LoadTurrets(ifstream & file, vector<SDL2pp::Point>& turretPos, shared_ptr<Level> level)
+{
+	string line;
+
+	for (size_t i = 0; i < turretPos.size(); ++i)
+	{
+		std::getline(file, line);
+
+		std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
+		std::shared_ptr<SDL2pp::Texture> turretSheet = std::make_shared<SDL2pp::Texture>(GameManager::GetInstance()->GetRenderer(), ".\\Assets\\Textures\\Turret.png");
+		std::shared_ptr<SDL2pp::Texture> projectileSheet = std::make_shared<SDL2pp::Texture>(GameManager::GetInstance()->GetRenderer(), ".\\Assets\\Textures\\red_dot.png");
+		double infinity = std::numeric_limits<double>::infinity();
+		sprites["turret"] = std::make_shared<SpriteSheet>(turretSheet, 1, infinity);
+		sprites["shoot"] = std::make_shared<SpriteSheet>(projectileSheet, 1, infinity);
+
+		std::shared_ptr<TurretActor> turret = std::make_shared<TurretActor>(
+			Vector2(turretPos[i].GetX(), turretPos[i].GetY())
+			, *GameManager::GetInstance()
+			, Vector2(0, 0)
+			, sprites
+			, "turret"
+			, line == "0" ? SpriteSheet::XAxisDirection::LEFT : SpriteSheet::XAxisDirection::RIGHT
+			, SpriteSheet::YAxisDirection::UP);
+
+		level->AddActor(turret);
 	}
 }

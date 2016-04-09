@@ -1,6 +1,7 @@
 #include "GameScreen.h"
 #include "GameManager.h"
 #include "Vector2.h"
+#include "Util.h"
 
 const static SDL_Color NORMAL = { 255, 255, 255, 255 };
 const static SDL_Color SELECTED = { 255, 80, 80, 255 };
@@ -243,6 +244,8 @@ void GameScreen::Draw()
 	//_levelRenderer.RenderLevel(_level, *_camera);
 	_levelRenderer.RenderLevel(_levelQuadtree, *_camera, _level->GetTileWidth(), _level->GetTileHeight());
 
+	// Sort all actors by z index
+	Sort(_level->GetActors());
 	// Draw all actors
 	for (auto actor : _level->GetActors())
 	{

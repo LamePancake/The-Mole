@@ -58,6 +58,18 @@ public:
 		enemy
 	};
 
+	std::unordered_map<int, int> ZIndex {
+		{ Type::npc, 3 },
+		{ Type::player, 5 },
+		{ Type::boss, 4 },
+		{ Type::door, 1 },
+		{ Type::object, 0 },
+		{ Type::projectile, 1 },
+		{ Type::turret, 2 },
+		{ Type::toggle, 2 },
+		{ Type::enemy, 2 },
+	};
+
 	/**
 	 * Creates a new Actor, which has a position and the potential to be drawn in the game world.
 	 *
@@ -221,6 +233,8 @@ public:
 	*
 	*/
 	virtual void Reset(Vector2 pos);
+
+	int GetZIndex();
 
 protected:
 

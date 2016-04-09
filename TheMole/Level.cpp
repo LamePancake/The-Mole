@@ -115,15 +115,15 @@ void Level::AddActor(std::shared_ptr<Actor> actor)
 
 	_actorCounts[actor->GetType()]++;
 
-	if (actor->GetType() == Actor::Type::object 
-		&& dynamic_pointer_cast<ObjectActor>(actor)->GetID() == ObjectActor::tutorialSign)
-	{
-		_actorsToAdd.insert(_actorsToAdd.begin(), actor);
-	}
-	else
-	{
+	//if (actor->GetType() == Actor::Type::object 
+		//&& dynamic_pointer_cast<ObjectActor>(actor)->GetID() == ObjectActor::tutorialSign)
+	//{
+		//_actorsToAdd.insert(_actorsToAdd.begin(), actor);
+	//}
+	//else
+	//{
 		_actorsToAdd.push_back(actor);
-	}
+	//}
 }
 
 std::vector<std::shared_ptr<Actor>>& Level::GetActors()

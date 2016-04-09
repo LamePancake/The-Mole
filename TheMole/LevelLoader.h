@@ -74,4 +74,6 @@ private:
 	void LoadHats(ifstream & file, shared_ptr<Level> level);
 
 	void LoadNPCS(ifstream & file, vector<SDL2pp::Point>& npcPos, shared_ptr<Level> level);
+
+	void LoadTurrets(ifstream & file, vector<SDL2pp::Point>& turretPos, shared_ptr<Level> level);
 };
