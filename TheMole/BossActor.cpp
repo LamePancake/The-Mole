@@ -3,6 +3,8 @@
 #include "ProjectileActor.h"
 #include "BossActor.h"
 
+#define HEAT_RATE 20
+
 using std::shared_ptr;
 
 BossActor::BossActor(Vector2 position,
@@ -122,12 +124,17 @@ void BossActor::CreateBehaviourTree()
         return _sprites[_currentSpriteSheet]->IsFinished() ? Node::Result::Success : Node::Result::Running;
     };
 
+    auto shouldPreRoll = [this](double deltaTime)
+    {
+        return _currentSpriteSheet != "roll" && _currentSpriteSheet != "preroll" ? Node::Result::Success : Node::Result::Failure;
+    };
+
     auto roll = [this](double deltaTime)
     {
         float playerX = _gameScreen->GetPlayer()->GetPosition().GetX();
         float bossX = _curKinematic.position.GetX();
         _curKinematic.velocity.SetX(300.f * (playerX - bossX < 0 ? -1 : 1));
-        
+        _heat += HEAT_RATE * deltaTime;
         if (_currentSpriteSheet != "roll")
         {
             SetSprite("roll");
@@ -139,10 +146,16 @@ void BossActor::CreateBehaviourTree()
     {
         if (_currentSpriteSheet != "overheat")
         {
+            _curKinematic.velocity.SetX(0);
             SetSprite("overheat");
             return Node::Result::Running;
         }
-        return _sprites[_currentSpriteSheet]->IsFinished() ? Node::Result::Success : Node::Result::Running;
+        if (_sprites[_currentSpriteSheet]->IsFinished())
+        {
+            _heat = 0;
+            return Node::Result::Success;
+        }
+        return Node::Result::Running;
     };
 
     auto shortHop = [this](double deltaTime)
@@ -197,7 +210,6 @@ void BossActor::CreateBehaviourTree()
 
    shared_ptr<Selector> attackSelector = shared_ptr<Selector>(new Selector);
    shared_ptr<Sequence> closeAttackSequence = shared_ptr<Sequence>(new Sequence);
-   shared_ptr<Sequence> farAttackSequence = shared_ptr<Sequence>(new Sequence);
 
    // If the player is close, do the pre-punch animation, the punch animation, and then idle for a bit
    closeAttackSequence->AddChild(shared_ptr<Node>(new Task(true, std::function<Node::Result(double)>(isPlayerClose))));
@@ -207,23 +219,25 @@ void BossActor::CreateBehaviourTree()
 
    // Tf the player is far, do the pre-roll, then continue rolling until overheating or getting close enough to punch the player
    shared_ptr<Selector> rollActionSelector = shared_ptr<Selector>(new Selector);
+   shared_ptr<Sequence> preRollSequence = shared_ptr<Sequence>(new Sequence);
    shared_ptr<Sequence> rollSequence = shared_ptr<Sequence>(new Sequence);
    shared_ptr<Sequence> overheatSequence = shared_ptr<Sequence>(new Sequence);
+
+   preRollSequence->AddChild(shared_ptr<Node>(new Task(false, std::function<Node::Result(double)>(shouldPreRoll))));
+   preRollSequence->AddChild(shared_ptr<Node>(new Task(false, std::function<Node::Result(double)>(preRoll))));
 
    rollSequence->AddChild(shared_ptr<Node>(new Task(true, std::function<Node::Result(double)>(notOverheated))));
    rollSequence->AddChild(shared_ptr<Node>(new Task(true, std::function<Node::Result(double)>(roll))));
 
-   overheatSequence->AddChild(shared_ptr<Node>(new Task(true, std::function<Node::Result(double)>(overheat))));
-   overheatSequence->AddChild(shared_ptr<Node>(new Task(true, std::function<Node::Result(double)>(idle))));
+   overheatSequence->AddChild(shared_ptr<Node>(new Task(false, std::function<Node::Result(double)>(overheat))));
+   overheatSequence->AddChild(shared_ptr<Node>(new Task(false, std::function<Node::Result(double)>(idle))));
 
+   rollActionSelector->AddChild(preRollSequence);
    rollActionSelector->AddChild(rollSequence);
    rollActionSelector->AddChild(overheatSequence);
 
-   farAttackSequence->AddChild(shared_ptr<Node>(new Task(false, std::function<Node::Result(double)>(preRoll))));
-   farAttackSequence->AddChild(rollActionSelector);
-
    attackSelector->AddChild(closeAttackSequence);
-   attackSelector->AddChild(farAttackSequence);
+   attackSelector->AddChild(rollActionSelector);
 
    firstStageSeq->AddChild(attackSelector);
 
