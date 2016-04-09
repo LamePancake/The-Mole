@@ -69,74 +69,89 @@ void BossActor::SetSprite(string name)
 
 void BossActor::CreateBehaviourTree()
 {
-    // Simple state checks
-    auto checkHeatFunc = [this](double deltaTime) { return _heat < 100 ? Node::Result::Success : Node::Result::Failure; };
-    auto checkOverheatedFunc = [this](double deltaTime) { return _heat >= 100 ? Node::Result::Success : Node::Result::Failure; };
-    auto checkAliveFunc = [this](double deltaTime) { return _health > 0 ? Node::Result::Success : Node::Result::Failure; };
-    auto checkDeadFunc = [this](double deltaTime) { return _health <= 0 ? Node::Result::Success : Node::Result::Failure; };
+    auto checkStage1 = [this](double deltaTime) { return _health > 50 ? Node::Result::Success : Node::Result::Failure; };
+    auto checkStage2 = [this](double deltaTime) { return _health <= 50 && _health > 0 ? Node::Result::Success : Node::Result::Failure; };
 
-    // Prepare to punch the player; switch to a new sprite
-    auto prePunchFunc = [this](double deltaTime)
+    auto isPlayerClose = [this](double deltaTime)
     {
+        // TODO: Use player and boss AABB's for bounds calculations
         float distToPlayer = _curKinematic.position.Distance(_gameScreen->GetPlayer()->GetPosition());
-        if (distToPlayer < 10)
+        return distToPlayer < 30 ? Node::Result::Success : Node::Result::Failure;
+    };
+
+    auto notOverheated = [this](double deltaTime)
+    {
+        return _heat < 100 ? Node::Result::Success : Node::Result::Failure;
+    };
+
+    auto prePunch = [this](double deltaTime)
+    {
+        if (_currentSpriteSheet != "prepunch")
         {
-            SetSprite("prepunch");
+            _sprites[_currentSpriteSheet]->Stop();
+            _currentSpriteSheet = "prepunch";
+            _sprites[_currentSpriteSheet]->Start();
+            _curKinematic.velocity.SetX(0);
             return Node::Result::Running;
         }
-        return Node::Result::Success;
+
+        return _sprites[_currentSpriteSheet]->IsFinished() ? Node::Result::Success : Node::Result::Running;
     };
 
-    // 
-    auto punchFunc = [this](double deltaTime)
+    auto punch = [this](double deltaTime)
     {
-        if (_rollDur > 0)
+        if (_currentSpriteSheet != "punch")
         {
-            // TODO: Figure out what the actual target position is supposed to do
-            cout << "punch" << endl;
-            //*_targetPos = _gameScreen->GetPlayer()->GetPosition();
-            _rollDur -= deltaTime;
-            SetSprite("punch");
+            _sprites[_currentSpriteSheet]->Stop();
+            _currentSpriteSheet = "punch";
+            _sprites[_currentSpriteSheet]->Start();
             return Node::Result::Running;
         }
-        return Node::Result::Success;
-    };
 
-    auto preRollFunc = [this](double deltaTime)
-    {
-        float distToPlayer = _curKinematic.position.Distance(_gameScreen->GetPlayer()->GetPosition());
-        return distToPlayer > 10;
+        return _sprites[_currentSpriteSheet]->IsFinished() ? Node::Result::Success : Node::Result::Running;
     };
-
-    auto rollFunc = [this](double deltaTime)
+    
+    auto preRoll = [this](double deltaTime)
     {
-        if (_rollDur > 0)
+        if (_currentSpriteSheet != "preroll")
         {
-            cout << "roll" << endl;
-            float playerX = _gameScreen->GetPlayer()->GetPosition().GetX();
-            float bossX = _curKinematic.position.GetX();
-            _curKinematic.velocity.SetX(300.f * (playerX - bossX < 0 ? -1 : 1));
-            //*_targetPos = _gameScreen->GetPlayer()->GetPosition();
-            //cout << "bPos: " << targetPos->GetX() << endl;
-            //cout << "pPos: " << _gameScreen->GetPlayer()->GetPosition().GetX() << endl;
-            //_rollDur -= deltaTime;
+            _curKinematic.velocity.SetX(0);
+            SetSprite("preroll");
+            return Node::Result::Running;
+        }
+        return _sprites[_currentSpriteSheet]->IsFinished() ? Node::Result::Success : Node::Result::Running;
+    };
+
+    auto roll = [this](double deltaTime)
+    {
+        float playerX = _gameScreen->GetPlayer()->GetPosition().GetX();
+        float bossX = _curKinematic.position.GetX();
+        _curKinematic.velocity.SetX(300.f * (playerX - bossX < 0 ? -1 : 1));
+        
+        if (_currentSpriteSheet != "roll")
+        {
             SetSprite("roll");
-            return Node::Result::Running;
         }
-        else
-        {
-            ResetDurations();
-            return Node::Result::Success;
-        }
+        return Node::Result::Running;
     };
 
-    auto shortHopFunc = [this](double deltaTime)
+    auto overheat = [this](double deltaTime)
+    {
+        if (_currentSpriteSheet != "overheat")
+        {
+            SetSprite("overheat");
+            return Node::Result::Running;
+        }
+        return _sprites[_currentSpriteSheet]->IsFinished() ? Node::Result::Success : Node::Result::Running;
+    };
+
+    auto shortHop = [this](double deltaTime)
     {
         cout << "hop" << endl;
         return Node::Result::Running;
     };
 
-    auto shockWaveFunc = [this](double deltaTime)
+    auto shockWave = [this](double deltaTime)
     {
         if (_shockWaveDur > 0)
         {
@@ -150,7 +165,7 @@ void BossActor::CreateBehaviourTree()
         }
     };
 
-   auto idleFunc = [this](double deltaTime)
+   auto idle = [this](double deltaTime)
     {
         if (_idleDur > 0)
         {
@@ -166,12 +181,53 @@ void BossActor::CreateBehaviourTree()
         }
    };
 
-   auto ejectFunc = [this](double elapsedSecs)
+   auto eject = [this](double elapsedSecs)
    {
        cout << "eject" << endl;
        return Node::Result::Running;
    };
 
-   shared_ptr<Node> root = shared_ptr<Node>(new Task(true, std::function<Node::Result(double)>(rollFunc)));
-   _bossTree = BossBehavTree(root, 0.3f);
+   // TODO: Draw the entire behaviour tree (here or somewhere within the repo) and point to it
+   shared_ptr<Selector> root = shared_ptr<Selector>(new Selector);
+
+   // While health is > 50, we'll go into this sequence (the first "phase" of the battle where the Underwatch
+   // only uses rolling and punches)
+   shared_ptr<Sequence> firstStageSeq = shared_ptr<Sequence>(new Sequence);
+   firstStageSeq->AddChild(shared_ptr<Node>(new Task(true, std::function<Node::Result(double)>(checkStage1))));
+
+   shared_ptr<Selector> attackSelector = shared_ptr<Selector>(new Selector);
+   shared_ptr<Sequence> closeAttackSequence = shared_ptr<Sequence>(new Sequence);
+   shared_ptr<Sequence> farAttackSequence = shared_ptr<Sequence>(new Sequence);
+
+   // If the player is close, do the pre-punch animation, the punch animation, and then idle for a bit
+   closeAttackSequence->AddChild(shared_ptr<Node>(new Task(true, std::function<Node::Result(double)>(isPlayerClose))));
+   closeAttackSequence->AddChild(shared_ptr<Node>(new Task(false, std::function<Node::Result(double)>(prePunch))));
+   closeAttackSequence->AddChild(shared_ptr<Node>(new Task(false, std::function<Node::Result(double)>(punch))));
+   closeAttackSequence->AddChild(shared_ptr<Node>(new Task(false, std::function<Node::Result(double)>(idle))));
+
+   // Tf the player is far, do the pre-roll, then continue rolling until overheating or getting close enough to punch the player
+   shared_ptr<Selector> rollActionSelector = shared_ptr<Selector>(new Selector);
+   shared_ptr<Sequence> rollSequence = shared_ptr<Sequence>(new Sequence);
+   shared_ptr<Sequence> overheatSequence = shared_ptr<Sequence>(new Sequence);
+
+   rollSequence->AddChild(shared_ptr<Node>(new Task(true, std::function<Node::Result(double)>(notOverheated))));
+   rollSequence->AddChild(shared_ptr<Node>(new Task(true, std::function<Node::Result(double)>(roll))));
+
+   overheatSequence->AddChild(shared_ptr<Node>(new Task(true, std::function<Node::Result(double)>(overheat))));
+   overheatSequence->AddChild(shared_ptr<Node>(new Task(true, std::function<Node::Result(double)>(idle))));
+
+   rollActionSelector->AddChild(rollSequence);
+   rollActionSelector->AddChild(overheatSequence);
+
+   farAttackSequence->AddChild(shared_ptr<Node>(new Task(false, std::function<Node::Result(double)>(preRoll))));
+   farAttackSequence->AddChild(rollActionSelector);
+
+   attackSelector->AddChild(closeAttackSequence);
+   attackSelector->AddChild(farAttackSequence);
+
+   firstStageSeq->AddChild(attackSelector);
+
+   root->AddChild(firstStageSeq);
+
+   _bossTree = BossBehavTree(root, 0.1f);
 }

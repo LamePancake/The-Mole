@@ -24,7 +24,7 @@ public:
 	virtual Result Run(double elapsedSecs) = 0;
     virtual bool IsInterruptible() const { return _interruptible; };
 
-    std::shared_ptr<Node> Node::GetRunningChild();
+    virtual std::shared_ptr<Node> Node::GetRunningChild();
 
 	std::shared_ptr<GameScreen> _gameScreen;
 
@@ -40,7 +40,7 @@ class CompositeNode : public Node
 private:
     std::vector<std::shared_ptr<Node>> children;
 public:
-    CompositeNode() : Node(true) {}
+    CompositeNode(bool interruptible = true) : Node(interruptible) {}
 
 	const std::vector<std::shared_ptr<Node>>& GetChildren() const;
 	void AddChild(std::shared_ptr<Node> child);
@@ -49,12 +49,16 @@ public:
 class Selector : public CompositeNode
 {
 public:
+    Selector(bool interruptible = true) :
+        CompositeNode{ interruptible } {};
 	virtual Result Run(double elapsedSecs) override;
 };
 
 class Sequence : public CompositeNode
 {
 public:
+    Sequence(bool interruptible = true) :
+        CompositeNode{ interruptible } {};
 	virtual Result Run(double elapsedSecs) override;
 };
 

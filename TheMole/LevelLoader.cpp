@@ -46,11 +46,11 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 	// Welcome to not wanting to properly make a texture cache
 	// So long as we don't have *too* many repeated textures, I'm sure that this list will be totally manageable :):):):):):):););)
 	// 10/10 would read again - Trey
-	std::shared_ptr<SDL2pp::Texture> baddieWalkSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(),".\\Assets\\Textures\\Baddie_walk_56x56.png");
+	std::shared_ptr<SDL2pp::Texture> baddieWalkSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(),"./Assets/Textures/Baddie_walk_56x56.png");
     std::shared_ptr<SDL2pp::Texture> bombSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), "./Assets/Textures/Shimmer.png");
-	std::shared_ptr<SDL2pp::Texture> projectileSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\red_dot.png");
-	std::shared_ptr<SDL2pp::Texture> mindControlIndicator = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\Controlled_indicator.png");
-  	std::shared_ptr<SDL2pp::Texture> turretSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\Turret.png");
+	std::shared_ptr<SDL2pp::Texture> projectileSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), "./Assets/Textures/red_dot.png");
+	std::shared_ptr<SDL2pp::Texture> mindControlIndicator = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), "./Assets/Textures/Controlled_indicator.png");
+  	std::shared_ptr<SDL2pp::Texture> turretSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), "./Assets/Textures/Turret.png");
 
     std::unordered_map<char, std::vector<SDL2pp::Point>> positions;
 
@@ -97,17 +97,17 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 				sprites.reserve(4);
 				if (den)
 				{
-					sprites["sideDig"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_den_sidedig_56x56.png", 4, 0.30);
-					sprites["verticalDig"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_downdig_56x56.png", 4, 0.30, true, SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection::DOWN);
-					sprites["walk"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_den_walk_56x56.png", 8, 1);
-					sprites["idle"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_den_idle_56x56.png", 4, 0.8);
+					sprites["sideDig"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_den_sidedig_56x56.png", 4, 0.30);
+					sprites["verticalDig"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_downdig_56x56.png", 4, 0.30, true, SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection::DOWN);
+					sprites["walk"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_den_walk_56x56.png", 8, 1);
+					sprites["idle"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_den_idle_56x56.png", 4, 0.8);
 				}
 				else
 				{
-					sprites["sideDig"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_sidedig_56x56.png", 4, 0.30);
-					sprites["verticalDig"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_downdig_56x56.png", 4, 0.30, true, SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection::DOWN);
-					sprites["walk"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_walk_56x56.png", 8, 1);
-					sprites["idle"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_idle_56x56.png", 4, 0.8);
+					sprites["sideDig"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_sidedig_56x56.png", 4, 0.30);
+					sprites["verticalDig"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_downdig_56x56.png", 4, 0.30, true, SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection::DOWN);
+					sprites["walk"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_walk_56x56.png", 8, 1);
+					sprites["idle"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_idle_56x56.png", 4, 0.8);
 				}
 				
 				player = std::make_shared<PlayerActor>(tile->GetWorldPosition(), gameManager, Vector2(.0f, 341.3f), sprites, "idle");
@@ -136,12 +136,15 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 				break;
 			case Tile::boss:
 				{
+                    // Boss sprites
 					std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
-					sprites.reserve(4);
-					sprites["idle"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Watch_idle_small.png", 1, 0.50, true, SpriteSheet::XAxisDirection::LEFT);
-					sprites["roll"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Watch_roll_small.png", 1, 0.50, true, SpriteSheet::XAxisDirection::LEFT);
-					sprites["prepunch"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Watch_prepunch_small.png", 1, 0.50, true, SpriteSheet::XAxisDirection::LEFT);
-					sprites["punch"] = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Watch_punch_small.png", 1, 0.50, true, SpriteSheet::XAxisDirection::LEFT);
+					sprites.reserve(6);
+					sprites["idle"] = std::make_shared<SpriteSheet>("./Assets/Textures/Watch_idle_small.png", 4, 0.50, true, SpriteSheet::XAxisDirection::LEFT);
+                    sprites["preroll"] = std::make_shared<SpriteSheet>("./Assets/Textures/CrappyPreroll.png", 5, 0.75, false, SpriteSheet::XAxisDirection::LEFT);
+                    sprites["roll"] = std::make_shared<SpriteSheet>("./Assets/Textures/Watch_roll_small.png", 1, 0.50, true, SpriteSheet::XAxisDirection::LEFT);
+                    sprites["overheat"] = std::make_shared<SpriteSheet>("./Assets/Textures/CrappyOverheat.png", 12, 1, false, SpriteSheet::XAxisDirection::LEFT);
+					sprites["prepunch"] = std::make_shared<SpriteSheet>("./Assets/Textures/Watch_prepunch_small.png", 1, 0.50, false, SpriteSheet::XAxisDirection::LEFT);
+					sprites["punch"] = std::make_shared<SpriteSheet>("./Assets/Textures/Watch_punch_small.png", 1, 0.50, false, SpriteSheet::XAxisDirection::LEFT);
 
                     // Create a prototype projectile actor for the boss to clone later
                     std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> projSprites;
@@ -297,12 +300,12 @@ void LevelLoader::LoadTogglesAndDoors(ifstream & file, vector<SDL2pp::Point> & t
 	GameManager* manager = GameManager::GetInstance();
 	SDL2pp::Renderer &rend = manager->GetRenderer();
 
-	shared_ptr<SDL2pp::Texture> door = std::make_shared<SDL2pp::Texture>(rend, ".\\Assets\\Textures\\Door.png");
-	shared_ptr<SDL2pp::Texture> doorHoriz = std::make_shared<SDL2pp::Texture>(rend, ".\\Assets\\Textures\\Door_horiz.png");
-	shared_ptr<SDL2pp::Texture> activeToggle = std::make_shared<SDL2pp::Texture>(rend, ".\\Assets\\Textures\\Active_toggle.png");
-	shared_ptr<SDL2pp::Texture> activeToggleVertical = std::make_shared<SDL2pp::Texture>(rend, ".\\Assets\\Textures\\Active_toggle_vertical.png");
-	shared_ptr<SDL2pp::Texture> oneShotToggle = std::make_shared<SDL2pp::Texture>(rend, ".\\Assets\\Textures\\Oneshot_toggle.png");
-	shared_ptr<SDL2pp::Texture> oneShotToggleVertical = std::make_shared<SDL2pp::Texture>(rend, ".\\Assets\\Textures\\Oneshot_toggle_vertical.png");
+	shared_ptr<SDL2pp::Texture> door = std::make_shared<SDL2pp::Texture>(rend, "./Assets/Textures/Door.png");
+	shared_ptr<SDL2pp::Texture> doorHoriz = std::make_shared<SDL2pp::Texture>(rend, "./Assets/Textures/Door_horiz.png");
+	shared_ptr<SDL2pp::Texture> activeToggle = std::make_shared<SDL2pp::Texture>(rend, "./Assets/Textures/Active_toggle.png");
+	shared_ptr<SDL2pp::Texture> activeToggleVertical = std::make_shared<SDL2pp::Texture>(rend, "./Assets/Textures/Active_toggle_vertical.png");
+	shared_ptr<SDL2pp::Texture> oneShotToggle = std::make_shared<SDL2pp::Texture>(rend, "./Assets/Textures/Oneshot_toggle.png");
+	shared_ptr<SDL2pp::Texture> oneShotToggleVertical = std::make_shared<SDL2pp::Texture>(rend, "./Assets/Textures/Oneshot_toggle_vertical.png");
 
 
     vector<shared_ptr<ToggleActor>> toggles;
@@ -419,7 +422,7 @@ void LevelLoader::LoadTogglesAndDoors(ifstream & file, vector<SDL2pp::Point> & t
 void LevelLoader::LoadDialog(ifstream & file, vector<SDL2pp::Point> & dialogPos, shared_ptr<Level> level)
 {
 	string line;
-	std::shared_ptr<SDL2pp::Texture> blankSheet = std::make_shared<SDL2pp::Texture>(GameManager::GetInstance()->GetRenderer(), ".\\Assets\\Textures\\Pancake.png");
+	std::shared_ptr<SDL2pp::Texture> blankSheet = std::make_shared<SDL2pp::Texture>(GameManager::GetInstance()->GetRenderer(), "./Assets/Textures/Pancake.png");
 
 	for (size_t i = 0; i < dialogPos.size(); ++i)
 	{
@@ -438,7 +441,7 @@ void LevelLoader::LoadDialog(ifstream & file, vector<SDL2pp::Point> & dialogPos,
 void LevelLoader::LoadCheckPoints(ifstream & file, vector<SDL2pp::Point>& checkPointPos, shared_ptr<Level> level)
 {
 	string line;
-	std::shared_ptr<SDL2pp::Texture> flagSheet = std::make_shared<SDL2pp::Texture>(GameManager::GetInstance()->GetRenderer(), ".\\Assets\\Textures\\Flag_raise.png");
+	std::shared_ptr<SDL2pp::Texture> flagSheet = std::make_shared<SDL2pp::Texture>(GameManager::GetInstance()->GetRenderer(), "./Assets/Textures/Flag_raise.png");
 
 	for (size_t i = 0; i < checkPointPos.size(); ++i)
 	{
@@ -457,7 +460,7 @@ void LevelLoader::LoadCheckPoints(ifstream & file, vector<SDL2pp::Point>& checkP
 void LevelLoader::LoadPancakes(ifstream & file, vector<SDL2pp::Point>& pancakePos, shared_ptr<Level> level)
 {
 	string line;
-	std::shared_ptr<SDL2pp::Texture> pancakeSheet = std::make_shared<SDL2pp::Texture>(GameManager::GetInstance()->GetRenderer(), ".\\Assets\\Textures\\PancakeSheet.png");
+	std::shared_ptr<SDL2pp::Texture> pancakeSheet = std::make_shared<SDL2pp::Texture>(GameManager::GetInstance()->GetRenderer(), "./Assets/Textures/PancakeSheet.png");
 
 	for (size_t i = 0; i < pancakePos.size(); ++i)
 	{
