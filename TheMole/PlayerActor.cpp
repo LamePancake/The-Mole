@@ -571,7 +571,7 @@ void PlayerActor::DigDiggableTiles()
                               : std::min(playerRect.x + playerRect.w, tileRect.x + tileRect.w) - std::max(playerRect.x, tileRect.x);
         float alignment = isX ? intersect / tile->GetHeight() : intersect / tile->GetWidth();
 
-        if (tile->GetID() == Tile::dirt && alignment > 0.3f)
+        if (tile->GetID() == Tile::dirt && (_digDir == Edge::TOP || _digDir == Edge::BOTTOM || alignment > 0.3f))
         {
             dug = true;
 			level->AddDugTile(tile);

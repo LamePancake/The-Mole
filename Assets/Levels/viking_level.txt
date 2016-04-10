@@ -54,8 +54,8 @@ npcs
 .\\Assets\\Textures\\Toad_idle.png 6 0.50 1
 
 turrets
-0
-0
+1
+1
 0
 0
 0

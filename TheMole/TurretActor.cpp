@@ -84,12 +84,19 @@ void TurretActor::SetPattern(std::vector<Vector2> prjDirSet)
 void TurretActor::TurretUpdate(double elapseSecs)
 {
 	_timeInterval += elapseSecs;
+
+	Vector2 projectilePosition = Vector2();
+	if (this->_startXDir == SpriteSheet::XAxisDirection::LEFT)
+		projectilePosition = Vector2(_curKinematic.position.GetX() - (_sprites["shoot"]->GetFrameWidth()), _curKinematic.position.GetY() + (_sprites[_currentSpriteSheet]->GetFrameHeight() / 2.0f) - (_sprites["shoot"]->GetFrameHeight() / 2.0f));
+	else
+		projectilePosition = Vector2(_curKinematic.position.GetX() + _sprites[_currentSpriteSheet]->GetFrameWidth() + (_sprites["shoot"]->GetFrameWidth()), _curKinematic.position.GetY() + (_sprites[_currentSpriteSheet]->GetFrameHeight() / 2.0f) - (_sprites["shoot"]->GetFrameHeight() / 2.0f));
+
 	if (_timeInterval > 5)
 	{
 		if (_pattern.size() == 0)
 		{
 			_gameScreen->GetLevel()->AddActor(std::make_shared<ProjectileActor>(
-				_curKinematic.position //- Vector2(0, -50) ///Vec2 position
+				projectilePosition //- Vector2(0, -50) ///Vec2 position
 				, *_mgr ///Gamemanager
 				, this->_startXDir == SpriteSheet::XAxisDirection::LEFT ? Vector2(-200.0f, 0.0f) : Vector2(200.0f, 0.0f) ///Vec2 spd
 				, _sprites ///sprites
@@ -102,7 +109,7 @@ void TurretActor::TurretUpdate(double elapseSecs)
 			for (size_t i = 0; i < _pattern.size(); i++)
 			{
 				_gameScreen->GetLevel()->AddActor(std::make_shared<ProjectileActor>(
-					_curKinematic.position //- Vector2(0, -50) ///Vec2 position
+					projectilePosition //- Vector2(0, -50) ///Vec2 position
 					, *_mgr ///Gamemanager
 					, this->_startXDir == SpriteSheet::XAxisDirection::LEFT ? _pattern[i] : Vector2(_pattern[i].GetX() * -1, _pattern[i].GetY())  ///Vec2 spd
 					, _sprites ///sprites
@@ -113,7 +120,7 @@ void TurretActor::TurretUpdate(double elapseSecs)
 		}
 		if (_timeInterval > 3) {
 			_gameScreen->GetLevel()->AddActor(std::make_shared<ProjectileActor>(
-				_curKinematic.position //- Vector2(0, -50) ///Vec2 position
+				projectilePosition //- Vector2(0, -50) ///Vec2 position
 				, *_mgr ///Gamemanager
 				, this->_startXDir == SpriteSheet::XAxisDirection::LEFT ? Vector2(-200.0f, 0.0f) : Vector2(200.0f, 0.0f)///Vec2 spd
 				, _sprites ///sprites

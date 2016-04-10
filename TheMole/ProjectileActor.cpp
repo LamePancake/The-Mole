@@ -24,17 +24,18 @@ void ProjectileActor::Draw(Camera & camera)
 void ProjectileActor::Update(double elapsedSecs)
 {
 	Actor::Update(elapsedSecs);
-    if (_isDestroyed || !_isActive) return;
+	if (_isDestroyed || !_isActive) return;
 
 	_aabb.UpdatePosition(*this);
 
 	_collisionInfo.colIntersect.clear();
 	_collisionInfo.rowIntersect.clear();
-	
+
 	DetectTileCollisions(_collisionInfo, _gameScreen->GetLevel());
-	if (_collisionInfo.shouldCorrectX|| _collisionInfo.shouldCorrectX) {
+	if (_collisionInfo.shouldCorrectX || _collisionInfo.shouldCorrectX) {
+
 		_sprites[_currentSpriteSheet]->Stop();
-        Destroy();
+		Destroy();
 	}
 
 	UpdatePosition(elapsedSecs);
@@ -49,7 +50,7 @@ void ProjectileActor::Reset(Vector2 pos)
 
 ProjectileActor * ProjectileActor::Clone()
 {
-    return new ProjectileActor(*this);
+	return new ProjectileActor(*this);
 }
 
 void ProjectileActor::UpdatePosition(double elapsedSecs) {
@@ -74,6 +75,6 @@ void ProjectileActor::ProjectileUpdate(double elapseSecs)
 	{
 		screen->GetPlayer()->ProjectileHit(this);
 		_sprites[_currentSpriteSheet]->Stop();
-        Destroy();
+		Destroy();
 	}
 }

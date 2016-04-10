@@ -20,9 +20,9 @@ SSSSS           D                  D         SSSSS
 SSSSS           D                  D         SSSSS
 SSSSS                                        SSSSS
 SSSSS                                        SSSSS
+SSSSS               B                        SSSSS
 SSSSS                                        SSSSS
-SSSSS                                        SSSSS
-SSSSTO              B                        SSSSS
+SSSSTO                                       SSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 

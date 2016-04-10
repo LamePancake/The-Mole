@@ -36,10 +36,10 @@ UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
 UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
 
 signs
-.\\Assets\\Textures\\jump_sign.png
-.\\Assets\\Textures\\enemy_sign.png
-.\\Assets\\Textures\\diggingUpDown_sign.png
-.\\Assets\\Textures\\diggingLeftRight_sign.png
+./Assets/Textures/jump_sign.png
+./Assets/Textures/enemy_sign.png
+./Assets/Textures/diggingUpDown_sign.png
+./Assets/Textures/diggingLeftRight_sign.png
 
 dialog
 Borin: Mmmmm.... Pancakes....
