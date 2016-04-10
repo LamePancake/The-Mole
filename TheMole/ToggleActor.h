@@ -33,6 +33,8 @@ public:
 
 	bool IsOn() const;
 
+    void SetOn(bool on);
+
 	Edge GetEdge() const;
 
 	virtual Type GetType() const override { return Type::toggle; }

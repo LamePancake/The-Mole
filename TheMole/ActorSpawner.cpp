@@ -13,9 +13,15 @@ void ActorSpawner::SetPrototype(std::shared_ptr<Actor> prototype)
 
 void ActorSpawner::Update(double deltaTime)
 {
-    _timeSinceSpawn += deltaTime;
-    if (_timeSinceSpawn < _period || (!_multiple && !_lastSpawned.expired())) return;
-
-    _lastSpawned = _level->AddActorCopy(_prototype);
-    _timeSinceSpawn = 0;
+    // Spawners that don't allow multiple should only start counting to the next spawn
+    // once their current one has been destroyed
+    if (!_multiple && _lastSpawned.expired())
+    {
+        _timeSinceSpawn += deltaTime;
+    }
+    if (_timeSinceSpawn > _period)
+    {
+        _lastSpawned = _level->AddActorCopy(_prototype);
+        _timeSinceSpawn = 0;
+    }
 }

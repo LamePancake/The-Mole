@@ -1,7 +1,9 @@
 #include <iostream>
 #include "GameScreen.h"
+#include "BombAIActor.h"
 #include "ProjectileActor.h"
 #include "BossActor.h"
+#include "ToggleActor.h"
 
 #define HEAT_RATE 10
 #define SLOW_RATE 200.f
@@ -16,10 +18,16 @@ BossActor::BossActor(Vector2 position,
           shared_ptr<Actor> projectile,
           SpriteSheet::XAxisDirection startXDirection,
           SpriteSheet::YAxisDirection startYDirection)
-	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection), _heat(0), _projPrototype(projectile)
+	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection),
+    _heat(0),
+    _projPrototype(projectile),
+    _tookDamage(false),
+    _rollDur(10),
+    _idleDur(5)
 {
     CreateBehaviourTree();
     _curKinematic.velocity.SetY(341.3f);
+    SetHealth(90);
 }
 
 BossActor::~BossActor()
@@ -48,6 +56,7 @@ void BossActor::Update(double elapsedSecs)
 	UpdatePosition(elapsedSecs);
     _aabb.UpdatePosition(*this);
 
+    // Detect tile collisions
     _collisionInfo.colIntersect.clear();
     _collisionInfo.rowIntersect.clear();
     DetectTileCollisions(_collisionInfo, _gameScreen->GetLevel());
@@ -60,6 +69,25 @@ void BossActor::Update(double elapsedSecs)
     {
         float corrected = _collisionInfo.rowPenetration * (_collisionInfo.rowEdge == Edge::BOTTOM ? -1 : 1);
         _curKinematic.position.SetY(_curKinematic.position.GetY() + corrected);
+    }
+
+    // Detect actor collisions
+    for (auto & actor : _gameScreen->GetLevel()->GetActors())
+    {
+        if (actor.get() == this) continue;
+        switch (actor->GetType())
+        {
+        case Actor::Type::bombenemy:
+        {
+            shared_ptr<BombAIActor> bomber = dynamic_pointer_cast<BombAIActor>(actor);
+            if (!bomber->IsBlowingUp() && bomber->IsUnderMindControl() && bomber->GetAABB().CheckCollision(_aabb))
+            {
+                _tookDamage = true;
+                _health -= 10;
+                bomber->BlowUp();
+            }
+        }
+        }
     }
 
     _prevKinematic = _curKinematic;
@@ -111,7 +139,28 @@ void BossActor::CreateBehaviourTree()
 
     auto notOverheated = [this](double deltaTime)
     {
-        return _heat < 100 ? Node::Result::Success : Node::Result::Failure;
+        bool over = _heat >= 100;
+        return !over ? Node::Result::Success : Node::Result::Failure;
+    };
+
+    auto passedPlayer = [this](double deltaTime)
+    {
+        float playerX = _gameScreen->GetPlayer()->GetPosition().GetX();
+        float bossX = _curKinematic.position.GetX();
+
+        int curRollDir = playerX < bossX ? -1 : 1;
+        bool passed = curRollDir != _rollDir;
+        return passed ? Node::Result::Success : Node::Result::Failure;
+    };
+
+    auto tookDamage = [this](double deltaTime)
+    {
+        if (_tookDamage)
+        {
+            _tookDamage = false;
+            return  Node::Result::Success;
+        }
+        return Node::Result::Failure;
     };
 
     auto prePunch = [this](double deltaTime)
@@ -176,15 +225,6 @@ void BossActor::CreateBehaviourTree()
         return Node::Result::Running;
     };
 
-    auto passedPlayer = [this](double deltaTime)
-    {
-        float playerX = _gameScreen->GetPlayer()->GetPosition().GetX();
-        float bossX = _curKinematic.position.GetX();
-
-        int curRollDir = playerX < bossX ? -1 : 1;
-        return curRollDir != _rollDir ? Node::Result::Success : Node::Result::Failure;
-    };
-
     auto slow = [this](double deltaTime)
     {
         if (_currentSpriteSheet != "idle")
@@ -195,6 +235,8 @@ void BossActor::CreateBehaviourTree()
         float deltaV = deltaTime * SLOW_RATE * (-_rollDir);
         float newX = _curKinematic.velocity.GetX() + deltaV;
         _curKinematic.velocity.SetX(newX);
+
+        _heat += HEAT_RATE * deltaTime;
 
         // Check whether _rollDir and newX have different signs
         if (((int)newX & 0x80000000) != (_rollDir & 0x80000000))
@@ -213,12 +255,30 @@ void BossActor::CreateBehaviourTree()
             SetSprite("overheat");
             return Node::Result::Running;
         }
-        if (_sprites[_currentSpriteSheet]->IsFinished())
+        else if (_sprites[_currentSpriteSheet]->IsFinished())
         {
-            _heat = 0;
+            _sprites[_currentSpriteSheet]->Reset();
             return Node::Result::Success;
         }
+        else if (!_sprites[_currentSpriteSheet]->IsAnimating())
+        {
+            _sprites[_currentSpriteSheet]->Start();
+        }
         return Node::Result::Running;
+    };
+
+    auto resetHeat = [this](double deltaTime)
+    {
+        _heat = 0;
+        for (auto & actor : _gameScreen->GetLevel()->GetActors())
+        {
+            if (actor->GetType() == Type::toggle)
+            {
+                shared_ptr<ToggleActor> toggle = dynamic_pointer_cast<ToggleActor>(actor);
+                toggle->SetOn(false);
+            }
+        }
+        return Node::Result::Success;
     };
 
     auto shortHop = [this](double deltaTime)
@@ -274,10 +334,11 @@ void BossActor::CreateBehaviourTree()
    // Roll until we either pass the player (slow down and turn around), or overheat (slow down and overheat)
    shared_ptr<Selector> rollActionSelector = shared_ptr<Selector>(new Selector);
    shared_ptr<Sequence> preRollSequence = shared_ptr<Sequence>(new Sequence);
-   shared_ptr<Sequence> rollSequence = shared_ptr<Sequence>(new Sequence);
+   shared_ptr<Sequence> rollSequence = shared_ptr<Sequence>(new Sequence(false));
    shared_ptr<Selector> continueRollSelector = shared_ptr<Selector>(new Selector);
    shared_ptr<Sequence> passSequence = shared_ptr<Sequence>(new Sequence);
    shared_ptr<Sequence> overheatSequence = shared_ptr<Sequence>(new Sequence);
+   shared_ptr<Selector> overheatEndSelector = shared_ptr<Selector>(new Selector);
 
    preRollSequence->AddChild(shared_ptr<Node>(new Task(false, std::function<Node::Result(double)>(shouldPreRoll))));
    preRollSequence->AddChild(shared_ptr<Node>(new Task(false, std::function<Node::Result(double)>(preRoll))));
@@ -291,8 +352,15 @@ void BossActor::CreateBehaviourTree()
    rollSequence->AddChild(shared_ptr<Node>(new Task(true, std::function<Node::Result(double)>(notOverheated))));
    rollSequence->AddChild(continueRollSelector);
 
-   overheatSequence->AddChild(shared_ptr<Node>(new Task(false, std::function<Node::Result(double)>(overheat))));
+   // Play the overheat animation 15 times or get hit by an enemy
+   shared_ptr<Node> overheatTask = shared_ptr<Node>(new Task(true, std::function<Node::Result(double)>(overheat)));
+   overheatEndSelector->AddChild(shared_ptr<Node>(new RunNTimes(overheatTask, 15, true)));
+   overheatEndSelector->AddChild(shared_ptr<Node>(new Task(true, std::function<Node::Result(double)>(tookDamage))));
+   
+   // Slow down, get hit or overheat 15 times, reset heat, then chill out
    overheatSequence->AddChild(shared_ptr<Node>(new Task(false, std::function<Node::Result(double)>(slow))));
+   overheatSequence->AddChild(shared_ptr<Node>(new UntilSuccess(overheatEndSelector)));
+   overheatSequence->AddChild(shared_ptr<Node>(new Task(true, std::function<Node::Result(double)>(resetHeat))));
    overheatSequence->AddChild(shared_ptr<Node>(new Task(false, std::function<Node::Result(double)>(idle))));
 
    rollActionSelector->AddChild(preRollSequence);

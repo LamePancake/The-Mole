@@ -4,6 +4,7 @@
 #include <memory>
 #include <functional>
 #include <vector>
+#include <stack>
 #include "Vector2.h"
 
 class GameScreen;
@@ -22,14 +23,16 @@ public:
     Node(bool interruptible);
 
 	virtual Result Run(double elapsedSecs) = 0;
+    virtual Result Resume(Result blockedResult, double elapsedSecs) = 0;
+
     virtual bool IsInterruptible() const { return _interruptible; };
 
-    virtual std::shared_ptr<Node> Node::GetRunningChild();
+    virtual std::shared_ptr<Node> Node::GetBlockingChild();
 
 	std::shared_ptr<GameScreen> _gameScreen;
 
 protected:
-    std::shared_ptr<Node>_runningChild;
+    std::shared_ptr<Node> _blockingChild;
 
 private:
     bool _interruptible;
@@ -37,8 +40,11 @@ private:
 
 class CompositeNode : public Node
 {
-private:
-    std::vector<std::shared_ptr<Node>> children;
+protected:
+    virtual void SaveState(const std::shared_ptr<Node> & blocked);
+    
+    std::vector<std::shared_ptr<Node>> _children;
+    int _blockedIndex;
 public:
     CompositeNode(bool interruptible = true) : Node(interruptible) {}
 
@@ -52,6 +58,7 @@ public:
     Selector(bool interruptible = true) :
         CompositeNode{ interruptible } {};
 	virtual Result Run(double elapsedSecs) override;
+    virtual Result Resume(Result blockedResult, double elapsedSecs) override;
 };
 
 class Sequence : public CompositeNode
@@ -60,6 +67,7 @@ public:
     Sequence(bool interruptible = true) :
         CompositeNode{ interruptible } {};
 	virtual Result Run(double elapsedSecs) override;
+    virtual Result Resume(Result blockedResult, double elapsedSecs) override;
 };
 
 /**
@@ -76,11 +84,50 @@ public:
     {
         return _taskFunc(elapsedSeconds);
     }
+    virtual Result Resume(Result blockedResult, double elapsedSecs) override;
 
 private:
     std::function<Result(double)> _taskFunc;
 };
 
+class UntilSuccess : public Node
+{
+public:
+    UntilSuccess(std::shared_ptr<Node> child)
+        : Node{ false }, _child(child) {}
+
+    virtual Result Run(double elapsedSeconds);
+
+    // The running child is always this node, so return nullptr
+    virtual std::shared_ptr<Node> GetRunningChild()
+    {
+        return nullptr;
+    }
+
+    virtual Result Resume(Result blockedResult, double elapsedSecs) override;
+private:
+    std::shared_ptr<Node> _child;
+};
+
+class RunNTimes : public Node
+{
+public:
+    RunNTimes(std::shared_ptr<Node> child, int iterations, bool interruptible)
+        : Node{ interruptible }, _child(child), _limit(iterations) {}
+
+    virtual Result Run(double elapsedSeconds);
+
+    // The running child is always this node, so return nullptr
+    virtual std::shared_ptr<Node> GetRunningChild()
+    {
+        return nullptr;
+    }
+    virtual Result Resume(Result blockedResult, double elapsedSecs) override;
+private:
+    std::shared_ptr<Node> _child;
+    int _limit;
+    int _current;
+};
 
 class BossBehavTree
 {
@@ -92,6 +139,10 @@ private:
     double _updatePeriod;
     double _timeSinceUpdate;
 
+    // Runs a blocked child holding up a given branch
+    void ContinueBlocked(double deltaTime);
+    void PushBlocked(std::shared_ptr<Node> blockedNode);
+
     std::shared_ptr<Node> _root;
-    std::shared_ptr<Node> _current;
+    std::stack<std::shared_ptr<Node>> _blocked; // Effectively stores a call stack
 };

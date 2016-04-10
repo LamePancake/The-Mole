@@ -18,11 +18,11 @@ SSSSS           D                  D         SSSSS
 SSSSS           D                  D         SSSSS
 SSSSS           D                  D         SSSSS
 SSSSS           D                  D         SSSSS
-SSSSS         B                              SSSSS
 SSSSS                                        SSSSS
 SSSSS                                        SSSSS
 SSSSS                                        SSSSS
-SSSSTO                                       SSSSS
+SSSSS                                        SSSSS
+SSSSTO              B                        SSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 

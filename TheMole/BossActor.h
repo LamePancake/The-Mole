@@ -52,7 +52,7 @@ public:
 
 private:
 	BossBehavTree _bossTree;
-	int _heat;
+	float _heat;
     std::shared_ptr<Actor> _projPrototype;
 
 	Vector2 _playerPos;
@@ -60,6 +60,9 @@ private:
 
     // The direction in which the boss was rolling on pre-roll
     int _rollDir;
+
+    // Whether we just took damage
+    bool _tookDamage;
 
     void CreateBehaviourTree();
 };

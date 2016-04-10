@@ -66,6 +66,11 @@ bool ToggleActor::IsOn() const
 	return _isOn;
 }
 
+void ToggleActor::SetOn(bool on)
+{
+    _isOn = on;
+}
+
 Actor::Edge ToggleActor::GetEdge() const
 {
 	return _edge;
