@@ -80,11 +80,15 @@ void BossActor::Update(double elapsedSecs)
         case Actor::Type::bombenemy:
         {
             shared_ptr<BombAIActor> bomber = dynamic_pointer_cast<BombAIActor>(actor);
-            if (!bomber->IsBlowingUp() && bomber->IsUnderMindControl() && bomber->GetAABB().CheckCollision(_aabb))
+            if (!bomber->IsBlowingUp() && bomber->GetAABB().CheckCollision(_aabb))
             {
-                _tookDamage = true;
-                _health -= 10;
+                // Blow up any stray bombers, but only actually take damage when we're overheating
                 bomber->BlowUp();
+                if (_currentSpriteSheet == "overheating")
+                {
+                    _tookDamage = true;
+                    _health -= 10;
+                }
             }
         }
         }

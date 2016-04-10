@@ -55,6 +55,7 @@ void ControlsScreen::Draw()
 	rend.Copy(*_border, NullOpt, Rect(0.0f, size.GetY() * 0.9f - (size.GetY() * 0.025f / 2), _back->GetWidth() + size.GetX() * 0.2f, _back->GetHeight() + size.GetY() * 0.025f));
 	rend.Copy(*_back, NullOpt, Rect(size.GetX() * 0.05f, size.GetY() * 0.9f, _back->GetWidth(), _back->GetHeight()));
 
+	rend.Copy(*_border, Rect(0, 0, 1, 1), Rect(0.0f, size.GetY() * 0.075f, size.GetX(), _controls->GetHeight()));
 	rend.Copy(*_controls, NullOpt, Rect(size.GetX() * 0.02f, size.GetY() * 0.07f, _controls->GetWidth(), _controls->GetHeight()));
 
 	rend.Present();

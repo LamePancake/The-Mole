@@ -91,10 +91,10 @@ void TurretActor::TurretUpdate(double elapseSecs)
 			_gameScreen->GetLevel()->AddActor(std::make_shared<ProjectileActor>(
 				_curKinematic.position //- Vector2(0, -50) ///Vec2 position
 				, *_mgr ///Gamemanager
-				, Vector2(-200.0f, 0.0f) ///Vec2 spd
+				, this->_startXDir == SpriteSheet::XAxisDirection::LEFT ? Vector2(-200.0f, 0.0f) : Vector2(200.0f, 0.0f) ///Vec2 spd
 				, _sprites ///sprites
 				, "shoot" ///startsprite
-				, SpriteSheet::XAxisDirection::LEFT) ///direction
+				, this->_startXDir) ///direction
 				);
 		}
 		else
@@ -104,10 +104,10 @@ void TurretActor::TurretUpdate(double elapseSecs)
 				_gameScreen->GetLevel()->AddActor(std::make_shared<ProjectileActor>(
 					_curKinematic.position //- Vector2(0, -50) ///Vec2 position
 					, *_mgr ///Gamemanager
-					, _pattern[i] ///Vec2 spd
+					, this->_startXDir == SpriteSheet::XAxisDirection::LEFT ? _pattern[i] : Vector2(_pattern[i].GetX() * -1, _pattern[i].GetY())  ///Vec2 spd
 					, _sprites ///sprites
 					, "shoot" ///startsprite
-					, SpriteSheet::XAxisDirection::LEFT) ///direction
+					, this->_startXDir) ///direction
 					);
 			}
 		}
@@ -115,10 +115,10 @@ void TurretActor::TurretUpdate(double elapseSecs)
 			_gameScreen->GetLevel()->AddActor(std::make_shared<ProjectileActor>(
 				_curKinematic.position //- Vector2(0, -50) ///Vec2 position
 				, *_mgr ///Gamemanager
-				, Vector2(-200.0f, 0.0f) ///Vec2 spd
+				, this->_startXDir == SpriteSheet::XAxisDirection::LEFT ? Vector2(-200.0f, 0.0f) : Vector2(200.0f, 0.0f)///Vec2 spd
 				, _sprites ///sprites
 				, "shoot" ///startsprite
-				, SpriteSheet::XAxisDirection::LEFT) ///direction
+				, this->_startXDir) ///direction
 				);
 			_timeInterval = elapseSecs;
 		}

@@ -49,9 +49,7 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 	// 10/10 would read again - Trey
 	std::shared_ptr<SDL2pp::Texture> baddieWalkSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(),"./Assets/Textures/Baddie_walk_56x56.png");
     std::shared_ptr<SDL2pp::Texture> bombSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), "./Assets/Textures/Shimmer.png");
-	std::shared_ptr<SDL2pp::Texture> projectileSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), "./Assets/Textures/red_dot.png");
 	std::shared_ptr<SDL2pp::Texture> mindControlIndicator = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), "./Assets/Textures/Controlled_indicator.png");
-  	std::shared_ptr<SDL2pp::Texture> turretSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), "./Assets/Textures/Turret.png");
 
     std::unordered_map<char, std::vector<SDL2pp::Point>> positions;
 
@@ -148,14 +146,14 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
                     // Create a prototype projectile actor for the boss to clone later
                     std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> projSprites;
                     double infinity = std::numeric_limits<double>::infinity();
-                    projSprites["shoot"] = std::make_shared<SpriteSheet>(projectileSheet, 1, infinity);
+                    projSprites["shoot"] = shared_ptr<SpriteSheet>(new SpriteSheet(bombSheet, 46, infinity, false));
 
                     std::shared_ptr<ProjectileActor> projectile = std::make_shared<ProjectileActor>(
                         tile->GetWorldPosition() ///Vec2 position
-                        , gameManager ///Gamemanager
-                        , Vector2(100.0f, 0.0f) ///Vec2 spd
-                        , projSprites ///sprites
-                        , "shoot" ///startsprite
+                        , gameManager            ///Gamemanager
+                        , Vector2(100.0f, 0.0f)  ///Vec2 spd
+                        , projSprites            ///sprites
+                        , "shoot"                ///startsprite
                         , SpriteSheet::XAxisDirection::LEFT); ///direction
 
 					std::shared_ptr<BossActor> boss = std::make_shared<BossActor>(tile->GetWorldPosition(),
@@ -169,7 +167,7 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 					tile->SetID(Tile::blank);
 				}
 				break;
-			case Tile::projectile:
+			/*case Tile::projectile:
 				{
 					std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
 					double infinity = std::numeric_limits<double>::infinity();
@@ -185,23 +183,10 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 					level->AddActor(projectile);
 					tile->SetID(Tile::blank);
 				}
-				break;
+				break;*/
 			case Tile::turret:
 			{
-				std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
-				double infinity = std::numeric_limits<double>::infinity();
-				sprites["turret"] = std::make_shared<SpriteSheet>(turretSheet, 1, infinity);
-				sprites["shoot"] = std::make_shared<SpriteSheet>(projectileSheet, 1, infinity);
-
-				std::shared_ptr<TurretActor> turret = std::make_shared<TurretActor>(
-					tile->GetWorldPosition()
-					, gameManager
-					, Vector2(0, 0)
-					, sprites
-					, "turret"
-					, SpriteSheet::XAxisDirection::LEFT
-					, SpriteSheet::YAxisDirection::UP);
-				level->AddActor(turret);
+				positions[Tile::turret].push_back(SDL2pp::Point(tile->GetWorldPosition().GetX(), tile->GetWorldPosition().GetY()));
 				tile->SetID(Tile::blank);
 			}
 			break;
@@ -297,6 +282,10 @@ void LevelLoader::LoadActorSpecifics(ifstream & file, string & lastLine, unorder
         {
             LoadActorSpawners(file, positions[Tile::spawner], level);
         }
+		else if (line == "turrets")
+		{
+			LoadTurrets(file, positions[Tile::turret], level);
+		}
 	}
 }
 
@@ -612,4 +601,32 @@ void LevelLoader::LoadActorSpawners(std::ifstream & file, std::vector<SDL2pp::Po
 
     for (auto & s : spawners)
         level->AddSpawner(s);
+}
+
+void LevelLoader::LoadTurrets(ifstream & file, vector<SDL2pp::Point>& turretPos, shared_ptr<Level> level)
+{
+	string line;
+    std::shared_ptr<SDL2pp::Texture> turretSheet = std::make_shared<SDL2pp::Texture>(GameManager::GetInstance()->GetRenderer(), "./Assets/Textures/Turret.png");
+    std::shared_ptr<SDL2pp::Texture> projectileSheet = std::make_shared<SDL2pp::Texture>(GameManager::GetInstance()->GetRenderer(), "./Assets/Textures/red_dot.png");
+
+	for (size_t i = 0; i < turretPos.size(); ++i)
+	{
+		std::getline(file, line);
+
+		std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
+		double infinity = std::numeric_limits<double>::infinity();
+		sprites["turret"] = std::make_shared<SpriteSheet>(turretSheet, 1, infinity);
+		sprites["shoot"] = std::make_shared<SpriteSheet>(projectileSheet, 1, infinity);
+
+		std::shared_ptr<TurretActor> turret = std::make_shared<TurretActor>(
+			Vector2(turretPos[i].GetX(), turretPos[i].GetY())
+			, *GameManager::GetInstance()
+			, Vector2(0, 0)
+			, sprites
+			, "turret"
+			, line == "0" ? SpriteSheet::XAxisDirection::LEFT : SpriteSheet::XAxisDirection::RIGHT
+			, SpriteSheet::YAxisDirection::UP);
+
+		level->AddActor(turret);
+	}
 }

@@ -64,7 +64,9 @@ private:
 
 	void LoadHats(std::ifstream& file, std::shared_ptr<Level> level);
 
-	void LoadNPCS(std::ifstream& file, std::vector<SDL2pp::Point>& npcPos, std::shared_ptr<Level> level);
-
     void LoadActorSpawners(std::ifstream& file, std::vector<SDL2pp::Point>& spawnerPos, std::shared_ptr<Level> level);
+
+	void LoadNPCS(std::ifstream & file, std::vector<SDL2pp::Point>& npcPos, std::shared_ptr<Level> level);
+
+	void LoadTurrets(std::ifstream & file, std::vector<SDL2pp::Point>& turretPos, std::shared_ptr<Level> level);
 };
