@@ -34,7 +34,6 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 	// 10/10 would read again - Trey
 	std::shared_ptr<SDL2pp::Texture> baddieWalkSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(),".\\Assets\\Textures\\Baddie_walk_56x56.png");
     std::shared_ptr<SDL2pp::Texture> bombSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), "./Assets/Textures/Shimmer.png");
-	std::shared_ptr<SDL2pp::Texture> projectileSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\red_dot.png");
 	std::shared_ptr<SDL2pp::Texture> mindControlIndicator = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\Controlled_indicator.png");
 
     std::unordered_map<char, std::vector<SDL2pp::Point>> positions;
@@ -492,7 +491,7 @@ void LevelLoader::LoadTurrets(ifstream & file, vector<SDL2pp::Point>& turretPos,
 
 		std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
 		std::shared_ptr<SDL2pp::Texture> turretSheet = std::make_shared<SDL2pp::Texture>(GameManager::GetInstance()->GetRenderer(), ".\\Assets\\Textures\\Turret.png");
-		std::shared_ptr<SDL2pp::Texture> projectileSheet = std::make_shared<SDL2pp::Texture>(GameManager::GetInstance()->GetRenderer(), ".\\Assets\\Textures\\red_dot.png");
+		std::shared_ptr<SDL2pp::Texture> projectileSheet = std::make_shared<SDL2pp::Texture>(GameManager::GetInstance()->GetRenderer(), ".\\Assets\\Textures\\projectile.png");
 		double infinity = std::numeric_limits<double>::infinity();
 		sprites["turret"] = std::make_shared<SpriteSheet>(turretSheet, 1, infinity);
 		sprites["shoot"] = std::make_shared<SpriteSheet>(projectileSheet, 1, infinity);
