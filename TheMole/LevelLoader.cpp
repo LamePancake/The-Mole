@@ -138,10 +138,10 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
                     // Boss sprites
 					std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
 					sprites.reserve(6);
-					sprites["idle"] = std::make_shared<SpriteSheet>("./Assets/Textures/Watch_idle_small.png", 4, 0.50, true, SpriteSheet::XAxisDirection::LEFT);
-                    sprites["preroll"] = std::make_shared<SpriteSheet>("./Assets/Textures/CrappyPreroll.png", 5, 0.75, false, SpriteSheet::XAxisDirection::LEFT);
-                    sprites["roll"] = std::make_shared<SpriteSheet>("./Assets/Textures/Watch_roll_small.png", 1, 0.50, true, SpriteSheet::XAxisDirection::LEFT);
-                    sprites["overheat"] = std::make_shared<SpriteSheet>("./Assets/Textures/CrappyOverheat.png", 12, 1, false, SpriteSheet::XAxisDirection::LEFT);
+					sprites["idle"] = std::make_shared<SpriteSheet>("./Assets/Textures/Watch_idle.png", 4, 0.50, true, SpriteSheet::XAxisDirection::LEFT);
+                    sprites["preroll"] = std::make_shared<SpriteSheet>("./Assets/Textures/Watch_preroll.png", 4, 0.75, false, SpriteSheet::XAxisDirection::LEFT);
+                    sprites["roll"] = std::make_shared<SpriteSheet>("./Assets/Textures/Watch_roll.png", 10, 0.50, true, SpriteSheet::XAxisDirection::LEFT);
+                    sprites["overheat"] = std::make_shared<SpriteSheet>("./Assets/Textures/Watch_overheat.png", 12, 1, false, SpriteSheet::XAxisDirection::LEFT);
 
                     // Create a prototype projectile actor for the boss to clone later
                     std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> projSprites;
