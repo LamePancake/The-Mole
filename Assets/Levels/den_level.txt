@@ -3,13 +3,14 @@ UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
 UUUUUUUUUU                                                                                          UUUUUU
 UUUUUUUUUU                                                                                          UUUUUU
 UUUUUUUUUU                                                                  CV                      UUUUUU
-UUUUUUUUUU                                                    SSSSSSS    SSSSSSS                    UUUUUU
+UUUUUUUUUU                                                               SSSSSSS                    UUUUUU
+UUUUUUUUUU                                                    SSSSSSS                               UUUUUU
 UUUUUUUUUU                                                                                          UUUUUU
-UUUUUUUUUU    H                       SSS            SSSSSS                                     H   UUUUUU
+UUUUUUUUUU    H          H            SSS            SSSSSS                                     H   UUUUUU
 UUUUUUUUUU                     U  U         U  U                     SSS  SSS  SSS  UUU             UUUUUU
 UUUUUUUUUUTO         EUU      UU  UU   E   UU  UUUUU        S  E  S                 UUUUUU          UUUUUU
-UUUUUUUUUUUUUDUUUUDUUUUUUUUUUUUUUUUUUUUUUUUUU  UUUUUKKKKKKKKUUUUUUU                 UUUUUUUUUDDDUUUUUUUUUU
-UUUUUUUUUUUUUDDDDDDUUUUUUUUUUUUUUUUUUUUUUUUUUKKUUUUUUUUUUUUUUUUUUUUKKKKKKKKKKKKKKKKKUUUUUUUUUDDDUUUUUUUUUU
+UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU  UUUUUKKKKKKKKUUUUUUU                 UUUUUUUUUDDDUUUUUUUUUU
+UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUKKUUUUUUUUUUUUUUUUUUUUKKKKKKKKKKKKKKKKKUUUUUUUUUDDDUUUUUUUUUU
 UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUDDDUUUUUUUUUU
 UUUUUUUUUUUUUUUUUUUU               UUUUUUUUUUUUUUUUUU                         UUUU                 UUUUUUU
 UUUUUUUUUUUUUUUUUUUU            D   UUUUUUUUUUUUUUUUUD       D E D            UUUU           FV    UUUUUUU
@@ -36,6 +37,7 @@ UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
 
 signs
 .\\Assets\\Textures\\jump_sign.png
+.\\Assets\\Textures\\enemy_sign.png
 .\\Assets\\Textures\\diggingUpDown_sign.png
 .\\Assets\\Textures\\diggingLeftRight_sign.png
 

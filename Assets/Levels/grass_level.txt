@@ -20,8 +20,8 @@ SSSSS                          D            LLLLLLLLLL                          
 SSSSS                          D                D                  N                F       UUUUUUUUUUUUUUK         UUUUU
 SSSSS                          D                D               LLLLLLLL          LLLLL   LLUUUUUUUUUUUUUUU         UUUUU
 SSSSS                          D                D                  DD                 U     UUUUUUUUUUUUUUULL      FUUUUU
-SSSSS                          D                D                  DD                 U     UUUUU                KLLUUUUU
-SSSSS                          D                D                                     ULL   UUUUU               KUUUUUUUU
+SSSSS                          D                D                  DD                 U     UUUUU                 LLUUUUU
+SSSSS                          D                D                                     ULL   UUUUU               KLUUUUUUU
 SSSSS                          D                D                                     U     UUUUU              KUUUUUUUUU
 SSSSS                          D                D                                     U     UUUUU             KUUUUUUUUUU
 SSSSS                    H     D                D    F                                U   LLUUUUU            KUUUUUUUUUUU
