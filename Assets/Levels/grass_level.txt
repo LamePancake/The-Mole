@@ -6,7 +6,7 @@ UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
                       D                                  UUUUUUUUUUUUU                                              UUUUU
   N                   D                                   UUUUUUUUUUU                                               UUUUU
 SSSSS                 D                                    UUUUUUUUU                     N    F                     UUUUU
-SSSSS                 D   C                       LLL       UUUUUUU                    LLLLLLLLLL             N   WWUUUUU
+SSSSS                 D   C                       LLL       UUUUUUU                    LLLLLLLLLL             N   W UUUUU
 SSSSS                                            LDDDLLLL    UUUUU                  LLLUU   UUUUU            LLLLLLLUUUUU
 SSSSS                                           LDDDDDDDDDDDDUUUUULLLL                      UUUUUK                  UUUUU
 SSSSS          N                          F    LDDDDDDDDDDDDDDDDDDDDDDDDD   N               UUUUUUK                 UUUUU
@@ -26,12 +26,12 @@ SSSSS                          D                D                               
 SSSSS                          D                D                                     U     UUUUU             KUUUUUUUUUU
 SSSSS                    H     D                D    F                                U   LLUUUUU            KUUUUUUUUUUU
 SSSSS                          D            N   ULLLLLLLLLLLD                         U     UUUUU           KUUUUUUUUUUUU
-SSSSS         H              LLDL         LLLLLLUUUU                                  ULL   UUUUU          KUUUUUUUUUUUUU
-SSSSS                    LLLLU D             UUUUUUU C                                      UUUUU         KUUUUUUUUUUUUUU
-SSSSS                 LLLU     D              UUUUUULLLLL                                 LLUUUUU        KUUUUUUUUUUUUUUU
-SSSSS        LLLLLDDDDUU       D               UUUUUUUUU                        N           UUUUU       KUUUUUUUUUUUUUUUU
-SSSSS       LUUUUUDDDDUUU      D                UUUUUUU                      LLLLLLLLL      UUUUU       UU         UUUUUU
-SSSSTO   N LUUUUUUUDDDDCDD     D                 UUUUUKKKKKKKKKKKKKKKKKKKKKKKKKKUUUUUULLLLLLUUUUU     N      N     GUUUUU
+SSSSS         H              LLUL         LLLLLLUUUU                                  ULL   UUUUU          KUUUUUUUUUUUUU
+SSSSS                    LLLLU               UUUUUUU C                                      UUUUU         KUUUUUUUUUUUUUU
+SSSSS                 LLLU                    UUUUUULLLLL                                 LLUUUUU        KUUUUUUUUUUUUUUU
+SSSSS        LLLLLDDDDUU                       UUUUUUUUU                        N           UUUUU       KUUUUUUUUUUUUUUUU
+SSSSS       LUUUUUDDDDUUU                       UUUUUUU                      LLLLLLLLL      UUUUU       UU         UUUUUU
+SSSSTO   N LUUUUUUUDDDDCDD                       UUUUUKKKKKKKKKKKKKKKKKKKKKKKKKKUUUUUULLLLLLUUUUU     N      N     GUUUUU
 UUUUULLLLLLUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUULLLLLLLLLLLLLLLLLLLUUUUU
 UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
 
@@ -74,8 +74,7 @@ npcs
 
 Toggles
 Bottom one-shot
-Bottom one-shot
 
 Doors
 Top toggle 0
-Top toggle 1
+Top toggle 0

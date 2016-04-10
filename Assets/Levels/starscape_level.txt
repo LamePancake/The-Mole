@@ -9,7 +9,7 @@ SS SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 S                                                                       !
 S             S                                 !     S                 S
 S F      S           S       S                  S            !          S
-S S                                       S                  S     S    S
+S S                                 F     S                  S     S    S
 S                                   S                                   S
 SKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKSKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKDS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSG        S
@@ -31,6 +31,7 @@ Top toggle 3
 
 checkpoints
 1
+2
 
 hats
 SHIELD 1
