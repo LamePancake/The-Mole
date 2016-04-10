@@ -1,9 +1,11 @@
-#pragma once
+#ifndef VECTOR2_H
+#define VECTOR2_H
+
 #include <cmath>
 
 /**
-* Class that holds X,Y position in floats.
-**/
+ * Class that holds X,Y position in floats.
+ **/
 class Vector2
 {
 public:
@@ -60,3 +62,5 @@ private:
 	float _x;
 	float _y;
 };
+
+#endif // VECTOR2_H

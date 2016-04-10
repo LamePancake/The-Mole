@@ -28,6 +28,9 @@ public:
 	virtual void Update(double deltaTime) override;
 	virtual void Reset(Vector2 pos) override;
 
+    virtual DoorActor* Clone() override;
+    virtual bool IsCloneable() const { return true; }
+
 	virtual Type GetType() const override { return Type::door; }
 
 	bool IsOpening() const;

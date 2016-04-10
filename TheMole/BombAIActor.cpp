@@ -36,6 +36,11 @@ void BombAIActor::Update(double deltaTime)
     }
 }
 
+BombAIActor * BombAIActor::Clone()
+{
+    return new BombAIActor(*this);
+}
+
 void BombAIActor::Reset(Vector2 position)
 {
     AIActor::Reset(position);

@@ -7,18 +7,8 @@
 
 #include "Tile.h"
 #include "Level.h"
-#include "AIActor.h"
-#include "BombAIActor.h"
-#include "Vector2.h"
-#include "Actor.h"
 #include "PlayerActor.h"
 #include "NPCActor.h"
-#include "ObjectActor.h"
-#include "BossActor.h"
-#include "ProjectileActor.h"
-#include "TurretActor.h"
-#include "ToggleActor.h"
-#include "DoorActor.h"
 
 /** Loads a level from a text file and returns a vector of tiles that represent the level. */
 class LevelLoader
@@ -64,17 +54,19 @@ private:
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	void LoadTogglesAndDoors(std::ifstream& file, std::vector<SDL2pp::Point> & togglePos, std::vector<SDL2pp::Point> & doorPos, std::shared_ptr<Level> level);
 
-	void LoadDialog(ifstream & file, vector<SDL2pp::Point> & dialogPos, shared_ptr<Level> level);
+	void LoadDialog(std::ifstream& file, std::vector<SDL2pp::Point> & dialogPos, std::shared_ptr<Level> level);
 
-	void LoadCheckPoints(ifstream & file, vector<SDL2pp::Point> & checkPointPos, shared_ptr<Level> level);
+	void LoadCheckPoints(std::ifstream& file, std::vector<SDL2pp::Point> & checkPointPos, std::shared_ptr<Level> level);
 
-	void LoadPancakes(ifstream & file, vector<SDL2pp::Point>& pancakePos, shared_ptr<Level> level);
+	void LoadPancakes(std::ifstream& file, std::vector<SDL2pp::Point>& pancakePos, std::shared_ptr<Level> level);
 
-	void LoadHelpSigns(ifstream & file, vector<SDL2pp::Point>& signPos, shared_ptr<Level> level);
+	void LoadHelpSigns(std::ifstream& file, std::vector<SDL2pp::Point>& signPos, std::shared_ptr<Level> level);
 
-	void LoadHats(ifstream & file, shared_ptr<Level> level);
+	void LoadHats(std::ifstream& file, std::shared_ptr<Level> level);
 
-	void LoadNPCS(ifstream & file, vector<SDL2pp::Point>& npcPos, shared_ptr<Level> level);
+    void LoadActorSpawners(std::ifstream& file, std::vector<SDL2pp::Point>& spawnerPos, std::shared_ptr<Level> level);
 
-	void LoadTurrets(ifstream & file, vector<SDL2pp::Point>& turretPos, shared_ptr<Level> level);
+	void LoadNPCS(std::ifstream & file, std::vector<SDL2pp::Point>& npcPos, std::shared_ptr<Level> level);
+
+	void LoadTurrets(std::ifstream & file, std::vector<SDL2pp::Point>& turretPos, std::shared_ptr<Level> level);
 };

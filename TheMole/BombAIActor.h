@@ -28,10 +28,20 @@ public:
         std::shared_ptr<SDL2pp::Texture> mindControlIndicator,
         Vector2 spawn,
         SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP)
-        : AIActor(position, manager, spd, sprites, std::move(startSprite), mindControlIndicator, spawn, startXDirection, startYDirection),
+        : AIActor(manager, position, spd, sprites, std::move(startSprite), mindControlIndicator, spawn, startXDirection, startYDirection),
         _isBlowingUp{false}
     {
     }
+
+    /**
+     * @brief Creates an AIActor from a serialised string.
+     * @param serialised The string specifying the actor's properties.
+     * 
+     * Format
+     * Same as AIActor format (see AIActor.h)
+     */
+    BombAIActor(std::string & serialised)
+        : AIActor{ serialised }, _isBlowingUp{ false } {}
 
     virtual Type GetType() const override { return Type::bombenemy; }
 
@@ -39,6 +49,10 @@ public:
     void BlowUp();
 
     virtual void Update(double deltaTime);
+
+    virtual BombAIActor* Clone() override;
+
+    virtual bool IsCloneable() const override { return true; }
 
     /**
      * Check collision against another SimpleAgent

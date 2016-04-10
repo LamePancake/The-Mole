@@ -26,19 +26,30 @@ public:
 	* @param	startXDirection	The actor's default facing direction along the x axis.
 	* @param	startYDirection	The actor's default facing direction along the y axis.
 	*/
-	AIActor(Vector2 position,
-		GameManager & manager,
+	AIActor(GameManager & manager,
+        Vector2 position,
 		Vector2 spd,
 		std::unordered_map<std::string,
 		std::shared_ptr<SpriteSheet>>& sprites,
         const std::string&& startSprite,
-		std::shared_ptr<SDL2pp::Texture> mindControlIndicator,
+        std::shared_ptr<SDL2pp::Texture> mindControlIndicator,
         Vector2 spawn,
 		SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP)
 		: Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection),
 		_underControl{ false }, _controlTimeLeft{ 0.0f }, _isSelected{ false }, _isCandidate{ false }, _ctrlIndicator{ mindControlIndicator }, _spawn(spawn)
 	{
 	}
+
+    /**
+     * @brief Creates an AIActor from a serialised string.
+     * @param serialised The string specifying the actor's properties.
+     *
+     * Format
+     * All of Actor serialisation info (see Actor.h)
+     * x y // spawn position, doubles
+     * texture_name // Mind control indicator texture name
+     */
+    AIActor(std::string & serialised);
 
 	/** Destructor. */
 	~AIActor();
@@ -139,6 +150,9 @@ public:
 	void ScanNeighbouringTiles(std::shared_ptr<Level> & level);
 
 	void Reset(Vector2 position);
+
+    virtual AIActor* Clone() override;
+    virtual bool IsCloneable() const { return true; }
 
     void CancelMindControl();
 

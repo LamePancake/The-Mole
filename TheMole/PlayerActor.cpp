@@ -1,4 +1,6 @@
 #include "PlayerActor.h"
+#include "AIActor.h"
+#include "DoorActor.h"
 #include "GameScreen.h"
 
 using std::vector;
@@ -103,10 +105,7 @@ void PlayerActor::Update(double elapsedSecs)
 			{
 			case Type::enemy:
             case Type::bombenemy:
-				if (CollisionCheck(*actor))
-				{
-					SetHealth(0);
-				}
+				SetHealth(0);
 				break;
 			case Type::door:
 				shared_ptr<DoorActor> door = dynamic_pointer_cast<DoorActor>(actor);
@@ -689,4 +688,9 @@ void PlayerActor::Reset(Vector2 pos)
 
 	_jumpVelocity = 0.0f;
 	_digDir = Edge::NONE;
+}
+
+Actor * PlayerActor::Clone()
+{
+    return nullptr;
 }

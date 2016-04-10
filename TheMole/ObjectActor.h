@@ -49,6 +49,10 @@ public:
 	// Resets the actor
 	virtual void Reset(Vector2 pos);
 
+    virtual ObjectActor* Clone();
+
+    virtual bool IsCloneable() const { return true; }
+
 	virtual Type GetType() const override { return Type::object; }
 	
 	/**

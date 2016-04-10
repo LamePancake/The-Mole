@@ -21,7 +21,6 @@ void DoorActor::Update(double deltaTime)
     switch (_curState)
     {
     case Closed:
-        std::cout << "Closed" << std::endl;
         if (switchOn)
         {
             _curState = Opening;
@@ -31,7 +30,6 @@ void DoorActor::Update(double deltaTime)
         }
         break;
     case Closing:
-        std::cout << "Closing" << std::endl;
         if (currentSheet->IsFinished())
         {
             _curState = Closed;
@@ -45,7 +43,6 @@ void DoorActor::Update(double deltaTime)
         }
         break;
     case Open:
-        std::cout << "Open" << std::endl;
         if (!switchOn)
         {
             _curState = Closing;
@@ -55,7 +52,6 @@ void DoorActor::Update(double deltaTime)
         }
         break;
     case Opening:
-        std::cout << "Opening" << std::endl;
         if (currentSheet->IsFinished())
         {
             _curState = Open;
@@ -80,6 +76,11 @@ void DoorActor::Reset(Vector2 pos)
     bank.StopSound("door_finish");
 	_sprites[_currentSpriteSheet]->SetReversed(false);
 	_sprites[_currentSpriteSheet]->Reset();
+}
+
+DoorActor * DoorActor::Clone()
+{
+    return new DoorActor(*this);
 }
 
 bool DoorActor::IsOpening() const

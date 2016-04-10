@@ -4,6 +4,7 @@
 #include "TurretActor.h"
 #include "GameScreen.h"
 #include "BombAIActor.h"
+#include "ProjectileActor.h"
 #include <memory>
 
 TurretActor::TurretActor(
@@ -60,6 +61,11 @@ void TurretActor::Reset(Vector2 pos)
     SetVisibility(true);
 }
 
+TurretActor * TurretActor::Clone()
+{
+    return new TurretActor(*this);
+}
+
 bool TurretActor::CollisionCheck(Actor & otherAI)
 {
     return _aabb.CheckCollision(otherAI.GetAABB());
@@ -81,10 +87,9 @@ void TurretActor::TurretUpdate(double elapseSecs)
 
 	Vector2 projectilePosition = Vector2();
 	if (this->_startXDir == SpriteSheet::XAxisDirection::LEFT)
-		projectilePosition = Vector2(_curKinematic.position.GetX() - (_sprites["shoot"]->GetFrameWidth() / 2.0f), _curKinematic.position.GetY() + (_sprites[_currentSpriteSheet]->GetFrameHeight() / 2.0f) - (_sprites["shoot"]->GetFrameHeight() / 2.0f));
+		projectilePosition = Vector2(_curKinematic.position.GetX() - (_sprites["shoot"]->GetFrameWidth()), _curKinematic.position.GetY() + (_sprites[_currentSpriteSheet]->GetFrameHeight() / 2.0f) - (_sprites["shoot"]->GetFrameHeight() / 2.0f));
 	else
-		projectilePosition = Vector2(_curKinematic.position.GetX() + _sprites[_currentSpriteSheet]->GetFrameWidth() + (_sprites["shoot"]->GetFrameWidth() / 2.0f), _curKinematic.position.GetY() + (_sprites[_currentSpriteSheet]->GetFrameHeight() / 2.0f) - (_sprites["shoot"]->GetFrameHeight() / 2.0f));
-
+		projectilePosition = Vector2(_curKinematic.position.GetX() + _sprites[_currentSpriteSheet]->GetFrameWidth() + (_sprites["shoot"]->GetFrameWidth()), _curKinematic.position.GetY() + (_sprites[_currentSpriteSheet]->GetFrameHeight() / 2.0f) - (_sprites["shoot"]->GetFrameHeight() / 2.0f));
 
 	if (_timeInterval > 5)
 	{

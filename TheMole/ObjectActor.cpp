@@ -77,6 +77,11 @@ void ObjectActor::Reset(Vector2 pos)
 		_collided = false;
 }
 
+ObjectActor * ObjectActor::Clone()
+{
+    return new ObjectActor(*this);
+}
+
 bool ObjectActor::CollisionCheck(Actor & otherAI)
 {
 	return _aabb.CheckCollision(otherAI.GetAABB());

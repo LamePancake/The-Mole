@@ -11,7 +11,7 @@
 #include "Camera.h"
 #include "SpriteSheet.h"
 #include "Tile.h"
-
+#include "Util.h"
 
 class GameScreen;
 class Level;
@@ -69,6 +69,7 @@ public:
 		{ Type::turret, 2 },
 		{ Type::toggle, 2 },
 		{ Type::enemy, 2 },
+        { Type::bombenemy, 2 },
 	};
 
 	/**
@@ -84,6 +85,46 @@ public:
 	 */
 	Actor(Vector2 position, GameManager & manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites, const std::string&& startSprite,
 			SpriteSheet::XAxisDirection startXDirection, SpriteSheet::YAxisDirection startYDirection, bool active = true);
+
+    /**
+     * @brief Constructs an actor from a serialised string containing all of the actor's construction parameters (one per line, excluding sprites).
+     * @param serialsied The string containing construction parameters.
+     *
+     * Format:
+     * x y // position, doubles
+     * x y // speed, doubles
+     * sprite_name (string) texture_file (string) num_frames (int) duration (double) LEFT or RIGHT (XAXisDirection) UP or DOWN (YAxisDirection) // Sprite sheets (1 per line)
+     * start_sprite // string
+     * LEFT or RIGHT // start XAxisDirection
+     * UP or DOWN // start YAxisDirection
+     * 0 or 1  // isActive
+     */
+    Actor(std::string & serialised);
+
+    Actor(Actor& other)
+        : _health(other._health),
+        _curKinematic(other._curKinematic),
+        _prevKinematic(other._prevKinematic),
+        _collisionInfo(other._collisionInfo),
+        _aabb(other._aabb),
+        _currentSpriteSheet(other._currentSpriteSheet),
+        _mgr(other._mgr),
+        _gameScreen(other._gameScreen),
+        _spriteXDir(other._spriteXDir),
+        _spriteYDir(other._spriteYDir),
+        _startXDir(other._startXDir),
+        _startYDir(other._startYDir),
+        _isVisible(other._isVisible),
+        _isDestroyed(other._isDestroyed),
+        _destroysOnInactive(other._destroysOnInactive),
+        _isActive(other._isActive)
+    {
+        for (auto & sheet : other._sprites)
+        {
+            std::shared_ptr<SpriteSheet> sheetCopy = std::shared_ptr<SpriteSheet>(new SpriteSheet(*sheet.second));
+            _sprites[sheet.first] = sheetCopy;
+        }
+    }
 
 	/** Destructor. */
 	~Actor();
@@ -225,6 +266,17 @@ public:
 	 */
 	void Destroy();
 
+    /**
+     * @brief Whethis actor will be destroyed upon being reset.
+     */
+    bool DestroysOnInactive() const;
+
+    /**
+     * @brief Sets whethis actor will be destroyed upon becoming inactive.
+     * @param dsstroyOnInactove Whether this actor should be destroyed upon becoming inactive.
+     */
+    void SetDestroysOnInactive(bool destroyOnInactive);
+
 	// All the state changing stuff happens in here. 
 	virtual void Update(double elapsedSecs);
 
@@ -249,6 +301,20 @@ public:
 	 *
 	 */
 	virtual void Reset(Vector2 pos);
+
+    /**
+     * @brief Clones the actor, using the underlying type to create the instance. If the actor isn't cloneable, returns nullptr
+     *
+     * @return The cloned actor.
+     */
+    virtual Actor* Clone() = 0;
+
+    /**
+     * @brief Queries whether this actor is cloneable.
+     *
+     * @return Whether this actor is cloneable.
+     */
+    virtual bool IsCloneable() const = 0;
 
 	int GetZIndex();
 
@@ -333,6 +399,8 @@ protected:
 	bool _isVisible;
 
 	bool _isDestroyed;
+
+    bool _destroysOnInactive;
 
     /** @brief true if this Actor should be updated, checked against for collision, etc. */
     bool _isActive;

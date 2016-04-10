@@ -2,6 +2,7 @@
 #include "GameScreen.h"
 
 using std::vector;
+using std::string;
 using std::shared_ptr;
 
 Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
@@ -17,7 +18,8 @@ Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::unordere
 	_startYDir(startYDirection),
 	_spriteXDir(startXDirection),
 	_spriteYDir(startYDirection),
-    _isActive(active)
+    _isActive(active),
+    _destroysOnInactive(false)
 {
 	SetHealth(100);
 	
@@ -32,6 +34,89 @@ Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::unordere
 
     _collisionInfo.shouldCorrectX = false;
     _collisionInfo.shouldCorrectY = false;
+}
+
+Actor::Actor(std::string & serialised)
+    : _collisionInfo(),
+    _mgr(GameManager::GetInstance()),
+    _gameScreen(std::dynamic_pointer_cast<GameScreen>(_mgr->GetCurrentScreen())),
+    _isVisible(true),
+    _isDestroyed(false),
+    _destroysOnInactive(false)
+{
+    SetHealth(100);
+
+    std::istringstream lineStream(serialised);
+    std::string line;
+    
+    // Get position
+    getline(lineStream, line);
+    float pos;
+    std::istringstream posReader(line);
+    posReader >> pos;
+    _curKinematic.position.SetX(pos);
+    posReader >> pos;
+    _curKinematic.position.SetY(pos);
+
+    // Get speed
+    getline(lineStream, line);
+    float speed;
+    std::istringstream speedReader(line);
+    speedReader >> speed;
+    _curKinematic.velocity.SetX(speed);
+    speedReader >> speed;
+    _curKinematic.velocity.SetY(speed);
+
+    // Get the list of sprites
+    vector<string> splitLine;
+    while(true)
+    {
+        getline(lineStream, line);
+        line.erase(std::remove(line.end() - 1, line.end(), '\r'), line.end());
+
+        splitLine = split(line, ' ');
+        if (splitLine.size() <= 1) break;
+
+        int numFrames;
+        double duration;
+        bool isRepeating;
+        SpriteSheet::XAxisDirection xDir;
+        SpriteSheet::YAxisDirection yDir;
+        std::istringstream spriteParamsStream(line);
+        spriteParamsStream.ignore(splitLine[0].size() + splitLine[1].size() + 1);
+
+        // Read in spritesheet parameters
+        spriteParamsStream >> numFrames;
+        spriteParamsStream >> duration;
+        spriteParamsStream >> isRepeating;
+        xDir = splitLine[5] == "LEFT" ? SpriteSheet::XAxisDirection::LEFT : SpriteSheet::XAxisDirection::RIGHT;
+        yDir = splitLine[6] == "UP" ? SpriteSheet::YAxisDirection::UP : SpriteSheet::YAxisDirection::DOWN;
+
+        // Add sprite
+        _sprites[splitLine[0]] = shared_ptr<SpriteSheet>(new SpriteSheet(std::move(splitLine[1]), numFrames, duration, isRepeating, xDir, yDir));
+        _spriteXDir = xDir;
+        _spriteYDir = yDir;
+    }
+
+    // splitLine[0] contains the name of the start sheet after the above loop
+    _currentSpriteSheet = splitLine[0];
+
+    // Get start x and y directions
+    getline(lineStream, line);
+    line.erase(std::remove(line.end() - 1, line.end(), '\r'), line.end());
+    _startXDir = line == "LEFT" ? SpriteSheet::XAxisDirection::LEFT : SpriteSheet::XAxisDirection::RIGHT;
+    getline(lineStream, line);
+    line.erase(std::remove(line.end() - 1, line.end(), '\r'), line.end());
+    _startYDir = line == "UP" ? SpriteSheet::YAxisDirection::UP : SpriteSheet::YAxisDirection::DOWN;
+    
+    // Determine whether we're active
+    getline(lineStream, line);
+    line.erase(std::remove(line.end() - 1, line.end(), '\r'), line.end());
+    _isActive = line == "1" ? true : false;
+
+    _aabb = AABB(_sprites[_currentSpriteSheet]->GetFrameWidth(), _sprites[_currentSpriteSheet]->GetFrameHeight(), *this);
+
+    serialised.erase(0, lineStream.tellg());
 }
 
 Actor::~Actor()
@@ -126,12 +211,24 @@ bool Actor::IsActive() const
 void Actor::SetActive(bool active)
 {
     _isActive = active;
+    if(_destroysOnInactive)
+        Destroy();
 }
 
 void Actor::Destroy()
 {
 	_isVisible = false;
 	_isDestroyed = true;
+}
+
+bool Actor::DestroysOnInactive() const
+{
+    return _destroysOnInactive;
+}
+
+void Actor::SetDestroysOnInactive(bool destroyOnInactive)
+{
+    _destroysOnInactive = destroyOnInactive;
 }
 
 void Actor::Update(double elapsedSecs)
@@ -315,13 +412,14 @@ void Actor::DetectTileCollisions(TileCollisionInfo& colInfo, std::shared_ptr<Lev
         colInfo.colEdge = xVel > 0 ? Edge::RIGHT : Edge::LEFT;
         GetTilesAlongEdge(colInfo.colEdge, curBounds, colInfo.colIntersect);
 
+        colInfo.colPenetration = colInfo.colEdge == Edge::LEFT
+            ? (int)ceil((colInfo.colIntersect[0]->GetWorldPosition().GetX() + tileWidth - curBounds.leftBound))
+            : (int)ceil((curBounds.rightBound - colInfo.colIntersect[0]->GetWorldPosition().GetX()));
+
         for (auto tile : colInfo.colIntersect)
         {
             if (tile->GetID() != Tile::blank)
             {
-                colInfo.colPenetration = colInfo.colEdge == Edge::LEFT
-                    ? (int)ceil((tile->GetWorldPosition().GetX() + tileWidth - curBounds.leftBound))
-                    : (int)ceil((curBounds.rightBound - tile->GetWorldPosition().GetX()));
                 colInfo.shouldCorrectX = true;
                 break;
             }
@@ -369,10 +467,10 @@ void Actor::GetBounds(const KinematicState & state, Bounds & bounds)
 
 	// Calculate the actor's bounds
 	// Note that this should use the AABB, but it's reporting incorrect positions currently
-	bounds.rightBound = state.position.GetX() + _sprites[_currentSpriteSheet]->GetFrameWidth();
+	bounds.rightBound = state.position.GetX() + _aabb.GetWidth();
 	bounds.leftBound = state.position.GetX();
 	bounds.topBound = state.position.GetY();
-	bounds.bottomBound = state.position.GetY() + _sprites[_currentSpriteSheet]->GetFrameHeight();
+	bounds.bottomBound = state.position.GetY() + _aabb.GetHeight();
 
 	// Determine which tiles we intersect
 	bounds.topRow = (int)(bounds.topBound / tileHeight);
