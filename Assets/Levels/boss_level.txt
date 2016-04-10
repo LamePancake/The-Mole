@@ -2,8 +2,8 @@ SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
-SSS+A           W                  W         A+SSS
-SSSSS           D                  D         SSSSS
+SSS             W                  W           SSS
+SSS+A           D                  D         A+SSS
 SSSSS           D                  D         SSSSS
 SSSSS           D                  D         SSSSS
 SSSSS           D                  D         SSSSS
@@ -45,8 +45,8 @@ Spawners
 *
 0 0
 100 341.3
-walk ./Assets/Textures/Baddie_walk_56x56.png 8 1.0 1 RIGHT UP
-blow_up ./Assets/Textures/Shimmer.png 46 2.0 0 RIGHT UP
+walk ./Assets/Textures/BombMole_walk.png 8 1.0 1 RIGHT UP
+blow_up ./Assets/Textures/Explosion.png 10 1.0 0 RIGHT UP
 walk
 RIGHT
 UP
