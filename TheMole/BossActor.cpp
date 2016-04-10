@@ -27,7 +27,7 @@ BossActor::BossActor(Vector2 position,
 {
     CreateBehaviourTree();
     _curKinematic.velocity.SetY(341.3f);
-    SetHealth(90);
+    SetHealth(50);
 }
 
 BossActor::~BossActor()
@@ -128,7 +128,7 @@ void BossActor::SetSprite(string name)
 
 void BossActor::CreateBehaviourTree()
 {
-    auto checkStage1 = [this](double deltaTime) { return _health > 60 ? Node::Result::Success : Node::Result::Failure; };
+    auto checkStage1 = [this](double deltaTime) { return _health > 0 ? Node::Result::Success : Node::Result::Failure; };
 
     auto isPlayerClose = [this](double deltaTime)
     {
