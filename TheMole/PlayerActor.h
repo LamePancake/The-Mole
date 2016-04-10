@@ -206,7 +206,6 @@ private:
 	Actor *_lastPrj;
 
     Edge _digDir;
-	bool _godMode;
 
 	// Mind control variables
 	bool _stoppedTime;

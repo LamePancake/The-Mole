@@ -18,7 +18,6 @@ PlayerActor::PlayerActor(Vector2 position, GameManager& manager, Vector2 spd, st
     _jumped(false),
     _jumpDuration(0.75),
     _jumpTimeElapsed(0),
-    _godMode(false),
     _stoppedTime(false),
     _selected(0),
     _jumpBoost(600),
@@ -333,17 +332,8 @@ void PlayerActor::UpdateInput(double elapsedSecs)
 		}
 	}
 
-	if(_mgr->inputManager->ActionOccurred("GODMODE", Input::Pressed))
-	{
-		_godMode = !_godMode;
-		_health = 40000000;
-	}
-
-	if (!_godMode)
-	{
-		//COMMENT OUT THIS LINE TO DISABLE JUMP
-		SetSpeed(Vector2(_curKinematic.velocity.GetX(), GetJumpVelocity()));
-	}
+	//COMMENT OUT THIS LINE TO DISABLE JUMP
+	SetSpeed(Vector2(_curKinematic.velocity.GetX(), GetJumpVelocity()));
 
 	if (_mgr->inputManager->ActionOccurred("CHICKEN", Input::Pressed) && !_jumpBoosted  && level->IsHatAvailable("CHICKEN"))
 	{
@@ -675,7 +665,6 @@ void PlayerActor::Reset(Vector2 pos)
 {
 	Actor::Reset(pos);
 	_jumped = false; 
-	_godMode = false;
 	_stoppedTime = false;
 	_atGoal = false;
 	_triggeredIntro = false;
