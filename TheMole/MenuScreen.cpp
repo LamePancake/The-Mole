@@ -27,8 +27,8 @@ int MenuScreen::Load()
 	_controls   = new Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\mainMenuControls.png");
 	_devLogo    = new Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\logo.png");
 	
-	_logo = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_walk_56x56.png", 8, 1);
-	_logo->SetScale(6.0);
+	_logo = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\TitleLogo.png", 8, 2);
+	_logo->SetScale(2);
 
 	_curMenuItem = 0;
 
@@ -175,7 +175,7 @@ void MenuScreen::Draw()
 		rend.Copy(*_menuItems[i], NullOpt, Rect(size.GetX() * (0.05f + (float)i * 0.24f), size.GetY() * 0.88f - scaleFactor, size.GetX() * 0.18, size.GetY() * 0.1f));
 	}
 
-	_logo->Draw(SDL2pp::Point(size.GetX() * 0.6, size.GetY() * 0.55));
+	_logo->Draw(SDL2pp::Point(size.GetX() * 0.5, size.GetY() * 0.4));
 	rend.Copy(*_controls, NullOpt, Rect(size.GetX() * 0.60f, 0, size.GetX() * 0.40f, size.GetY() * 0.1f));
 	_borin->Draw(SDL2pp::Point((int)_borinPosition.GetX(), (int)_borinPosition.GetY()));
 

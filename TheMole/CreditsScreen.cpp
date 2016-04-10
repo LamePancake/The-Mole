@@ -103,6 +103,7 @@ void CreditsScreen::Draw()
 	rend.Copy(*_border, NullOpt, Rect(0.0f, size.GetY() * (0.25f + ((float)NUM_DEVELOPERS * 0.13f)) - (size.GetY() * 0.025f / 2), _back->GetWidth() + size.GetX() * 0.2f, _back->GetHeight() + size.GetY() * 0.025f));
 	rend.Copy(*_back, NullOpt, Rect(size.GetX() * 0.05f, size.GetY() * (0.25f + ((float)NUM_DEVELOPERS * 0.13f)), _back->GetWidth(), _back->GetHeight()));
 
+	rend.Copy(*_border, Rect(0, 0, 1, 1), Rect(0.0f, size.GetY() * 0.075f, size.GetX(), _credits->GetHeight()));
 	rend.Copy(*_credits, NullOpt, Rect(size.GetX() * 0.02f, size.GetY() * 0.07f, _credits->GetWidth(), _credits->GetHeight()));
 	rend.Copy(*_controls, NullOpt, Rect(size.GetX() * 0.7f, 0, size.GetX() * 0.40f, size.GetY() * 0.1f));
 
@@ -110,7 +111,6 @@ void CreditsScreen::Draw()
 
 	rend.Present();
 }
-
 // Could probably put this in a destructor, actually, but I guess it's nice to know when it will be called
 void CreditsScreen::Unload()
 {

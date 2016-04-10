@@ -184,6 +184,11 @@ void Actor::Reset(Vector2 pos)
     }
 }
 
+int Actor::GetZIndex()
+{
+	return ZIndex[GetType()];
+}
+
 void Actor::DetectTileCollisions(TileCollisionInfo& colInfo, std::shared_ptr<Level>& level)
 {
 	int tileWidth = level->GetTileWidth();

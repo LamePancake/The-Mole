@@ -34,6 +34,7 @@ int CutsceneScreen::Load()
 	_NPC->SetScale(0.8);
 
 	srand(time(NULL));
+	_skipTimer = 0;
 	return SCREEN_LOAD_SUCCESS;
 }
 
@@ -83,6 +84,10 @@ int CutsceneScreen::Update(double elapsedSecs)
 		}
 
 		UpdateDialog();
+
+		// HACK, will fix after open house. But seriously, probably not lol :))))))))))))))))))))))))
+		if(_currentNPCDialog == "*Takes hat off of Borin* ")
+			_protagonist = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\Borin_dialog.png", _protagNumFrames, _protagDuration);
 
 		int idx = rand() % 3;
 		std::string key = _currentlySpeaking == PROTAG ? _protagVoices[idx] : _npcVoices[idx];
