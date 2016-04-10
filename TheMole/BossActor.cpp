@@ -128,8 +128,7 @@ void BossActor::SetSprite(string name)
 
 void BossActor::CreateBehaviourTree()
 {
-    auto checkStage1 = [this](double deltaTime) { return _health > 50 ? Node::Result::Success : Node::Result::Failure; };
-    auto checkStage2 = [this](double deltaTime) { return _health <= 50 && _health > 0 ? Node::Result::Success : Node::Result::Failure; };
+    auto checkStage1 = [this](double deltaTime) { return _health > 60 ? Node::Result::Success : Node::Result::Failure; };
 
     auto isPlayerClose = [this](double deltaTime)
     {
@@ -165,33 +164,6 @@ void BossActor::CreateBehaviourTree()
             return  Node::Result::Success;
         }
         return Node::Result::Failure;
-    };
-
-    auto prePunch = [this](double deltaTime)
-    {
-        if (_currentSpriteSheet != "prepunch")
-        {
-            _sprites[_currentSpriteSheet]->Stop();
-            _currentSpriteSheet = "prepunch";
-            _sprites[_currentSpriteSheet]->Start();
-            _curKinematic.velocity.SetX(0);
-            return Node::Result::Running;
-        }
-
-        return _sprites[_currentSpriteSheet]->IsFinished() ? Node::Result::Success : Node::Result::Running;
-    };
-
-    auto punch = [this](double deltaTime)
-    {
-        if (_currentSpriteSheet != "punch")
-        {
-            _sprites[_currentSpriteSheet]->Stop();
-            _currentSpriteSheet = "punch";
-            _sprites[_currentSpriteSheet]->Start();
-            return Node::Result::Running;
-        }
-
-        return _sprites[_currentSpriteSheet]->IsFinished() ? Node::Result::Success : Node::Result::Running;
     };
     
     auto preRoll = [this](double deltaTime)
@@ -283,26 +255,6 @@ void BossActor::CreateBehaviourTree()
             }
         }
         return Node::Result::Success;
-    };
-
-    auto shortHop = [this](double deltaTime)
-    {
-        cout << "hop" << endl;
-        return Node::Result::Running;
-    };
-
-    auto shockWave = [this](double deltaTime)
-    {
-        if (_shockWaveDur > 0)
-        {
-            // Use prototype actor to create new one and add to level
-            //_gameScreen->GetLevel()->AddActor(projectile);
-            return Node::Result::Running;
-        }
-        else
-        {
-            return Node::Result::Success;
-        }
     };
 
    auto idle = [this](double deltaTime)
