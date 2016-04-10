@@ -352,8 +352,13 @@ void PlayerActor::UpdateInput(double elapsedSecs)
 	if (_mgr->inputManager->ActionOccurred("SHIELD", Input::Pressed) && level->IsHatAvailable("SHIELD"))
 	{
 		///Activate shield
-		if(_shieldStr > 0)
-			_shieldActive = true;
+		//if(_shieldStr > 0)
+		_shieldActive = true;
+		_shieldReleased = false;
+	}
+
+	if (_mgr->inputManager->ActionOccurred("SHIELD", Input::Held) && level->IsHatAvailable("SHIELD"))
+	{
 		_shieldReleased = false;
 	}
 
@@ -403,7 +408,7 @@ void PlayerActor::UpdateShieldStatus(double deltaTime)
 
 void PlayerActor::ShieldHit()
 {
-	_shieldStr--;
+	//_shieldStr--;
 }
 
 void PlayerActor::ProjectileHit(Actor *prj)

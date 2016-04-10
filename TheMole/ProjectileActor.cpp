@@ -32,7 +32,7 @@ void ProjectileActor::Update(double elapsedSecs)
 	_collisionInfo.rowIntersect.clear();
 	
 	DetectTileCollisions(_collisionInfo, _gameScreen->GetLevel());
-	if (_collisionInfo.colPenetration != 0 || _collisionInfo.rowPenetration != 0) {
+	if (_collisionInfo.shouldCorrectX|| _collisionInfo.shouldCorrectX) {
 		_sprites[_currentSpriteSheet]->Stop();
         Destroy();
 	}
@@ -43,7 +43,8 @@ void ProjectileActor::Update(double elapsedSecs)
 
 void ProjectileActor::Reset(Vector2 pos)
 {
-	Actor::Reset(pos);
+	Destroy();
+	//Actor::Reset(pos);
 }
 
 ProjectileActor * ProjectileActor::Clone()
