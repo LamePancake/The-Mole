@@ -19,7 +19,7 @@ Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::unordere
 	_spriteXDir(startXDirection),
 	_spriteYDir(startYDirection),
     _isActive(active),
-    _destroyOnReset(false)
+    _destroysOnInactive(false)
 {
 	SetHealth(100);
 	
@@ -42,7 +42,7 @@ Actor::Actor(std::string & serialised)
     _gameScreen(std::dynamic_pointer_cast<GameScreen>(_mgr->GetCurrentScreen())),
     _isVisible(true),
     _isDestroyed(false),
-    _destroyOnReset(false)
+    _destroysOnInactive(false)
 {
     SetHealth(100);
 
@@ -113,6 +113,8 @@ Actor::Actor(std::string & serialised)
     getline(lineStream, line);
     line.erase(std::remove(line.end() - 1, line.end(), '\r'), line.end());
     _isActive = line == "1" ? true : false;
+
+    _aabb = AABB(_sprites[_currentSpriteSheet]->GetFrameWidth(), _sprites[_currentSpriteSheet]->GetFrameHeight(), *this);
 
     serialised.erase(0, lineStream.tellg());
 }
@@ -209,6 +211,8 @@ bool Actor::IsActive() const
 void Actor::SetActive(bool active)
 {
     _isActive = active;
+    if(_destroysOnInactive)
+        Destroy();
 }
 
 void Actor::Destroy()
@@ -217,14 +221,14 @@ void Actor::Destroy()
 	_isDestroyed = true;
 }
 
-bool Actor::DestroysOnReset() const
+bool Actor::DestroysOnInactive() const
 {
-    return _destroyOnReset;
+    return _destroysOnInactive;
 }
 
-void Actor::SetDestroyOnReset(bool destroyOnReset)
+void Actor::SetDestroysOnInactive(bool destroyOnInactive)
 {
-    _destroyOnReset = destroyOnReset;
+    _destroysOnInactive = destroyOnInactive;
 }
 
 void Actor::Update(double elapsedSecs)
@@ -265,12 +269,6 @@ void Actor::Draw(Camera& camera)
 
 void Actor::Reset(Vector2 pos)
 {
-    if (_destroyOnReset)
-    {
-        Destroy();
-        return;
-    }
-
 	SetPosition(pos);
 	SetHealth(100);
 	SetActorXDirection(_startXDir);
@@ -409,13 +407,14 @@ void Actor::DetectTileCollisions(TileCollisionInfo& colInfo, std::shared_ptr<Lev
         colInfo.colEdge = xVel > 0 ? Edge::RIGHT : Edge::LEFT;
         GetTilesAlongEdge(colInfo.colEdge, curBounds, colInfo.colIntersect);
 
+        colInfo.colPenetration = colInfo.colEdge == Edge::LEFT
+            ? (int)ceil((colInfo.colIntersect[0]->GetWorldPosition().GetX() + tileWidth - curBounds.leftBound))
+            : (int)ceil((curBounds.rightBound - colInfo.colIntersect[0]->GetWorldPosition().GetX()));
+
         for (auto tile : colInfo.colIntersect)
         {
             if (tile->GetID() != Tile::blank)
             {
-                colInfo.colPenetration = colInfo.colEdge == Edge::LEFT
-                    ? (int)ceil((tile->GetWorldPosition().GetX() + tileWidth - curBounds.leftBound))
-                    : (int)ceil((curBounds.rightBound - tile->GetWorldPosition().GetX()));
                 colInfo.shouldCorrectX = true;
                 break;
             }
@@ -463,10 +462,10 @@ void Actor::GetBounds(const KinematicState & state, Bounds & bounds)
 
 	// Calculate the actor's bounds
 	// Note that this should use the AABB, but it's reporting incorrect positions currently
-	bounds.rightBound = state.position.GetX() + _sprites[_currentSpriteSheet]->GetFrameWidth();
+	bounds.rightBound = state.position.GetX() + _aabb.GetWidth();
 	bounds.leftBound = state.position.GetX();
 	bounds.topBound = state.position.GetY();
-	bounds.bottomBound = state.position.GetY() + _sprites[_currentSpriteSheet]->GetFrameHeight();
+	bounds.bottomBound = state.position.GetY() + _aabb.GetHeight();
 
 	// Determine which tiles we intersect
 	bounds.topRow = (int)(bounds.topBound / tileHeight);

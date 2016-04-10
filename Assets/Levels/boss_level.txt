@@ -1,21 +1,59 @@
-SSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSS               SSSSS
-SSSSS               SSSSS
-SSSSS               SSSSS
-SSSSS               SSSSS
-SSSSS               SSSSS
-SSSSS               SSSSS
-SSSSS               SSSSS
-SSSSTO           B  SSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+SSS+A           W                  W         A+SSS
+SSSSS           D                  D         SSSSS
+SSSSS           D                  D         SSSSS
+SSSSS           D                  D         SSSSS
+SSSSS           D                  D         SSSSS
+SSSSS           D                  D         SSSSS
+SSSSS           D                  D         SSSSS
+SSSSS           D                  D         SSSSS
+SSSSS           D                  D         SSSSS
+SSSSS           D                  D         SSSSS
+SSSSS           D                  D         SSSSS
+SSSSS           D                  D         SSSSS
+SSSSS           D                  D         SSSSS
+SSSSS           D                  D         SSSSS
+SSSSS           D                  D         SSSSS
+SSSSS           D                  D         SSSSS
+SSSSS         B                              SSSSS
+SSSSS                                        SSSSS
+SSSSS                                        SSSSS
+SSSSS                                        SSSSS
+SSSSTO                                       SSSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+
+Toggles
+Top one-shot
+Top one-shot
+
+Doors
+Right toggle 0
+Left toggle 1
 
 hats
 SHIELD 1
 CHICKEN 1
 MIND_CONTROL 1
+
+Spawners
+1
+0
+*
+0 0
+100 341.3
+walk ./Assets/Textures/Baddie_walk_56x56.png 8 1.0 1 RIGHT UP
+blow_up ./Assets/Textures/Shimmer.png 46 2.0 0 RIGHT UP
+walk
+RIGHT
+UP
+1
+0 0
+./Assets/Textures/Controlled_indicator.png
+
+1
+0
+spawner 0

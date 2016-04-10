@@ -8,7 +8,7 @@ std::shared_ptr<Actor> ActorSpawner::GetPrototype()
 void ActorSpawner::SetPrototype(std::shared_ptr<Actor> prototype)
 {
     _prototype = prototype;
-    _prototype->SetDestroyOnReset(true);
+    _prototype->SetDestroysOnInactive(true);
 }
 
 void ActorSpawner::Update(double deltaTime)

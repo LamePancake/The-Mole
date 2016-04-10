@@ -58,6 +58,9 @@ private:
 	Vector2 _playerPos;
 	Vector2 _bossPos;
 
+    // The direction in which the boss was rolling on pre-roll
+    int _rollDir;
+
     void CreateBehaviourTree();
 };
  

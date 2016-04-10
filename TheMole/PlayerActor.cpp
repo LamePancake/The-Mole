@@ -106,10 +106,7 @@ void PlayerActor::Update(double elapsedSecs)
 			{
 			case Type::enemy:
             case Type::bombenemy:
-				if (CollisionCheck(*actor))
-				{
-					SetHealth(0);
-				}
+				SetHealth(0);
 				break;
 			case Type::door:
 				shared_ptr<DoorActor> door = dynamic_pointer_cast<DoorActor>(actor);

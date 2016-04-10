@@ -9,7 +9,7 @@ public:
     ActorSpawner(std::shared_ptr<Level> level, std::shared_ptr<Actor> prototype, double period, bool allowMultiple)
         : _level(level), _prototype(prototype), _period(period), _multiple(allowMultiple), _lastSpawned(), _timeSinceSpawn(0)
     {
-        _prototype->SetDestroyOnReset(true);
+        _prototype->SetDestroysOnInactive(true);
     }
 
     /**

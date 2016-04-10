@@ -103,7 +103,7 @@ public:
         _startYDir(other._startYDir),
         _isVisible(other._isVisible),
         _isDestroyed(other._isDestroyed),
-        _destroyOnReset(other._destroyOnReset),
+        _destroysOnInactive(other._destroysOnInactive),
         _isActive(other._isActive)
     {
         for (auto & sheet : other._sprites)
@@ -256,13 +256,13 @@ public:
     /**
      * @brief Whethis actor will be destroyed upon being reset.
      */
-    bool DestroysOnReset() const;
+    bool DestroysOnInactive() const;
 
     /**
-     * @brief Sets whethis actor will be destroyed upon being reset.
-     * @param dsstroyOnReset Whether this actor should be destroyed upon being reset.
+     * @brief Sets whethis actor will be destroyed upon becoming inactive.
+     * @param dsstroyOnInactove Whether this actor should be destroyed upon becoming inactive.
      */
-    void SetDestroyOnReset(bool destroyOnReset);
+    void SetDestroysOnInactive(bool destroyOnInactive);
 
 	// All the state changing stuff happens in here. 
 	virtual void Update(double elapsedSecs);
@@ -385,7 +385,7 @@ protected:
 
 	bool _isDestroyed;
 
-    bool _destroyOnReset;
+    bool _destroysOnInactive;
 
     /** @brief true if this Actor should be updated, checked against for collision, etc. */
     bool _isActive;
