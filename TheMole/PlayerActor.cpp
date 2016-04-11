@@ -49,11 +49,11 @@ void PlayerActor::Draw(Camera& camera)
 				, 10.0f));
 		}
 
-		if (_shieldActive)
-			rend.FillRect(SDL2pp::Rect(dim.GetX() * (0.2f)
-				, dim.GetY()  * 0.2f
-				, 20.0f
-				, 20.0f));
+		//if (_shieldActive)
+		//	rend.FillRect(SDL2pp::Rect(dim.GetX() * (0.2f)
+		//		, dim.GetY()  * 0.2f
+		//		, 20.0f
+		//		, 20.0f));
 	}
 }
 
