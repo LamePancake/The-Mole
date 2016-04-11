@@ -92,7 +92,7 @@ void TurretActor::TurretUpdate(double elapseSecs)
 	else
 		projectilePosition = Vector2(_curKinematic.position.GetX() + _sprites[_currentSpriteSheet]->GetFrameWidth() + (_sprites["shoot"]->GetFrameWidth()), _curKinematic.position.GetY() + (_sprites[_currentSpriteSheet]->GetFrameHeight() / 2.0f) - (_sprites["shoot"]->GetFrameHeight() / 2.0f));
 
-	if (_timeInterval > 0.25)
+	if (_timeInterval > 3)
 	{
 		if (_pattern.size() == 0)
 		{
