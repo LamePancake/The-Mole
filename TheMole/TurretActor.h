@@ -16,6 +16,17 @@ public:
 		, SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT
 		, SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP);
 
+	TurretActor(
+		Vector2 position
+		, GameManager & manager
+		, Vector2 spd
+		, bool aim
+		, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites
+		, const std::string&& startSprite
+		, SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT
+		, SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP
+		);
+
 	~TurretActor();
 
 	/**

@@ -23,6 +23,22 @@ TurretActor::TurretActor(
 	_timeInterval = 0;
 }
 
+TurretActor::TurretActor(Vector2 position
+	, GameManager & manager
+	, Vector2 spd
+	, bool aim
+	, std::unordered_map<std::string
+	, std::shared_ptr<SpriteSheet>>& sprites
+	, const std::string && startSprite
+	, SpriteSheet::XAxisDirection startXDirection
+	, SpriteSheet::YAxisDirection startYDirection
+	) : Actor(position, manager, spd, sprites, std::move(startSprite)
+		, startXDirection, startYDirection), _aim(aim)
+{
+	_sprites[_currentSpriteSheet];
+	_timeInterval = 0;
+}
+
 TurretActor::~TurretActor()
 {
 }
