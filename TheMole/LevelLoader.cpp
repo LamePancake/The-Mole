@@ -93,15 +93,15 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 			case Tile::origin:
 			{
 				std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
-				sprites.reserve(6);
+				sprites.reserve(4);
 				if (den)
 				{
 					sprites["sideDig"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_den_sidedig_56x56.png", 4, 0.30);
 					sprites["verticalDig"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_downdig_56x56.png", 4, 0.30, true, SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection::DOWN);
 					sprites["walk"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_den_walk_56x56.png", 8, 1);
 					sprites["idle"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_den_idle_56x56.png", 4, 0.8);
-					sprites["shieldOff"] == std::make_shared<SpriteSheet>("./Assets/Textures/Empty_Shield.png", 1, 1);
-					sprites["shieldOn"] == std::make_shared<SpriteSheet>("./Assets/Textures/Full_Shield.png", 1, 1);
+					//sprites["shieldOff"] == std::make_shared<SpriteSheet>("./Assets/Textures/Empty_Shield.png", 1, 1);
+					//sprites["shieldOn"] == std::make_shared<SpriteSheet>("./Assets/Textures/Full_Shield.png", 1, 1);
 				}
 				else
 				{
@@ -109,9 +109,12 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 					sprites["verticalDig"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_downdig_56x56.png", 4, 0.30, true, SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection::DOWN);
 					sprites["walk"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_walk_56x56.png", 8, 1);
 					sprites["idle"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_idle_56x56.png", 4, 0.8);
-					sprites["shieldOff"] == std::make_shared<SpriteSheet>("./Assets/Textures/Empty_Shield.png", 1, 1);
-					sprites["shieldOn"] == std::make_shared<SpriteSheet>("./Assets/Textures/Full_Shield.png", 1, 1);
+					//sprites["shieldOff"] == std::make_shared<SpriteSheet>("./Assets/Textures/Empty_Shield.png", 1, 1);
+					//sprites["shieldOn"] == std::make_shared<SpriteSheet>("./Assets/Textures/Full_Shield.png", 1, 1);
 				}
+
+				sprites["shieldOff"] = std::make_shared<SpriteSheet>("./Assets/Textures/Empty_Shield.png", 1, 1);
+				sprites["shieldOn"] = std::make_shared<SpriteSheet>("./Assets/Textures/Full_Shield.png", 1, 1);
 
 				sprites["chickenHatWalk"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_walk_56x56_chicken.png", 8, 1);
 				sprites["chickenHatIdle"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_idle_56x56_chicken.png", 4, 0.8);
