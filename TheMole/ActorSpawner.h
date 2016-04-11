@@ -32,7 +32,7 @@ public:
      * @brief Updates the actor spawner, spawning new actors as appropriate.
      *
      */
-    void Update(double deltaTime);
+    virtual void Update(double deltaTime);
 
     // Starts spawning stuff
     void Start();

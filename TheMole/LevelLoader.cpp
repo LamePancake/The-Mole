@@ -16,6 +16,7 @@
 #include "ToggleActor.h"
 #include "DoorActor.h"
 #include "ActorSpawner.h"
+#include "TargetedActorSpawner.h"
 
 using std::shared_ptr;
 using std::vector;
@@ -48,7 +49,7 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 	// So long as we don't have *too* many repeated textures, I'm sure that this list will be totally manageable :):):):):):):););)
 	// 10/10 would read again - Trey
 	std::shared_ptr<SDL2pp::Texture> baddieWalkSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(),"./Assets/Textures/Baddie_walk_56x56.png");
-    std::shared_ptr<SDL2pp::Texture> bombSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), "./Assets/Textures/Shimmer.png");
+    std::shared_ptr<SDL2pp::Texture> bombSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), "./Assets/Textures/Explosion.png");
 	std::shared_ptr<SDL2pp::Texture> mindControlIndicator = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), "./Assets/Textures/Controlled_indicator.png");
 
     std::unordered_map<char, std::vector<SDL2pp::Point>> positions;
@@ -82,7 +83,7 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
             {
                 std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> bombSprites;
                 bombSprites["walk"] = std::make_shared<SpriteSheet>(baddieWalkSheet, 8, 1.f);
-                bombSprites["blow_up"] = std::make_shared<SpriteSheet>(bombSheet, 46, 2.f, false);
+                bombSprites["blow_up"] = std::make_shared<SpriteSheet>(bombSheet, 11, 2.f, false);
 
                 std::shared_ptr<BombAIActor> e = std::make_shared<BombAIActor>(tile->GetWorldPosition(), gameManager, Vector2(100.0f, 341.3f), bombSprites, "walk",
                     mindControlIndicator, tile->GetWorldPosition());
@@ -93,9 +94,7 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 			case Tile::origin:
 			{
 				std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
-				sprites.reserve(6);
-                sprites["shieldOff"] == std::make_shared<SpriteSheet>("./Assets/Textures/Empty_Shield.png", 1, 1);
-                sprites["shieldOn"] == std::make_shared<SpriteSheet>("./Assets/Textures/Full_Shield.png", 1, 1);
+				sprites.reserve(14);
 				if (den)
 				{
 					sprites["sideDig"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_den_sidedig_56x56.png", 4, 0.30);
@@ -110,6 +109,9 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 					sprites["walk"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_walk_56x56.png", 8, 1);
 					sprites["idle"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_idle_56x56.png", 4, 0.8);
                 }
+
+				sprites["shieldOff"] = std::make_shared<SpriteSheet>("./Assets/Textures/Empty_Shield.png", 1, 1);
+				sprites["shieldOn"] = std::make_shared<SpriteSheet>("./Assets/Textures/Full_Shield.png", 1, 1);
 
 				sprites["chickenHatWalk"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_walk_56x56_chicken.png", 8, 1);
 				sprites["chickenHatIdle"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_idle_56x56_chicken.png", 4, 0.8);
@@ -146,34 +148,44 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 				break;
 			case Tile::boss:
 				{
+                    double infinity = std::numeric_limits<double>::infinity();
+
                     // Boss sprites
 					std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
-					sprites.reserve(6);
 					sprites["idle"] = std::make_shared<SpriteSheet>("./Assets/Textures/Watch_idle.png", 4, 0.50, true, SpriteSheet::XAxisDirection::LEFT);
                     sprites["preroll"] = std::make_shared<SpriteSheet>("./Assets/Textures/Watch_preroll.png", 4, 0.75, false, SpriteSheet::XAxisDirection::LEFT);
                     sprites["roll"] = std::make_shared<SpriteSheet>("./Assets/Textures/Watch_roll.png", 10, 0.50, true, SpriteSheet::XAxisDirection::LEFT);
                     sprites["overheat"] = std::make_shared<SpriteSheet>("./Assets/Textures/Watch_overheat.png", 12, 1, false, SpriteSheet::XAxisDirection::LEFT);
+                    sprites["dead"] = std::make_shared<SpriteSheet>("./Assets/Textures/Watch_death.png", 1, infinity, false, SpriteSheet::XAxisDirection::LEFT);
 
-                    // Create a prototype projectile actor for the boss to clone later
-                    std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> projSprites;
-                    double infinity = std::numeric_limits<double>::infinity();
-                    projSprites["shoot"] = shared_ptr<SpriteSheet>(new SpriteSheet(bombSheet, 46, infinity, false));
+                    std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> alienSprites;
+                    alienSprites["turret"] = shared_ptr<SpriteSheet>(new SpriteSheet("./Assets/Textures/Graylien_shoot.png", 4, 1.5f, false));
+                    alienSprites["dead"] = shared_ptr<SpriteSheet>(new SpriteSheet("./Assets/Textures/Graylien_dead.png", 1, infinity, false));
+                    alienSprites["shoot"] = shared_ptr<SpriteSheet>(new SpriteSheet("./Assets/Textures/laser.png", 1, infinity, false));
 
-                    std::shared_ptr<ProjectileActor> projectile = std::make_shared<ProjectileActor>(
-                        tile->GetWorldPosition() ///Vec2 position
-                        , gameManager            ///Gamemanager
-                        , Vector2(100.0f, 0.0f)  ///Vec2 spd
-                        , projSprites            ///sprites
-                        , "shoot"                ///startsprite
-                        , SpriteSheet::XAxisDirection::LEFT); ///direction
+                    std::shared_ptr<TurretActor> alien = std::make_shared<TurretActor>(
+                                Vector2(0, 0),
+                                *GameManager::GetInstance(),
+                                Vector2(0, 0),
+                                alienSprites,
+                                "turret",
+                                line == "0" ? SpriteSheet::XAxisDirection::LEFT : SpriteSheet::XAxisDirection::RIGHT,
+                                SpriteSheet::YAxisDirection::UP);
 
-					std::shared_ptr<BossActor> boss = std::make_shared<BossActor>(tile->GetWorldPosition(),
+                    std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> explosion;
+                    explosion["explode"] = shared_ptr<SpriteSheet>(new SpriteSheet(bombSheet, 11, 1.0, false));
+                    std::shared_ptr<Actor> explodeProto = shared_ptr<Actor>(new ObjectActor(Vector2(0, 0), *GameManager::GetInstance(), Vector2(0, 0), -1, explosion, "explode"));
+                    std::shared_ptr<TargetedActorSpawner> explosionSpawner = shared_ptr<TargetedActorSpawner>(
+                        new TargetedActorSpawner(level, explodeProto, 0.2, 13, Vector2(0, 0), 80));
+
+					std::shared_ptr<BossActor> boss = shared_ptr<BossActor>(new BossActor(tile->GetWorldPosition(),
                                                                                   gameManager,
                                                                                   Vector2(200, 0),
                                                                                   sprites,
                                                                                   "idle",
-                                                                                  projectile,
-                                                                                  SpriteSheet::XAxisDirection::LEFT);
+                                                                                  alien,
+                                                                                  explosionSpawner,
+                                                                                  SpriteSheet::XAxisDirection::LEFT));
 					level->AddActor(boss);
 					tile->SetID(Tile::blank);
 				}

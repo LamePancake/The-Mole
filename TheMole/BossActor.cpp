@@ -15,15 +15,17 @@ BossActor::BossActor(Vector2 position,
           Vector2 spd,
           std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
           const std::string&& startSprite,
-          shared_ptr<Actor> projectile,
+          shared_ptr<Actor> alien,
+          shared_ptr<TargetedActorSpawner> spawner,
           SpriteSheet::XAxisDirection startXDirection,
           SpriteSheet::YAxisDirection startYDirection)
 	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection),
     _heat(0),
-    _projPrototype(projectile),
+    _alien(alien),
     _tookDamage(false),
     _rollDur(10),
-    _idleDur(5)
+    _idleDur(2),
+    _explosionSpawner(spawner)
 {
     CreateBehaviourTree();
     _curKinematic.velocity.SetY(341.3f);
@@ -142,7 +144,7 @@ void BossActor::SetSprite(string name)
 void BossActor::CreateBehaviourTree()
 {
     auto checkStage1 = [this](double deltaTime) { return _health > 0 ? Node::Result::Success : Node::Result::Failure; };
-
+    auto checkStage2 = [this](double deltaTime) { return _currentSpriteSheet != "dead" ? Node::Result::Success : Node::Result::Failure; };
     auto isPlayerClose = [this](double deltaTime)
     {
         shared_ptr<PlayerActor> player = _gameScreen->GetPlayer();
@@ -290,15 +292,35 @@ void BossActor::CreateBehaviourTree()
         }
    };
 
+   // Starts the xplosion sequence
    auto explode = [this](double elapsedSecs)
    {
-
+       Vector2 centre(_aabb.GetX() + _aabb.GetWidth() / 2, _aabb.GetY() + _aabb.GetHeight() / 2);
+       _explosionSpawner->SetTarget(centre);
+       _explosionSpawner->Start();
+       _gameScreen->GetLevel()->AddSpawner(_explosionSpawner);
+       return Node::Success;
    };
 
-   auto eject = [this](double elapsedSecs)
+   // Checks whether an explosion spawned last frame
+   auto spawnedExplosion = [this](double deltaTime)
    {
-       cout << "eject" << endl;
-       return Node::Result::Running;
+       Node::Result res = _explosionSpawner->GetNumSpawned() == 13 ? Node::Result::Success : Node::Result::Failure;
+       return res;
+   };
+
+   auto spawnAlien = [this](double deltaTime)
+   {
+       // Put the alien in at current position
+       _alien->SetPosition(Vector2(_curKinematic.position.GetX() - 64, _curKinematic.position.GetY() + 128));
+       
+       SetSprite("dead");
+       // Update health bar?
+
+       // Start firing those dank projectiles
+       _gameScreen->GetLevel()->AddActor(_alien);
+       SetActive(false);
+       return Node::Success;
    };
 
    // TODO: Draw the entire behaviour tree (here or somewhere within the repo) and point to it
@@ -348,6 +370,21 @@ void BossActor::CreateBehaviourTree()
    firstStageSeq->AddChild(rollActionSelector);
 
    root->AddChild(firstStageSeq);
+
+   // Blow up and spawn the alien
+   shared_ptr<Sequence> ejectSeq = shared_ptr<Sequence>(new Sequence);
+   shared_ptr<Node> checkStage2Task = shared_ptr<Node>(new Task(true, std::function<Node::Result(double)>(checkStage2)));
+   shared_ptr<Node> startExploding = shared_ptr<Node>(new Task(false, std::function<Node::Result(double)>(explode)));
+   shared_ptr<Node> explodeTask = shared_ptr<Node>(new Task(false, std::function<Node::Result(double)>(spawnedExplosion)));
+   shared_ptr<Node> untilExplode = shared_ptr<Node>(new UntilSuccess(explodeTask));
+   shared_ptr<Node> spawnAlienTask = shared_ptr<Node>(new Task(true, std::function<Node::Result(double)>(spawnAlien)));
+
+   ejectSeq->AddChild(checkStage2Task);
+   ejectSeq->AddChild(startExploding);
+   ejectSeq->AddChild(untilExplode);
+   ejectSeq->AddChild(spawnAlienTask);
+   
+   root->AddChild(ejectSeq);
 
    _bossTree = BossBehavTree(root, 0.1f);
 }

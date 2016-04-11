@@ -18,21 +18,23 @@ SSSSS           D                  D         SSSSS
 SSSSS           D                  D         SSSSS
 SSSSS           D                  D         SSSSS
 SSSSS           D                  D         SSSSS
+SSSSS           D                  D         SSSSS
 SSSSS                                        SSSSS
+SSSSS        B                               SSSSS
 SSSSS                                        SSSSS
-SSSSS               B                        SSSSS
-SSSSS                                        SSSSS
-SSSSTO                                        GSSS
+SSSSTO                                   W   AGSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 
 Toggles
 Top one-shot
 Top one-shot
+Bottom one-shot
 
 Doors
 Right toggle 0
 Left toggle 1
+Left toggle 2
 
 hats
 SHIELD 1
@@ -40,13 +42,13 @@ CHICKEN 1
 MIND_CONTROL 1
 
 Spawners
-1
+5
 1
 *
 0 0
 100 341.3
 walk ./Assets/Textures/BombMole_walk.png 8 1.0 1 RIGHT UP
-blow_up ./Assets/Textures/Explosion.png 10 1.0 0 RIGHT UP
+blow_up ./Assets/Textures/Explosion.png 11 1.0 0 RIGHT UP
 walk
 RIGHT
 UP
@@ -54,6 +56,6 @@ UP
 0 0
 ./Assets/Textures/Controlled_indicator.png
 
-1
+5
 1
 spawner 0

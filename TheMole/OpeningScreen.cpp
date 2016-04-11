@@ -100,7 +100,9 @@ void OpeningScreen::Unload()
 		{
 			delete _storyTexture[i][j];
 		}
+		_storyTexture[i].clear();
 	}
+	_storyTexture.clear();
 
 	_currScreen = 0;
 	delete _backgroundTexture;

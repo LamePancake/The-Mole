@@ -2,6 +2,7 @@
 
 #include "Actor.h"
 #include "BossBehavTree.h"
+#include "TargetedActorSpawner.h"
 
 class BossActor : public Actor
 {
@@ -10,7 +11,8 @@ public:
               Vector2 spd,
               std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
               const std::string&& startSprite,
-              std::shared_ptr<Actor> projectile,
+              std::shared_ptr<Actor> alien,
+              std::shared_ptr<TargetedActorSpawner> spawner,
 		      SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT,
               SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP);
 
@@ -53,7 +55,8 @@ public:
 private:
 	BossBehavTree _bossTree;
 	float _heat;
-    std::shared_ptr<Actor> _projPrototype;
+    std::shared_ptr<Actor> _alien;
+    std::shared_ptr<TargetedActorSpawner> _explosionSpawner;
 
 	Vector2 _playerPos;
 	Vector2 _bossPos;

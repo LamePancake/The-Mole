@@ -42,11 +42,14 @@ void PlayerActor::Draw(Camera& camera)
 
 	if (!_gameScreen->isIntroScreen && _gameScreen->GetLevel()->IsHatAvailable("SHIELD"))
 	{
-		for (int i = 0; i < _shieldStr; i++) {
-			rend.FillRect(SDL2pp::Rect(dim.GetX() * (0.90f + (i * 0.02f))
-				, dim.GetY()  * 0.97f
-				, 10.0f
-				, 10.0f));
+		for (int i = 0; i < _shieldStr; i++) 
+		{
+			std::string _shieldSprite = "shieldOn";
+			_sprites[_shieldSprite]->Draw(SDL2pp::Point(dim.GetX() * (0.80f + (i * 0.04f)), dim.GetY()  * 0.9f));
+			//rend.FillRect(SDL2pp::Rect(dim.GetX() * (0.90f + (i * 0.02f))
+			//	, dim.GetY()  * 0.97f
+			//	, 10.0f
+			//	, 10.0f));
 		}
 
 		//if (_shieldActive)

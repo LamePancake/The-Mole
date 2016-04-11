@@ -1,10 +1,10 @@
 #pragma once
 #include "ActorSpawner.h"
 
-class TargetActorSpawner : public ActorSpawner
+class TargetedActorSpawner : public ActorSpawner
 {
 public:
-    TargetActorSpawner(std::shared_ptr<Level> level,
+    TargetedActorSpawner(std::shared_ptr<Level> level,
                        std::shared_ptr<Actor> prototype,
                        double period,
                        int limit,

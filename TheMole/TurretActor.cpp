@@ -5,6 +5,7 @@
 #include "GameScreen.h"
 #include "BombAIActor.h"
 #include "ProjectileActor.h"
+#include "ToggleActor.h"
 #include <memory>
 #include <math.h>
 
@@ -19,7 +20,6 @@ TurretActor::TurretActor(
 	) : Actor(position, manager, spd, sprites, std::move(startSprite)
 		, startXDirection, startYDirection)
 {
-	_sprites[_currentSpriteSheet];
 	_timeInterval = 0;
 }
 
@@ -35,7 +35,6 @@ TurretActor::TurretActor(Vector2 position
 	) : Actor(position, manager, spd, sprites, std::move(startSprite)
 		, startXDirection, startYDirection), _aim(aim)
 {
-	_sprites[_currentSpriteSheet];
 	_timeInterval = 0;
 }
 
@@ -51,6 +50,7 @@ void TurretActor::Draw(Camera & camera)
 void TurretActor::Update(double elapsedSecs)
 {
 	Actor::Update(elapsedSecs);
+    TurretUpdate(elapsedSecs);
 	if (_isDestroyed || !_isActive) return;
 
 	for (auto & actor : _gameScreen->GetLevel()->GetActors())
@@ -66,9 +66,21 @@ void TurretActor::Update(double elapsedSecs)
 				return;
 			}
 		}
-	}
+        else if (actor->GetType() == Type::projectile)
+        {
+            // Major hacks in-bound
+            // The only timte this will ever happen is in the boss battle...
+            // So we're going to do some logic here that probably shouldn't be a thing
+            //SetActive(false);
+            //auto switches = _gameScreen->GetLevel()->GetActorsOfType<ToggleActor>(Type::toggle);
+            //switches[2]->SetVisibility(true);
+            //switches[2]->SetActive(true);
 
-	TurretUpdate(elapsedSecs);
+            //_sprites[_currentSpriteSheet]->Stop();
+            //_currentSpriteSheet = "dead";
+            //_sprites[_currentSpriteSheet]->Start();
+        }
+	}
 }
 
 void TurretActor::Reset(Vector2 pos)
@@ -160,17 +172,6 @@ void TurretActor::TurretUpdate(double elapseSecs)
 					);
 			}
 		}
-		//if (_timeInterval > 3) {
-		//	_gameScreen->GetLevel()->AddActor(std::make_shared<ProjectileActor>(
-		//		projectilePosition //- Vector2(0, -50) ///Vec2 position
-		//		, *_mgr ///Gamemanager
-		//		, this->_startXDir == SpriteSheet::XAxisDirection::LEFT ? Vector2(-200.0f, 0.0f) : Vector2(200.0f, 0.0f)///Vec2 spd
-		//		, _sprites ///sprites
-		//		, "shoot" ///startsprite
-		//		, this->_startXDir) ///direction
-		//		);
-		//	_timeInterval = elapseSecs;
-		//}
         _timeInterval = 0;
 	}
 }

@@ -62,9 +62,9 @@ public:
 	std::unordered_map<int, int> ZIndex {
 		{ Type::npc, 3 },
 		{ Type::player, 5 },
-		{ Type::boss, 4 },
+		{ Type::boss, 0 },
 		{ Type::door, 1 },
-		{ Type::object, 0 },
+		{ Type::object, 1 },
 		{ Type::projectile, 1 },
 		{ Type::turret, 2 },
 		{ Type::toggle, 2 },
