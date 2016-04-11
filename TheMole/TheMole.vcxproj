@@ -140,6 +140,7 @@
     <ClCompile Include="BossActor.cpp" />
     <ClCompile Include="BossBehavTree.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="ClosingScreen.cpp" />
     <ClCompile Include="ControlsScreen.cpp" />
     <ClCompile Include="CreditsScreen.cpp" />
     <ClCompile Include="CutsceneScreen.cpp" />
@@ -182,6 +183,7 @@
     <ClInclude Include="CutsceneScreen.h" />
     <ClInclude Include="DoorActor.h" />
     <ClInclude Include="GameScreen.h" />
+    <ClInclude Include="ClosingScreen.h" />
     <ClInclude Include="LevelSelectScreen.h" />
     <ClInclude Include="Math.h" />
     <ClInclude Include="NPCActor.h" />

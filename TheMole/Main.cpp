@@ -14,6 +14,7 @@
 #include "ControlsScreen.h"
 #include "OptionsScreen.h"
 #include "OpeningScreen.h"
+#include "ClosingScreen.h"
 
 
 using std::string;
@@ -72,6 +73,7 @@ int main(int argc, char** argv) {
 		shared_ptr<Screen> menu(new MenuScreen(bank));
 		shared_ptr<Screen> levelSelect(new LevelSelectScreen(bank));
 		shared_ptr<OpeningScreen> opening(new OpeningScreen(bank));
+		shared_ptr<ClosingScreen> closing(new ClosingScreen(bank));
 
 		shared_ptr<Screen> den(new GameScreen("./Assets/Levels/den_level.txt", "./Assets/Textures/den_bg.png", "./Assets/SavedData/den_score.txt", "viking", bank));
 		shared_ptr<Screen> viking(new GameScreen("./Assets/Levels/viking_level.txt", "./Assets/Textures/viking_bg.png", "./Assets/SavedData/viking_score.txt", "grass", bank));
@@ -102,7 +104,7 @@ int main(int argc, char** argv) {
 
 		// Post Boss Fight Screens
 		shared_ptr<Screen> postFight(new GameScreen("./Assets/Levels/postfight_level.txt", "./Assets/Textures/boss_bg.png", "./Assets/SavedData/boss_score.txt", "postfightintro", bank, true));
-		shared_ptr<Screen> postFightIntro(new CutsceneScreen("./Assets/Textures/dialog_box.png", "./Assets/Textures/boss_bg.png", "./Assets/Textures/Borin_dialog.png", 4, 0.8, "./Assets/Textures/Adalbert_dialog.png", 4, 0.8, bank, "levelSelect", "./Assets/Dialog/post_fight_dialog.txt", "Borin", "Adalbert", borinVoices, vikingVoices));
+		shared_ptr<Screen> postFightIntro(new CutsceneScreen("./Assets/Textures/dialog_box.png", "./Assets/Textures/boss_bg.png", "./Assets/Textures/Borin_dialog.png", 4, 0.8, "./Assets/Textures/Adalbert_dialog.png", 4, 0.8, bank, "closing", "./Assets/Dialog/post_fight_dialog.txt", "Borin", "Adalbert", borinVoices, vikingVoices));
 
 
 		shared_ptr<Screen> credits(new CreditsScreen(bank));
@@ -115,6 +117,7 @@ int main(int argc, char** argv) {
 		screens.insert({ "credits", credits });
 		screens.insert({ "controls", controls });
 		screens.insert({ "options", options });
+		screens.insert({ "closing", closing });
 
 		screens.insert({ "denlevel", den });
 		screens.insert({ "vikinglevel", viking });
