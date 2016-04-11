@@ -6,6 +6,7 @@
 #include "BombAIActor.h"
 #include "ProjectileActor.h"
 #include <memory>
+#include <math.h>
 
 TurretActor::TurretActor(
 	Vector2 position
@@ -17,6 +18,22 @@ TurretActor::TurretActor(
 	, SpriteSheet::YAxisDirection startYDirection
 	) : Actor(position, manager, spd, sprites, std::move(startSprite)
 		, startXDirection, startYDirection)
+{
+	_sprites[_currentSpriteSheet];
+	_timeInterval = 0;
+}
+
+TurretActor::TurretActor(Vector2 position
+	, GameManager & manager
+	, Vector2 spd
+	, bool aim
+	, std::unordered_map<std::string
+	, std::shared_ptr<SpriteSheet>>& sprites
+	, const std::string && startSprite
+	, SpriteSheet::XAxisDirection startXDirection
+	, SpriteSheet::YAxisDirection startYDirection
+	) : Actor(position, manager, spd, sprites, std::move(startSprite)
+		, startXDirection, startYDirection), _aim(aim)
 {
 	_sprites[_currentSpriteSheet];
 	_timeInterval = 0;
@@ -82,6 +99,19 @@ void TurretActor::SetPattern(std::vector<Vector2> prjDirSet)
 	_pattern = prjDirSet;
 }
 
+void TurretActor::ToggleAim()
+{
+	_aim = _aim ? false : true;
+}
+
+Vector2 TurretActor::AimAtPlayer()
+{
+	Vector2 aim = _gameScreen->GetPlayer()->GetPosition() - _curKinematic.position;
+	double length = sqrt(pow(aim.GetX(), 2) + pow(aim.GetY(), 2));
+	aim = Vector2((aim.GetX() / length) * 100, (aim.GetY() / length) * 100);
+	return aim;
+}
+
 void TurretActor::TurretUpdate(double elapseSecs)
 {
 	_timeInterval += elapseSecs;
@@ -94,7 +124,18 @@ void TurretActor::TurretUpdate(double elapseSecs)
 
 	if (_timeInterval > 3)
 	{
-		if (_pattern.size() == 0)
+		if (_aim)
+		{
+			_gameScreen->GetLevel()->AddActor(std::make_shared<ProjectileActor>(
+				projectilePosition //- Vector2(0, -50) ///Vec2 position
+				, *_mgr ///Gamemanager
+				, AimAtPlayer()
+				, _sprites ///sprites
+				, "shoot" ///startsprite
+				, this->_startXDir) ///direction
+				);
+		}
+		else if (_pattern.size() == 0)
 		{
 			_gameScreen->GetLevel()->AddActor(std::make_shared<ProjectileActor>(
 				projectilePosition //- Vector2(0, -50) ///Vec2 position
@@ -119,17 +160,17 @@ void TurretActor::TurretUpdate(double elapseSecs)
 					);
 			}
 		}
-		if (_timeInterval > 3) {
-			_gameScreen->GetLevel()->AddActor(std::make_shared<ProjectileActor>(
-				projectilePosition //- Vector2(0, -50) ///Vec2 position
-				, *_mgr ///Gamemanager
-				, this->_startXDir == SpriteSheet::XAxisDirection::LEFT ? Vector2(-200.0f, 0.0f) : Vector2(200.0f, 0.0f)///Vec2 spd
-				, _sprites ///sprites
-				, "shoot" ///startsprite
-				, this->_startXDir) ///direction
-				);
-			_timeInterval = elapseSecs;
-		}
+		//if (_timeInterval > 3) {
+		//	_gameScreen->GetLevel()->AddActor(std::make_shared<ProjectileActor>(
+		//		projectilePosition //- Vector2(0, -50) ///Vec2 position
+		//		, *_mgr ///Gamemanager
+		//		, this->_startXDir == SpriteSheet::XAxisDirection::LEFT ? Vector2(-200.0f, 0.0f) : Vector2(200.0f, 0.0f)///Vec2 spd
+		//		, _sprites ///sprites
+		//		, "shoot" ///startsprite
+		//		, this->_startXDir) ///direction
+		//		);
+		//	_timeInterval = elapseSecs;
+		//}
 	}
 }
 
