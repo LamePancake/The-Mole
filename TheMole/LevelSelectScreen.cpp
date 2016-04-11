@@ -71,6 +71,8 @@ int LevelSelectScreen::Load()
 	_nextScreen = "menu";
 	_curMenuItem = 0;
 
+	_mgr->PlayMusic(".\\Assets\\Audio\\menu_theme.ogg");
+
 	return SCREEN_LOAD_SUCCESS;
 }
 

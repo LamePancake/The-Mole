@@ -205,13 +205,16 @@ void GameManager::WriteHighScoreFile(std::string path)
 
 void GameManager::PlayMusic(std::string path)
 {
-	SDL2pp::Music *track;
-	track = new Music(path);
 	if (_curMusicPath != path)
 	{
 		_curMusicPath = path;
-		_mixer.PlayMusic(*track);
+		_track = new Music(path);
+		_mixer.PlayMusic(*_track);
 	}
+	//else
+	//{
+	//	_mixer.ResumeMusic();
+	//}
 }
 
 void GameManager::ClearHighScores()

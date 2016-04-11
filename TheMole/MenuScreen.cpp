@@ -41,8 +41,9 @@ int MenuScreen::Load()
 	_direction = 1;
 	_nextScreen = "levelSelect";
 
-    _menuTheme = new Music(".\\Assets\\Audio\\menu_theme.ogg");
-    _mgr->GetMixer().PlayMusic(*_menuTheme);
+    //_menuTheme = new Music(".\\Assets\\Audio\\menu_theme.ogg");
+    //_mgr->GetMixer().PlayMusic(*_menuTheme);
+	_mgr->PlayMusic(".\\Assets\\Audio\\menu_theme.ogg");
 
 	return SCREEN_LOAD_SUCCESS;
 }

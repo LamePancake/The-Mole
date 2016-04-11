@@ -133,6 +133,7 @@ private:
 	std::shared_ptr<Screen> _nextScreen;
 	std::shared_ptr<Screen> _curScreen;
 	std::string _curMusicPath;
+	SDL2pp::Music* _track;
 
 	SDL2pp::SDL& _sdl;
 	SDL2pp::SDLImage& _sdlImage;
