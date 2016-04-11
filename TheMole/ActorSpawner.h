@@ -33,6 +33,16 @@ public:
      */
     void Update(double deltaTime);
 
+    std::weak_ptr<Actor> GetLastSpawned();
+
+    void SetPeriod(double newPeriod);
+
+    double GetPeriod() const;
+
+    bool CanSpawnMultiple() const;
+
+    void SetCanSpawnMultiple(bool allowMultiple);
+
 private:
     std::shared_ptr<Level> _level;
 

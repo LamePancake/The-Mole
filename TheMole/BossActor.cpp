@@ -27,7 +27,7 @@ BossActor::BossActor(Vector2 position,
 {
     CreateBehaviourTree();
     _curKinematic.velocity.SetY(341.3f);
-    SetHealth(50);
+    SetHealth(10);
 }
 
 BossActor::~BossActor()
@@ -80,14 +80,27 @@ void BossActor::Update(double elapsedSecs)
         case Actor::Type::bombenemy:
         {
             shared_ptr<BombAIActor> bomber = dynamic_pointer_cast<BombAIActor>(actor);
-            if (!bomber->IsBlowingUp() && bomber->GetAABB().CheckCollision(_aabb))
+            AABB bomberAABB = bomber->GetAABB();
+
+            // The boss sprite's borders are a bit far from its actual dimensions
+            // So now we have this
+            Vector2 bomberCentre = Vector2(bomberAABB.GetX() + bomberAABB.GetWidth() / 2, bomberAABB.GetY() + bomberAABB.GetHeight() / 2);
+            Vector2 bossCentre = Vector2(_aabb.GetX() + _aabb.GetWidth() / 2, _aabb.GetY() + _aabb.GetHeight() / 2);
+
+            float dist = bomberCentre.Distance(bossCentre);
+
+            if (!bomber->IsBlowingUp() && bomber->GetAABB().CheckCollision(_aabb) && dist <= 100)
             {
                 // Blow up any stray bombers, but only actually take damage when we're overheating
-                bomber->BlowUp();
-                if (_currentSpriteSheet == "overheating")
+                if (_currentSpriteSheet == "overheat" && bomber->IsUnderMindControl())
                 {
+                    bomber->BlowUp();
                     _tookDamage = true;
                     _health -= 10;
+                }
+                else if (_currentSpriteSheet == "roll")
+                {
+                    bomber->BlowUp();
                 }
             }
         }
@@ -174,6 +187,7 @@ void BossActor::CreateBehaviourTree()
             float bossX = _curKinematic.position.GetX();
 
             _rollDir = playerX < bossX ? -1 : 1;
+            _spriteXDir = _rollDir == -1 ? SpriteSheet::XAxisDirection::LEFT : SpriteSheet::XAxisDirection::RIGHT;
 
             _curKinematic.velocity.SetX(0);
             SetSprite("preroll");
@@ -194,6 +208,9 @@ void BossActor::CreateBehaviourTree()
 
         _curKinematic.velocity.SetX(300.f * (playerX < bossX ? -1 : 1));
         _heat += HEAT_RATE * deltaTime;
+
+        _spriteXDir = _curKinematic.velocity.GetX() < 0 ? SpriteSheet::XAxisDirection::LEFT : SpriteSheet::XAxisDirection::RIGHT;
+
         if (_currentSpriteSheet != "roll")
         {
             SetSprite("roll");
@@ -271,6 +288,11 @@ void BossActor::CreateBehaviourTree()
             ResetDurations();
             return Node::Result::Success;
         }
+   };
+
+   auto explode = [this](double elapsedSecs)
+   {
+
    };
 
    auto eject = [this](double elapsedSecs)

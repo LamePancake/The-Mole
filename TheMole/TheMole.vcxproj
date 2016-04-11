@@ -191,6 +191,7 @@
     <ClInclude Include="Quadtree.h" />
     <ClInclude Include="SoundEffectBank.h" />
     <ClInclude Include="SpriteSheet.h" />
+    <ClInclude Include="TargetActorSpawner.h" />
     <ClInclude Include="ToggleActor.h" />
     <ClInclude Include="Tile.h" />
     <ClInclude Include="TurretActor.h" />

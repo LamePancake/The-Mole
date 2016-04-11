@@ -25,3 +25,23 @@ void ActorSpawner::Update(double deltaTime)
         _timeSinceSpawn = 0;
     }
 }
+
+void ActorSpawner::SetPeriod(double newPeriod)
+{
+    _period = newPeriod;
+}
+
+double ActorSpawner::GetPeriod() const
+{
+    return _period;
+}
+
+bool ActorSpawner::CanSpawnMultiple() const
+{
+    return _multiple;
+}
+
+void ActorSpawner::SetCanSpawnMultiple(bool allowMultiple)
+{
+    _multiple = allowMultiple;
+}
