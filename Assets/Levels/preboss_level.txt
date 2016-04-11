@@ -1,19 +1,30 @@
-SSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSS               SSSSS
-SSSSS               SSSSS
-SSSSS               SSSSS
-SSSSS               SSSSS
-SSSSS               SSSSS
-SSSSS          N    SSSSS
-SSSSSII             SSSSS
-SSSSTOI             SSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+SSS                                            SSS
+SSS             D                  D           SSS
+SSSSS           D                  D         SSSSS
+SSSSS           D                  D         SSSSS
+SSSSS           D                  D         SSSSS
+SSSSS           D                  D         SSSSS
+SSSSS           D                  D         SSSSS
+SSSSS           D                  D         SSSSS
+SSSSS           D                  D         SSSSS
+SSSSS           D                  D         SSSSS
+SSSSS           D                  D         SSSSS
+SSSSS           D                  D         SSSSS
+SSSSS           D                  D         SSSSS
+SSSSS           D                  D         SSSSS
+SSSSS           D                  D         SSSSS
+SSSSS           D                  D         SSSSS
+SSSSS                                        SSSSS
+SSSSS                                        SSSSS
+SSSSS               N                        SSSSS
+SSSSSII                                      SSSSS
+SSSSTOI                                       GSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 
 hats
 SHIELD 0
