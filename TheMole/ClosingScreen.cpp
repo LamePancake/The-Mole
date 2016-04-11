@@ -7,37 +7,102 @@ using namespace SDL2pp;
 const static SDL_Color NORMAL = { 255, 255, 255, 255 };
 const static SDL_Color GRAY = { 100, 100, 100, 20 };
 
-std::vector<std::string> credits{
-	"Matt Ku - Programmer, Designer",         
-	"Shane Spoor - Programmer, Designer",     
-	"Tim Wang - Programmer, Designer, Artist",
-	"Trevor Ware - Programmer, Designer",     
+std::vector<std::string> matt{
+	"Matt Ku",
+	"Chief Projectile Motion Researcher",         
+	"Turret Engineer",     
+	"Lead Input Handling Designer",
+	"Viking Hat Strengthening Associate",     
+	"Senior Actor Deleter",
+	"Chief Trap Implementer",
+	"Senior Red Marker User",
+	"Lead Fight Organizer",
+};
+
+std::vector<std::string> shane{
+	"Shane Spoor",
+	"Chief Refactorer",
+	"Lead Speedrun Attemptor",
+	"Senior Late Night Comment Author",
+	"Lead Door Opener",
+	"Shimmer Investigator",
+	"Explosives Expert",
+	"Noise Maker",
+	"Chief Coffee Consumer",
+};
+
+std::vector<std::string> trevor{
+	"Trevor Ware",
+	"Team Lead",
+	"Quadtree Implementation Technical Lead",
+	"Senior Menu Artist",
+	"Chief Committer",
+	"Map Format Architect",
+	"Dialogue Writer",
+	"Cutscene Face Arranger",
+	"Hat Stylist",
+};
+
+std::vector<std::string> tim{
+	"Tim Wang",
+	"Lead Artist",
+	"Chief AI Programmer",
+	"Senior Annoying Pancake Jump Placer",
+	"Chief SourceTree Evangelist",
+	"Lead Cameo Character Artist",
+	"Preliminary Tile Collision Implementor",
+	"Lead Animator",
+	"Senior Practicum Developer",
+};
+
+std::vector<std::string> end{
+	"Thank you for playing!!",
 };
 
 int ClosingScreen::Load()
 {
 	_mgr = GameManager::GetInstance();
 
-	_currScreen = 0;
-
-	_storyTexture.resize(2);
-
 	_font = new SDL2pp::Font(".\\Assets\\Fonts\\Exo-Regular.otf", 35);
 	_backgroundTexture = new Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\end_bg.png");
 	_backgroundTexture2 = new Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\opening_thing.png");
-	_enter = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\borin_end.png", 4, 0.5f);
-	_enter->SetScale(1.0f);
+	_borinAndTheChicken = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\borin_end.png", 4, 0.5f);
+	_borinAndTheChicken->SetScale(1.0f);
 
-	for (int i = 0; i < credits.size(); ++i)
+	_creditsTexture.resize(5);
+
+	for (int j = 0; j < matt.size(); ++j)
 	{
-		if (i >= credits.size() / 2.0)
-			_currScreen = 1;
-
-		Texture* t = new Texture(_mgr->GetRenderer(), _font->RenderText_Solid(credits[i], NORMAL));
-		_storyTexture[_currScreen].push_back(t);
+		Texture* t = new Texture(_mgr->GetRenderer(), _font->RenderText_Solid(matt[j], NORMAL));
+		_creditsTexture[0].push_back(t);
 	}
 
-	_currScreen = 0;
+	for (int j = 0; j < shane.size(); ++j)
+	{
+		Texture* t = new Texture(_mgr->GetRenderer(), _font->RenderText_Solid(shane[j], NORMAL));
+		_creditsTexture[1].push_back(t);
+	}
+
+	for (int j = 0; j < tim.size(); ++j)
+	{
+		Texture* t = new Texture(_mgr->GetRenderer(), _font->RenderText_Solid(tim[j], NORMAL));
+		_creditsTexture[2].push_back(t);
+	}
+
+	for (int j = 0; j < trevor.size(); ++j)
+	{
+		Texture* t = new Texture(_mgr->GetRenderer(), _font->RenderText_Solid(trevor[j], NORMAL));
+		_creditsTexture[3].push_back(t);
+	}
+
+	for (int j = 0; j < end.size(); ++j)
+	{
+		Texture* t = new Texture(_mgr->GetRenderer(), _font->RenderText_Solid(end[j], NORMAL));
+		_creditsTexture[4].push_back(t);
+	}
+
+	_drawnCredit.push_back(_creditsTexture[_currPerson][_currDraw++]);
+
 	return SCREEN_LOAD_SUCCESS;
 }
 
@@ -46,17 +111,31 @@ int ClosingScreen::Update(double elapsedSecs)
 	SDL_PumpEvents();
 	_mgr->inputManager->UpdateKeyboardState();
 
-	_enter->Update(elapsedSecs);
+	_timer += elapsedSecs;
 
-	if (_mgr->inputManager->ActionOccurred("CONFIRM", Input::Pressed))
+	_borinAndTheChicken->Update(elapsedSecs);
+
+	if (_timer > 1.5)
 	{
-		_currScreen++;
+		_timer = 0;
 
-		if (_currScreen > 1)
+		if (_currDraw < _creditsTexture[_currPerson].size())
+			_drawnCredit.push_back(_creditsTexture[_currPerson][_currDraw++]);
+		else
+			_currDraw++;
+
+		if (_currDraw > _creditsTexture[_currPerson].size())
 		{
-			_soundBank.PlaySound("accept");
-			_mgr->SetNextScreen("menu");
-			return SCREEN_FINISH;
+			_currPerson++;
+			_drawnCredit.clear();
+			_currDraw = 0;
+
+			if (_currPerson >= 5)
+			{
+				_soundBank.PlaySound("accept");
+				_mgr->SetNextScreen("menu");
+				return SCREEN_FINISH;
+			}
 		}
 	}
 
@@ -72,31 +151,39 @@ void ClosingScreen::Draw()
 
 	SDL2pp::Point size = GameManager::GetInstance()->GetWindow().GetSize();
 
-	rend.Copy(*_backgroundTexture2, NullOpt, Rect(size.GetX() * 0.5f - ((size.GetX() * 0.95f) / 2.0f), size.GetY() * 0.5f - ((size.GetY() * 0.65f) / 2.0f), size.GetX() * 0.95f, size.GetY() * 0.65f));
+	rend.Copy(*_backgroundTexture2, NullOpt, Rect(size.GetX() * 0.5f - ((size.GetX() * 0.95f) / 2.0f), size.GetY() * 0.5f - ((size.GetY() * 0.85f) / 2.0f), size.GetX() * 0.95f, size.GetY() * 0.85f));
 
 	int i = 0;
-	for (Texture* line : _storyTexture[_currScreen])
+	for (Texture* line : _drawnCredit)
 	{
-		rend.Copy(*line, NullOpt, Rect(size.GetX() * 0.5f - (line->GetWidth() / 2.0f), size.GetY() * (0.25f + (0.1 * i)), line->GetWidth(), line->GetHeight()));
+		rend.Copy(*line, NullOpt, Rect(size.GetX() * 0.5f - (line->GetWidth() / 2.0f), size.GetY() * (0.1f + (0.09 * i)), line->GetWidth(), line->GetHeight()));
 		++i;
 	}
 
-	_enter->Draw(SDL2pp::Point(size.GetX() * 0.1f, size.GetY() * 0.855f));
+	_borinAndTheChicken->Draw(SDL2pp::Point(size.GetX() * 0.1f, size.GetY() * 0.855f));
 	rend.Present();
 }
 
 // Could probably put this in a destructor, actually, but I guess it's nice to know when it will be called
 void ClosingScreen::Unload()
 {
-	for (int i = 0; i < _storyTexture.size(); ++i)
+	for (int j = 0; j < _creditsTexture.size(); ++j)
 	{
-		for (int j = 0; j < _storyTexture[i].size(); ++j)
+		for (int i = 0; i < _creditsTexture[j].size(); ++i)
 		{
-			delete _storyTexture[i][j];
+			delete _creditsTexture[j][i];
 		}
+		_creditsTexture[j].clear();
 	}
+	
+	_creditsTexture.clear();
+	_timer = 0;
 
-	_currScreen = 0;
+	_drawnCredit.clear();
+
+	_currDraw = 0;
+	_currPerson = 0;
+
 	delete _backgroundTexture;
 	delete _backgroundTexture2;
 }
