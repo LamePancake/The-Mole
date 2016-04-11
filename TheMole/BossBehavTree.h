@@ -24,6 +24,7 @@ public:
 
 	virtual Result Run(double elapsedSecs) = 0;
     virtual Result Resume(Result blockedResult, double elapsedSecs) = 0;
+    virtual void Reset();
 
     virtual bool IsInterruptible() const { return _interruptible; };
 
@@ -50,6 +51,7 @@ public:
 
 	const std::vector<std::shared_ptr<Node>>& GetChildren() const;
 	void AddChild(std::shared_ptr<Node> child);
+    virtual void Reset();
 };
 
 class Selector : public CompositeNode
@@ -85,6 +87,7 @@ public:
         return _taskFunc(elapsedSeconds);
     }
     virtual Result Resume(Result blockedResult, double elapsedSecs) override;
+    virtual void Reset();
 
 private:
     std::function<Result(double)> _taskFunc;
@@ -105,6 +108,7 @@ public:
     }
 
     virtual Result Resume(Result blockedResult, double elapsedSecs) override;
+    virtual void Reset();
 private:
     std::shared_ptr<Node> _child;
 };
@@ -123,6 +127,7 @@ public:
         return nullptr;
     }
     virtual Result Resume(Result blockedResult, double elapsedSecs) override;
+    virtual void Reset();
 private:
     std::shared_ptr<Node> _child;
     int _limit;
@@ -135,6 +140,7 @@ public:
     BossBehavTree() {}
 	BossBehavTree(std::shared_ptr<Node> root, double updatePeriod);
     void Update(double detlaTime);
+    void Reset();
 private:
     double _updatePeriod;
     double _timeSinceUpdate;

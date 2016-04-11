@@ -115,6 +115,14 @@ void BossActor::Update(double elapsedSecs)
 void BossActor::Reset(Vector2 pos)
 {
 	Actor::Reset(pos);
+
+    if (_currentSpriteSheet != "dead")
+    {
+        _bossTree.Reset();
+        _heat = 0;
+        SetHealth(50);
+        ResetDurations();
+    }
 }
 
 BossActor * BossActor::Clone()

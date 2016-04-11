@@ -11,6 +11,12 @@ Node::Node(bool interruptible)
 {
 }
 
+void Node::Reset()
+{
+    _blockingChild = nullptr;
+}
+
+
 std::shared_ptr<Node> Node::GetBlockingChild()
 {
     return _blockingChild;
@@ -28,6 +34,13 @@ const vector<shared_ptr<Node>>& CompositeNode::GetChildren() const
 void CompositeNode::AddChild(shared_ptr<Node> child)
 {
     _children.push_back(child);
+}
+
+void CompositeNode::Reset()
+{
+    _blockedIndex = -1;
+    for (auto & child : _children)
+        child->Reset();
 }
 
 Node::Result Selector::Run(double elapsedSecs)
@@ -171,6 +184,14 @@ void BossBehavTree::Update(double deltaTime)
     }
 }
 
+void BossBehavTree::Reset()
+{
+    _timeSinceUpdate = 0;
+    _root->Reset();
+    for (auto i = 0; i < _blocked.size(); ++i)
+        _blocked.pop();
+}
+
 void BossBehavTree::PushBlocked(shared_ptr<Node> blocked)
 {
     _blocked.push(blocked);
@@ -244,6 +265,11 @@ Node::Result UntilSuccess::Resume(Result blockedResult, double elapsedSecs)
     return blockedResult == Result::Success ? Result::Success : Run(elapsedSecs);
 }
 
+void UntilSuccess::Reset()
+{
+    _child->Reset();
+}
+
 Node::Result RunNTimes::Run(double elapsedSeconds)
 {
     Result res = _child->Run(elapsedSeconds);
@@ -280,8 +306,19 @@ Node::Result RunNTimes::Resume(Result blockedResult, double elapsedSecs)
     return Result::Running;
 }
 
+void RunNTimes::Reset()
+{
+    _current = 0;
+    _child->Reset();
+}
+
 Node::Result Task::Resume(Result blockedResult, double elapsedSecs)
 {
     // Task nodes should always be leaves, so we can't return anything meaningful
     return Result();
+}
+
+void Task::Reset()
+{
+    // Does nothing
 }
