@@ -86,7 +86,30 @@ void PlayerActor::Update(double elapsedSecs)
 	if (wasDigging && _digDir == Edge::NONE)
 	{
 		_sprites[_currentSpriteSheet]->Stop();
-		_currentSpriteSheet = _curKinematic.velocity.GetX() > 1 ? "walk" : "idle";
+			
+		if (_curKinematic.velocity.GetX() > 1)
+		{
+			if (_mgr->inputManager->ActionOccurred("CHICKEN", Input::Held))
+				_currentSpriteSheet = "chickenHatWalk";
+			else if (_mgr->inputManager->ActionOccurred("SHIELD", Input::Held))
+				_currentSpriteSheet = "vikingHatWalk";
+			else if (_mgr->inputManager->ActionOccurred("MIND_CONTROL", Input::Held))
+				_currentSpriteSheet = "mindControlHatWalk";
+			else
+				_currentSpriteSheet = "walk";
+		}
+		else
+		{
+			if (_mgr->inputManager->ActionOccurred("CHICKEN", Input::Held))
+				_currentSpriteSheet = "chickenHatIdle";
+			else if (_mgr->inputManager->ActionOccurred("SHIELD", Input::Held))
+				_currentSpriteSheet = "vikingHatIdle";
+			else if (_mgr->inputManager->ActionOccurred("MIND_CONTROL", Input::Held))
+				_currentSpriteSheet = "mindControlHatIdle";
+			else
+				_currentSpriteSheet = "idle";
+		}
+		
 		SetActorYDirection(SpriteSheet::YAxisDirection::UP);
 		_sprites[_currentSpriteSheet]->Start();
 	}
@@ -291,9 +314,18 @@ void PlayerActor::UpdateInput(double elapsedSecs)
             SetSpeed(Vector2(Math::Clamp(_curKinematic.velocity.GetX() - 50.0f, -300.0f, -50.0f), _curKinematic.velocity.GetY()));
             if (_currentSpriteSheet != "walk")
             {
-                _sprites[_currentSpriteSheet]->Stop();
-                _currentSpriteSheet = "walk";
-                _sprites[_currentSpriteSheet]->Start();
+				_sprites[_currentSpriteSheet]->Stop();
+
+				if (_mgr->inputManager->ActionOccurred("CHICKEN", Input::Held))
+					_currentSpriteSheet = "chickenHatWalk";
+				else if (_mgr->inputManager->ActionOccurred("SHIELD", Input::Held))
+					_currentSpriteSheet = "vikingHatWalk";
+				else if (_mgr->inputManager->ActionOccurred("MIND_CONTROL", Input::Held))
+					_currentSpriteSheet = "mindControlHatWalk";
+				else
+					_currentSpriteSheet = "walk";
+
+				_sprites[_currentSpriteSheet]->Start();
             }
         }
         else if (_mgr->inputManager->ActionOccurred("RIGHT", Input::Down))
@@ -303,9 +335,18 @@ void PlayerActor::UpdateInput(double elapsedSecs)
 
             if (_currentSpriteSheet != "walk")
             {
-                _sprites[_currentSpriteSheet]->Stop();
-                _currentSpriteSheet = "walk";
-                _sprites[_currentSpriteSheet]->Start();
+				_sprites[_currentSpriteSheet]->Stop();
+
+				if (_mgr->inputManager->ActionOccurred("CHICKEN", Input::Held))
+					_currentSpriteSheet = "chickenHatWalk";
+				else if (_mgr->inputManager->ActionOccurred("SHIELD", Input::Held))
+					_currentSpriteSheet = "vikingHatWalk";
+				else if (_mgr->inputManager->ActionOccurred("MIND_CONTROL", Input::Held))
+					_currentSpriteSheet = "mindControlHatWalk";
+				else
+					_currentSpriteSheet = "walk";
+
+				_sprites[_currentSpriteSheet]->Start();
             }
         }
         else
@@ -314,9 +355,18 @@ void PlayerActor::UpdateInput(double elapsedSecs)
             SetSpeed(Vector2(0.0f, _curKinematic.velocity.GetY()));
             if (_currentSpriteSheet == "walk")
             {
-                _sprites[_currentSpriteSheet]->Stop();
-                _currentSpriteSheet = "idle";
-                _sprites[_currentSpriteSheet]->Start();
+				_sprites[_currentSpriteSheet]->Stop();
+
+				if (_mgr->inputManager->ActionOccurred("CHICKEN", Input::Held))
+					_currentSpriteSheet = "chickenHatIdle";
+				else if (_mgr->inputManager->ActionOccurred("SHIELD", Input::Held))
+					_currentSpriteSheet = "vikingHatIdle";
+				else if (_mgr->inputManager->ActionOccurred("MIND_CONTROL", Input::Held))
+					_currentSpriteSheet = "mindControlHatIdle";
+				else
+					_currentSpriteSheet = "idle";
+
+				_sprites[_currentSpriteSheet]->Start();
             }
         }
     }
