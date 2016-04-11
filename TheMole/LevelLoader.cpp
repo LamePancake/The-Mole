@@ -108,7 +108,16 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 					sprites["walk"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_walk_56x56.png", 8, 1);
 					sprites["idle"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_idle_56x56.png", 4, 0.8);
 				}
-				
+
+				sprites["chickenHatWalk"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_walk_56x56_chicken.png", 8, 1);
+				sprites["chickenHatIdle"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_idle_56x56_chicken.png", 4, 0.8);
+				sprites["mindControlHatWalk"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_walk_56x56_mindcontrol.png", 8, 1);
+				sprites["mindControlHatIdle"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_idle_56x56_mindcontrol.png", 4, 0.8);
+				sprites["vikingHatWalk"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_walk_56x56_viking.png", 8, 1);
+				sprites["vikingHatIdle"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_idle_56x56_viking.png", 4, 0.8);
+				sprites["chickenWalk"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_walk_56x56_sidewithchicken.png", 8, 1);
+				sprites["chickenIdle"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_idle_56x56_sidewithchicken.png", 4, 0.8);
+
 				player = std::make_shared<PlayerActor>(tile->GetWorldPosition(), gameManager, Vector2(.0f, 341.3f), sprites, "idle");
 				tile->SetID(Tile::blank);
 				level->SetSpawnPoint(tile->GetWorldPosition(), 0);
