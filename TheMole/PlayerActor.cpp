@@ -397,7 +397,7 @@ void PlayerActor::UpdateShieldStatus(double deltaTime)
 		_shieldStr = 4;
 	}
 
-	
+
 	//}
 }
 
