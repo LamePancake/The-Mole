@@ -41,7 +41,7 @@ MIND_CONTROL 1
 
 Spawners
 1
-0
+1
 *
 0 0
 100 341.3
@@ -55,5 +55,5 @@ UP
 ./Assets/Textures/Controlled_indicator.png
 
 1
-0
+1
 spawner 0

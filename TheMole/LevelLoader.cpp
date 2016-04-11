@@ -49,7 +49,7 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 	// 10/10 would read again - Trey
 	std::shared_ptr<SDL2pp::Texture> baddieWalkSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(),"./Assets/Textures/Baddie_walk_56x56.png");
     std::shared_ptr<SDL2pp::Texture> bombSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), "./Assets/Textures/Shimmer.png");
-	std::shared_ptr<SDL2pp::Texture> mindControlIndicator = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), ".\\Assets\\Textures\\Controlled_indicator.png");
+	std::shared_ptr<SDL2pp::Texture> mindControlIndicator = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), "./Assets/Textures/Controlled_indicator.png");
 
     std::unordered_map<char, std::vector<SDL2pp::Point>> positions;
 
@@ -94,14 +94,14 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 			{
 				std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
 				sprites.reserve(6);
+                sprites["shieldOff"] == std::make_shared<SpriteSheet>("./Assets/Textures/Empty_Shield.png", 1, 1);
+                sprites["shieldOn"] == std::make_shared<SpriteSheet>("./Assets/Textures/Full_Shield.png", 1, 1);
 				if (den)
 				{
 					sprites["sideDig"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_den_sidedig_56x56.png", 4, 0.30);
 					sprites["verticalDig"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_downdig_56x56.png", 4, 0.30, true, SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection::DOWN);
 					sprites["walk"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_den_walk_56x56.png", 8, 1);
 					sprites["idle"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_den_idle_56x56.png", 4, 0.8);
-					sprites["shieldOff"] == std::make_shared<SpriteSheet>("./Assets/Textures/Empty_Shield.png", 1, 1);
-					sprites["shieldOn"] == std::make_shared<SpriteSheet>("./Assets/Textures/Full_Shield.png", 1, 1);
 				}
 				else
 				{
@@ -109,9 +109,7 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 					sprites["verticalDig"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_downdig_56x56.png", 4, 0.30, true, SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection::DOWN);
 					sprites["walk"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_walk_56x56.png", 8, 1);
 					sprites["idle"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_idle_56x56.png", 4, 0.8);
-					sprites["shieldOff"] == std::make_shared<SpriteSheet>("./Assets/Textures/Empty_Shield", 1, 1);
-					sprites["shieldOn"] == std::make_shared<SpriteSheet>("./Assets/Textures/Full_Shield", 1, 1);
-				}
+                }
 
 				sprites["chickenHatWalk"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_walk_56x56_chicken.png", 8, 1);
 				sprites["chickenHatIdle"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_idle_56x56_chicken.png", 4, 0.8);
@@ -556,12 +554,12 @@ void LevelLoader::LoadActorSpawners(std::ifstream & file, std::vector<SDL2pp::Po
         double period;
         spawnPeriodStream >> period;
 
-        // Read in whether spawner can spawn many actors simulataneously
+        // Read in spawner simulataneous actor limit
         getline(file, line);
         line.erase(std::remove(line.end() - 1, line.end(), '\r'), line.end());
-        std::istringstream allowMultipleStream(line);
-        bool allowMultiple;
-        allowMultipleStream >> allowMultiple;
+        std::istringstream limitStream(line);
+        int limit;
+        limitStream >> limit;
 
         // Hacky way to check whether we're specifying the actor prototype or copying another
         // This line will only ever have one character if we're 
@@ -582,7 +580,7 @@ void LevelLoader::LoadActorSpawners(std::ifstream & file, std::vector<SDL2pp::Po
             {
                 shared_ptr<Actor> enemy = shared_ptr<AIActor>(new AIActor(serialised));
                 enemy->SetPosition(Vector2(spawnerPos[i].x, spawnerPos[i].y));
-                shared_ptr<ActorSpawner> spawner = shared_ptr<ActorSpawner>(new ActorSpawner(level, enemy, period, allowMultiple));
+                shared_ptr<ActorSpawner> spawner = shared_ptr<ActorSpawner>(new ActorSpawner(level, enemy, period, limit));
                 spawners.push_back(spawner);
             }
                 break;
@@ -590,7 +588,7 @@ void LevelLoader::LoadActorSpawners(std::ifstream & file, std::vector<SDL2pp::Po
             {
                 shared_ptr<Actor> enemy = shared_ptr<AIActor>(new BombAIActor(serialised));
                 enemy->SetPosition(Vector2(spawnerPos[i].x, spawnerPos[i].y));
-                shared_ptr<ActorSpawner> spawner = shared_ptr<ActorSpawner>(new ActorSpawner(level, enemy, period, allowMultiple));
+                shared_ptr<ActorSpawner> spawner = shared_ptr<ActorSpawner>(new ActorSpawner(level, enemy, period, limit));
                 spawners.push_back(spawner);
             }
                 break;
@@ -607,7 +605,7 @@ void LevelLoader::LoadActorSpawners(std::ifstream & file, std::vector<SDL2pp::Po
             // Copy the prototype and create the spawner
             shared_ptr<Actor> prototype = shared_ptr<Actor>(spawners[toCopy]->GetPrototype()->Clone());
             prototype->SetPosition(Vector2(Vector2(spawnerPos[i].x, spawnerPos[i].y)));
-            shared_ptr<ActorSpawner> spawner = shared_ptr<ActorSpawner>(new ActorSpawner(level, prototype, period, allowMultiple));
+            shared_ptr<ActorSpawner> spawner = shared_ptr<ActorSpawner>(new ActorSpawner(level, prototype, period, limit));
             spawners.push_back(spawner);
         }
     }

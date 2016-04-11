@@ -7,7 +7,7 @@ public:
     TargetActorSpawner(std::shared_ptr<Level> level,
                        std::shared_ptr<Actor> prototype,
                        double period,
-                       bool allowMultiple,
+                       int limit,
                        Vector2 target,
                        double radius);
 

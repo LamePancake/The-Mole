@@ -164,6 +164,7 @@
     <ClCompile Include="Quadtree.cpp" />
     <ClCompile Include="SoundEffectBank.cpp" />
     <ClCompile Include="SpriteSheet.cpp" />
+    <ClCompile Include="TargetActorSpawner.cpp" />
     <ClCompile Include="ToggleActor.cpp" />
     <ClCompile Include="Tile.cpp" />
     <ClCompile Include="TurretActor.cpp" />

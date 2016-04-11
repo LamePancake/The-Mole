@@ -26,7 +26,7 @@ bool AABB::CheckCollision(AABB otherBox)
     //
 	//     b0--------b1
 	//      |        |
-	// a0---|----a1  |
+	// a0---|----a1  |          
 	//  |   |    |   |
 	//  |  b3--------b2
 	//  |        |

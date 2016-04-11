@@ -171,6 +171,7 @@ void TurretActor::TurretUpdate(double elapseSecs)
 		//		);
 		//	_timeInterval = elapseSecs;
 		//}
+        _timeInterval = 0;
 	}
 }
 

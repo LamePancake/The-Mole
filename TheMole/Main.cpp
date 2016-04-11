@@ -75,7 +75,7 @@ int main(int argc, char** argv) {
 		shared_ptr<OpeningScreen> opening(new OpeningScreen(bank));
 		shared_ptr<ClosingScreen> closing(new ClosingScreen(bank));
 
-		shared_ptr<Screen> den(new GameScreen("./Assets/Levels/den_level.txt", "./Assets/Textures/den_bg.png", "./Assets/SavedData/den_score.txt", "viking", bank));
+		shared_ptr<Screen> den(new GameScreen("./Assets/Levels/test_level.txt", "./Assets/Textures/den_bg.png", "./Assets/SavedData/den_score.txt", "viking", bank));
 		shared_ptr<Screen> viking(new GameScreen("./Assets/Levels/viking_level.txt", "./Assets/Textures/viking_bg.png", "./Assets/SavedData/viking_score.txt", "grass", bank));
 		shared_ptr<Screen> grass(new GameScreen("./Assets/Levels/grass_level.txt", "./Assets/Textures/grasslands_bg.png", "./Assets/SavedData/grasslands_score.txt", "starscape", bank));
 		shared_ptr<Screen> starscape(new GameScreen("./Assets/Levels/starscape_level.txt", "./Assets/Textures/starscape_bg.png", "./Assets/SavedData/starscape_score.txt", "boss", bank));
