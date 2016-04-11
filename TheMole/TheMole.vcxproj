@@ -155,6 +155,7 @@
     <ClCompile Include="MenuScreen.cpp" />
     <ClCompile Include="NPCActor.cpp" />
     <ClCompile Include="ObjectActor.cpp" />
+    <ClCompile Include="OpeningScreen.cpp" />
     <ClCompile Include="OptionsScreen.cpp" />
     <ClCompile Include="PlayerActor.cpp" />
     <ClCompile Include="AIActor.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="Math.h" />
     <ClInclude Include="NPCActor.h" />
     <ClInclude Include="ObjectActor.h" />
+    <ClInclude Include="OpeningScreen.h" />
     <ClInclude Include="OptionsScreen.h" />
     <ClInclude Include="PlayerActor.h" />
     <ClInclude Include="ProjectileActor.h" />
