@@ -103,6 +103,9 @@
     <ClCompile Include="ActorSpawner.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="OpeningScreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AABB.h">
@@ -211,6 +214,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TargetActorSpawner.h">
+      <Filter>Header Files</Filter>
+	 </ClInclude>
+    <ClInclude Include="OpeningScreen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

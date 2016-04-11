@@ -13,6 +13,7 @@
 #include "CreditsScreen.h"
 #include "ControlsScreen.h"
 #include "OptionsScreen.h"
+#include "OpeningScreen.h"
 
 
 using std::string;
@@ -21,7 +22,7 @@ using std::shared_ptr;
 
 int main(int argc, char** argv) {
 	try {
-		std::string startScreen("menu");
+		std::string startScreen("opening");
 
 		using namespace SDL2pp;
 		uint32_t subsystems = SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER;
@@ -70,6 +71,7 @@ int main(int argc, char** argv) {
 		unordered_map<string, shared_ptr<Screen>> screens;
 		shared_ptr<Screen> menu(new MenuScreen(bank));
 		shared_ptr<Screen> levelSelect(new LevelSelectScreen(bank));
+		shared_ptr<OpeningScreen> opening(new OpeningScreen(bank));
 
 		shared_ptr<Screen> den(new GameScreen("./Assets/Levels/den_level.txt", "./Assets/Textures/den_bg.png", "./Assets/SavedData/den_score.txt", "viking", bank));
 		shared_ptr<Screen> viking(new GameScreen("./Assets/Levels/viking_level.txt", "./Assets/Textures/viking_bg.png", "./Assets/SavedData/viking_score.txt", "grass", bank));
@@ -102,6 +104,7 @@ int main(int argc, char** argv) {
 		shared_ptr<Screen> controls(new ControlsScreen(bank));
 		shared_ptr<Screen> options(new OptionsScreen(bank));
 
+		screens.insert({ "opening", opening });
 		screens.insert({ "menu", menu });
 		screens.insert({ "levelSelect", levelSelect });
 		screens.insert({ "credits", credits });
