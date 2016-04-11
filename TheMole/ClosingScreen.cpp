@@ -63,8 +63,9 @@ int ClosingScreen::Load()
 {
 	_mgr = GameManager::GetInstance();
 
-	_closingTheme = new Music(".\\Assets\\Audio\\In-The-End.mp3");
-	_mgr->GetMixer().PlayMusic(*_closingTheme);
+	//_closingTheme = new Music(".\\Assets\\Audio\\In-The-End.mp3");
+	//_mgr->GetMixer().PlayMusic(*_closingTheme);
+	_mgr->PlayMusic(".\\Assets\\Audio\\In-The-End.mp3");
 
 	_font = new SDL2pp::Font(".\\Assets\\Fonts\\Exo-Regular.otf", 35);
 	_backgroundTexture = new Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\end_bg.png");
