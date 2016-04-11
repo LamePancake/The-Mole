@@ -15,7 +15,7 @@ TurretActor::TurretActor(
 	, const std::string && startSprite
 	, SpriteSheet::XAxisDirection startXDirection
 	, SpriteSheet::YAxisDirection startYDirection
-	): Actor(position, manager, spd, sprites, std::move(startSprite)
+	) : Actor(position, manager, spd, sprites, std::move(startSprite)
 		, startXDirection, startYDirection)
 {
 	_sprites[_currentSpriteSheet];
@@ -34,41 +34,42 @@ void TurretActor::Draw(Camera & camera)
 void TurretActor::Update(double elapsedSecs)
 {
 	Actor::Update(elapsedSecs);
-    if (_isDestroyed || !_isActive) return;
+	if (_isDestroyed || !_isActive) return;
 
-    for (auto & actor : _gameScreen->GetLevel()->GetActors())
-    {
-        if (actor->GetType() == Type::bombenemy)
-        {
-            auto bomber = dynamic_pointer_cast<BombAIActor>(actor);
-            if (CollisionCheck(*bomber) && bomber->IsUnderMindControl())
-            {
-                bomber->BlowUp();
-                SetActive(false);
-                SetVisibility(false);
-                return;
-            }
-        }
-    }
+	for (auto & actor : _gameScreen->GetLevel()->GetActors())
+	{
+		if (actor->GetType() == Type::bombenemy)
+		{
+			auto bomber = dynamic_pointer_cast<BombAIActor>(actor);
+			if (CollisionCheck(*bomber) && bomber->IsUnderMindControl())
+			{
+				bomber->BlowUp();
+				SetActive(false);
+				SetVisibility(false);
+				return;
+			}
+		}
+	}
 
 	TurretUpdate(elapsedSecs);
 }
 
 void TurretActor::Reset(Vector2 pos)
 {
+	_timeInterval = 0;
 	Actor::Reset(pos);
-    SetActive(true);
-    SetVisibility(true);
+	SetActive(true);
+	SetVisibility(true);
 }
 
 TurretActor * TurretActor::Clone()
 {
-    return new TurretActor(*this);
+	return new TurretActor(*this);
 }
 
 bool TurretActor::CollisionCheck(Actor & otherAI)
 {
-    return _aabb.CheckCollision(otherAI.GetAABB());
+	return _aabb.CheckCollision(otherAI.GetAABB());
 }
 
 void TurretActor::SetPattern(Vector2 prjDir)
@@ -91,7 +92,7 @@ void TurretActor::TurretUpdate(double elapseSecs)
 	else
 		projectilePosition = Vector2(_curKinematic.position.GetX() + _sprites[_currentSpriteSheet]->GetFrameWidth() + (_sprites["shoot"]->GetFrameWidth()), _curKinematic.position.GetY() + (_sprites[_currentSpriteSheet]->GetFrameHeight() / 2.0f) - (_sprites["shoot"]->GetFrameHeight() / 2.0f));
 
-	if (_timeInterval > 5)
+	if (_timeInterval > 0.25)
 	{
 		if (_pattern.size() == 0)
 		{
