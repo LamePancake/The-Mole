@@ -210,6 +210,8 @@ void ClosingScreen::Unload()
 
 	delete _backgroundTexture;
 	delete _backgroundTexture2;
+
+	delete _closingTheme;
 }
 
 SoundEffectBank & ClosingScreen::GetSoundBank()
