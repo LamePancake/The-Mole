@@ -88,8 +88,8 @@ int MenuScreen::Update(double elapsedSecs)
 	}
 
 	// Change the currently selected menu item
-	if (!_delay && _mgr->inputManager->ActionOccurred("ARROWRIGHT", Input::Pressed)
-		|| _mgr->inputManager->ActionOccurred("RIGHT", Input::Pressed)) 
+	if (!_delay && (_mgr->inputManager->ActionOccurred("ARROWRIGHT", Input::Pressed)
+		|| _mgr->inputManager->ActionOccurred("RIGHT", Input::Pressed))) 
 	{
 		_soundBank.PlaySound("select");
 		_update = true;
@@ -98,8 +98,8 @@ int MenuScreen::Update(double elapsedSecs)
 		_borin->SetXAxisDirection(SpriteSheet::RIGHT);
 		if (_curMenuItem == NUM_MENU_ITEMS) _curMenuItem = NUM_MENU_ITEMS - 1;
 	}
-	else if (!_delay && _mgr->inputManager->ActionOccurred("ARROWLEFT", Input::Pressed)
-		|| _mgr->inputManager->ActionOccurred("LEFT", Input::Pressed))
+	else if (!_delay && (_mgr->inputManager->ActionOccurred("ARROWLEFT", Input::Pressed)
+		|| _mgr->inputManager->ActionOccurred("LEFT", Input::Pressed)))
 	{
 		_soundBank.PlaySound("select");
 		_update = true;

@@ -93,14 +93,14 @@ int LevelSelectScreen::Update(double elapsedSecs)
 		return SCREEN_FINISH;
 	}
 
-	if (!_delay && _mgr->inputManager->ActionOccurred("ARROWDOWN", Input::Pressed) || _mgr->inputManager->ActionOccurred("DOWN", Input::Pressed))
+	if (!_delay && (_mgr->inputManager->ActionOccurred("ARROWDOWN", Input::Pressed) || _mgr->inputManager->ActionOccurred("DOWN", Input::Pressed)))
 	{
 		_soundBank.PlaySound("select");
 		_borin->SetXAxisDirection(_borin->GetXAxisDirection() == SpriteSheet::LEFT ? SpriteSheet::RIGHT : SpriteSheet::LEFT);
 		_curMenuItem++;
 		if (_curMenuItem == NUM_LEVELS) _curMenuItem = 0;
 	}
-	else if (!_delay && _mgr->inputManager->ActionOccurred("ARROWUP", Input::Pressed) || _mgr->inputManager->ActionOccurred("UP", Input::Pressed))
+	else if (!_delay && (_mgr->inputManager->ActionOccurred("ARROWUP", Input::Pressed) || _mgr->inputManager->ActionOccurred("UP", Input::Pressed)))
 	{
 		_soundBank.PlaySound("select");
 		_borin->SetXAxisDirection(_borin->GetXAxisDirection() == SpriteSheet::LEFT ? SpriteSheet::RIGHT : SpriteSheet::LEFT);
