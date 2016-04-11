@@ -103,6 +103,9 @@ int ClosingScreen::Load()
 
 	_drawnCredit.push_back(_creditsTexture[_currPerson][_currDraw++]);
 
+	_closingTheme = new Music(".\\Assets\\Audio\\In-The-End.mp3");
+	_mgr->GetMixer().PlayMusic(*_closingTheme);
+
 	return SCREEN_LOAD_SUCCESS;
 }
 
@@ -160,7 +163,7 @@ void ClosingScreen::Draw()
 		++i;
 	}
 
-	_borinAndTheChicken->Draw(SDL2pp::Point(size.GetX() * 0.1f, size.GetY() * 0.855f));
+	_borinAndTheChicken->Draw(SDL2pp::Point(size.GetX() * 0.375f, size.GetY() * 0.855f));
 	rend.Present();
 }
 

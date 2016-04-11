@@ -28,7 +28,7 @@ private:
 	SDL2pp::Font* _font;
 
 	std::shared_ptr<SpriteSheet> _borinAndTheChicken;
-
+	SDL2pp::Music* _closingTheme;
 	std::vector<std::vector<SDL2pp::Texture*>> _creditsTexture;
 	std::vector<SDL2pp::Texture*> _drawnCredit;
 
