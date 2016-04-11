@@ -211,4 +211,6 @@ private:
 	bool _stoppedTime;
 	const float _mindControlRadius = 384.f;
 	int _selected;
+
+	void UpdateHatSprite();
 };

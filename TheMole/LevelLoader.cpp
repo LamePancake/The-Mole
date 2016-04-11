@@ -96,22 +96,18 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 				sprites.reserve(4);
 				if (den)
 				{
-					sprites["sideDig"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_den_sidedig_56x56.png", 4, 0.30);
-					sprites["verticalDig"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_downdig_56x56.png", 4, 0.30, true, SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection::DOWN);
 					sprites["walk"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_den_walk_56x56.png", 8, 1);
 					sprites["idle"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_den_idle_56x56.png", 4, 0.8);
-					//sprites["shieldOff"] == std::make_shared<SpriteSheet>("./Assets/Textures/Empty_Shield.png", 1, 1);
-					//sprites["shieldOn"] == std::make_shared<SpriteSheet>("./Assets/Textures/Full_Shield.png", 1, 1);
+					sprites["sideDig"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_den_sidedig_56x56.png", 4, 0.30);
 				}
 				else
 				{
-					sprites["sideDig"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_sidedig_56x56.png", 4, 0.30);
-					sprites["verticalDig"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_downdig_56x56.png", 4, 0.30, true, SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection::DOWN);
 					sprites["walk"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_walk_56x56.png", 8, 1);
 					sprites["idle"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_idle_56x56.png", 4, 0.8);
-					//sprites["shieldOff"] == std::make_shared<SpriteSheet>("./Assets/Textures/Empty_Shield.png", 1, 1);
-					//sprites["shieldOn"] == std::make_shared<SpriteSheet>("./Assets/Textures/Full_Shield.png", 1, 1);
+					sprites["sideDig"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_sidedig_56x56.png", 4, 0.30);
 				}
+
+				sprites["verticalDig"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_downdig_56x56.png", 4, 0.30, true, SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection::DOWN);
 
 				sprites["shieldOff"] = std::make_shared<SpriteSheet>("./Assets/Textures/Empty_Shield.png", 1, 1);
 				sprites["shieldOn"] = std::make_shared<SpriteSheet>("./Assets/Textures/Full_Shield.png", 1, 1);

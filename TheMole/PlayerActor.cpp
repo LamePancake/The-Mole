@@ -64,6 +64,8 @@ void PlayerActor::Update(double elapsedSecs)
 {
 	bool wasDigging = _digDir != Edge::NONE;
 
+	// Updates the mindcontrol hat if the button is being pressed because stoping time messes up other stuff for hat switching.
+	UpdateHatSprite();
 	UpdateInput(elapsedSecs);
 	if (_isDestroyed || !_isActive || _stoppedTime) return;
 
@@ -93,7 +95,7 @@ void PlayerActor::Update(double elapsedSecs)
 		SetActorYDirection(SpriteSheet::YAxisDirection::UP);
 		_sprites[_currentSpriteSheet]->Start();
 	}
-
+	
 	UpdatePosition(elapsedSecs);
 	_aabb.UpdatePosition(*this);
 
@@ -292,7 +294,20 @@ void PlayerActor::UpdateInput(double elapsedSecs)
 		{
 			SetActorXDirection(SpriteSheet::XAxisDirection::LEFT);
 			SetSpeed(Vector2(Math::Clamp(_curKinematic.velocity.GetX() - 50.0f, -300.0f, -50.0f), _curKinematic.velocity.GetY()));
-			if (_currentSpriteSheet != "walk")
+			
+			if (_currentSpriteSheet != "chickenHatWalk" && _mgr->inputManager->ActionOccurred("CHICKEN", Input::Held) && !_mgr->inputManager->ActionOccurred("SHIELD", Input::Held) && _gameScreen->GetLevel()->IsHatAvailable("CHICKEN"))
+			{
+				_sprites[_currentSpriteSheet]->Stop();
+				_currentSpriteSheet = "chickenHatWalk";
+				_sprites[_currentSpriteSheet]->Start();
+			}
+			else if (_currentSpriteSheet != "vikingHatWalk" && _mgr->inputManager->ActionOccurred("SHIELD", Input::Held) && !_mgr->inputManager->ActionOccurred("CHICKEN", Input::Held) && _gameScreen->GetLevel()->IsHatAvailable("SHIELD"))
+			{
+				_sprites[_currentSpriteSheet]->Stop();
+				_currentSpriteSheet = "vikingHatWalk";
+				_sprites[_currentSpriteSheet]->Start();
+			}
+			else if (_currentSpriteSheet != "walk" && !_mgr->inputManager->ActionOccurred("MIND_CONTROL", Input::Held) && !_mgr->inputManager->ActionOccurred("SHIELD", Input::Held) && !_mgr->inputManager->ActionOccurred("CHICKEN", Input::Held))
 			{
 				_sprites[_currentSpriteSheet]->Stop();
 				_currentSpriteSheet = "walk";
@@ -304,7 +319,19 @@ void PlayerActor::UpdateInput(double elapsedSecs)
 			SetActorXDirection(SpriteSheet::XAxisDirection::RIGHT);
 			SetSpeed(Vector2(Math::Clamp(_curKinematic.velocity.GetX() + 50.0f, 50.0f, 300.0f), _curKinematic.velocity.GetY()));
 
-			if (_currentSpriteSheet != "walk")
+			if (_currentSpriteSheet != "chickenHatWalk" && _mgr->inputManager->ActionOccurred("CHICKEN", Input::Held) && !_mgr->inputManager->ActionOccurred("SHIELD", Input::Held) && _gameScreen->GetLevel()->IsHatAvailable("CHICKEN"))
+			{
+				_sprites[_currentSpriteSheet]->Stop();
+				_currentSpriteSheet = "chickenHatWalk";
+				_sprites[_currentSpriteSheet]->Start();
+			}
+			else if (_currentSpriteSheet != "vikingHatWalk" && _mgr->inputManager->ActionOccurred("SHIELD", Input::Held) && !_mgr->inputManager->ActionOccurred("CHICKEN", Input::Held) && _gameScreen->GetLevel()->IsHatAvailable("SHIELD"))
+			{
+				_sprites[_currentSpriteSheet]->Stop();
+				_currentSpriteSheet = "vikingHatWalk";
+				_sprites[_currentSpriteSheet]->Start();
+			}
+			else if (_currentSpriteSheet != "walk" && !_mgr->inputManager->ActionOccurred("MIND_CONTROL", Input::Held) && !_mgr->inputManager->ActionOccurred("SHIELD", Input::Held) && !_mgr->inputManager->ActionOccurred("CHICKEN", Input::Held))
 			{
 				_sprites[_currentSpriteSheet]->Stop();
 				_currentSpriteSheet = "walk";
@@ -315,7 +342,19 @@ void PlayerActor::UpdateInput(double elapsedSecs)
 		{
 			// If we're not trying to move in a given direction, stop all motion on the x axis and use the idle animation
 			SetSpeed(Vector2(0.0f, _curKinematic.velocity.GetY()));
-			if (_currentSpriteSheet == "walk")
+			if (_currentSpriteSheet != "chickenHatIdle" && _mgr->inputManager->ActionOccurred("CHICKEN", Input::Held) && !_mgr->inputManager->ActionOccurred("SHIELD", Input::Held) && _gameScreen->GetLevel()->IsHatAvailable("CHICKEN"))
+			{
+				_sprites[_currentSpriteSheet]->Stop();
+				_currentSpriteSheet = "chickenHatIdle";
+				_sprites[_currentSpriteSheet]->Start();
+			}
+			else if (_currentSpriteSheet != "vikingHatIdle" && _mgr->inputManager->ActionOccurred("SHIELD", Input::Held) && !_mgr->inputManager->ActionOccurred("CHICKEN", Input::Held) && _gameScreen->GetLevel()->IsHatAvailable("SHIELD"))
+			{
+				_sprites[_currentSpriteSheet]->Stop();
+				_currentSpriteSheet = "vikingHatIdle";
+				_sprites[_currentSpriteSheet]->Start();
+			}
+			else if (_currentSpriteSheet != "idle" && !_mgr->inputManager->ActionOccurred("MIND_CONTROL", Input::Held) && !_mgr->inputManager->ActionOccurred("SHIELD", Input::Held) && !_mgr->inputManager->ActionOccurred("CHICKEN", Input::Held))
 			{
 				_sprites[_currentSpriteSheet]->Stop();
 				_currentSpriteSheet = "idle";
@@ -372,7 +411,6 @@ void PlayerActor::UpdateInput(double elapsedSecs)
 		///Deactivate Shield
 		//_shieldReleased = true;
 	}
-
 }
 
 void PlayerActor::UpdateShieldStatus(double deltaTime)
@@ -669,6 +707,11 @@ void PlayerActor::Reset(Vector2 pos)
 
 	SetSpeed(Vector2(0.0f, 341.3f));
 
+	_shieldTimer = 0;
+	_shieldActive = false;
+	_shieldReleased = true;
+	_shieldStr = 4;
+
 	_sprites[_currentSpriteSheet]->Stop();
 	_currentSpriteSheet = "idle";
 	_sprites[_currentSpriteSheet]->Start();
@@ -690,4 +733,15 @@ void PlayerActor::Reset(Vector2 pos)
 Actor * PlayerActor::Clone()
 {
 	return nullptr;
+}
+
+// Updates mind control becuase it needs to be checked before everything else
+void PlayerActor::UpdateHatSprite()
+{
+	if (_mgr->inputManager->ActionOccurred("MIND_CONTROL", Input::Held) && _gameScreen->GetLevel()->IsHatAvailable("MIND_CONTROL"))
+	{
+		_sprites[_currentSpriteSheet]->Stop();
+		_currentSpriteSheet = "mindControlHatIdle";
+		_sprites[_currentSpriteSheet]->Start();
+	}
 }
