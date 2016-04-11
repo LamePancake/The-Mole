@@ -63,6 +63,9 @@ int ClosingScreen::Load()
 {
 	_mgr = GameManager::GetInstance();
 
+	_closingTheme = new Music(".\\Assets\\Audio\\In-The-End.mp3");
+	_mgr->GetMixer().PlayMusic(*_closingTheme);
+
 	_font = new SDL2pp::Font(".\\Assets\\Fonts\\Exo-Regular.otf", 35);
 	_backgroundTexture = new Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\end_bg.png");
 	_backgroundTexture2 = new Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\opening_thing.png");
@@ -103,9 +106,6 @@ int ClosingScreen::Load()
 
 	_drawnCredit.push_back(_creditsTexture[_currPerson][_currDraw++]);
 
-	_closingTheme = new Music(".\\Assets\\Audio\\In-The-End.mp3");
-	_mgr->GetMixer().PlayMusic(*_closingTheme);
-
 	return SCREEN_LOAD_SUCCESS;
 }
 
@@ -118,27 +118,45 @@ int ClosingScreen::Update(double elapsedSecs)
 
 	_borinAndTheChicken->Update(elapsedSecs);
 
-	if (_timer > 1.5)
+	if (_timer > 1.6)
 	{
 		_timer = 0;
 
-		if (_currDraw < _creditsTexture[_currPerson].size())
-			_drawnCredit.push_back(_creditsTexture[_currPerson][_currDraw++]);
-		else
-			_currDraw++;
-
-		if (_currDraw > _creditsTexture[_currPerson].size())
+		if (_currPerson < _creditsTexture.size())
 		{
-			_currPerson++;
-			_drawnCredit.clear();
-			_currDraw = 0;
+			if (_currDraw < _creditsTexture[_currPerson].size())
+				_drawnCredit.push_back(_creditsTexture[_currPerson][_currDraw++]);
+			else
+				_currDraw++;
 
-			if (_currPerson >= 5)
+			if (_currDraw > _creditsTexture[_currPerson].size())
 			{
-				_soundBank.PlaySound("accept");
-				_mgr->SetNextScreen("menu");
-				return SCREEN_FINISH;
+				_currPerson++;
+				_currDraw = 0;
+
+				if (_currPerson >= 5)
+				{
+					_end = true;
+				}
+				else
+				{
+					_drawnCredit.clear();
+				}
 			}
+		}
+	}
+
+	if (_end)
+	{
+		if (_endTimer == 0.0)
+			_mgr->GetMixer().FadeOutMusic(10000);
+		
+		_endTimer += elapsedSecs;
+		
+		if (_endTimer > 10)
+		{
+			_mgr->SetNextScreen("menu");
+			return SCREEN_FINISH;
 		}
 	}
 
@@ -181,6 +199,9 @@ void ClosingScreen::Unload()
 	
 	_creditsTexture.clear();
 	_timer = 0;
+	_endTimer = 0;
+
+	_end = false;
 
 	_drawnCredit.clear();
 

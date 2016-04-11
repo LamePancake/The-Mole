@@ -11,7 +11,7 @@ class ClosingScreen :public Screen
 public:
 
 	ClosingScreen(SoundEffectBank & effectBank)
-		: _soundBank(effectBank), _currDraw(0), _currPerson(0), _timer(0.0){}
+		: _soundBank(effectBank), _currDraw(0), _currPerson(0), _timer(0.0), _endTimer(0.0), _end(false){}
 
 	virtual int Load() override;
 	virtual int Update(double elasepdSecs) override;
@@ -33,6 +33,8 @@ private:
 	std::vector<SDL2pp::Texture*> _drawnCredit;
 
 	double _timer;
+	double _endTimer;
+	bool _end;
 
 	int _currPerson;
 	int _currDraw;

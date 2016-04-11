@@ -23,8 +23,8 @@ int CreditsScreen::Load()
 
 	_developers[0] = new Texture(_mgr->GetRenderer(), _font->RenderText_Solid("Matt Ku - Programmer, Designer",          NORMAL));
 	_developers[1] = new Texture(_mgr->GetRenderer(), _font->RenderText_Solid("Shane Spoor - Programmer, Designer",      NORMAL));
-	_developers[2] = new Texture(_mgr->GetRenderer(), _font->RenderText_Solid("Tim Wang - Programmer, Designer, Artist", NORMAL));
-	_developers[3] = new Texture(_mgr->GetRenderer(), _font->RenderText_Solid("Trevor Ware - Programmer, Designer",      NORMAL));
+	_developers[2] = new Texture(_mgr->GetRenderer(), _font->RenderText_Solid("Tim Wang - Programmer, Designer, Lead Artist", NORMAL));
+	_developers[3] = new Texture(_mgr->GetRenderer(), _font->RenderText_Solid("Trevor Ware - Programmer, Designer, Artist",      NORMAL));
 
 	_back    = new Texture(_mgr->GetRenderer(), _font->RenderText_Solid("Back", NORMAL));
 	_back->SetColorMod(SELECTED.r, SELECTED.g, SELECTED.b);
