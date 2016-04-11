@@ -69,7 +69,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)Lib\SDL2pp\RelWithDebInfo;$(SolutionDir)Lib\SDL2</LibraryPath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)Lib\SDL2pp\RelWithDebInfo;$(SolutionDir)Lib\SDL2;</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(SolutionDir)Lib\SDL2pp\Debug;$(SolutionDir)Lib\SDL2</LibraryPath>
@@ -155,6 +155,7 @@
     <ClCompile Include="MenuScreen.cpp" />
     <ClCompile Include="NPCActor.cpp" />
     <ClCompile Include="ObjectActor.cpp" />
+    <ClCompile Include="OpeningScreen.cpp" />
     <ClCompile Include="OptionsScreen.cpp" />
     <ClCompile Include="PlayerActor.cpp" />
     <ClCompile Include="AIActor.cpp" />
@@ -185,6 +186,7 @@
     <ClInclude Include="Math.h" />
     <ClInclude Include="NPCActor.h" />
     <ClInclude Include="ObjectActor.h" />
+    <ClInclude Include="OpeningScreen.h" />
     <ClInclude Include="OptionsScreen.h" />
     <ClInclude Include="PlayerActor.h" />
     <ClInclude Include="ProjectileActor.h" />
