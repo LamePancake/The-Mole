@@ -69,6 +69,8 @@ bool ToggleActor::IsOn() const
 void ToggleActor::SetOn(bool on)
 {
     _isOn = on;
+    _sprites[_currentSpriteSheet]->SetReversed(_isOn);
+    _sprites[_currentSpriteSheet]->Reset();
 }
 
 Actor::Edge ToggleActor::GetEdge() const
