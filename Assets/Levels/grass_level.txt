@@ -1,39 +1,39 @@
-UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
-UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUEEEEEEEEEEEEEEEEEEEEEEUU
-UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUULLLLLLALLLLLLLLLALLLLLUU
-UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUC      D       D     CUU
-                      D                                 UUUUUUUUUUUUUUU                     UUUUULLLLLLLLLD   DLLLLLUUUUU
-                      D                                  UUUUUUUUUUUUU                                              UUUUU
-  N                   D                                   UUUUUUUUUUU                                               UUUUU
-SSSSS                 D                                    UUUUUUUUU                     N    F                     UUUUU
-SSSSS                 D   C                       LLL       UUUUUUU                    LLLLLLLLLL             N   W UUUUU
-SSSSS                                            LDDDLLLL    UUUUU                  LLLUU   UUUUU            LLLLLLLUUUUU
-SSSSS                                           LDDDDDDDDDDDDUUUUULLLL                      UUUUUK                  UUUUU
-SSSSS          N                          F    LDDDDDDDDDDDDDDDDDDDDDDDDD   N               UUUUUUK                 UUUUU
-SSSSS        LLLLLL                     LLLLLLLUUUUUUUUUUDDDDDDDUUUUUUUUULLLLLLL            UUUUUUUK                UUUUU
-SSSSS                                  LU               DDDDDDUUU                           UUUUUUUUK               UUUUU
-SSSSS                                                   DDD                                 UUUUUUUUUK              UUUUU
-SSSSS                        N                                                              UUUUUUUUUUK             UUUUU
-SSSSS                    LLLLLLLLLL                                                         UUUUUUUUUUUK            UUUUU
-SSSSS                          D  ULLL                                                      UUUUUUUUUUUUK           UUUUU
-SSSSS                          D            LLLLLLLLLL                                      UUUUUUUUUUUUUK          UUUUU
-SSSSS                          D                D                  N                F       UUUUUUUUUUUUUUK         UUUUU
-SSSSS                          D                D               LLLLLLLL          LLLLL   LLUUUUUUUUUUUUUUU         UUUUU
-SSSSS                          D                D                  DD                 U     UUUUUUUUUUUUUUULL      FUUUUU
-SSSSS                          D                D                  DD                 U     UUUUU                 LLUUUUU
-SSSSS                          D                D                                     ULL   UUUUU               KLUUUUUUU
-SSSSS                          D                D                                     U     UUUUU              KUUUUUUUUU
-SSSSS                          D                D                                     U     UUUUU             KUUUUUUUUUU
-SSSSS                    H     D                D    F                                U   LLUUUUU            KUUUUUUUUUUU
-SSSSS                          D            N   ULLLLLLLLLLLD                         U     UUUUU           KUUUUUUUUUUUU
-SSSSS         H              LLUL         LLLLLLUUUU                                  ULL   UUUUU          KUUUUUUUUUUUUU
-SSSSS                    LLLLU               UUUUUUU C                                      UUUUU         KUUUUUUUUUUUUUU
-SSSSS                 LLLU                    UUUUUULLLLL                                 LLUUUUU        KUUUUUUUUUUUUUUU
-SSSSS        LLLLLDDDDUU                       UUUUUUUUU                        N           UUUUU       KUUUUUUUUUUUUUUUU
-SSSSS       LUUUUUDDDDUUU                       UUUUUUU                      LLLLLLLLL      UUUUU       UU         UUUUUU
-SSSSTO   N LUUUUUUUDDDDCDD                       UUUUUKKKKKKKKKKKKKKKKKKKKKKKKKKUUUUUULLLLLLUUUUU     N      N     GUUUUU
-UUUUULLLLLLUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUULLLLLLLLLLLLLLLLLLLUUUUU
-UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUEEEEEEEEEEEEEEEEEEEEEEUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUULLLLLLALLLLLLLLLALLLLLUU                                           U                    UUUUU
+UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUC      D       D     CUU                                L   C  E   U      C             UUUUU
+                      D                                 UUUUUUUUUUUUUUU                     UUUUULLLLLLLLLD   DLLLLLUUUUU                                ULLLLLLLLLLU                    UUUUU
+                      D                                  UUUUUUUUUUUUU                                              UUUUU                                           U D                  UUUUU
+  N                   D                                   UUUUUUUUUUU                                               UUUUU                            D       DD     U D  KKKKKKK         UUUUU
+SSSSS                 D                                    UUUUUUUUU                     N    F                     UUUUU                            D      DDDDDD  U D  LLLLLLL         UUUUU
+SSSSS                 D   C                       LLL       UUUUUUU                    LLLLLLLLLL             N   W UUUUU                            D   LLLUUUUUU  U D      UUU         UUUUU
+SSSSS                                            LDDDLLLL    UUUUU                  LLLUU   UUUUU            LLLLLLLUUUUU                            D    U      U  U D      UUU         UUUUU
+SSSSS                                           LDDDDDDDDDDDDUUUUULLLL                      UUUUUK                  UUUUU                            D     U    D   U D      UUU F       UUUUU
+SSSSS          N                          F    LDDDDDDDDDDDDDDDDDDDDDDDDD   N               UUUUUUK                 UUUUULLLLLLLLL                   D      U CU    U D      UUULLLLLL   UUUUU
+SSSSS        LLLLLL                     LLLLLLLUUUUUUUUUUDDDDDDDUUUUUUUUULLLLLLL            UUUUUUUK                UUUUUKKKKKKKKK                   D       UU     U D      UUU         UUUUU
+SSSSS                                  LU               DDDDDDUUU                           UUUUUUUUK               UUUUU                            D       U      U D      UUU         UUUUU
+SSSSS                                                   DDD                                 UUUUUUUUUK              UUUUU    D                       D      U       U D      UUU         UUUUU
+SSSSS                        N                                                              UUUUUUUUUUK             UUUUU    D                       D     U     F  U D      UUU      KKKUUUUU
+SSSSS                    LLLLLLLLLL                                                         UUUUUUUUUUUK            UUUUU    D  LLLLLL               D    U    LLLLLU D      UUU      UUUUUUUU
+SSSSS                          D  ULLL                                                      UUUUUUUUUUUUK           UUUUU    D                       D    U         U D      UUU         UUUUU
+SSSSS                          D            LLLLLLLLLL                                      UUUUUUUUUUUUUK          UUUUU    D                       D    U         U D      UUU         UUUUU
+SSSSS                          D                D                  N                F       UUUUUUUUUUUUUUK         UUUUU    D                       D    U         U D      UUU         UUUUU
+SSSSS                          D                D               LLLLLLLL          LLLLL   LLUUUUUUUUUUUUUUU         UUUUU    D                       D    U         U D      UUU         UUUUU
+SSSSS                          D                D                  DD                 U     UUUUUUUUUUUUUUULL      FUUUUU    D                       D    ULLLLL    U D      UUULLL      UUUUU
+SSSSS                          D                D                  DD                 U     UUUUU                 LLUUUUU    D                       D    U         U D      UUU         UUUUU
+SSSSS                          D                D                                     ULL   UUUUU               KLUUUUUUU    D               D  LLLLLULLLLU         U D      UUU         UUUUU
+SSSSS                          D                D                                     U     UUUUU              KUUUUUUUUU    D               D            U         U D      UUU         UUUUU
+SSSSS                          D                D                                     U     UUUUU             KUUUUUUUUUU    D               D            U         U D      UUU   KKKKKKUUUUU
+SSSSS                    H     D                D    F                                U   LLUUUUU            KUUUUUUUUUUU    D               D          CU          U D      UUU   UUUUUUUUUUU
+SSSSS                          D            N   ULLLLLLLLLLLD                         U     UUUUU           KUUUUUUUUUUUU    D               D          U           U D      UUU         UUUUU
+SSSSS         H              LLUL         LLLLLLUUUU                                  ULL   UUUUU          KUUUUUUUUUUUUU    D               D         US     KKKKKKU D      UUU         UUUUU
+SSSSS                    LLLLU               UUUUUUU C                                      UUUUU         KUUUUUUUUUUUUUU    D               D        USS     UUUUUUU D      UUU         UUUUU
+SSSSS                 LLLU                    UUUUUULLLLL                                 LLUUUUU        KUUUUUUUUUUUUUUU    D               D       UUSS           U D      UUULLL      UUUUU
+SSSSS        LLLLLDDDDUU                       UUUUUUUUU                        N           UUUUU       KUUUUUUUUUUUUUUUU    D               D       UUSSSSSS       U D      UUU         UUUUU
+SSSSS       LUUUUUDDDDUUU                       UUUUUUU                      LLLLLLLLL      UUUUU       UU         UUUUUU   UU               D       UUSSSSSSSS       D      UUU         UUUUU
+SSSSTO   N LUUUUUUUDDDDCDD                       UUUUUKKKKKKKKKKKKKKKKKKKKKKKKKKUUUUUULLLLLLUUUUU     N      N             UUUUKKKKKKKKKKKKKKKKKKKKKKUUSSSSSSSSS      D      UUG         UUUUU
+UUUUULLLLLLUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUULLLLLLLLLLLLLLLLLLLUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
+UUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUU
 
 signs
 .\\Assets\\Textures\\chickenGlide_sign.png
@@ -42,13 +42,19 @@ signs
 pancakes
 3
 4
+6
+8
 2
+7
+5
 1
 0
 
 checkpoints
 4
+7
 3
+6
 2
 5
 1
@@ -71,6 +77,7 @@ npcs
 .\\Assets\\Textures\\Chicken_idle.png 4 0.7 1
 .\\Assets\\Textures\\Chicken_idle.png 4 0.8 1
 .\\Assets\\Textures\\Chicken_idle.png 4 0.7 1
+
 
 Toggles
 Bottom one-shot
