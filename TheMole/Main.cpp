@@ -75,7 +75,7 @@ int main(int argc, char** argv) {
 		shared_ptr<Screen> viking(new GameScreen("./Assets/Levels/viking_level.txt", "./Assets/Textures/viking_bg.png", "./Assets/SavedData/viking_score.txt", "grass", bank));
 		shared_ptr<Screen> grass(new GameScreen("./Assets/Levels/grass_level.txt", "./Assets/Textures/grasslands_bg.png", "./Assets/SavedData/grasslands_score.txt", "starscape", bank));
 		shared_ptr<Screen> starscape(new GameScreen("./Assets/Levels/starscape_level.txt", "./Assets/Textures/starscape_bg.png", "./Assets/SavedData/starscape_score.txt", "boss", bank));
-		shared_ptr<Screen> boss(new GameScreen("./Assets/Levels/boss_level.txt", "./Assets/Textures/boss_bg.png", "./Assets/SavedData/boss_score.txt", "levelSelect", bank));
+		shared_ptr<Screen> boss(new GameScreen("./Assets/Levels/boss_level.txt", "./Assets/Textures/boss_bg.png", "./Assets/SavedData/boss_score.txt", "postfight", bank));
 		
 		shared_ptr<Screen> denIntro(new CutsceneScreen("./Assets/Textures/dialog_box.png", "./Assets/Textures/den_bg.png", "./Assets/Textures/Borin_den_dialog.png", 4, 0.8, "./Assets/Textures/Toad_dialog.png", 6, 0.50, bank, "denpost", "./Assets/Dialog/den_dialog.txt", "Borin", "Toad", borinVoices, toadVoices));
 		shared_ptr<Screen> vikingIntro(new CutsceneScreen("./Assets/Textures/dialog_box.png", "./Assets/Textures/grasslands_bg.png", "./Assets/Textures/Borin_den_dialog.png", 4, 0.8, "./Assets/Textures/Adalbert_dialog.png", 4, 0.8, bank, "vikingpost", "./Assets/Dialog/viking_dialog.txt", "Borin", "Adalbert", borinVoices, vikingVoices));
@@ -97,6 +97,11 @@ int main(int argc, char** argv) {
 		shared_ptr<Screen> grassPostIntro(new GameScreen("./Assets/Levels/postgrass_level.txt", "./Assets/Textures/viking_bg.png", "./Assets/SavedData/grasslands_score.txt", "grasslevel", bank, true));
 		shared_ptr<Screen> starscapePostIntro(new GameScreen("./Assets/Levels/poststarscape_level.txt", "./Assets/Textures/starscape_bg.png", "./Assets/SavedData/starscape_score.txt", "starscapelevel", bank, true));
 		shared_ptr<Screen> bossPostIntro(new GameScreen("./Assets/Levels/postboss_level.txt", "./Assets/Textures/boss_bg.png", "./Assets/SavedData/boss_score.txt", "bosslevel", bank, true));
+
+		// Post Boss Fight Screens
+		shared_ptr<Screen> postFight(new GameScreen("./Assets/Levels/postfight_level.txt", "./Assets/Textures/boss_bg.png", "./Assets/SavedData/boss_score.txt", "postfightintro", bank, true));
+		shared_ptr<Screen> postFightIntro(new CutsceneScreen("./Assets/Textures/dialog_box.png", "./Assets/Textures/boss_bg.png", "./Assets/Textures/Borin_dialog.png", 4, 0.8, "./Assets/Textures/Adalbert_dialog.png", 4, 0.8, bank, "levelSelect", "./Assets/Dialog/post_fight_dialog.txt", "Borin", "Adalbert", borinVoices, vikingVoices));
+
 
 		shared_ptr<Screen> credits(new CreditsScreen(bank));
 		shared_ptr<Screen> controls(new ControlsScreen(bank));
@@ -131,6 +136,9 @@ int main(int argc, char** argv) {
 		screens.insert({ "grasspost", grassPostIntro });
 		screens.insert({ "starscapepost", starscapePostIntro });
 		screens.insert({ "bosspost", bossPostIntro });
+
+		screens.insert({ "postfight", postFight });
+		screens.insert({ "postfightintro", postFightIntro });
 
 		GameManager::_instance = new GameManager(std::move(sdl), std::move(image), std::move(mixer), std::move(sdl_ttf), std::move(window), std::move(renderer), screens);
         bank.LoadSounds();

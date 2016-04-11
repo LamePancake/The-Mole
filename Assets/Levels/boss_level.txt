@@ -22,7 +22,7 @@ SSSSS                                        SSSSS
 SSSSS                                        SSSSS
 SSSSS               B                        SSSSS
 SSSSS                                        SSSSS
-SSSSTO                                       SSSSS
+SSSSTO                                        GSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 
