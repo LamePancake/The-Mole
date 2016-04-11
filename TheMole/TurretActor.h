@@ -49,12 +49,17 @@ public:
 	void SetPattern(Vector2 prjDir);
 
 	void SetPattern(std::vector<Vector2> prjDirSet);
+
+	void ToggleAim();
+
+	Vector2 AimAtPlayer();
 private:
 	void TurretUpdate(double elapseSecs);
 	/** Stores projectiles currently spawned */
 	std::vector<std::shared_ptr<ProjectileActor>> _projectiles;
 	///Calculates the time between shots
 	double _timeInterval; //Don't touch
+	bool _aim;
 	///This store the direction(s) of the projectile(s) fired by this turret
 	std::vector<Vector2> _pattern;
 	virtual Type GetType() const override { return Type::turret; }
