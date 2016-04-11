@@ -24,6 +24,9 @@ int OpeningScreen::Load()
 {
 	_mgr = GameManager::GetInstance();
 
+	_openingTheme = new Music(".\\Assets\\Audio\\epic-orchestra.wav");
+	_mgr->GetMixer().PlayMusic(*_openingTheme);
+
 	_currScreen = 0;
 
 	_storyTexture.resize(2);
@@ -61,6 +64,7 @@ int OpeningScreen::Update(double elapsedSecs)
 		if (_currScreen > 1)
 		{
 			_soundBank.PlaySound("accept");
+			_mgr->GetMixer().HaltMusic();
 			_mgr->SetNextScreen("menu");
 			return SCREEN_FINISH;
 		}
@@ -107,6 +111,8 @@ void OpeningScreen::Unload()
 	_currScreen = 0;
 	delete _backgroundTexture;
 	delete _backgroundTexture2;
+
+	delete _openingTheme;
 }
 
 SoundEffectBank & OpeningScreen::GetSoundBank()

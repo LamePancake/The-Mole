@@ -174,6 +174,7 @@ int GameScreen::Update(double elapsedSecs)
 			_mgr->_unlockedLevels[_nextLevel] = true;
 			_mgr->WriteLevelUnlockFile(".\\Assets\\SavedData\\level_unlocks.txt");
 			_mgr->WriteHighScoreFile(_scorePath);
+			_soundBank.PlaySound("accept");
 			_mgr->SetNextScreen(_nextLevel);
 			return SCREEN_FINISH;
 		}

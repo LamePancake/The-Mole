@@ -31,7 +31,7 @@ private:
 
 	std::vector<std::vector<SDL2pp::Texture*>> _storyTexture;
 	int _currScreen;
-
+	SDL2pp::Music* _openingTheme;
 	SoundEffectBank & _soundBank;
 };
 
