@@ -76,8 +76,11 @@ void ObjectActor::Reset(Vector2 pos)
 	if(_id == dialogTrigger)
 		_collided = false;
 
-	if (_id == flag)
-		_collided = false;
+	if (_id == flag && _collided)
+	{
+		_sprites[_currentSpriteSheet]->SetReversed(true);
+		_sprites[_currentSpriteSheet]->Stop();
+	}
 }
 
 ObjectActor * ObjectActor::Clone()

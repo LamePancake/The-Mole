@@ -118,7 +118,7 @@ void TurretActor::TurretUpdate(double elapseSecs)
 					);
 			}
 		}
-		if (_timeInterval > 5) {
+		if (_timeInterval > 3) {
 			_gameScreen->GetLevel()->AddActor(std::make_shared<ProjectileActor>(
 				projectilePosition //- Vector2(0, -50) ///Vec2 position
 				, *_mgr ///Gamemanager
