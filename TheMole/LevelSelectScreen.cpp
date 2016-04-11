@@ -71,7 +71,7 @@ int LevelSelectScreen::Load()
 	_nextScreen = "menu";
 	_curMenuItem = 0;
 
-	_mgr->PlayMusic(".\\Assets\\Audio\\menu_theme.ogg");
+	_mgr->PlayMusic(".\\Assets\\Audio\\Electrix_NES_Snabisch.mp3");
 
 	return SCREEN_LOAD_SUCCESS;
 }

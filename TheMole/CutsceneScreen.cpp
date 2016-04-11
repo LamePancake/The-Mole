@@ -35,6 +35,9 @@ int CutsceneScreen::Load()
 
 	srand(time(NULL));
 	_skipTimer = 0;
+
+	_mgr->PlayMusic(_musicPath);
+	
 	return SCREEN_LOAD_SUCCESS;
 }
 

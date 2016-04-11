@@ -41,6 +41,8 @@ int CreditsScreen::Load()
 	_timer = 0;
 	_direction = 1;
 
+	_mgr->PlayMusic(".\\Assets\\Audio\\Electrix_NES_Snabisch.mp3");
+	
 	return SCREEN_LOAD_SUCCESS;
 }
 
