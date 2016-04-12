@@ -136,8 +136,8 @@ void AIActor::Update(double elapsedSecs)
 	}
 	else
 	{
-		_aabb.UpdatePosition(*this);
 		UpdatePosition(elapsedSecs);
+        _aabb.UpdatePosition(*this);
 
 		for (auto actor : _gameScreen->GetLevel()->GetActors())
 		{

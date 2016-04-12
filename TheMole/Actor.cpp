@@ -212,14 +212,6 @@ void Actor::SetSprite(std::string && sprite, bool resetOnStart)
 
 void Actor::PlaySpriteSound(std::string & sprite, bool playIfNotVisible)
 {
-    // Stop the sound for the current spritesheet, if any
-    if (_sounds.find(_currentSpriteSheet) != _sounds.end())
-    {
-        auto sound = _sounds[_currentSpriteSheet];
-        auto nameCopy(sound.first);
-        _gameScreen->GetSoundBank().StopSound(std::move(nameCopy));
-    }
-
     // Start the sound fot the next spritesheet, if any
     if (_sounds.find(sprite) != _sounds.end())
     {

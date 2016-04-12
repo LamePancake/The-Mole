@@ -85,7 +85,7 @@ void ObjectActor::Update(double elapsedSecs)
     if (_sprites[_currentSpriteSheet]->IsAtFirstFrame())
     {
         auto spriteName(_currentSpriteSheet);
-        PlaySpriteSound(spriteName);
+        PlaySpriteSound(_currentSpriteSheet);
     }
 
 	switch (_id)

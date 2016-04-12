@@ -112,10 +112,12 @@ void ProjectileActor::ProjectileUpdate(double elapseSecs)
                 }
             }
             break;
+            // Fall through
             case Type::door:
+            case Type::enemy:
+            case Type::bombenemy:
                 _sprites[_currentSpriteSheet]->Stop();
                 Destroy();
-            break;
             }
         }
     }
