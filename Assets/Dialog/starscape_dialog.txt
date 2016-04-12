@@ -2,7 +2,7 @@ Viking: Hohohoho. Young mole, we meet again.
 Borin: Hey, do I know you?
 Borin: Right, you're Adalbert, the great Viking Scientist.
 Borin: What are you doing here?
-Viking: Yes. It is I, Adalbert. I have been wating for you to come.
+Viking: Yes. It is I, Adalbert. I have been waiting for you to come.
 Borin: Why?
 Viking: Isn't it obvious!
 Viking: I've made modifications to the mind-control hat you gave me.
@@ -26,4 +26,4 @@ Borin: .....Why do I have to do everything myself?
 Viking: Oh yeah, watch out for a pair of stupid scientists.
 Viking: They opened a portal in there a while back.
 Viking: They haven't come back yet.
-Viking: I wonder what happened to them?
+Viking: I wonder what happened to them.

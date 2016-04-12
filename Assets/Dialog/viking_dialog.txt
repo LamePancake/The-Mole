@@ -1,7 +1,7 @@
 Viking: Hohohoho. What is a mole doing this far from the den?
 Borin: ...
 Viking: Oh, what is this?
-Viking: An alien mind-control hat, perhaps?
+Viking: A Graylien mind-control hat, perhaps?
 Viking: Young mole, may I see your hat?
 Borin: ...
 Viking: Hohohoho. Not talking eh? I'll just take a little peek.
@@ -13,17 +13,17 @@ Borin: Never heard of you.
 Viking: How could you not have heard of me?
 Viking: I have prevented all Hell from breaking loose many times.
 Borin: Sorry, I don't follow any Viking Scientists.
-Viking: Never mind that, this hat is definitely of alien-make.
+Viking: Never mind that, this hat is definitely of Graylien-make.
 Viking: I must study it some more.
 Borin: Where did you get that hat?
 Viking: Why it was on your head. Do you not remember?
 Borin: No I don't.
-Viking: This alien tech must have wiped your memories.
+Viking: This Graylien tech must have wiped your memories.
 Viking: All the more reason to study it.
 Viking: May I borrow this hat for a while?
-Borin: Of course, I don't need it anymore.
+Borin: Sure, I don't need it anymore.
 Viking: Excellent. Hohohoho. Oh, I almost forgot.
-Viking: King Cornelius is looking for a mole to help stop the aliens.
+Viking: King Cornelius is looking for a mole to help stop the Grayliens.
 Borin: Does he want to save the moles too?
 Viking: Yes, of course!
 Viking: He asked me to point worthy moles to the Viking Stronghold.
@@ -36,7 +36,7 @@ Viking: *Hands Borin a Viking Hat*
 Borin: Traps! What traps?
 Viking: Don't worry, you'll be fine. Just remember to use the hat.
 Viking: Now, I must be off.
-Viking: I need to get back to my lab to study this alien hat.
+Viking: I need to get back to my lab to study this hat.
 Viking: Hohohoho. Good bye young mole. And good luck!
 Borin: ...What a strange man. 
 Borin: Wait! How do I use this thing?
