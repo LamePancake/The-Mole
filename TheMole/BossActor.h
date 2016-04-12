@@ -58,8 +58,8 @@ private:
     std::shared_ptr<Actor> _alien;
     std::shared_ptr<TargetedActorSpawner> _explosionSpawner;
 
-	Vector2 _playerPos;
-	Vector2 _bossPos;
+	Vector2 _spawnPos;
+    bool _isFirstUpdate;
 
     // The direction in which the boss was rolling on pre-roll
     int _rollDir;

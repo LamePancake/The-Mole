@@ -41,8 +41,9 @@ int MenuScreen::Load()
 	_direction = 1;
 	_nextScreen = "levelSelect";
 
-    _menuTheme = new Music(".\\Assets\\Audio\\menu_theme.ogg");
-    _mgr->GetMixer().PlayMusic(*_menuTheme);
+    //_menuTheme = new Music(".\\Assets\\Audio\\menu_theme.ogg");
+    //_mgr->GetMixer().PlayMusic(*_menuTheme);
+	_mgr->PlayMusic(".\\Assets\\Audio\\Electrix_NES_Snabisch.mp3");
 
 	return SCREEN_LOAD_SUCCESS;
 }
@@ -82,7 +83,6 @@ int MenuScreen::Update(double elapsedSecs)
 		if (_nextScreen == "exit")
 			exit(0);
 
-		_mgr->GetMixer().HaltMusic();
 		_mgr->SetNextScreen(_nextScreen);
 		return SCREEN_FINISH;
 	}

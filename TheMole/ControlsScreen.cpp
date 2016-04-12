@@ -23,6 +23,8 @@ int ControlsScreen::Load()
 
 	_controls = new Texture(_mgr->GetRenderer(), _headerFont->RenderText_Solid("Controls", NORMAL));
 
+	_mgr->PlayMusic(".\\Assets\\Audio\\Electrix_NES_Snabisch.mp3");
+
 	return SCREEN_LOAD_SUCCESS;
 }
 

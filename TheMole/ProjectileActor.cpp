@@ -86,24 +86,37 @@ bool ProjectileActor::CollisionCheck(Actor & otherAI)
 void ProjectileActor::ProjectileUpdate(double elapseSecs)
 {
 	const std::shared_ptr<GameScreen> screen = std::dynamic_pointer_cast<GameScreen>(_mgr->GetCurrentScreen());
-	if (CollisionCheck(*(screen->GetPlayer())))
-	{
-        Vector2 vel = _curKinematic.velocity;
-		screen->GetPlayer()->ProjectileHit(this);
+    for (auto actor : _gameScreen->GetLevel()->GetActors())
+    {
+        if (_aabb.CheckCollision(actor->GetAABB()))
+        {
+            switch (actor->GetType())
+            {
+            case Type::player:
+            {
+                Vector2 vel = _curKinematic.velocity;
+                screen->GetPlayer()->ProjectileHit(this);
 
-        // Hacky check for having been reflected
-        if (_curKinematic.velocity.GetX() == vel.GetX())
-        {
-            // Hacky check for having been reflected
-            _sprites[_currentSpriteSheet]->Stop();
-            Destroy();
+                // Hacky check for having been reflected
+                if (_curKinematic.velocity.GetX() == vel.GetX())
+                {
+                    _sprites[_currentSpriteSheet]->Stop();
+                    Destroy();
+                }
+                else
+                {
+                    // Set the projectile back to whatever its position was last frame so that we don't continuously hit the player
+                    _curKinematic.position = _prevKinematic.position;
+                    _wasReflected = true;
+                }
+            }
+            break;
+            case Type::door:
+                _sprites[_currentSpriteSheet]->Stop();
+                Destroy();
+            break;
+            }
         }
-        else
-        {
-            // Set the projectile back to whatever its position was last frame so that we don't continuously hit the player
-            _curKinematic.position = _prevKinematic.position;
-            _wasReflected = true;
-        }
-	}
+    }
     _prevKinematic = _curKinematic;
 }

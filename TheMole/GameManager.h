@@ -64,6 +64,7 @@ public:
 
 	void ReadLevelUnlockFile(std::string path);
 	void WriteLevelUnlockFile(std::string path);
+	void PlayMusic(std::string path);
 	std::map<std::string, bool> _unlockedLevels;
 
 	void ReadHighScoreFile(std::string path);
@@ -131,6 +132,8 @@ private:
 	std::stack<std::shared_ptr<Screen>> _backStack;
 	std::shared_ptr<Screen> _nextScreen;
 	std::shared_ptr<Screen> _curScreen;
+	std::string _curMusicPath;
+	SDL2pp::Music* _track;
 
 	SDL2pp::SDL& _sdl;
 	SDL2pp::SDLImage& _sdlImage;

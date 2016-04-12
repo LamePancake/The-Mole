@@ -30,8 +30,8 @@ public:
 	///<param name="loseScreenPath"> Path to the file containing the losing screen image.</param>
 	///<param name="nextLevel">      String indicating the next screen/level to load when this one is finished.</param>
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	GameScreen(std::string levelPath, std::string backgroundPath, std::string scorePath, std::string nextLevel, SoundEffectBank & effectBank, bool isIntroScreen = false)
-		: _levelPath(levelPath), _backgroundPath(backgroundPath), _scorePath(scorePath), _nextLevel(nextLevel), _soundBank(effectBank), _paused(false), _deaths(0), _deathCounterUpdated(false), _deathTimer(0), isIntroScreen(isIntroScreen), _skipTimer(0){}
+	GameScreen(std::string levelPath, std::string backgroundPath, std::string scorePath, std::string nextLevel, SoundEffectBank & effectBank, std::string musicPath, bool isIntroScreen = false)
+		: _levelPath(levelPath), _backgroundPath(backgroundPath), _scorePath(scorePath), _nextLevel(nextLevel), _soundBank(effectBank), _paused(false), _deaths(0), _deathCounterUpdated(false), _deathTimer(0), isIntroScreen(isIntroScreen), _skipTimer(0), _backgroundTrack(musicPath){}
 
 	virtual int Load();
 	virtual int Update(double elapasedSecs) override;
@@ -79,6 +79,7 @@ protected:
 	std::shared_ptr<SDL2pp::Texture> _pancakeMarker;
 	std::shared_ptr<SDL2pp::Texture> _pancakeMarker2;
 	std::shared_ptr<SDL2pp::Texture> _skull;
+	std::string _backgroundTrack;
 
 	int _deaths;
 	double _deathTimer;

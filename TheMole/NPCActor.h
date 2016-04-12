@@ -23,6 +23,9 @@ public:
 		SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP)
 		: Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection) {}
 
+    NPCActor(std::string serialised)
+        : Actor(serialised) {}
+
 	/** Destructor. */
 	~NPCActor();
 
@@ -37,6 +40,8 @@ public:
 
 	// All the state changing stuff happens in here.
 	virtual void Update(double elapsedSecs) override;
+
+    virtual void UpdatePosition(double elapsedSecs) override;
 
 	// Resets the actor
 	virtual void Reset(Vector2 pos);

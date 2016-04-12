@@ -2,23 +2,23 @@ SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
-SSS             W                  W           SSS
-SSS+A           D                  D         A+SSS
-SSSSS           D                  D         SSSSS
-SSSSS           D                  D         SSSSS
-SSSSS           D                  D         SSSSS
-SSSSS           D                  D         SSSSS
-SSSSS           D                  D         SSSSS
-SSSSS           D                  D         SSSSS
-SSSSS           D                  D         SSSSS
-SSSSS           D                  D         SSSSS
-SSSSS           D                  D         SSSSS
-SSSSS           D                  D         SSSSS
-SSSSS           D                  D         SSSSS
-SSSSS           D                  D         SSSSS
-SSSSS           D                  D         SSSSS
-SSSSS           D                  D         SSSSS
-SSSSS           D                  D         SSSSS
+SSS             W SSSSSSSSSSSSSSSS W           SSS
+SSS+A           D SE E E E E E E S D         A+SSS
+SSSSS           D SSSSSSSSSSSSSSSS D         SSSSS
+SSSSS           D S      +       S D         SSSSS
+SSSSS           D SSSSSSSSSSSSSSSS D         SSSSS
+SSSSS           D S      +       S D         SSSSS
+SSSSS           D SSSSSSSSSSSSSSSS D         SSSSS
+SSSSS           D SE E E E E E E S D         SSSSS
+SSSSS           D SSSSSSSSSSSSSSSS D         SSSSS
+SSSSS           D S      +       S D         SSSSS
+SSSSS           D SSSSSSSSSSSSSSSS D         SSSSS
+SSSSS           D S      +       S D         SSSSS
+SSSSS           D SSSSSSSSSSSSSSSS D         SSSSS
+SSSSS           D S      +       S D         SSSSS
+SSSSS           D SSSSSSSSSSSSSSSS D         SSSSS
+SSSSS           D S      ++      S D         SSSSS
+SSSSS           D SSSSSSSSSSSSSSSS D         SSSSS
 SSSSS                                        SSSSS
 SSSSS        B                               SSSSS
 SSSSS                                        SSSSS
@@ -59,3 +59,47 @@ UP
 5
 1
 spawner 0
+
+0.5
+10
+N
+0 0
+100 341.3
+walk ./Assets/Textures/Chicken_walk.png 8 1.0 1 RIGHT UP
+walk
+RIGHT
+UP
+1
+0 0
+
+0.5
+5
+N
+0 0
+200 341.3
+roll ./Assets/Textures/Watch_roll_small.png 10 1.0 1 LEFT UP
+roll
+RIGHT
+UP
+1
+0 0
+
+0.5
+10
+spawner 2
+
+0.5
+5
+spawner 3
+
+0.5
+10
+spawner 2
+
+0.5
+5
+spawner 3
+
+0.5
+10
+spawner 2

@@ -1,6 +1,7 @@
 #include "GameManager.h"
 #include "MenuScreen.h"
 
+using namespace SDL2pp;
 using std::string;
 using std::shared_ptr;
 using std::unordered_map;
@@ -200,6 +201,20 @@ void GameManager::WriteHighScoreFile(std::string path)
 	}
 
 	myfile.close();
+}
+
+void GameManager::PlayMusic(std::string path)
+{
+	if (_curMusicPath != path)
+	{
+		_curMusicPath = path;
+		_track = new Music(path);
+		_mixer.PlayMusic(*_track);
+	}
+	//else
+	//{
+	//	_mixer.ResumeMusic();
+	//}
 }
 
 void GameManager::ClearHighScores()

@@ -36,6 +36,7 @@ TurretActor::TurretActor(Vector2 position
 		, startXDirection, startYDirection), _aim(aim), _reflectable(reflectable)
 {
 	_timeInterval = 0;
+    _sprites["turret"]->Stop();
 }
 
 TurretActor::~TurretActor()
@@ -51,6 +52,7 @@ void TurretActor::Update(double elapsedSecs)
 {
 	Actor::Update(elapsedSecs);
     TurretUpdate(elapsedSecs);
+    _aabb.UpdatePosition(*this);
 	if (_isDestroyed || !_isActive) return;
 
 	for (auto & actor : _gameScreen->GetLevel()->GetActors())
@@ -131,9 +133,6 @@ Vector2 TurretActor::GetProjectileVel()
     float myX = _curKinematic.position.GetX();
 
     int aimMultiplier = playerX < myX ? -1 : 1;
-    SpriteSheet::XAxisDirection xDir = aimMultiplier == -1 ? SpriteSheet::XAxisDirection::LEFT : SpriteSheet::XAxisDirection::RIGHT;
-    _spriteXDir = xDir;
-
     if (_aim == Aim::XAxis)
     {
         Vector2 aim;
@@ -160,8 +159,18 @@ void TurretActor::TurretUpdate(double elapseSecs)
 	else
 		projectilePosition = Vector2(_curKinematic.position.GetX() + _sprites[_currentSpriteSheet]->GetFrameWidth() + (_sprites["shoot"]->GetFrameWidth()), _curKinematic.position.GetY() + (_sprites[_currentSpriteSheet]->GetFrameHeight() / 2.0f) - (_sprites["shoot"]->GetFrameHeight() / 2.0f));
 
-	if (_timeInterval > 3)
-	{
+    if (_aim != Aim::None)
+    {
+        SpriteSheet::XAxisDirection xDir = _gameScreen->GetPlayer()->GetPosition().GetX() < _curKinematic.position.GetX()
+                                            ? SpriteSheet::XAxisDirection::LEFT : SpriteSheet::XAxisDirection::RIGHT;
+        _spriteXDir = xDir;
+    }
+
+    if (_timeInterval > 3)
+    {
+        _sprites["turret"]->Reset();
+        _sprites["turret"]->Start();
+        // Play a sound
 		if (_aim != Aim::None)
 		{
             auto projectile = std::make_shared<ProjectileActor>(

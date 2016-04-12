@@ -105,7 +105,7 @@ int GameScreen::Load()
 	_levelCompleteControls = new SDL2pp::Texture(_mgr->GetRenderer(), ".\\Assets\\Textures\\CreditsControls.png");
 
 	_curMenuItem  = 0;
-
+	_mgr->PlayMusic(_backgroundTrack);
 	return SCREEN_LOAD_SUCCESS;
 }
 

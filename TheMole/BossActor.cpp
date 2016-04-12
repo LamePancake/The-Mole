@@ -25,11 +25,13 @@ BossActor::BossActor(Vector2 position,
     _tookDamage(false),
     _rollDur(10),
     _idleDur(2),
-    _explosionSpawner(spawner)
+    _explosionSpawner(spawner),
+    _isFirstUpdate(true),
+    _spawnPos(position)
 {
     CreateBehaviourTree();
     _curKinematic.velocity.SetY(341.3f);
-    SetHealth(10);
+    SetHealth(50);
 }
 
 BossActor::~BossActor()
@@ -53,6 +55,15 @@ void BossActor::Update(double elapsedSecs)
 {
 	Actor::Update(elapsedSecs);
     if (_isDestroyed || !_isActive) return;
+
+    if (_isFirstUpdate)
+    {
+        // HACK ALERT
+        auto switches = _gameScreen->GetLevel()->GetActorsOfType<ToggleActor>(Type::toggle);
+        switches[2]->SetVisibility(false);
+        switches[2]->SetActive(false);
+        _isFirstUpdate = false;
+    }
 
     _bossTree.Update(elapsedSecs);
 	UpdatePosition(elapsedSecs);
@@ -106,6 +117,22 @@ void BossActor::Update(double elapsedSecs)
                 }
             }
         }
+        break;
+        case Actor::Type::player:
+        {
+            AABB playerAABB = actor->GetAABB();
+
+            // The boss sprite's borders are a bit far from its actual dimensions
+            // So now we have this
+            Vector2 playerCentre = Vector2(playerAABB.GetX() + playerAABB.GetWidth() / 2, playerAABB.GetY() + playerAABB.GetHeight() / 2);
+            Vector2 bossCentre = Vector2(_aabb.GetX() + _aabb.GetWidth() / 2, _aabb.GetY() + _aabb.GetHeight() / 2);
+            float dist = playerCentre.Distance(bossCentre);
+            if (dist <= 100)
+            {
+                actor->SetHealth(0);
+            }
+        }
+        break;
         }
     }
 
@@ -114,7 +141,7 @@ void BossActor::Update(double elapsedSecs)
 
 void BossActor::Reset(Vector2 pos)
 {
-	Actor::Reset(pos);
+	Actor::Reset(_spawnPos);
 
     if (_currentSpriteSheet != "dead")
     {

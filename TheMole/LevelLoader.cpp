@@ -97,18 +97,18 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 				sprites.reserve(14);
 				if (den)
 				{
-					sprites["sideDig"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_den_sidedig_56x56.png", 4, 0.30);
-					sprites["verticalDig"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_downdig_56x56.png", 4, 0.30, true, SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection::DOWN);
 					sprites["walk"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_den_walk_56x56.png", 8, 1);
 					sprites["idle"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_den_idle_56x56.png", 4, 0.8);
+					sprites["sideDig"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_den_sidedig_56x56.png", 4, 0.30);
 				}
 				else
 				{
-					sprites["sideDig"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_sidedig_56x56.png", 4, 0.30);
-					sprites["verticalDig"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_downdig_56x56.png", 4, 0.30, true, SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection::DOWN);
 					sprites["walk"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_walk_56x56.png", 8, 1);
 					sprites["idle"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_idle_56x56.png", 4, 0.8);
-                }
+					sprites["sideDig"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_sidedig_56x56.png", 4, 0.30);
+				}
+
+				sprites["verticalDig"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_downdig_56x56.png", 4, 0.30, true, SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection::DOWN);
 
 				sprites["shieldOff"] = std::make_shared<SpriteSheet>("./Assets/Textures/Empty_Shield.png", 1, 1);
 				sprites["shieldOn"] = std::make_shared<SpriteSheet>("./Assets/Textures/Full_Shield.png", 1, 1);
@@ -159,7 +159,7 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
                     sprites["dead"] = std::make_shared<SpriteSheet>("./Assets/Textures/Watch_death.png", 1, infinity, false, SpriteSheet::XAxisDirection::LEFT);
 
                     std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> alienSprites;
-                    alienSprites["turret"] = shared_ptr<SpriteSheet>(new SpriteSheet("./Assets/Textures/Graylien_shoot.png", 4, 1.5f, false));
+                    alienSprites["turret"] = shared_ptr<SpriteSheet>(new SpriteSheet("./Assets/Textures/Graylien_shoot.png", 4, 0.75f, false));
                     alienSprites["dead"] = shared_ptr<SpriteSheet>(new SpriteSheet("./Assets/Textures/Graylien_dead.png", 1, infinity, false));
                     alienSprites["shoot"] = shared_ptr<SpriteSheet>(new SpriteSheet("./Assets/Textures/laser.png", 1, infinity, false));
 
@@ -560,7 +560,7 @@ void LevelLoader::LoadActorSpawners(std::ifstream & file, std::vector<SDL2pp::Po
         do
         {
             getline(file, line);
-            line.erase(std::remove(line.end() - 1, line.end(), '\r'), line.end());
+            if(line.size() != 0) line.erase(std::remove(line.end() - 1, line.end(), '\r'), line.end());
         } while (line.size() == 0);
 
         // Read in requested period for spawner
@@ -606,6 +606,13 @@ void LevelLoader::LoadActorSpawners(std::ifstream & file, std::vector<SDL2pp::Po
                 spawners.push_back(spawner);
             }
                 break;
+            case Tile::npc:
+            {
+                shared_ptr<Actor> npc = shared_ptr<NPCActor>(new NPCActor(serialised));
+                npc->SetPosition(Vector2(spawnerPos[i].x, spawnerPos[i].y));
+                shared_ptr<ActorSpawner> spawner = shared_ptr<ActorSpawner>(new ActorSpawner(level, npc, period, limit));
+                spawners.push_back(spawner);
+            }
             }
         }
         else
