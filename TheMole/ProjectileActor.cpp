@@ -1,15 +1,15 @@
 #include "ProjectileActor.h"
 #include "GameScreen.h"
 
-ProjectileActor::ProjectileActor(Vector2 position
-	, GameManager & manager
-	, Vector2 spd
-	, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites
-	, const std::string && startSprite
-	, SpriteSheet::XAxisDirection startXDirection, SpriteSheet::YAxisDirection startYDirection)
-	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection)
+ProjectileActor::ProjectileActor(Vector2 position,
+	 GameManager & manager,
+	 Vector2 spd,
+	 std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
+	 const std::string && startSprite,
+     bool reflectable,
+	 SpriteSheet::XAxisDirection startXDirection, SpriteSheet::YAxisDirection startYDirection)
+	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection), _reflectable(reflectable), _wasReflected(false)
 {
-	_sprites[_currentSpriteSheet];
 }
 
 ProjectileActor::~ProjectileActor()
@@ -26,10 +26,10 @@ void ProjectileActor::Update(double elapsedSecs)
 	Actor::Update(elapsedSecs);
 	if (_isDestroyed || !_isActive) return;
 
-	_aabb.UpdatePosition(*this);
-
 	_collisionInfo.colIntersect.clear();
 	_collisionInfo.rowIntersect.clear();
+
+    _spriteXDir = _curKinematic.velocity.GetX() < 0 ? SpriteSheet::XAxisDirection::LEFT : SpriteSheet::XAxisDirection::RIGHT;
 
 	DetectTileCollisions(_collisionInfo, _gameScreen->GetLevel());
 	if (_collisionInfo.shouldCorrectX || _collisionInfo.shouldCorrectY) {
@@ -39,13 +39,28 @@ void ProjectileActor::Update(double elapsedSecs)
 	}
 
 	UpdatePosition(elapsedSecs);
+    _aabb.UpdatePosition(*this);
 	ProjectileUpdate(elapsedSecs);
 }
 
 void ProjectileActor::Reset(Vector2 pos)
 {
 	Destroy();
-	//Actor::Reset(pos);
+}
+
+bool ProjectileActor::IsReflectable()
+{
+    return _reflectable;
+}
+
+void ProjectileActor::SetReflectable(bool reflectable)
+{
+    _reflectable = reflectable;
+}
+
+bool ProjectileActor::WasReflected() const
+{
+    return _wasReflected;
 }
 
 ProjectileActor * ProjectileActor::Clone()
@@ -73,8 +88,22 @@ void ProjectileActor::ProjectileUpdate(double elapseSecs)
 	const std::shared_ptr<GameScreen> screen = std::dynamic_pointer_cast<GameScreen>(_mgr->GetCurrentScreen());
 	if (CollisionCheck(*(screen->GetPlayer())))
 	{
+        Vector2 vel = _curKinematic.velocity;
 		screen->GetPlayer()->ProjectileHit(this);
-		_sprites[_currentSpriteSheet]->Stop();
-		Destroy();
+
+        // Hacky check for having been reflected
+        if (_curKinematic.velocity.GetX() == vel.GetX())
+        {
+            // Hacky check for having been reflected
+            _sprites[_currentSpriteSheet]->Stop();
+            Destroy();
+        }
+        else
+        {
+            // Set the projectile back to whatever its position was last frame so that we don't continuously hit the player
+            _curKinematic.position = _prevKinematic.position;
+            _wasReflected = true;
+        }
 	}
+    _prevKinematic = _curKinematic;
 }

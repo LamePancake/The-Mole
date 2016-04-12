@@ -7,6 +7,13 @@ class TurretActor :
 	public Actor
 {
 public:
+    enum Aim
+    {
+        None,
+        XAxis,
+        Player
+    };
+
 	TurretActor(
 		Vector2 position
 		, GameManager & manager
@@ -20,7 +27,8 @@ public:
 		Vector2 position
 		, GameManager & manager
 		, Vector2 spd
-		, bool aim
+		, Aim aim
+        , bool reflectable
 		, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites
 		, const std::string&& startSprite
 		, SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT
@@ -61,16 +69,18 @@ public:
 
 	void SetPattern(std::vector<Vector2> prjDirSet);
 
-	void ToggleAim();
+	void ChangeAim(Aim newAim);
 
-	Vector2 AimAtPlayer();
+	Vector2 GetProjectileVel();
 private:
 	void TurretUpdate(double elapseSecs);
 	/** Stores projectiles currently spawned */
 	std::vector<std::shared_ptr<ProjectileActor>> _projectiles;
 	///Calculates the time between shots
 	double _timeInterval; //Don't touch
-	bool _aim;
+
+	Aim _aim;
+    bool _reflectable; // Whether projectiles from this turret are reflectable
 	///This store the direction(s) of the projectile(s) fired by this turret
 	std::vector<Vector2> _pattern;
 	virtual Type GetType() const override { return Type::turret; }

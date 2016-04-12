@@ -2,6 +2,7 @@
 #include "AIActor.h"
 #include "DoorActor.h"
 #include "GameScreen.h"
+#include "ProjectileActor.h"
 
 using std::vector;
 using std::shared_ptr;
@@ -413,9 +414,12 @@ void PlayerActor::ProjectileHit(Actor *prj)
 {
 	if (_lastPrj != prj)
 	{
-		if (_shieldActive)
+		if (_shieldActive && ((ProjectileActor*)prj)->IsReflectable())
 		{
-
+            Vector2 vel = prj->GetSpeed();
+            vel.SetX(vel.GetX() * -1);
+            vel.SetY(vel.GetY() * -1);
+            prj->SetSpeed(vel);
 		}
 		else
 		{
@@ -685,6 +689,11 @@ void PlayerActor::Reset(Vector2 pos)
 
 	_jumpVelocity = 0.0f;
 	_digDir = Edge::NONE;
+
+    _shieldActive = false;
+    _shieldReleased = true;
+    _shieldTimer = 0;
+    _shieldStr = 4;
 }
 
 Actor * PlayerActor::Clone()

@@ -167,6 +167,8 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
                                 Vector2(0, 0),
                                 *GameManager::GetInstance(),
                                 Vector2(0, 0),
+                                TurretActor::Aim::XAxis,
+                                true,
                                 alienSprites,
                                 "turret",
                                 line == "0" ? SpriteSheet::XAxisDirection::LEFT : SpriteSheet::XAxisDirection::RIGHT,

@@ -122,6 +122,17 @@ void BossActor::Reset(Vector2 pos)
         _heat = 0;
         SetHealth(50);
         ResetDurations();
+        SetSprite("idle");
+    }
+    else
+    {
+        // The bombs will have reset, so we need to make sure they don't show up
+        auto bombs = _explosionSpawner->GetSpawned();
+        for (auto bomb : bombs)
+        {
+            auto locked = bomb.lock();
+            locked->SetVisibility(false);
+        }
     }
 }
 

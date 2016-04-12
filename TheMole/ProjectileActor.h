@@ -19,6 +19,7 @@ public:
 	* @param	startYDirection	The direction in the y axis which the actor will face at the start.
 	*/
 	ProjectileActor(Vector2 position, GameManager & manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites, const std::string&& startSprite,
+        bool reflectable,
 		SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT
 		, SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP);
 
@@ -39,6 +40,12 @@ public:
 	// Resets the actor
 	virtual void Reset(Vector2 pos);
 
+    bool IsReflectable();
+
+    void SetReflectable(bool reflectable);
+
+    bool WasReflected() const;
+
     virtual ProjectileActor* Clone() override;
 
     virtual bool IsCloneable() const { return true; }
@@ -56,8 +63,10 @@ public:
 	*/
 	bool CollisionCheck(Actor & otherAI);
 
-
 private:
+    bool _reflectable;
+    bool _wasReflected;
+
 	void ProjectileUpdate(double elapseSecs);
 };
 
