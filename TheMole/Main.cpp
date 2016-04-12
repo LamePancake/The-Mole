@@ -57,6 +57,9 @@ int main(int argc, char** argv) {
 		soundEffects["toad1"] = "./Assets/Audio/toad_voice1.ogg";
 		soundEffects["toad2"] = "./Assets/Audio/toad_voice2.ogg";
 		soundEffects["toad3"] = "./Assets/Audio/toad_voice3.ogg";
+		soundEffects["win"] = "./Assets/Audio/Jingle_Achievement_00.mp3";
+		soundEffects["lose"] = "./Assets/Audio/Jingle_Lose_00.mp3";
+		soundEffects["checkpoint"] = "./Assets/Audio/Pickup_03.wav";
 		SoundEffectBank bank(soundEffects);
 
 		vector<string> borinVoices = { "borin1", "borin2", "borin3" };

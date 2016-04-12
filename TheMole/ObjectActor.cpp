@@ -132,6 +132,7 @@ void ObjectActor::FlagUpdate(double elapsedSecs)
 		_sprites[_currentSpriteSheet]->SetRepeating(false);
 
 		_gameScreen->GetLevel()->SetSpawnPoint(GetPosition(), _numericIdentifier);
+		_gameScreen->GetSoundBank().PlaySound("checkpoint");
 		_collided = true;
 	}
 }

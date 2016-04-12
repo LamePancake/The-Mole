@@ -20,6 +20,7 @@ TurretActor::TurretActor(
 	) : Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection), _aim(Aim::None), _reflectable(false)
 {
 	_timeInterval = 0;
+    _period = 3;
 }
 
 TurretActor::TurretActor(Vector2 position
@@ -27,13 +28,14 @@ TurretActor::TurretActor(Vector2 position
 	, Vector2 spd
 	, Aim aim
     , bool reflectable
+    , double period
 	, std::unordered_map<std::string
 	, std::shared_ptr<SpriteSheet>>& sprites
 	, const std::string && startSprite
 	, SpriteSheet::XAxisDirection startXDirection
 	, SpriteSheet::YAxisDirection startYDirection
 	) : Actor(position, manager, spd, sprites, std::move(startSprite)
-		, startXDirection, startYDirection), _aim(aim), _reflectable(reflectable)
+		, startXDirection, startYDirection), _aim(aim), _reflectable(reflectable), _period(period)
 {
 	_timeInterval = 0;
     _sprites["turret"]->Stop();
@@ -166,7 +168,7 @@ void TurretActor::TurretUpdate(double elapseSecs)
         _spriteXDir = xDir;
     }
 
-    if (_timeInterval > 3)
+    if (_timeInterval > _period)
     {
         _sprites["turret"]->Reset();
         _sprites["turret"]->Start();

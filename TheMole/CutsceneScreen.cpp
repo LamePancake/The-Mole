@@ -103,7 +103,7 @@ int CutsceneScreen::Update(double elapsedSecs)
 void CutsceneScreen::Draw()
 {
 	Renderer& rend = _mgr->GetRenderer();
-	rend.SetDrawColor(100, 100, 100, 255);
+	rend.SetDrawColor(255, 50, 50, 255);
 	rend.Clear();
 
 	SDL2pp::Point dim = GameManager::GetInstance()->GetWindow().GetSize();

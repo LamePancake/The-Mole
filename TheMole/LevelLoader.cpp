@@ -24,8 +24,11 @@ using std::unordered_map;
 using std::string;
 using std::ifstream;
 
+#define DEN 0
+#define POSTGRASS 1
+
 // Loads the level
-std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared_ptr<PlayerActor> & player, bool den)
+std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared_ptr<PlayerActor> & player, int specialLevel)
 {
 	int    levelWidth = 0; // Keeps track of the width of the level
 	int    levelHeight = 0; // Keeps track of the height of the level
@@ -95,11 +98,17 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 			{
 				std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
 				sprites.reserve(14);
-				if (den)
+				if (specialLevel == DEN)
 				{
 					sprites["walk"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_den_walk_56x56.png", 8, 1);
 					sprites["idle"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_den_idle_56x56.png", 4, 0.8);
 					sprites["sideDig"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_den_sidedig_56x56.png", 4, 0.30);
+				}
+				else if (specialLevel == POSTGRASS)
+				{
+					sprites["walk"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_walk_56x56_sidewithchicken.png", 8, 1);
+					sprites["idle"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_idle_56x56_sidewithchicken.png", 4, 0.8);
+					sprites["sideDig"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_sidedig_56x56.png", 4, 0.30);
 				}
 				else
 				{
@@ -109,18 +118,14 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 				}
 
 				sprites["verticalDig"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_downdig_56x56.png", 4, 0.30, true, SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection::DOWN);
-
 				sprites["shieldOff"] = std::make_shared<SpriteSheet>("./Assets/Textures/Empty_Shield.png", 1, 1);
 				sprites["shieldOn"] = std::make_shared<SpriteSheet>("./Assets/Textures/Full_Shield.png", 1, 1);
-
 				sprites["chickenHatWalk"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_walk_56x56_chicken.png", 8, 1);
 				sprites["chickenHatIdle"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_idle_56x56_chicken.png", 4, 0.8);
 				sprites["mindControlHatWalk"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_walk_56x56_mindcontrol.png", 8, 1);
 				sprites["mindControlHatIdle"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_idle_56x56_mindcontrol.png", 4, 0.8);
 				sprites["vikingHatWalk"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_walk_56x56_viking.png", 8, 1);
 				sprites["vikingHatIdle"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_idle_56x56_viking.png", 4, 0.8);
-				sprites["chickenWalk"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_walk_56x56_sidewithchicken.png", 8, 1);
-				sprites["chickenIdle"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_idle_56x56_sidewithchicken.png", 4, 0.8);
 
 				player = std::make_shared<PlayerActor>(tile->GetWorldPosition(), gameManager, Vector2(.0f, 341.3f), sprites, "idle");
 				tile->SetID(Tile::blank);
@@ -169,6 +174,7 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
                                 Vector2(0, 0),
                                 TurretActor::Aim::XAxis,
                                 true,
+                                0.75,
                                 alienSprites,
                                 "turret",
                                 line == "0" ? SpriteSheet::XAxisDirection::LEFT : SpriteSheet::XAxisDirection::RIGHT,

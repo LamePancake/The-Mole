@@ -29,6 +29,7 @@ public:
 		, Vector2 spd
 		, Aim aim
         , bool reflectable
+        , double period
 		, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites
 		, const std::string&& startSprite
 		, SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT
@@ -81,6 +82,8 @@ private:
 
 	Aim _aim;
     bool _reflectable; // Whether projectiles from this turret are reflectable
+    double _period; // Time (seconds) between shots
+
 	///This store the direction(s) of the projectile(s) fired by this turret
 	std::vector<Vector2> _pattern;
 	virtual Type GetType() const override { return Type::turret; }
