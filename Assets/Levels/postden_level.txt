@@ -18,7 +18,7 @@ CHICKEN 0
 MIND_CONTROL 0
 
 dialog
-Guess, I should follow him.
+Guess I should follow him.
 
 signs
 .\\Assets\\Textures\\move_sign.png
