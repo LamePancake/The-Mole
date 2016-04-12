@@ -51,11 +51,11 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 	// Welcome to not wanting to properly make a texture cache
 	// So long as we don't have *too* many repeated textures, I'm sure that this list will be totally manageable :):):):):):):););)
 	// 10/10 would read again - Trey
-	std::shared_ptr<SDL2pp::Texture> baddieWalkSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(),"./Assets/Textures/Baddie_walk_56x56.png");
-    std::shared_ptr<SDL2pp::Texture> bombSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), "./Assets/Textures/Explosion.png");
+	std::shared_ptr<SDL2pp::Texture> baddieWalkSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), "./Assets/Textures/Baddie_walk_56x56.png");
+	std::shared_ptr<SDL2pp::Texture> bombSheet = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), "./Assets/Textures/Explosion.png");
 	std::shared_ptr<SDL2pp::Texture> mindControlIndicator = std::make_shared<SDL2pp::Texture>(gameManager.GetRenderer(), "./Assets/Textures/Controlled_indicator.png");
 
-    std::unordered_map<char, std::vector<SDL2pp::Point>> positions;
+	std::unordered_map<char, std::vector<SDL2pp::Point>> positions;
 
 	// Read the actual map data, stopping when we get to switch descriptions etc.
 	do
@@ -150,15 +150,14 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 			}
 			break;
 			case Tile::collectible:
-				{
-					positions[Tile::collectible].push_back(SDL2pp::Point(tile->GetWorldPosition().GetX(), tile->GetWorldPosition().GetY()));
-					tile->SetID(Tile::blank);
-				}
-				break;
+			{
+				positions[Tile::collectible].push_back(SDL2pp::Point(tile->GetWorldPosition().GetX(), tile->GetWorldPosition().GetY()));
+				tile->SetID(Tile::blank);
+			}
+			break;
 			case Tile::boss:
-				{
-                    double infinity = std::numeric_limits<double>::infinity();
-
+			{
+				double infinity = std::numeric_limits<double>::infinity();
                     // Boss sprites
 					std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
 					sprites["idle"] = std::make_shared<SpriteSheet>("./Assets/Textures/Watch_idle.png", 4, 0.50, true, SpriteSheet::XAxisDirection::LEFT);
@@ -240,14 +239,14 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 			}
 			break;
 
-            case Tile::door:
-                positions[Tile::door].push_back(SDL2pp::Point(levelWidth, levelHeight));
-                tile->SetID(Tile::blank);
-                break;
-            case Tile::toggle:
-                positions[Tile::toggle].push_back(SDL2pp::Point(levelWidth, levelHeight));
-                tile->SetID(Tile::blank);
-                break;
+			case Tile::door:
+				positions[Tile::door].push_back(SDL2pp::Point(levelWidth, levelHeight));
+				tile->SetID(Tile::blank);
+				break;
+			case Tile::toggle:
+				positions[Tile::toggle].push_back(SDL2pp::Point(levelWidth, levelHeight));
+				tile->SetID(Tile::blank);
+				break;
 
 			case Tile::dialog:
 				positions[Tile::dialog].push_back(SDL2pp::Point(tile->GetWorldPosition().GetX(), tile->GetWorldPosition().GetY()));
@@ -259,10 +258,10 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 				tile->SetID(Tile::blank);
 				break;
 
-            case Tile::spawner:
-                positions[Tile::spawner].push_back(SDL2pp::Point(tile->GetWorldPosition().GetX(), tile->GetWorldPosition().GetY()));
-                tile->SetID(Tile::blank);
-                break;
+			case Tile::spawner:
+				positions[Tile::spawner].push_back(SDL2pp::Point(tile->GetWorldPosition().GetX(), tile->GetWorldPosition().GetY()));
+				tile->SetID(Tile::blank);
+				break;
 			}
 
 			level->AddTileToLevel(tile, levelHeight);
@@ -272,17 +271,17 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 		}
 
 		levelWidth = 0;
-       	levelHeight++;
+		levelHeight++;
 	} while (inFile.good() && line.length() == level->GetLevelSize().x);
 
 	level->SetTileWidth(tileWidth);
 	level->SetTileHeight(tileHeight);
-    
-    // We stopped because we read a line != to level->GetLevelSize().x; must be more data to load
-    if (inFile.good())
-    {
-        LoadActorSpecifics(inFile, line, positions, level);
-    }
+
+	// We stopped because we read a line != to level->GetLevelSize().x; must be more data to load
+	if (inFile.good())
+	{
+		LoadActorSpecifics(inFile, line, positions, level);
+	}
 
 	inFile.close();
 
@@ -327,10 +326,10 @@ void LevelLoader::LoadActorSpecifics(ifstream & file, string & lastLine, unorder
 		{
 			LoadNPCS(file, positions[Tile::npc], level);
 		}
-        else if (line == "spawners")
-        {
-            LoadActorSpawners(file, positions[Tile::spawner], level);
-        }
+		else if (line == "spawners")
+		{
+			LoadActorSpawners(file, positions[Tile::spawner], level);
+		}
 		else if (line == "turrets")
 		{
 			LoadTurrets(file, positions[Tile::turret], level);
@@ -354,44 +353,44 @@ void LevelLoader::LoadTogglesAndDoors(ifstream & file, vector<SDL2pp::Point> & t
 	shared_ptr<SDL2pp::Texture> oneShotToggleVertical = std::make_shared<SDL2pp::Texture>(rend, "./Assets/Textures/Oneshot_toggle_vertical.png");
 
 
-    vector<shared_ptr<ToggleActor>> toggles;
+	vector<shared_ptr<ToggleActor>> toggles;
 
     std::unordered_map<std::string, std::pair<std::string, bool>> doorSounds = { };
 
     std::unordered_map<std::string, std::pair<std::string, bool>> toggleSounds = { {"toggle", {"switch_on", false}} };
 
 	// We would have just read "toggles", so we can go ahead and start reading all of the pad info in
-  	for (size_t i = 0; i < togglePos.size(); ++i)
+	for (size_t i = 0; i < togglePos.size(); ++i)
 	{
 		std::getline(file, line);
 		std::transform(line.begin(), line.end(), line.begin(), ::tolower);
 		split(line, ' ', tokens);
-		
+
 		Actor::Edge edge = Actor::Edge::NONE;
 		shared_ptr<SpriteSheet> sheet;
-        SpriteSheet::XAxisDirection xDir = SpriteSheet::XAxisDirection::RIGHT;
-        SpriteSheet::YAxisDirection yDir = SpriteSheet::YAxisDirection::UP;
-        Vector2 startPos(togglePos[i].x * level->GetTileWidth(), togglePos[i].y * level->GetTileHeight());
+		SpriteSheet::XAxisDirection xDir = SpriteSheet::XAxisDirection::RIGHT;
+		SpriteSheet::YAxisDirection yDir = SpriteSheet::YAxisDirection::UP;
+		Vector2 startPos(togglePos[i].x * level->GetTileWidth(), togglePos[i].y * level->GetTileHeight());
 		bool isActive = tokens[1] == "active";
 
 		if (tokens[0] == "top")
 		{
 			edge = Actor::Edge::TOP;
-            yDir = SpriteSheet::YAxisDirection::DOWN;
+			yDir = SpriteSheet::YAxisDirection::DOWN;
 			sheet = std::make_shared<SpriteSheet>(isActive ? activeToggle : oneShotToggle, 2, 0, false);
 		}
 		else if (tokens[0] == "bottom")
 		{
 			edge = Actor::Edge::BOTTOM;
 			sheet = std::make_shared<SpriteSheet>(isActive ? activeToggle : oneShotToggle, 2, 0, false);
-            startPos.SetY(startPos.GetY() + level->GetTileHeight() - sheet->GetFrameHeight());
+			startPos.SetY(startPos.GetY() + level->GetTileHeight() - sheet->GetFrameHeight());
 		}
 		else if (tokens[0] == "right")
 		{
 			edge = Actor::Edge::RIGHT;
 			sheet = std::make_shared<SpriteSheet>(isActive ? activeToggleVertical : oneShotToggleVertical, 2, 0, false);
-            xDir = SpriteSheet::XAxisDirection::LEFT;
-            startPos.SetX(startPos.GetX() + level->GetTileWidth() - sheet->GetFrameWidth());
+			xDir = SpriteSheet::XAxisDirection::LEFT;
+			startPos.SetX(startPos.GetX() + level->GetTileWidth() - sheet->GetFrameWidth());
 		}
 		else if (tokens[0] == "left")
 		{
@@ -401,7 +400,6 @@ void LevelLoader::LoadTogglesAndDoors(ifstream & file, vector<SDL2pp::Point> & t
 
 		unordered_map<string, shared_ptr<SpriteSheet>> sprites;
 		sprites["toggle"] = sheet;
-
         shared_ptr<ToggleActor> toggle(new ToggleActor(startPos, *GameManager::GetInstance(), Vector2(0, 0), sprites, "toggle", toggleSounds, xDir, yDir, edge, isActive));
         level->AddActor(toggle);
         toggles.push_back(toggle);
@@ -701,7 +699,7 @@ void LevelLoader::LoadActorSpawners(std::ifstream & file, std::vector<SDL2pp::Po
 void LevelLoader::LoadTurrets(ifstream & file, vector<SDL2pp::Point>& turretPos, shared_ptr<Level> level)
 {
     string line;
-    std::unordered_map<std::string, std::pair<std::string, bool>> sounds = {};
+    std::unordered_map<std::string, std::pair<std::string, bool>> sounds = { {"turret", {"turret", false}} };
 	for (size_t i = 0; i < turretPos.size(); ++i)
 	{
 		std::getline(file, line);
@@ -713,16 +711,30 @@ void LevelLoader::LoadTurrets(ifstream & file, vector<SDL2pp::Point>& turretPos,
 		sprites["turret"] = std::make_shared<SpriteSheet>(turretSheet, 1, infinity);
 		sprites["shoot"] = std::make_shared<SpriteSheet>(projectileSheet, 1, infinity);
 
-		std::shared_ptr<TurretActor> turret = std::make_shared<TurretActor>(
-			Vector2(turretPos[i].GetX(), turretPos[i].GetY())
-			, *GameManager::GetInstance()
-			, Vector2(0, 0)
-			, sprites
-			, "turret"
-            , sounds
-			, line == "0" ? SpriteSheet::XAxisDirection::LEFT : SpriteSheet::XAxisDirection::RIGHT
-			, SpriteSheet::YAxisDirection::UP);
-
+		std::shared_ptr<TurretActor> turret;
+		if (line == "2")
+			turret = std::make_shared<TurretActor>(
+				Vector2(turretPos[i].GetX(), turretPos[i].GetY())
+				, *GameManager::GetInstance()
+				, Vector2(0, 0)
+				, TurretActor::Aim::Player
+				, false
+				, 3.0
+				, sprites
+				, "turret"
+                , sounds
+				, SpriteSheet::XAxisDirection::RIGHT
+				, SpriteSheet::YAxisDirection::UP);
+		else
+			turret = std::make_shared<TurretActor>(
+				Vector2(turretPos[i].GetX(), turretPos[i].GetY())
+				, *GameManager::GetInstance()
+				, Vector2(0, 0)
+				, sprites
+				, "turret"
+                , sounds
+				, line == "0" ? SpriteSheet::XAxisDirection::LEFT : SpriteSheet::XAxisDirection::RIGHT
+				, SpriteSheet::YAxisDirection::UP);
 		level->AddActor(turret);
 	}
 }

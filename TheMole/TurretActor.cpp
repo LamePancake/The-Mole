@@ -168,7 +168,7 @@ void TurretActor::TurretUpdate(double elapseSecs)
     if (_timeInterval > _period)
     {
         std::unordered_map<std::string, std::pair<std::string, bool>> sounds = {};
-        PlaySpriteSound("turret");
+        _gameScreen->PlaySoundIfVisible("turret", this);
         SetSprite("turret", true);
 		if (_aim != Aim::None)
 		{

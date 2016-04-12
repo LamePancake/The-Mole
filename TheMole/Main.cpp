@@ -62,6 +62,7 @@ int main(int argc, char** argv) {
 		soundEffects["checkpoint"] = "./Assets/Audio/Pickup_03.wav";
         soundEffects["explosion"] = "./Assets/Audio/Explosion.wav";
         soundEffects["laser"] = "./Assets/Audio/laser.wav";
+        soundEffects["turret"] = "./Assets/Audio/turret.wav";
 		SoundEffectBank bank(soundEffects);
 
 		vector<string> borinVoices = { "borin1", "borin2", "borin3" };
