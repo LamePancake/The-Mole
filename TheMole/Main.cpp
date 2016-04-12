@@ -69,11 +69,16 @@ int main(int argc, char** argv) {
 		vector<string> alienVoices = { "alien1", "alien2", "alien3" };
 		vector<string> vikingVoices = { "viking1", "viking2", "viking3" };
 		vector<string> toadVoices = { "toad1", "toad2", "toad3" };
-			
+        
+        SDL_DisplayMode mode;
+        SDL_GetCurrentDisplayMode(0, &mode);
+
 		// Straightforward wrappers around corresponding SDL2 objects
 		// These take full care of proper object destruction and error checking
-		Window window("The Mole", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1280, 720, SDL_WINDOW_RESIZABLE);//SDL_WINDOW_FULLSCREEN);
+		Window window("The Mole", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1280, 720, SDL_WINDOW_FULLSCREEN);
 		Renderer renderer(window, -1, SDL_RENDERER_ACCELERATED);
+
+        //renderer.SetLogicalSize(1280, 720);
 
 		unordered_map<string, shared_ptr<Screen>> screens;
 		shared_ptr<Screen> menu(new MenuScreen(bank));
