@@ -22,7 +22,8 @@ PlayerActor::PlayerActor(Vector2 position, GameManager& manager, Vector2 spd, st
 	_stoppedTime(false),
 	_selected(0),
 	_jumpBoost(600),
-	_jumpBoosted(false)
+	_jumpBoosted(false),
+    _wasOnDoor(false)
 {
 	_shieldActive = false;///Start shield in inactive state
 	_shieldReleased = true;
@@ -100,6 +101,7 @@ void PlayerActor::Update(double elapsedSecs)
 	UpdatePosition(elapsedSecs);
 	_aabb.UpdatePosition(*this);
 
+    _wasOnDoor = false;
 	for (auto actor : _gameScreen->GetLevel()->GetActors())
 	{
 		if (!actor->IsActive() || actor.get() == (Actor*)this) continue;
@@ -123,11 +125,15 @@ void PlayerActor::Update(double elapsedSecs)
 					// Push our hero out of the door
 					if (affectsY)
 					{
+                        int extraOff = door->GetPosition().GetY() > _curKinematic.position.GetY() ? -1 : 1;
 						_curKinematic.position.SetY(_curKinematic.position.GetY() + overlap.GetY());
 						_prevKinematic.position.SetY(_curKinematic.position.GetY()); // Tile collision will screw up otherwise...
+
+                        if (extraOff == -1) _wasOnDoor = true;
 					}
 					else
 					{
+                        int extraOff = door->GetPosition().GetX() > _curKinematic.position.GetX() ? -1 : 1;
 						_curKinematic.position.SetX(_curKinematic.position.GetX() + overlap.GetX());
 						_prevKinematic.position.SetX(_curKinematic.position.GetX()); // Tile collision will screw up otherwise...
 					}
@@ -193,6 +199,8 @@ void PlayerActor::UpdateCollisions(double elapsedSecs)
 		else if (_collisionInfo.colEdge == Edge::LEFT) correctedXPos += _collisionInfo.colPenetration;
 		DefaultTileCollisionHandler(_collisionInfo.colIntersect, _collisionInfo.colEdge, correctedXPos);
 	}
+
+    _wasOnGround = _wasOnGround || _wasOnDoor;
 }
 
 void PlayerActor::StopJumping()
@@ -701,6 +709,7 @@ void PlayerActor::Reset(Vector2 pos)
 	_atGoal = false;
 	_triggeredIntro = false;
 	_wasOnGround = true;
+    _wasOnDoor = false;
 
 	SetSpeed(Vector2(0.0f, 341.3f));
 

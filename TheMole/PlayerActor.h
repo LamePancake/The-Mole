@@ -195,6 +195,7 @@ private:
 	double _jumpDuration;
 	double _jumpTimeElapsed;
 	bool _wasOnGround; // Tracks whether the player was on the ground in the previous frame
+    bool _wasOnDoor; // Tracks whether the player was standing on a door in the last frame (hacky, but I don't have time to do it better right now)
 	SpriteSheet::XAxisDirection _prevDirection;
 
 	///Shield stuff
