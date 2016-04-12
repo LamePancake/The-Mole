@@ -39,8 +39,12 @@ int GameScreen::Load()
 		|| _levelPath == "./Assets/Levels/postden_level.txt"
 		|| _levelPath == "./Assets/Levels/previking_level.txt")
 	{
-		_level = _levelLoader.LoadLevel(_levelPath, _player, true);
+		_level = _levelLoader.LoadLevel(_levelPath, _player, 0);
 	}	
+	else if (_levelPath == "./Assets/Levels/postgrass_level.txt")
+	{
+		_level = _levelLoader.LoadLevel(_levelPath, _player, 1);
+	}
 	else
 	{
 		_level = _levelLoader.LoadLevel(_levelPath, _player);
