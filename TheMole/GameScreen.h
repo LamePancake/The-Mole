@@ -57,7 +57,7 @@ public:
 
 	SoundEffectBank & GetSoundBank();
 
-    void PlaySoundIfVisible(std::string && sound, Actor* actor, bool repeating = false);
+    void PlaySoundIfVisible(std::string sound, Actor* actor, bool repeating = false);
     
     bool IsOnScreen(Actor* actor);
 

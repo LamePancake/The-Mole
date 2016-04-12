@@ -151,12 +151,14 @@ void AIActor::Update(double elapsedSecs)
                         // Push our hero out of the door
                         if (affectsY)
                         {
-                            _curKinematic.position.SetY(_curKinematic.position.GetY() + overlap.GetY());
+                            int extraOff = door->GetPosition().GetY() > _curKinematic.position.GetY() ? -1 : 1;
+                            _curKinematic.position.SetY(_curKinematic.position.GetY() + overlap.GetY() + extraOff); // + extraOff since there might be some rounding problems
                             _prevKinematic.position.SetY(_curKinematic.position.GetY());
                         }
                         else
                         {
-                            _curKinematic.position.SetX(_curKinematic.position.GetX() + overlap.GetX());
+                            int extraOff = door->GetPosition().GetX() > _curKinematic.position.GetX() ? -1 : 1;
+                            _curKinematic.position.SetX(_curKinematic.position.GetX() + overlap.GetX() + extraOff);
                             _prevKinematic.position.SetX(_curKinematic.position.GetX());
                             if (!_underControl)
                             {

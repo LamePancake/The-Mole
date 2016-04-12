@@ -42,8 +42,6 @@ public:
 
 	void ResetDurations();
 
-	void SetSprite(std::string name);
-
 	double _idleDur;
 	double _preRollDur;
 	double _rollDur;

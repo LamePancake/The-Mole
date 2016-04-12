@@ -19,7 +19,8 @@ Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::unordere
 	_spriteXDir(startXDirection),
 	_spriteYDir(startYDirection),
     _isActive(active),
-    _destroysOnInactive(false)
+    _destroysOnInactive(false),
+    _sounds()
 {
 	SetHealth(100);
 	
@@ -34,6 +35,21 @@ Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::unordere
 
     _collisionInfo.shouldCorrectX = false;
     _collisionInfo.shouldCorrectY = false;
+}
+
+Actor::Actor(Vector2 position,
+    GameManager & manager,
+    Vector2 spd,
+    std::unordered_map < std::string,
+    std::shared_ptr < SpriteSheet >> &sprites,
+    const std::string&& startSprite,
+    std::unordered_map<std::string, std::pair<std::string, bool>> sounds,
+    SpriteSheet::XAxisDirection startXDirection,
+    SpriteSheet::YAxisDirection startYDirection,
+    bool active)
+    : Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection, active)
+{
+    _sounds = sounds;
 }
 
 Actor::Actor(std::string & serialised)
@@ -166,6 +182,33 @@ void Actor::SetHealth(size_t health)
 void Actor::SetPosition(Vector2 pos)
 {
 	_curKinematic.position = pos;
+}
+
+void Actor::SetSprite(std::string & sprite, bool playSoundIfNotVisible)
+{
+    _sprites[_currentSpriteSheet]->Stop();
+    _currentSpriteSheet = sprite;
+    _sprites[_currentSpriteSheet]->Start();
+    
+    if (_sounds.find(sprite) != _sounds.end())
+    {
+        auto sound = _sounds[sprite];
+        if (playSoundIfNotVisible)
+        {
+            std::string strCopy = sound.first;
+            _gameScreen->GetSoundBank().PlaySound(std::move(strCopy), sound.second);
+        }
+        else
+        {
+            _gameScreen->PlaySoundIfVisible(sound.first, this, sound.second);
+        }
+    }
+    
+}
+
+void Actor::SetSprite(std::string && sprite, bool playSoundIfNotVisible)
+{
+    SetSprite(sprite, playSoundIfNotVisible);
 }
 
 SpriteSheet::XAxisDirection Actor::GetActorXDirection() const

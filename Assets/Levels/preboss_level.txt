@@ -2,22 +2,23 @@ SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
-SSS                                            SSS
-SSS             D                  D           SSS
-SSSSS           D                  D         SSSSS
-SSSSS           D                  D         SSSSS
-SSSSS           D                  D         SSSSS
-SSSSS           D                  D         SSSSS
-SSSSS           D                  D         SSSSS
-SSSSS           D                  D         SSSSS
-SSSSS           D                  D         SSSSS
-SSSSS           D                  D         SSSSS
-SSSSS           D                  D         SSSSS
-SSSSS           D                  D         SSSSS
-SSSSS           D                  D         SSSSS
-SSSSS           D                  D         SSSSS
-SSSSS           D                  D         SSSSS
-SSSSS           D                  D         SSSSS
+SSS             W SSSSSSSSSSSSSSSS W           SSS
+SSS A           D S              S D         A+SSS
+SSSSS           D SSSSSSSSSSSSSSSS D         SSSSS
+SSSSS           D S              S D         SSSSS
+SSSSS           D SSSSSSSSSSSSSSSS D         SSSSS
+SSSSS           D S              S D         SSSSS
+SSSSS           D SSSSSSSSSSSSSSSS D         SSSSS
+SSSSS           D S              S D         SSSSS
+SSSSS           D SSSSSSSSSSSSSSSS D         SSSSS
+SSSSS           D S              S D         SSSSS
+SSSSS           D SSSSSSSSSSSSSSSS D         SSSSS
+SSSSS           D S              S D         SSSSS
+SSSSS           D SSSSSSSSSSSSSSSS D         SSSSS
+SSSSS           D S              S D         SSSSS
+SSSSS           D SSSSSSSSSSSSSSSS D         SSSSS
+SSSSS           D S              S D         SSSSS
+SSSSS           D SSSSSSSSSSSSSSSS D         SSSSS
 SSSSS                                        SSSSS
 SSSSS                                        SSSSS
 SSSSS        N                               SSSSS

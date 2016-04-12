@@ -27,7 +27,7 @@ SoundEffectBank & GameScreen::GetSoundBank()
 	return _soundBank;
 }
 
-void GameScreen::PlaySoundIfVisible(std::string && sound, Actor * actor, bool repeating)
+void GameScreen::PlaySoundIfVisible(std::string sound, Actor * actor, bool repeating)
 {
     if (!actor->IsVisible()) return;
 

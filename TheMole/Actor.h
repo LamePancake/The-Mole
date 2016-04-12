@@ -86,6 +86,17 @@ public:
 	Actor(Vector2 position, GameManager & manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites, const std::string&& startSprite,
 			SpriteSheet::XAxisDirection startXDirection, SpriteSheet::YAxisDirection startYDirection, bool active = true);
 
+    Actor(Vector2 position,
+          GameManager & manager,
+          Vector2 spd,
+          std::unordered_map<std::string,
+          std::shared_ptr<SpriteSheet>>& sprites,
+          const std::string&& startSprite,
+          std::unordered_map<std::string, std::pair<std::string, bool>> sounds,
+          SpriteSheet::XAxisDirection startXDirection,
+          SpriteSheet::YAxisDirection startYDirection,
+          bool active = true);
+
     /**
      * @brief Constructs an actor from a serialised string containing all of the actor's construction parameters (one per line, excluding sprites).
      * @param serialsied The string containing construction parameters.
@@ -187,6 +198,10 @@ public:
 	 * @param	pos	The position.
 	 */
 	void SetPosition(Vector2 pos);
+
+    void SetSprite(std::string & sprite, bool playSoundIfNotVisible = false);
+
+    void SetSprite(std::string && sprite, bool playSoundIfNotVisible = false);
 
 	/**
 	 * Gets actor direction.
@@ -376,6 +391,9 @@ protected:
 	
 	/** The sprite. */
 	std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> _sprites;
+
+    /** Sounds associated with each sprite. */
+    std::unordered_map<std::string, std::pair<std::string, bool>> _sounds;
 
 	/** The game manager which drives the game loop. */
 	GameManager* _mgr;

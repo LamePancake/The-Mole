@@ -179,14 +179,6 @@ void BossActor::ResetDurations()
 	_shockWaveDur = 5;
 }
 
-void BossActor::SetSprite(string name)
-{
-	_sprites[_currentSpriteSheet]->Stop();
-	_currentSpriteSheet = name;
-	SetActorYDirection(SpriteSheet::YAxisDirection::UP);
-	_sprites[_currentSpriteSheet]->Start();
-}
-
 void BossActor::CreateBehaviourTree()
 {
     auto checkStage1 = [this](double deltaTime) { return _health > 0 ? Node::Result::Success : Node::Result::Failure; };
