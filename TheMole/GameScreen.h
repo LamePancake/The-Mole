@@ -31,7 +31,7 @@ public:
 	///<param name="nextLevel">      String indicating the next screen/level to load when this one is finished.</param>
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	GameScreen(std::string levelPath, std::string backgroundPath, std::string scorePath, std::string nextLevel, SoundEffectBank & effectBank, std::string musicPath, bool isIntroScreen = false)
-		: _levelPath(levelPath), _backgroundPath(backgroundPath), _scorePath(scorePath), _nextLevel(nextLevel), _soundBank(effectBank), _paused(false), _deaths(0), _deathCounterUpdated(false), _deathTimer(0), isIntroScreen(isIntroScreen), _skipTimer(0), _backgroundTrack(musicPath){}
+		: _levelPath(levelPath), _backgroundPath(backgroundPath), _scorePath(scorePath), _nextLevel(nextLevel), _soundBank(effectBank), _paused(false), _deaths(0), _deathCounterUpdated(false), _deathTimer(0), isIntroScreen(isIntroScreen), _skipTimer(0), _backgroundTrack(musicPath), _deathSoundPlayed(false), _winSoundPlayed(false){}
 
 	virtual int Load();
 	virtual int Update(double elapasedSecs) override;
@@ -111,6 +111,9 @@ protected:
 	void OnLevelCompleteDraw();
 
 	void OnGameOverDraw();
+
+	bool _deathSoundPlayed;
+	bool _winSoundPlayed;
 };
 
 #endif

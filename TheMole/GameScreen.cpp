@@ -9,7 +9,7 @@ const static SDL_Color COMPLETE = { 150, 255, 150, 255 };
 const static SDL_Color GAMEOVER = { 255, 20, 20, 255 };
 const static SDL_Color RECORD = { 255, 153, 51, 255 };
 
-#define GAMEOVER_DELAY 1.2
+#define GAMEOVER_DELAY 2.0
 #define SKIP_TIME 1.1
 
 std::shared_ptr<Level> GameScreen::GetLevel() const
@@ -126,6 +126,13 @@ int GameScreen::Update(double elapsedSecs)
 	// Check if the player is dead
 	if (_player->IsDead())
 	{
+		if (!_deathSoundPlayed)
+		{
+			_mgr->GetMixer().PauseMusic();
+			_soundBank.PlaySound("lose");
+			_deathSoundPlayed = true;
+		}
+			
 		_deathTimer += elapsedSecs;
 
 		if (_deathTimer >= GAMEOVER_DELAY / 2.0)
@@ -150,6 +157,8 @@ int GameScreen::Update(double elapsedSecs)
 			_deathTimer = 0;
 			_deathCounterUpdated = false;
 			_level->Reset();
+			_deathSoundPlayed = false;
+			_mgr->GetMixer().ResumeMusic();
 		}
 		return SCREEN_CONTINUE;
 	}
@@ -157,6 +166,13 @@ int GameScreen::Update(double elapsedSecs)
 	// Check if the player got to the goal
 	if (_player->AtGoal())
 	{
+		if (!_winSoundPlayed)
+		{
+			_mgr->GetMixer().PauseMusic();
+			_soundBank.PlaySound("win");
+			_winSoundPlayed = true;
+		}
+			
 		if (_mgr->inputManager->ActionOccurred("CONFIRM", Input::Pressed))
 		{
 			if (_deaths < _mgr->_bestDeathCount)
@@ -176,6 +192,8 @@ int GameScreen::Update(double elapsedSecs)
 			_mgr->WriteHighScoreFile(_scorePath);
 			_soundBank.PlaySound("accept");
 			_mgr->SetNextScreen(_nextLevel);
+			_winSoundPlayed = false;
+			_mgr->GetMixer().ResumeMusic();
 			return SCREEN_FINISH;
 		}
 		return SCREEN_CONTINUE;
@@ -288,7 +306,8 @@ void GameScreen::Draw()
 void GameScreen::Unload()
 {
 	_mgr->ClearHighScores();
-
+	_deathSoundPlayed = false;
+	_winSoundPlayed = false;
 	_stringFormatter.str(std::string());
 	_stringFormatter.clear();
 	_deathTimer = 0.0;
