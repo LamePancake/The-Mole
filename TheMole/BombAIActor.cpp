@@ -10,8 +10,8 @@ void BombAIActor::BlowUp()
     std::string oldSheet = _currentSpriteSheet;
 
     // Start blowing up
-    SetSprite("blow_up", true);
     PlaySpriteSound("blow_up");
+    SetSprite("blow_up", true);
     _isBlowingUp = true;
 
     // Cancel mind control

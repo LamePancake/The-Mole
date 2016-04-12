@@ -106,6 +106,8 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	bool IsFinished() const;
 
+    bool IsAtFirstFrame() const;
+
 	/**
 	 * @brief	Starts or resumes the sprite sheet's animation. If the sheet is already animating, this does nothing.
 	 *

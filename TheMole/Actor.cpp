@@ -110,9 +110,8 @@ Actor::Actor(std::string & serialised)
     // Get the list of sounds, if any
     if (splitLine.size() == 3)
     {
-        std::unordered_map<std::string, std::pair<std::string, bool>> sounds;
         splitLine = split(line, ' ');
-        sounds[splitLine[0]] = { splitLine[1], splitLine[2] == "1" };
+        _sounds[splitLine[0]] = { splitLine[1], splitLine[2] == "1" };
         while (true)
         {
             getline(lineStream, line);
@@ -121,7 +120,7 @@ Actor::Actor(std::string & serialised)
             splitLine = split(line, ' ');
             if (splitLine.size() <= 1) break;
 
-            sounds[splitLine[0]] = { splitLine[1], splitLine[2] == "1" };
+            _sounds[splitLine[0]] = { splitLine[1], splitLine[2] == "1" };
         }
     }
 

@@ -107,6 +107,11 @@ bool SpriteSheet::IsFinished() const
 	return (_isReversed && _currentFrame == 0) || (_currentFrame == _numFrames - 1);
 }
 
+bool SpriteSheet::IsAtFirstFrame() const
+{
+    return _isReversed && _currentFrame == _numFrames -1 || _currentFrame == 0;
+}
+
 void SpriteSheet::Start()
 {
 	_isRunning = true;

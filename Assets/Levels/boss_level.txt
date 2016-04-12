@@ -49,6 +49,7 @@ Spawners
 100 341.3
 walk ./Assets/Textures/BombMole_walk.png 8 1.0 1 RIGHT UP
 blow_up ./Assets/Textures/Explosion.png 11 1.0 0 RIGHT UP
+blow_up explosion 0
 walk
 RIGHT
 UP

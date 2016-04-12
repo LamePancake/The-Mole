@@ -38,7 +38,7 @@ void CompositeNode::AddChild(shared_ptr<Node> child)
 
 void CompositeNode::Reset()
 {
-    _blockedIndex = -1;
+    _blockedIndex = 0;
     for (auto & child : _children)
         child->Reset();
 }

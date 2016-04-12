@@ -22,12 +22,6 @@ ObjectActor::ObjectActor(Vector2 position,
 {
 	if (id == flag)
 		_sprites[_currentSpriteSheet]->Pause();
-    else if (_sounds.find(_currentSpriteSheet) != _sounds.end())
-    {
-        auto sound = _sounds[_currentSpriteSheet];
-        auto soundCopy(sound.first);
-        _gameScreen->PlaySoundIfVisible(std::move(soundCopy), this, sound.second);
-    }
 
 	if (id == dialogTrigger)
 	{
@@ -87,6 +81,12 @@ void ObjectActor::Update(double elapsedSecs)
 	Actor::Update(elapsedSecs);
     if (_isDestroyed || !_isActive) return;
     _aabb.UpdatePosition(*this);
+
+    if (_sprites[_currentSpriteSheet]->IsAtFirstFrame())
+    {
+        auto spriteName(_currentSpriteSheet);
+        PlaySpriteSound(spriteName);
+    }
 
 	switch (_id)
 	{

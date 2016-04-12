@@ -24,17 +24,17 @@ void DoorActor::Update(double deltaTime)
         if (switchOn)
         {
             _curState = Opening;
-            PlaySpriteSound("door_progress");
-            SetSprite("door_progress", false);
+            _gameScreen->PlaySoundIfVisible("door_progress", this, true);
             currentSheet->SetReversed(false);
+            currentSheet->Start();
         }
         break;
     case Closing:
         if (currentSheet->IsFinished())
         {
             _curState = Closed;
-            PlaySpriteSound("door_finish");
-            SetSprite("door_finish", false);
+            bank.StopSound("door_progress");
+            _gameScreen->PlaySoundIfVisible("door_finish", this);
         }
         else if (switchOn)
         {
@@ -46,17 +46,17 @@ void DoorActor::Update(double deltaTime)
         if (!switchOn)
         {
             _curState = Closing;
-            PlaySpriteSound("door_progress");
-            SetSprite("door_progress", false);
+            _gameScreen->PlaySoundIfVisible("door_progress", this, true);
             currentSheet->SetReversed(true);
+            currentSheet->Start();
         }
         break;
     case Opening:
         if (currentSheet->IsFinished())
         {
             _curState = Open;
-            PlaySpriteSound("door_finish");
-            SetSprite("door_finish", false);
+            bank.StopSound("door_progress");
+            _gameScreen->PlaySoundIfVisible("door_finish", this);
         }
         else if (!switchOn)
         {

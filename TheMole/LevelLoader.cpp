@@ -356,8 +356,7 @@ void LevelLoader::LoadTogglesAndDoors(ifstream & file, vector<SDL2pp::Point> & t
 
     vector<shared_ptr<ToggleActor>> toggles;
 
-    std::unordered_map<std::string, std::pair<std::string, bool>> doorSounds = { {"door_progress", {"door_progress", true}},
-                                                                                 {"door_finish", {"door_finish", false}} };
+    std::unordered_map<std::string, std::pair<std::string, bool>> doorSounds = { };
 
     std::unordered_map<std::string, std::pair<std::string, bool>> toggleSounds = { {"toggle", {"switch_on", false}} };
 
