@@ -53,6 +53,13 @@ void AIActor::SetSelectedForControl(bool selected)
 
 void AIActor::SetIsMindControlCandidate(bool isCandidate)
 {
+    // Don't allow mind control while exploding
+    if (GetType() == Type::bombenemy)
+    {
+        BombAIActor* bomb = (BombAIActor*)this;
+        if (bomb->IsBlowingUp()) return;
+    }
+
 	_isCandidate = isCandidate;
 
 	// We're finishing up mind control selection and we're under control, so determine velocity
