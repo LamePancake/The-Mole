@@ -27,6 +27,27 @@ SoundEffectBank & GameScreen::GetSoundBank()
 	return _soundBank;
 }
 
+void GameScreen::PlaySoundIfVisible(std::string && sound, Actor * actor, bool repeating)
+{
+    if (!actor->IsVisible()) return;
+
+    // Determine if the actor is on-screen, and if so, play the sound
+    if (IsOnScreen(actor))
+    {
+        _soundBank.PlaySound(std::move(sound), repeating);
+    }
+}
+
+bool GameScreen::IsOnScreen(Actor * actor)
+{
+    SDL2pp::Rect viewport = _camera->GetViewport();
+    AABB aabb = actor->GetAABB();
+    SDL2pp::Rect actorRect(aabb.GetX(), aabb.GetY(), aabb.GetWidth(), aabb.GetHeight());
+
+    SDL2pp::Optional<SDL2pp::Rect> intersect = actorRect.GetIntersection(viewport);
+    return intersect ? true : false; // Have to do this silly thing to invoke operator bool
+}
+
 int GameScreen::Load()
 {
 	_mgr = GameManager::GetInstance();

@@ -24,7 +24,7 @@ void DoorActor::Update(double deltaTime)
         if (switchOn)
         {
             _curState = Opening;
-            bank.PlaySound("door_progress", true);
+            _gameScreen->PlaySoundIfVisible("door_progress", this, true);
             currentSheet->SetReversed(false);
             currentSheet->Start();
         }
@@ -34,7 +34,7 @@ void DoorActor::Update(double deltaTime)
         {
             _curState = Closed;
             bank.StopSound("door_progress");
-            bank.PlaySound("door_finish");
+            _gameScreen->PlaySoundIfVisible("door_finish", this);
         }
         else if (switchOn)
         {
@@ -46,7 +46,7 @@ void DoorActor::Update(double deltaTime)
         if (!switchOn)
         {
             _curState = Closing;
-            bank.PlaySound("door_progress", true);
+            _gameScreen->PlaySoundIfVisible("door_progress", this, true);
             currentSheet->SetReversed(true);
             currentSheet->Start();
         }
@@ -56,7 +56,7 @@ void DoorActor::Update(double deltaTime)
         {
             _curState = Open;
             bank.StopSound("door_progress");
-            bank.PlaySound("door_finish");
+            _gameScreen->PlaySoundIfVisible("door_finish", this);
         }
         else if (!switchOn)
         {
