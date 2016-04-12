@@ -754,5 +754,6 @@ void PlayerActor::UpdateHatSprite()
 		_sprites[_currentSpriteSheet]->Stop();
 		_currentSpriteSheet = "mindControlHatIdle";
 		_sprites[_currentSpriteSheet]->Start();
+		SetActorYDirection(SpriteSheet::YAxisDirection::UP);
 	}
 }

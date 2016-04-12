@@ -55,6 +55,26 @@ std::vector<std::string> tim{
 	"Senior Practicum Developer",
 };
 
+std::vector<std::string> music{
+	"Music",
+	"Snabisch",
+	"edtijo",
+	"SketchyLogic",
+	"remaxim",
+	"HunTerSpoTMusic",
+	"Linkin Park",
+};
+
+std::vector<std::string> sound{
+	"Sound Effects",
+	"dklon",
+	"ShapingWaves",
+	"Master484",
+	"Little Robot Sound Factory",
+	"TheGertz",
+	"broumbroum",
+};
+
 std::vector<std::string> end{
 	"Thank you for playing!!",
 };
@@ -73,7 +93,7 @@ int ClosingScreen::Load()
 	_borinAndTheChicken = std::make_shared<SpriteSheet>(".\\Assets\\Textures\\borin_end.png", 4, 0.5f);
 	_borinAndTheChicken->SetScale(1.0f);
 
-	_creditsTexture.resize(5);
+	_creditsTexture.resize(7);
 
 	for (int j = 0; j < matt.size(); ++j)
 	{
@@ -99,10 +119,22 @@ int ClosingScreen::Load()
 		_creditsTexture[3].push_back(t);
 	}
 
+	for (int j = 0; j < music.size(); ++j)
+	{
+		Texture* t = new Texture(_mgr->GetRenderer(), _font->RenderText_Solid(music[j], NORMAL));
+		_creditsTexture[4].push_back(t);
+	}
+
+	for (int j = 0; j < sound.size(); ++j)
+	{
+		Texture* t = new Texture(_mgr->GetRenderer(), _font->RenderText_Solid(sound[j], NORMAL));
+		_creditsTexture[5].push_back(t);
+	}
+
 	for (int j = 0; j < end.size(); ++j)
 	{
 		Texture* t = new Texture(_mgr->GetRenderer(), _font->RenderText_Solid(end[j], NORMAL));
-		_creditsTexture[4].push_back(t);
+		_creditsTexture[6].push_back(t);
 	}
 
 	_drawnCredit.push_back(_creditsTexture[_currPerson][_currDraw++]);
@@ -135,7 +167,7 @@ int ClosingScreen::Update(double elapsedSecs)
 				_currPerson++;
 				_currDraw = 0;
 
-				if (_currPerson >= 5)
+				if (_currPerson >= 7)
 				{
 					_end = true;
 				}
