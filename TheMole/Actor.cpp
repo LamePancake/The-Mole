@@ -5,8 +5,16 @@ using std::vector;
 using std::string;
 using std::shared_ptr;
 
-Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
-			const std::string&& startSprite, SpriteSheet::XAxisDirection startXDirection, SpriteSheet::YAxisDirection startYDirection, bool active)
+Actor::Actor(Vector2 position,
+             GameManager & manager,
+             Vector2 spd,
+             std::unordered_map < std::string,
+             std::shared_ptr < SpriteSheet >> &sprites,
+             const std::string&& startSprite,
+             std::unordered_map<std::string, std::pair<std::string, bool>> &sounds,
+             SpriteSheet::XAxisDirection startXDirection,
+             SpriteSheet::YAxisDirection startYDirection,
+             bool active)
 	:_curKinematic{ position, spd },
 	_prevKinematic{ position, spd },
 	_collisionInfo(),
@@ -20,7 +28,7 @@ Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::unordere
 	_spriteYDir(startYDirection),
     _isActive(active),
     _destroysOnInactive(false),
-    _sounds()
+    _sounds(sounds)
 {
 	SetHealth(100);
 	
@@ -35,21 +43,6 @@ Actor::Actor(Vector2 position, GameManager & manager, Vector2 spd, std::unordere
 
     _collisionInfo.shouldCorrectX = false;
     _collisionInfo.shouldCorrectY = false;
-}
-
-Actor::Actor(Vector2 position,
-    GameManager & manager,
-    Vector2 spd,
-    std::unordered_map < std::string,
-    std::shared_ptr < SpriteSheet >> &sprites,
-    const std::string&& startSprite,
-    std::unordered_map<std::string, std::pair<std::string, bool>> sounds,
-    SpriteSheet::XAxisDirection startXDirection,
-    SpriteSheet::YAxisDirection startYDirection,
-    bool active)
-    : Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection, active)
-{
-    _sounds = sounds;
 }
 
 Actor::Actor(std::string & serialised)
@@ -91,7 +84,7 @@ Actor::Actor(std::string & serialised)
         line.erase(std::remove(line.end() - 1, line.end(), '\r'), line.end());
 
         splitLine = split(line, ' ');
-        if (splitLine.size() <= 1) break;
+        if (splitLine.size() <= 3) break;
 
         int numFrames;
         double duration;
@@ -112,6 +105,24 @@ Actor::Actor(std::string & serialised)
         _sprites[splitLine[0]] = shared_ptr<SpriteSheet>(new SpriteSheet(std::move(splitLine[1]), numFrames, duration, isRepeating, xDir, yDir));
         _spriteXDir = xDir;
         _spriteYDir = yDir;
+    }
+
+    // Get the list of sounds, if any
+    if (splitLine.size() == 3)
+    {
+        std::unordered_map<std::string, std::pair<std::string, bool>> sounds;
+        splitLine = split(line, ' ');
+        sounds[splitLine[0]] = { splitLine[1], splitLine[2] == "1" };
+        while (true)
+        {
+            getline(lineStream, line);
+            line.erase(std::remove(line.end() - 1, line.end(), '\r'), line.end());
+
+            splitLine = split(line, ' ');
+            if (splitLine.size() <= 1) break;
+
+            sounds[splitLine[0]] = { splitLine[1], splitLine[2] == "1" };
+        }
     }
 
     // splitLine[0] contains the name of the start sheet after the above loop
@@ -184,16 +195,37 @@ void Actor::SetPosition(Vector2 pos)
 	_curKinematic.position = pos;
 }
 
-void Actor::SetSprite(std::string & sprite, bool playSoundIfNotVisible)
+void Actor::SetSprite(std::string & sprite, bool resetOnStart)
 {
     _sprites[_currentSpriteSheet]->Stop();
     _currentSpriteSheet = sprite;
-    _sprites[_currentSpriteSheet]->Start();
-    
+
+    if(resetOnStart)
+        _sprites[_currentSpriteSheet]->Reset();
+
+    _sprites[_currentSpriteSheet]->Start();    
+}
+
+void Actor::SetSprite(std::string && sprite, bool resetOnStart)
+{
+    SetSprite(sprite, resetOnStart);
+}
+
+void Actor::PlaySpriteSound(std::string & sprite, bool playIfNotVisible)
+{
+    // Stop the sound for the current spritesheet, if any
+    if (_sounds.find(_currentSpriteSheet) != _sounds.end())
+    {
+        auto sound = _sounds[_currentSpriteSheet];
+        auto nameCopy(sound.first);
+        _gameScreen->GetSoundBank().StopSound(std::move(nameCopy));
+    }
+
+    // Start the sound fot the next spritesheet, if any
     if (_sounds.find(sprite) != _sounds.end())
     {
         auto sound = _sounds[sprite];
-        if (playSoundIfNotVisible)
+        if (playIfNotVisible)
         {
             std::string strCopy = sound.first;
             _gameScreen->GetSoundBank().PlaySound(std::move(strCopy), sound.second);
@@ -203,12 +235,16 @@ void Actor::SetSprite(std::string & sprite, bool playSoundIfNotVisible)
             _gameScreen->PlaySoundIfVisible(sound.first, this, sound.second);
         }
     }
-    
 }
 
-void Actor::SetSprite(std::string && sprite, bool playSoundIfNotVisible)
+void Actor::PlaySpriteSound(std::string && sprite, bool playIfNotVisible)
 {
-    SetSprite(sprite, playSoundIfNotVisible);
+    PlaySpriteSound(sprite, playIfNotVisible);
+}
+
+void Actor::SetSound(std::string sprite, std::string sound, bool repeats)
+{
+    _sounds[sprite] = { sound, repeats };
 }
 
 SpriteSheet::XAxisDirection Actor::GetActorXDirection() const

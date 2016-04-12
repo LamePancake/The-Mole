@@ -20,6 +20,7 @@ public:
 		, Vector2 spd
 		, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites
 		, const std::string&& startSprite
+        , std::unordered_map<std::string, std::pair<std::string, bool>> &sounds
 		, SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT
 		, SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP);
 
@@ -32,6 +33,7 @@ public:
         , double period
 		, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites
 		, const std::string&& startSprite
+        , std::unordered_map<std::string, std::pair<std::string, bool>> & sounds
 		, SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT
 		, SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP
 		);

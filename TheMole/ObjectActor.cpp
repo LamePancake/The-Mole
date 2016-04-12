@@ -2,12 +2,32 @@
 #include "PlayerActor.h"
 #include "GameScreen.h"
 
-ObjectActor::ObjectActor(Vector2 position, GameManager & manager, Vector2 spd, int id, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites, const std::string&& startSprite,
-	SpriteSheet::XAxisDirection startXDirection, SpriteSheet::YAxisDirection startYDirection, std::string dialog, int numericIdentifier)
-	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection), _id(id), _collided(false), _dialog(dialog), _timer(0), _numericIdentifier(numericIdentifier)
+ObjectActor::ObjectActor(Vector2 position,
+                         GameManager & manager,
+                         Vector2 spd,
+                         int id,
+                         std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
+                         const std::string&& startSprite,
+                         std::unordered_map<std::string, std::pair<std::string, bool>> & sounds,
+                         SpriteSheet::XAxisDirection startXDirection,
+                         SpriteSheet::YAxisDirection startYDirection,
+                         std::string dialog,
+                         int numericIdentifier)
+	: Actor(position, manager, spd, sprites, std::move(startSprite), sounds, startXDirection, startYDirection),
+      _id(id),
+      _collided(false),
+      _dialog(dialog),
+      _timer(0),
+      _numericIdentifier(numericIdentifier)
 {
 	if (id == flag)
 		_sprites[_currentSpriteSheet]->Pause();
+    else if (_sounds.find(_currentSpriteSheet) != _sounds.end())
+    {
+        auto sound = _sounds[_currentSpriteSheet];
+        auto soundCopy(sound.first);
+        _gameScreen->PlaySoundIfVisible(std::move(soundCopy), this, sound.second);
+    }
 
 	if (id == dialogTrigger)
 	{
@@ -15,6 +35,31 @@ ObjectActor::ObjectActor(Vector2 position, GameManager & manager, Vector2 spd, i
 		_font = new SDL2pp::Font(".\\Assets\\Fonts\\Exo-Regular.otf", 30);
 		_dialogTexture = new SDL2pp::Texture(_mgr->GetRenderer(), _font->RenderText_Solid(_dialog, SDL_Color{ 255, 255, 255, 255 }));
 	}
+}
+
+ObjectActor::ObjectActor(std::string serialised)
+    : Actor(serialised),
+    _collided(false),
+    _timer(0)
+{
+    std::istringstream lineStream(serialised);
+    std::string line;
+    getline(lineStream, line);
+    line.erase(std::remove(line.end() - 1, line.end(), '\r'), line.end());
+
+    std::istringstream idStream(line);
+    idStream >> _id;
+    getline(lineStream, line);
+    if (line.empty())
+        _dialog = " ";
+    else
+        _dialog = line;
+
+    getline(lineStream, line);
+    std::istringstream numericIdStream(line);
+    numericIdStream >> _numericIdentifier;
+    
+    serialised.erase(0, lineStream.tellg());
 }
 
 ObjectActor::~ObjectActor()

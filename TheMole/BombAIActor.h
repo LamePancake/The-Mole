@@ -25,10 +25,11 @@ public:
         std::unordered_map<std::string,
         std::shared_ptr<SpriteSheet >> &sprites,
         const std::string&& startSprite,
+        std::unordered_map<std::string, std::pair<std::string, bool>> &sounds,
         std::shared_ptr<SDL2pp::Texture> mindControlIndicator,
         Vector2 spawn,
         SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP)
-        : AIActor(manager, position, spd, sprites, std::move(startSprite), mindControlIndicator, spawn, startXDirection, startYDirection),
+        : AIActor(manager, position, spd, sprites, std::move(startSprite), sounds, mindControlIndicator, spawn, startXDirection, startYDirection),
         _isBlowingUp{false}
     {
     }

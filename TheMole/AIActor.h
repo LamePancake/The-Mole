@@ -32,10 +32,11 @@ public:
 		std::unordered_map<std::string,
 		std::shared_ptr<SpriteSheet>>& sprites,
         const std::string&& startSprite,
+        std::unordered_map<std::string, std::pair<std::string, bool>> & sounds,
         std::shared_ptr<SDL2pp::Texture> mindControlIndicator,
         Vector2 spawn,
 		SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP)
-		: Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection),
+		: Actor(position, manager, spd, sprites, std::move(startSprite), sounds, startXDirection, startYDirection),
 		_underControl{ false }, _controlTimeLeft{ 0.0f }, _isSelected{ false }, _isCandidate{ false }, _ctrlIndicator{ mindControlIndicator }, _spawn(spawn)
 	{
 	}

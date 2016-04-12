@@ -18,10 +18,15 @@ public:
 	* @param	startXDirection	The direction in the x axis which the actor will face at the start.
 	* @param	startYDirection	The direction in the y axis which the actor will face at the start.
 	*/
-	ProjectileActor(Vector2 position, GameManager & manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites, const std::string&& startSprite,
-        bool reflectable,
-		SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT
-		, SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP);
+	ProjectileActor(Vector2 position,
+                    GameManager & manager,
+                    Vector2 spd, std::unordered_map<std::string,
+                    std::shared_ptr<SpriteSheet>>& sprites,
+                    const std::string&& startSprite,
+                    std::unordered_map<std::string, std::pair<std::string, bool>> &sounds,
+                    bool reflectable,
+		            SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT,
+		            SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP);
 
 	~ProjectileActor();
 

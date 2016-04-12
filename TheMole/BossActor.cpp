@@ -15,11 +15,12 @@ BossActor::BossActor(Vector2 position,
           Vector2 spd,
           std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
           const std::string&& startSprite,
+          std::unordered_map<std::string, std::pair<std::string, bool>> & sounds,
           shared_ptr<Actor> alien,
           shared_ptr<TargetedActorSpawner> spawner,
           SpriteSheet::XAxisDirection startXDirection,
           SpriteSheet::YAxisDirection startYDirection)
-	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection),
+	: Actor(position, manager, spd, sprites, std::move(startSprite), sounds, startXDirection, startYDirection),
     _heat(0),
     _alien(alien),
     _tookDamage(false),
@@ -149,7 +150,7 @@ void BossActor::Reset(Vector2 pos)
         _heat = 0;
         SetHealth(50);
         ResetDurations();
-        SetSprite("idle");
+        SetSprite("idle", true);
     }
     else
     {
@@ -230,7 +231,8 @@ void BossActor::CreateBehaviourTree()
             _spriteXDir = _rollDir == -1 ? SpriteSheet::XAxisDirection::LEFT : SpriteSheet::XAxisDirection::RIGHT;
 
             _curKinematic.velocity.SetX(0);
-            SetSprite("preroll");
+            PlaySpriteSound("preroll", true);
+            SetSprite("preroll", true);
             return Node::Result::Running;
         }
         return _sprites[_currentSpriteSheet]->IsFinished() ? Node::Result::Success : Node::Result::Running;
@@ -253,7 +255,8 @@ void BossActor::CreateBehaviourTree()
 
         if (_currentSpriteSheet != "roll")
         {
-            SetSprite("roll");
+            PlaySpriteSound("roll", true);
+            SetSprite("roll", true);
         }
         return Node::Result::Running;
     };
@@ -262,7 +265,7 @@ void BossActor::CreateBehaviourTree()
     {
         if (_currentSpriteSheet != "idle")
         {
-            SetSprite("idle");
+            SetSprite("idle", true);
         }
 
         float deltaV = deltaTime * SLOW_RATE * (-_rollDir);
@@ -285,7 +288,8 @@ void BossActor::CreateBehaviourTree()
         if (_currentSpriteSheet != "overheat")
         {
             _curKinematic.velocity.SetX(0);
-            SetSprite("overheat");
+            PlaySpriteSound("overheat", true);
+            SetSprite("overheat", true);
             return Node::Result::Running;
         }
         else if (_sprites[_currentSpriteSheet]->IsFinished())
@@ -318,9 +322,8 @@ void BossActor::CreateBehaviourTree()
     {
         if (_idleDur > 0)
         {
-            cout << "cooldown" << endl;
             _idleDur -= deltaTime;
-            SetSprite("idle");
+            SetSprite("idle", true);
             return Node::Result::Running;
         }
         else
@@ -352,8 +355,7 @@ void BossActor::CreateBehaviourTree()
        // Put the alien in at current position
        _alien->SetPosition(Vector2(_curKinematic.position.GetX() - 64, _curKinematic.position.GetY() + 128));
        
-       SetSprite("dead");
-       // Update health bar?
+       SetSprite("dead", true);
 
        // Start firing those dank projectiles
        _gameScreen->GetLevel()->AddActor(_alien);

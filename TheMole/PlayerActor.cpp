@@ -7,9 +7,15 @@
 using std::vector;
 using std::shared_ptr;
 
-PlayerActor::PlayerActor(Vector2 position, GameManager& manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
-	const std::string&& startSprite, SpriteSheet::XAxisDirection startXDir, SpriteSheet::YAxisDirection startYDir)
-	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDir, startYDir),
+PlayerActor::PlayerActor(Vector2 position,
+                         GameManager& manager,
+                         Vector2 spd,
+                         std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
+                         const std::string&& startSprite,
+                         std::unordered_map <std::string, std::pair<std::string, bool>> & sounds,
+                         SpriteSheet::XAxisDirection startXDir,
+                         SpriteSheet::YAxisDirection startYDir)
+	: Actor(position, manager, spd, sprites, std::move(startSprite), sounds, startXDir, startYDir),
 	_prevDirection(startXDir),
 	_atGoal(false),
 	_triggeredIntro(false),
@@ -48,17 +54,7 @@ void PlayerActor::Draw(Camera& camera)
 		{
 			std::string _shieldSprite = "shieldOn";
 			_sprites[_shieldSprite]->Draw(SDL2pp::Point(dim.GetX() * (0.80f + (i * 0.04f)), dim.GetY()  * 0.9f));
-			//rend.FillRect(SDL2pp::Rect(dim.GetX() * (0.90f + (i * 0.02f))
-			//	, dim.GetY()  * 0.97f
-			//	, 10.0f
-			//	, 10.0f));
 		}
-
-		//if (_shieldActive)
-		//	rend.FillRect(SDL2pp::Rect(dim.GetX() * (0.2f)
-		//		, dim.GetY()  * 0.2f
-		//		, 20.0f
-		//		, 20.0f));
 	}
 }
 
@@ -275,6 +271,12 @@ void PlayerActor::UpdateInput(double elapsedSecs)
 		{
 			_digDir = _mgr->inputManager->ActionOccurred("RIGHT", Input::Down) ? Edge::RIGHT : Edge::LEFT;
 			SetActorXDirection(_digDir == Edge::LEFT ? SpriteSheet::XAxisDirection::LEFT : SpriteSheet::XAxisDirection::RIGHT);
+
+            float minV = _digDir == Edge::LEFT ? -300 : 50;
+            float maxV = _digDir == Edge::LEFT ? -50 : 300;
+            float mul = _digDir == Edge::LEFT ? -1 : 1;
+
+            SetSpeed(Vector2(Math::Clamp(_curKinematic.velocity.GetX() + (50.f * mul), minV, maxV), _curKinematic.velocity.GetY()));
 			SetActorYDirection(SpriteSheet::YAxisDirection::UP);
 			if (_currentSpriteSheet != "sideDig")
 			{
@@ -288,6 +290,9 @@ void PlayerActor::UpdateInput(double elapsedSecs)
 		{
 			_digDir = _mgr->inputManager->ActionOccurred("UP", Input::Down) ? Edge::TOP : Edge::BOTTOM;
 			SetActorYDirection(_digDir == Edge::TOP ? SpriteSheet::YAxisDirection::UP : SpriteSheet::YAxisDirection::DOWN);
+
+            SetSpeed(Vector2(0, _curKinematic.velocity.GetY()));
+
 			if (_currentSpriteSheet != "verticalDig")
 			{
 				_sprites[_currentSpriteSheet]->Stop();

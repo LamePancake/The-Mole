@@ -10,32 +10,32 @@
 #include <math.h>
 
 TurretActor::TurretActor(
-	Vector2 position
-	, GameManager & manager
-	, Vector2 spd
-	, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites
-	, const std::string && startSprite
-	, SpriteSheet::XAxisDirection startXDirection
-	, SpriteSheet::YAxisDirection startYDirection
-	) : Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection), _aim(Aim::None), _reflectable(false)
+	Vector2 position,
+	GameManager & manager,
+	Vector2 spd,
+	std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
+	const std::string && startSprite,
+    std::unordered_map<std::string, std::pair<std::string, bool>> & sounds,
+	SpriteSheet::XAxisDirection startXDirection,
+	SpriteSheet::YAxisDirection startYDirection)
+    : Actor(position, manager, spd, sprites, std::move(startSprite), sounds, startXDirection, startYDirection), _aim(Aim::None), _reflectable(false)
 {
 	_timeInterval = 0;
     _period = 3;
 }
 
-TurretActor::TurretActor(Vector2 position
-	, GameManager & manager
-	, Vector2 spd
-	, Aim aim
-    , bool reflectable
-    , double period
-	, std::unordered_map<std::string
-	, std::shared_ptr<SpriteSheet>>& sprites
-	, const std::string && startSprite
-	, SpriteSheet::XAxisDirection startXDirection
-	, SpriteSheet::YAxisDirection startYDirection
-	) : Actor(position, manager, spd, sprites, std::move(startSprite)
-		, startXDirection, startYDirection), _aim(aim), _reflectable(reflectable), _period(period)
+TurretActor::TurretActor(Vector2 position,
+	GameManager & manager,
+	Vector2 spd,
+	Aim aim,
+    bool reflectable,
+    double period,
+	std::unordered_map<std::string,std::shared_ptr<SpriteSheet>>& sprites,
+	const std::string && startSprite,
+    std::unordered_map<std::string, std::pair<std::string, bool>> &sounds,
+	SpriteSheet::XAxisDirection startXDirection,
+	SpriteSheet::YAxisDirection startYDirection)
+    : Actor(position, manager, spd, sprites, std::move(startSprite), sounds, startXDirection, startYDirection), _aim(aim), _reflectable(reflectable), _period(period)
 {
 	_timeInterval = 0;
     _sprites["turret"]->Stop();
@@ -85,10 +85,7 @@ void TurretActor::Update(double elapsedSecs)
                     switches[2]->SetVisibility(true);
                     switches[2]->SetActive(true);
 
-                    _sprites[_currentSpriteSheet]->Stop();
-                    _currentSpriteSheet = "dead";
-                    _sprites[_currentSpriteSheet]->Start();
-
+                    SetSprite("dead", true);
                     projectile->Destroy();
                 }
             }
@@ -170,17 +167,19 @@ void TurretActor::TurretUpdate(double elapseSecs)
 
     if (_timeInterval > _period)
     {
-        _sprites["turret"]->Reset();
-        _sprites["turret"]->Start();
-        // Play a sound
+        std::unordered_map<std::string, std::pair<std::string, bool>> sounds = {};
+        PlaySpriteSound("turret");
+        SetSprite("turret", true);
 		if (_aim != Aim::None)
 		{
+            std::unordered_map<std::string, std::pair<std::string, bool>> sounds = {};
             auto projectile = std::make_shared<ProjectileActor>(
                 projectilePosition //- Vector2(0, -50) ///Vec2 position
                 , *_mgr ///Gamemanager
                 , GetProjectileVel()
                 , _sprites ///sprites
                 , "shoot" ///startsprite
+                , sounds
                 , this->_spriteXDir); ///direction
 
             projectile->SetReflectable(_reflectable);
@@ -194,6 +193,7 @@ void TurretActor::TurretUpdate(double elapseSecs)
                 , this->_startXDir == SpriteSheet::XAxisDirection::LEFT ? Vector2(-200.0f, 0.0f) : Vector2(200.0f, 0.0f) ///Vec2 spd
                 , _sprites ///sprites
                 , "shoot" ///startsprite
+                , sounds
                 , this->_startXDir); ///direction
                 
             projectile->SetReflectable(_reflectable);
@@ -209,6 +209,7 @@ void TurretActor::TurretUpdate(double elapseSecs)
                     , this->_startXDir == SpriteSheet::XAxisDirection::LEFT ? Vector2(-200.0f, 0.0f) : Vector2(200.0f, 0.0f) ///Vec2 spd
                     , _sprites ///sprites
                     , "shoot" ///startsprite
+                    , sounds
                     , this->_startXDir); ///direction
 
                 projectile->SetReflectable(_reflectable);

@@ -76,23 +76,20 @@ public:
 	 * Creates a new Actor, which has a position and the potential to be drawn in the game world.
 	 *
 	 * @param	position		starting position of the actor.
-	 * @param [in,out]	manager A reference to the game manager.
+	 * @param   manager         A reference to the game manager.
 	 * @param	spd				The actor's starting velocity.
 	 * @param	sprites			A map of names to sprite sheets.
 	 * @param	startSprite		The name of the sprite to show by default.
+     * @param   sounds          A list of sounds, with 0 or 1 corresponding to a given sprite sheet.
 	 * @param	startXDirection	The direction in the x axis which the actor will face at the start.
 	 * @param	startYDirection	The direction in the y axis which the actor will face at the start.
 	 */
-	Actor(Vector2 position, GameManager & manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites, const std::string&& startSprite,
-			SpriteSheet::XAxisDirection startXDirection, SpriteSheet::YAxisDirection startYDirection, bool active = true);
-
     Actor(Vector2 position,
           GameManager & manager,
           Vector2 spd,
-          std::unordered_map<std::string,
-          std::shared_ptr<SpriteSheet>>& sprites,
+          std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
           const std::string&& startSprite,
-          std::unordered_map<std::string, std::pair<std::string, bool>> sounds,
+          std::unordered_map<std::string, std::pair<std::string, bool>> &sounds,
           SpriteSheet::XAxisDirection startXDirection,
           SpriteSheet::YAxisDirection startYDirection,
           bool active = true);
@@ -128,7 +125,8 @@ public:
         _isVisible(other._isVisible),
         _isDestroyed(other._isDestroyed),
         _destroysOnInactive(other._destroysOnInactive),
-        _isActive(other._isActive)
+        _isActive(other._isActive),
+        _sounds(other._sounds)
     {
         for (auto & sheet : other._sprites)
         {
@@ -199,9 +197,15 @@ public:
 	 */
 	void SetPosition(Vector2 pos);
 
-    void SetSprite(std::string & sprite, bool playSoundIfNotVisible = false);
+    void SetSprite(std::string & sprite, bool resetOnStart);
 
-    void SetSprite(std::string && sprite, bool playSoundIfNotVisible = false);
+    void SetSprite(std::string && sprite, bool resetOnStart);
+
+    void PlaySpriteSound(std::string & sprite, bool playIfNotVisible = false);
+
+    void PlaySpriteSound(std::string && sprite, bool playIfNotVisible = false);
+
+    void SetSound(std::string sprite, std::string sound, bool repeats);
 
 	/**
 	 * Gets actor direction.

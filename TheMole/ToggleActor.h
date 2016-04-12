@@ -11,11 +11,12 @@ public:
 		Vector2 spd,
 		std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
 		const std::string&& startSprite,
+        std::unordered_map<std::string, std::pair<std::string, bool>> & sounds,
 		SpriteSheet::XAxisDirection startXDirection,
 		SpriteSheet::YAxisDirection startYDirection,
 		Edge edge,
 		bool isWeightPad)
-		: Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection),
+		: Actor(position, manager, spd, sprites, std::move(startSprite), sounds, startXDirection, startYDirection),
 		_isOn(false),
 		_isWeightPad(isWeightPad),
         _edge(edge)

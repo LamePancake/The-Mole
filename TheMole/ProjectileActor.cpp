@@ -2,13 +2,14 @@
 #include "GameScreen.h"
 
 ProjectileActor::ProjectileActor(Vector2 position,
-	 GameManager & manager,
-	 Vector2 spd,
-	 std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
-	 const std::string && startSprite,
-     bool reflectable,
-	 SpriteSheet::XAxisDirection startXDirection, SpriteSheet::YAxisDirection startYDirection)
-	: Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection), _reflectable(reflectable), _wasReflected(false)
+                                 GameManager & manager,
+                                 Vector2 spd,
+                                 std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
+                                 const std::string && startSprite,
+                                 std::unordered_map<std::string, std::pair<std::string, bool>> &sounds,
+                                 bool reflectable,
+	                             SpriteSheet::XAxisDirection startXDirection, SpriteSheet::YAxisDirection startYDirection)
+	: Actor(position, manager, spd, sprites, std::move(startSprite), sounds, startXDirection, startYDirection), _reflectable(reflectable), _wasReflected(false)
 {
 }
 

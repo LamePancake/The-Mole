@@ -28,8 +28,23 @@ public:
 	 * @param	startXDirection	The direction in the x axis which the actor will face at the start.
 	 * @param	startYDirection	The direction in the y axis which the actor will face at the start.
 	 */
-	ObjectActor(Vector2 position, GameManager & manager, Vector2 spd, int id, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites, const std::string&& startSprite,
-		SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP, std::string dialog = " ", int numericIdentifier = -1);
+	ObjectActor(Vector2 position,
+                GameManager & manager,
+                Vector2 spd,
+                int id,
+                std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
+                const std::string&& startSprite,
+                std::unordered_map<std::string, std::pair<std::string, bool>> & sounds,
+		        SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT,
+                SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP,
+                std::string dialog = " ",
+                int numericIdentifier = -1);
+
+    // Format: Same as Actor (see Actor.h), followed by
+    // id (int)
+    // dialog (string, may be empty)
+    // numericIdentifier (int)
+    ObjectActor(std::string serialised);
 
 	/** Destructor. */
 	~ObjectActor();

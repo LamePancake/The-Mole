@@ -18,8 +18,14 @@ public:
     ///<param name="startYDirection"> The actor's default facing direction along the y axis.</param>
     ///
     ////////////////////////////////////////////////////////////////////////////////////////////////////
-	PlayerActor(Vector2 position, GameManager & manager, Vector2 spd, std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites, const std::string&& startSprite,
-		SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT, SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP);
+	PlayerActor(Vector2 position,
+                GameManager & manager,
+                Vector2 spd,
+                std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
+                const std::string&& startSprite,
+                std::unordered_map<std::string, std::pair<std::string, bool>> & sounds,
+		        SpriteSheet::XAxisDirection startXDirection = SpriteSheet::XAxisDirection::RIGHT,
+                SpriteSheet::YAxisDirection startYDirection = SpriteSheet::YAxisDirection::UP);
 
 	/** Destructor. */
 	~PlayerActor();

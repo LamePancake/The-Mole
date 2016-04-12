@@ -13,11 +13,12 @@ public:
 		Vector2 spd,
 		std::unordered_map<std::string, std::shared_ptr<SpriteSheet>>& sprites,
 		const std::string&& startSprite,
+        std::unordered_map<std::string, std::pair<std::string, bool>> & sounds,
 		SpriteSheet::XAxisDirection startXDirection,
 		SpriteSheet::YAxisDirection startYDirection,
 		Edge edge,
 		const std::shared_ptr<ToggleActor> doorSwitch)
-		: Actor(position, manager, spd, sprites, std::move(startSprite), startXDirection, startYDirection),
+		: Actor(position, manager, spd, sprites, std::move(startSprite), sounds, startXDirection, startYDirection),
 		_edge(edge),
 		_switch(doorSwitch),
         _curState(Closed)

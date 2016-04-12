@@ -75,9 +75,10 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 			{
 				std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> enemySprites;
 				enemySprites["walk"] = std::make_shared<SpriteSheet>(baddieWalkSheet, 8, 1.f);
+                std::unordered_map<std::string, std::pair<std::string, bool>> enemySounds = {};
 
 				std::shared_ptr<AIActor> e = std::make_shared<AIActor>(gameManager, tile->GetWorldPosition(), Vector2(100.0f, 341.3f), enemySprites, "walk",
-                    mindControlIndicator, tile->GetWorldPosition());
+                    enemySounds, mindControlIndicator, tile->GetWorldPosition());
 				level->AddActor(e);
 				tile->SetID(Tile::blank);
 			}
@@ -88,8 +89,10 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
                 bombSprites["walk"] = std::make_shared<SpriteSheet>(baddieWalkSheet, 8, 1.f);
                 bombSprites["blow_up"] = std::make_shared<SpriteSheet>(bombSheet, 11, 2.f, false);
 
+                std::unordered_map<std::string, std::pair<std::string, bool>> bomberSounds = { {"blow_up", {"explosion", false}} };
+
                 std::shared_ptr<BombAIActor> e = std::make_shared<BombAIActor>(tile->GetWorldPosition(), gameManager, Vector2(100.0f, 341.3f), bombSprites, "walk",
-                    mindControlIndicator, tile->GetWorldPosition());
+                    bomberSounds, mindControlIndicator, tile->GetWorldPosition());
                 level->AddActor(e);
                 tile->SetID(Tile::blank);
             }
@@ -127,7 +130,8 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
 				sprites["vikingHatWalk"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_walk_56x56_viking.png", 8, 1);
 				sprites["vikingHatIdle"] = std::make_shared<SpriteSheet>("./Assets/Textures/Borin_idle_56x56_viking.png", 4, 0.8);
 
-				player = std::make_shared<PlayerActor>(tile->GetWorldPosition(), gameManager, Vector2(.0f, 341.3f), sprites, "idle");
+                std::unordered_map<std::string, std::pair<std::string, bool>> playerSounds = {};
+				player = std::make_shared<PlayerActor>(tile->GetWorldPosition(), gameManager, Vector2(.0f, 341.3f), sprites, "idle", playerSounds);
 				tile->SetID(Tile::blank);
 				level->SetSpawnPoint(tile->GetWorldPosition(), 0);
 				level->AddActor(player);
@@ -163,11 +167,15 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
                     sprites["overheat"] = std::make_shared<SpriteSheet>("./Assets/Textures/Watch_overheat.png", 12, 1, false, SpriteSheet::XAxisDirection::LEFT);
                     sprites["dead"] = std::make_shared<SpriteSheet>("./Assets/Textures/Watch_death.png", 1, infinity, false, SpriteSheet::XAxisDirection::LEFT);
 
+                    // Boss sounds
+                    std::unordered_map<std::string, std::pair<std::string, bool>> bossSounds = {};
+
                     std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> alienSprites;
                     alienSprites["turret"] = shared_ptr<SpriteSheet>(new SpriteSheet("./Assets/Textures/Graylien_shoot.png", 4, 0.75f, false));
                     alienSprites["dead"] = shared_ptr<SpriteSheet>(new SpriteSheet("./Assets/Textures/Graylien_dead.png", 1, infinity, false));
                     alienSprites["shoot"] = shared_ptr<SpriteSheet>(new SpriteSheet("./Assets/Textures/laser.png", 1, infinity, false));
 
+                    std::unordered_map<std::string, std::pair<std::string, bool>> alienSounds = { {"turret", {"laser", false}} };
                     std::shared_ptr<TurretActor> alien = std::make_shared<TurretActor>(
                                 Vector2(0, 0),
                                 *GameManager::GetInstance(),
@@ -177,12 +185,21 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
                                 0.75,
                                 alienSprites,
                                 "turret",
+                                alienSounds,
                                 line == "0" ? SpriteSheet::XAxisDirection::LEFT : SpriteSheet::XAxisDirection::RIGHT,
                                 SpriteSheet::YAxisDirection::UP);
 
+                    // Set up the object actor for explosions
                     std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> explosion;
                     explosion["explode"] = shared_ptr<SpriteSheet>(new SpriteSheet(bombSheet, 11, 1.0, false));
-                    std::shared_ptr<Actor> explodeProto = shared_ptr<Actor>(new ObjectActor(Vector2(0, 0), *GameManager::GetInstance(), Vector2(0, 0), -1, explosion, "explode"));
+                    std::unordered_map<std::string, std::pair<std::string, bool>> explosionSounds = { {"explode", {"explosion", false}} };
+                    std::shared_ptr<Actor> explodeProto = shared_ptr<Actor>(new ObjectActor(Vector2(0, 0), 
+                                                                                            *GameManager::GetInstance(),
+                                                                                            Vector2(0, 0),
+                                                                                            -1,
+                                                                                            explosion,
+                                                                                            "explode",
+                                                                                            explosionSounds));
                     std::shared_ptr<TargetedActorSpawner> explosionSpawner = shared_ptr<TargetedActorSpawner>(
                         new TargetedActorSpawner(level, explodeProto, 0.2, 13, Vector2(0, 0), 80));
 
@@ -191,6 +208,7 @@ std::shared_ptr<Level> LevelLoader::LoadLevel(std::string levelPath, std::shared
                                                                                   Vector2(200, 0),
                                                                                   sprites,
                                                                                   "idle",
+                                                                                  bossSounds,
                                                                                   alien,
                                                                                   explosionSpawner,
                                                                                   SpriteSheet::XAxisDirection::LEFT));
@@ -338,6 +356,11 @@ void LevelLoader::LoadTogglesAndDoors(ifstream & file, vector<SDL2pp::Point> & t
 
     vector<shared_ptr<ToggleActor>> toggles;
 
+    std::unordered_map<std::string, std::pair<std::string, bool>> doorSounds = { {"door_progress", {"door_progress", true}},
+                                                                                 {"door_finish", {"door_finish", false}} };
+
+    std::unordered_map<std::string, std::pair<std::string, bool>> toggleSounds = { {"toggle", {"switch_on", false}} };
+
 	// We would have just read "toggles", so we can go ahead and start reading all of the pad info in
   	for (size_t i = 0; i < togglePos.size(); ++i)
 	{
@@ -380,7 +403,7 @@ void LevelLoader::LoadTogglesAndDoors(ifstream & file, vector<SDL2pp::Point> & t
 		unordered_map<string, shared_ptr<SpriteSheet>> sprites;
 		sprites["toggle"] = sheet;
 
-        shared_ptr<ToggleActor> toggle(new ToggleActor(startPos, *GameManager::GetInstance(), Vector2(0, 0), sprites, "toggle", xDir, yDir, edge, isActive));
+        shared_ptr<ToggleActor> toggle(new ToggleActor(startPos, *GameManager::GetInstance(), Vector2(0, 0), sprites, "toggle", toggleSounds, xDir, yDir, edge, isActive));
         level->AddActor(toggle);
         toggles.push_back(toggle);
         tokens.clear();
@@ -438,6 +461,7 @@ void LevelLoader::LoadTogglesAndDoors(ifstream & file, vector<SDL2pp::Point> & t
                                                    Vector2(0, 0),
                                                    sprites,
                                                    "open",
+                                                   doorSounds,
                                                    xDir,
                                                    yDir,
 	                                               edge,
@@ -451,6 +475,7 @@ void LevelLoader::LoadDialog(ifstream & file, vector<SDL2pp::Point> & dialogPos,
 {
 	string line;
 	std::shared_ptr<SDL2pp::Texture> blankSheet = std::make_shared<SDL2pp::Texture>(GameManager::GetInstance()->GetRenderer(), "./Assets/Textures/Pancake.png");
+    std::unordered_map<std::string, std::pair<std::string, bool>> dialogSounds = {};
 
 	for (size_t i = 0; i < dialogPos.size(); ++i)
 	{
@@ -460,7 +485,13 @@ void LevelLoader::LoadDialog(ifstream & file, vector<SDL2pp::Point> & dialogPos,
 		double infinity = std::numeric_limits<double>::infinity();
 		sprites["nothing"] = std::make_shared<SpriteSheet>(blankSheet, 1, infinity);
 
-		std::shared_ptr<ObjectActor> dialog = std::make_shared<ObjectActor>(Vector2(dialogPos[i].GetX(), dialogPos[i].GetY()), *GameManager::GetInstance(), Vector2(0, 0), ObjectActor::dialogTrigger, sprites, "nothing");
+		std::shared_ptr<ObjectActor> dialog = std::make_shared<ObjectActor>(Vector2(dialogPos[i].GetX(), dialogPos[i].GetY()),
+                                                                            *GameManager::GetInstance(),
+                                                                            Vector2(0, 0),
+                                                                            ObjectActor::dialogTrigger,
+                                                                            sprites,
+                                                                            "nothing",
+                                                                            dialogSounds);
 		dialog->SetDialog(line);
 		level->AddActor(dialog);
 	}
@@ -468,8 +499,9 @@ void LevelLoader::LoadDialog(ifstream & file, vector<SDL2pp::Point> & dialogPos,
 
 void LevelLoader::LoadCheckPoints(ifstream & file, vector<SDL2pp::Point>& checkPointPos, shared_ptr<Level> level)
 {
-	string line;
-	std::shared_ptr<SDL2pp::Texture> flagSheet = std::make_shared<SDL2pp::Texture>(GameManager::GetInstance()->GetRenderer(), "./Assets/Textures/Flag_raise.png");
+    string line;
+    std::shared_ptr<SDL2pp::Texture> flagSheet = std::make_shared<SDL2pp::Texture>(GameManager::GetInstance()->GetRenderer(), "./Assets/Textures/Flag_raise.png");
+    std::unordered_map<std::string, std::pair<std::string, bool>> checkpointSounds = {}; // There actually are sounds, but I'm not going to mess with this
 
 	for (size_t i = 0; i < checkPointPos.size(); ++i)
 	{
@@ -479,7 +511,13 @@ void LevelLoader::LoadCheckPoints(ifstream & file, vector<SDL2pp::Point>& checkP
 		sprites["raise"] = std::make_shared<SpriteSheet>(flagSheet, 6, 1.0, false);
 		sprites["raise"]->Pause();
 
-		std::shared_ptr<ObjectActor> flag = std::make_shared<ObjectActor>(Vector2(checkPointPos[i].GetX(), checkPointPos[i].GetY()), *GameManager::GetInstance(), Vector2(0, 0), ObjectActor::flag, sprites, "raise");
+		std::shared_ptr<ObjectActor> flag = std::make_shared<ObjectActor>(Vector2(checkPointPos[i].GetX(), checkPointPos[i].GetY()),
+                                                                          *GameManager::GetInstance(),
+                                                                          Vector2(0, 0),
+                                                                          ObjectActor::flag,
+                                                                          sprites,
+                                                                          "raise",
+                                                                          checkpointSounds);
 		flag->SetNumericID(atoi(line.c_str()));
 		level->AddActor(flag);
 	}
@@ -487,9 +525,9 @@ void LevelLoader::LoadCheckPoints(ifstream & file, vector<SDL2pp::Point>& checkP
 
 void LevelLoader::LoadPancakes(ifstream & file, vector<SDL2pp::Point>& pancakePos, shared_ptr<Level> level)
 {
-	string line;
-	std::shared_ptr<SDL2pp::Texture> pancakeSheet = std::make_shared<SDL2pp::Texture>(GameManager::GetInstance()->GetRenderer(), "./Assets/Textures/PancakeSheet.png");
-
+    string line;
+    std::shared_ptr<SDL2pp::Texture> pancakeSheet = std::make_shared<SDL2pp::Texture>(GameManager::GetInstance()->GetRenderer(), "./Assets/Textures/PancakeSheet.png");
+    std::unordered_map<std::string, std::pair<std::string, bool>> pancakeSounds = {};
 	for (size_t i = 0; i < pancakePos.size(); ++i)
 	{
 		std::getline(file, line);
@@ -497,7 +535,13 @@ void LevelLoader::LoadPancakes(ifstream & file, vector<SDL2pp::Point>& pancakePo
 		std::unordered_map<std::string, std::shared_ptr<SpriteSheet>> sprites;
 		sprites["whateverPancakesDo"] = std::make_shared<SpriteSheet>(pancakeSheet, 8, 0.8f);
 
-		std::shared_ptr<ObjectActor> collectible = std::make_shared<ObjectActor>(Vector2(pancakePos[i].GetX(), pancakePos[i].GetY()), *GameManager::GetInstance(), Vector2(0, 0), ObjectActor::pancake, sprites, "whateverPancakesDo");
+		std::shared_ptr<ObjectActor> collectible = std::make_shared<ObjectActor>(Vector2(pancakePos[i].GetX(), pancakePos[i].GetY()),
+                                                                                 *GameManager::GetInstance(),
+                                                                                 Vector2(0, 0),
+                                                                                 ObjectActor::pancake,
+                                                                                 sprites,
+                                                                                 "whateverPancakesDo",
+                                                                                 pancakeSounds);
 		collectible->SetNumericID(atoi(line.c_str()));
 		level->AddActor(collectible);
 	}
@@ -508,7 +552,7 @@ void LevelLoader::LoadPancakes(ifstream & file, vector<SDL2pp::Point>& pancakePo
 void LevelLoader::LoadHelpSigns(ifstream & file, vector<SDL2pp::Point>& signPos, shared_ptr<Level> level)
 {
 	string line;
-
+    std::unordered_map<std::string, std::pair<std::string, bool>> helpSounds = {};
 	for (size_t i = 0; i < signPos.size(); ++i)
 	{
 		std::getline(file, line);
@@ -518,7 +562,13 @@ void LevelLoader::LoadHelpSigns(ifstream & file, vector<SDL2pp::Point>& signPos,
 		double infinity = std::numeric_limits<double>::infinity();
 		sprites["idle"] = std::make_shared<SpriteSheet>(signSheet, 1, infinity);
 
-		std::shared_ptr<ObjectActor> sign = std::make_shared<ObjectActor>(Vector2(signPos[i].GetX(), signPos[i].GetY()), *GameManager::GetInstance(), Vector2(0, 0), ObjectActor::tutorialSign, sprites, "idle");
+		std::shared_ptr<ObjectActor> sign = std::make_shared<ObjectActor>(Vector2(signPos[i].GetX(), signPos[i].GetY()),
+                                                                          *GameManager::GetInstance(),
+                                                                          Vector2(0, 0),
+                                                                          ObjectActor::tutorialSign,
+                                                                          sprites,
+                                                                          "idle",
+                                                                          helpSounds);
 		level->AddActor(sign);
 	}
 }
@@ -541,6 +591,8 @@ void LevelLoader::LoadNPCS(ifstream & file, vector<SDL2pp::Point>& npcPos, share
 	string line;
 	vector<string> tokens;
 
+    std::unordered_map<std::string, std::pair<std::string, bool>> npcSounds;
+
 	for (size_t i = 0; i < npcPos.size(); ++i)
 	{
 		std::getline(file, line);
@@ -550,7 +602,13 @@ void LevelLoader::LoadNPCS(ifstream & file, vector<SDL2pp::Point>& npcPos, share
 		std::shared_ptr<SDL2pp::Texture> npcSheet = std::make_shared<SDL2pp::Texture>(GameManager::GetInstance()->GetRenderer(), tokens[0]);
 		sprites["idle"] = std::make_shared<SpriteSheet>(npcSheet, atoi(tokens[1].c_str()), atof(tokens[2].c_str()));
 
-		std::shared_ptr<NPCActor> npc = std::make_shared<NPCActor>(Vector2(npcPos[i].GetX(), npcPos[i].GetY()), *GameManager::GetInstance(), Vector2(0, 0), sprites, "idle", atoi(tokens[3].c_str()) ? SpriteSheet::XAxisDirection::LEFT : SpriteSheet::XAxisDirection::RIGHT);
+		std::shared_ptr<NPCActor> npc = std::make_shared<NPCActor>(Vector2(npcPos[i].x, npcPos[i].y),
+                                                                   *GameManager::GetInstance(),
+                                                                   Vector2(0, 0),
+                                                                   sprites,
+                                                                   "idle",
+                                                                   npcSounds,
+                                                                   atoi(tokens[3].c_str()) ? SpriteSheet::XAxisDirection::LEFT : SpriteSheet::XAxisDirection::RIGHT);
 		level->AddActor(npc);
 		tokens.clear();
 	}
@@ -582,7 +640,7 @@ void LevelLoader::LoadActorSpawners(std::ifstream & file, std::vector<SDL2pp::Po
         limitStream >> limit;
 
         // Hacky way to check whether we're specifying the actor prototype or copying another
-        // This line will only ever have one character if we're 
+        // This line will only ever have one character if we're specifying an actual prototype
         getline(file, line);
         line.erase(std::remove(line.end() - 1, line.end(), '\r'), line.end());
         if (line.size() == 1)
@@ -643,8 +701,8 @@ void LevelLoader::LoadActorSpawners(std::ifstream & file, std::vector<SDL2pp::Po
 
 void LevelLoader::LoadTurrets(ifstream & file, vector<SDL2pp::Point>& turretPos, shared_ptr<Level> level)
 {
-	string line;
-
+    string line;
+    std::unordered_map<std::string, std::pair<std::string, bool>> sounds = {};
 	for (size_t i = 0; i < turretPos.size(); ++i)
 	{
 		std::getline(file, line);
@@ -662,6 +720,7 @@ void LevelLoader::LoadTurrets(ifstream & file, vector<SDL2pp::Point>& turretPos,
 			, Vector2(0, 0)
 			, sprites
 			, "turret"
+            , sounds
 			, line == "0" ? SpriteSheet::XAxisDirection::LEFT : SpriteSheet::XAxisDirection::RIGHT
 			, SpriteSheet::YAxisDirection::UP);
 
